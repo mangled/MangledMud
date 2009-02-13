@@ -1,0 +1,23 @@
+This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.
+Basic commands: 
+ move/go <direction>
+ get/take <thing>; drop/throw <thing>
+ look; look <thing>; look <direction>
+ say <message>
+ rob <player>; give <player> = <number of pennies>; kill <player>
+ inventory
+ help
+ news
+ @describe me = <description>
+ @password <oldpassword>=<newpassword>
+ page <player> --- tell player that you are looking for them (cost 1 penny)
+ gripe <message> --- Complain to the management.
+ home --- go home
+Other commands are available for extending the universe.  Many of
+these commands cost pennies, which you can obtain in a number of ways.
+Full names of exits can be used in place of a go or move command.  The
+names "me" and "here" are special; me means the current player, and
+here means the current player's location.
+More information is available in the reference section of the Library,
+north of the Temple.
+Remember, no matter how bad it gets, you can always go home.

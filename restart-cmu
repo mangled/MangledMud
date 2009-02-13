@@ -1,0 +1,11 @@
+#!/bin/csh -f
+mv cmu.db cmu.db.old
+if(-r cmu.db.new) then
+	mv cmu.db.new cmu.db
+else
+	cp cmu.db.old cmu.db
+endif
+
+cp netmud netmud.running
+echo RESTARTED AT `date` >> cmu.log
+exec netmud cmu.db cmu.db.new >>& cmu.log

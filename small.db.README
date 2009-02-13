@@ -1,0 +1,26 @@
+Notes to new administrators using small.db:
+
+1. There are four objects of type player in small.db: Wizard(#1),
+Beaker(#2), guy(#121), and Darooha(#203).  As distributed, all have
+the password "potrzebie."  Wizard is the administrative player; it is
+the only one that has its WIZARD bit set, and it owns most of the core
+rooms.  Beaker is included for testing.  guy and Darooha own the
+"Eastward Ho" and "Bud's" adventures; if you want to leave these
+samples out, you can remove them using extract.  Only the Wizard and
+the objects owned by the Wizard are really important...
+
+2. Small.db contains no unlinked exits; thus it will be impossible for
+anybody who is not a WIZARD to connect new rooms to the core rooms.
+When TinyMUD was first started up on LANCELOT.AVALON.CS.CMU.EDU, the
+Town Square was given 9 unlinked exits (7 of the 8 cardinal directions
+plus up and down) and was set to be LINK_OK; this allowed early
+construction to take place in the neighborhood of the Town Square
+without the need for administrative oversight.  
+
+While this policy worked well during the early lifetime of the game,
+as the database grew the immediate surroundings of the Town Square
+became rather chaotic, and only a few of the directions exits from it
+got much use.  It might be reasonable to build a more extensive Town
+Center before allowing haphazard construction.
+
+--Jim Aspnes
