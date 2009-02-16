@@ -1,9 +1,12 @@
 #include "copyright.h"
 
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "db.h"
 #include "config.h"
@@ -41,15 +44,15 @@ void do_shutdown(dbref player)
 	notify(player, "Your delusions of grandeur have been duly noted.");
     }
 }
-	
-/* should be void, but it's defined as int */
-static int alarm_handler()
+
+static void alarm_handler(int sig)
 {
+    (void) sig;
     alarm_triggered = 1;
     if(!alarm_block) {
         fork_and_dump();
     }
-    return 0;
+    return;
 }
 
 static void dump_database_internal()
@@ -133,12 +136,13 @@ static void fork_and_dump()
     alarm(DUMP_INTERVAL);
 }
 
-static int reaper()
+static void reaper(int sig)
 {
+    (void) sig;
     union wait stat;
 
     while(wait3(&stat, WNOHANG, 0) > 0);
-    return 0;
+    return;
 }
 
 int init_game(const char *infile, const char *outfile)
@@ -159,7 +163,7 @@ int init_game(const char *infile, const char *outfile)
    srandom(getpid());
 
    /* set up dumper */
-   if(dumpfile) free(dumpfile);
+   if(dumpfile) free((void*) dumpfile);
    dumpfile = alloc_string(outfile);
    signal(SIGALRM, alarm_handler);
    signal(SIGHUP, alarm_handler);
@@ -179,8 +183,6 @@ void process_command(dbref player, char *command)
     char *arg2;
     char *q;			/* utility */
     char *p;			/* utility */
-
-    char *index(char *, char);
 
     if(command == 0) abort();
 

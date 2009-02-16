@@ -23,6 +23,7 @@ extern void look_room(dbref player, dbref room);
 extern void do_look_around(dbref player);
 extern void do_look_at(dbref player, const char *name);
 extern void do_examine(dbref player, const char *name);
+extern void do_score(dbref player);
 extern void do_inventory(dbref player);
 extern void do_find(dbref player, const char *name);
 
@@ -46,6 +47,9 @@ extern int can_doit(dbref player, dbref thing, const char *default_fail_msg);
 extern int can_see(dbref player, dbref thing, int can_see_location);
 extern int controls(dbref who, dbref what);
 extern int payfor(dbref who, int cost);
+extern int can_link(dbref who, dbref what);
+extern int ok_name(const char *name);
+extern int ok_player_name(const char *name);
 
 /* From rob.c */
 extern void do_kill(dbref player, const char *what, int cost);
@@ -66,9 +70,11 @@ extern void do_chown(dbref player, const char *name, const char *newobj);
 extern void do_set(dbref player, const char *name, const char *flag);
 
 /* From speech.c */
+extern const char *reconstruct_message(const char *arg1, const char *arg2);
 extern void do_wall(dbref player, const char *arg1, const char *arg2);
 extern void do_gripe(dbref player, const char *arg1, const char *arg2);
 extern void do_say(dbref player, const char *arg1, const char *arg2);
+extern void do_pose(dbref player, const char *arg1, const char *arg2);
 extern void do_page(dbref player, const char *arg1);
 extern void notify_except(dbref first, dbref exception, const char *msg);
 
@@ -81,8 +87,10 @@ extern const char *string_match(const char *src, const char *sub);
 extern int member(dbref thing, dbref list);
 extern dbref remove_first(dbref first, dbref what);
 extern const char *getname(dbref thing);
+extern dbref reverse(dbref list);
 
 /* From wiz.c */
 extern void do_teleport(dbref player, const char *arg1, const char *arg2);
 extern void do_force(dbref player, const char *what, char *command);
 extern void do_stats(dbref player, const char *name);
+extern void do_toad(dbref player, const char *name);

@@ -1,10 +1,11 @@
 #include "copyright.h"
 
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "db.h"
+#include "externs.h"
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     struct object *o;
     dbref owner;

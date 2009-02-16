@@ -1,6 +1,7 @@
 #include "copyright.h"
 
 /* Wizard-only commands */
+#include <stdlib.h>
 
 #include "db.h"
 #include "interface.h"
@@ -161,7 +162,7 @@ void do_toad(dbref player, const char *name)
 	/* we're ok */
 	/* do it */
 	if(db[victim].password) {
-	    free(db[victim].password);
+	    free((void*) db[victim].password);
 	    db[victim].password = 0;
 	}
 	db[victim].flags = TYPE_THING;
@@ -175,7 +176,7 @@ void do_toad(dbref player, const char *name)
 
 	/* reset name */
 	sprintf(buf, "a slimy toad named %s", db[victim].name);
-	free(db[victim].name);
+	free((void*) db[victim].name);
 	db[victim].name = alloc_string(buf);
     }
 }

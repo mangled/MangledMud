@@ -1,6 +1,7 @@
 #include "copyright.h"
 
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/time.h>
@@ -13,6 +14,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <unistd.h>
+#include <time.h>
 
 #include "db.h"
 #include "interface.h"
@@ -67,7 +70,6 @@ void freeqs(struct descriptor_data *d);
 void welcome_user(struct descriptor_data *d);
 void check_connect(struct descriptor_data *d, const char *msg);
 void close_sockets();
-char *malloc (int);
 const char *addrout (long);
 void dump_users(struct descriptor_data *d);
 void set_signals();
@@ -81,7 +83,8 @@ int queue_string(struct descriptor_data *, const char *);
 int queue_write(struct descriptor_data *, const char *, int);
 int process_output(struct descriptor_data *d);
 int process_input(struct descriptor_data *d);
-int bailout(int, int, struct sigcontext *);
+void bailout(int);
+void dump_status(int);
 
 #define MALLOC(result, type, number) do {			\
 	if (!((result) = (type *) malloc ((number) * sizeof (type))))	\
@@ -90,7 +93,7 @@ int bailout(int, int, struct sigcontext *);
 
 #define FREE(x) (free(x))
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     if (argc < 3) {
 	fprintf (stderr, "Usage: %s infile dumpfile [port]\n", *argv);
@@ -110,8 +113,6 @@ void main(int argc, char **argv)
 
 void set_signals()
 {
-    int bailout (), dump_status ();
-
     /* we don't care about SIGPIPE, we notice it in select() and write() */
     signal (SIGPIPE, SIG_IGN);
 
@@ -124,7 +125,9 @@ void set_signals()
     signal (SIGILL, bailout);
     signal (SIGTRAP, bailout);
     signal (SIGIOT, bailout);
+#if !defined linux
     signal (SIGEMT, bailout);
+#endif
     signal (SIGFPE, bailout);
     signal (SIGBUS, bailout);
     signal (SIGSEGV, bailout);
@@ -282,10 +285,10 @@ struct descriptor_data *new_connection(int sock)
 {
     int newsock;
     struct sockaddr_in addr;
-    int addr_len;
+    socklen_t addr_len;
 
     addr_len = sizeof (addr);
-    newsock = accept (sock, (struct sockaddr *) & addr, &addr_len);
+    newsock = accept (sock, (struct sockaddr *) &addr, &addr_len);
     if (newsock < 0) {
 	return 0;
     } else {
@@ -298,8 +301,8 @@ const char *addrout(long a)
 {
     static char buf[1024];
 
-    sprintf (buf, "%d.%d.%d.%d", (a >> 24) & 0xff, (a >> 16) & 0xff,
-	     (a >> 8) & 0xff, a & 0xff);
+    sprintf (buf, "%d.%d.%d.%d", (int)((a >> 24) & 0xff), (int)((a >> 16) & 0xff),
+	     (int)((a >> 8) & 0xff), (int)(a & 0xff));
     return buf;
 }
 
@@ -469,7 +472,7 @@ int process_output(struct descriptor_data *d)
     struct text_block **qp, *cur;
     int cnt;
 
-    for (qp = &d->output.head; cur = *qp;) {
+    for (qp = &d->output.head; (cur = *qp);) {
 	cnt = write (d->descriptor, cur -> start, cur -> nchars);
 	if (cnt < 0) {
 	    if (errno == EWOULDBLOCK)
@@ -534,7 +537,8 @@ void welcome_user(struct descriptor_data *d)
 
 void goodbye_user(struct descriptor_data *d)
 {
-    write (d->descriptor, LEAVE_MESSAGE, strlen (LEAVE_MESSAGE));
+    ssize_t bytes_written = write (d->descriptor, LEAVE_MESSAGE, strlen (LEAVE_MESSAGE));
+    (void) bytes_written;
 }
 
 char *strsave (const char *s)
@@ -725,7 +729,8 @@ void close_sockets()
 
     for (d = descriptor_list; d; d = dnext) {
 	dnext = d->next;
-	write (d->descriptor, shutdown_message, strlen (shutdown_message));
+	ssize_t bytes_written = write (d->descriptor, shutdown_message, strlen (shutdown_message));
+        (void) bytes_written;
 	if (shutdown (d->descriptor, 2) < 0)
 	    perror ("shutdown");
 	close (d->descriptor);
@@ -738,21 +743,22 @@ void emergency_shutdown()
 	close_sockets();
 }
 
-int bailout(int sig, int code, struct sigcontext *scp)
+void bailout(int sig)
 {
     char message[1024];
     
-    sprintf (message, "BAILOUT: caught signal %d code %d", sig, code);
+    sprintf (message, "BAILOUT: caught signal %d", sig);
     panic(message);
     _exit (7);
-    return 0;
+    return;
 }
 
-int dump_status()
+void dump_status(int sig)
 {
     struct descriptor_data *d;
     long now;
 
+    (void) sig;
     (void) time (&now);
     fprintf (stderr, "STATUS REPORT:\n");
     for (d = descriptor_list; d; d = d->next) {
@@ -762,19 +768,19 @@ int dump_status()
 
 	    if (d->last_time)
 		fprintf (stderr, " idle %d seconds\n",
-			 now - d->last_time);
+			 (int)(now - d->last_time));
 	    else
 		fprintf (stderr, " never used\n");
 	} else {
 	    fprintf (stderr, "CONNECTING descriptor %d", d->descriptor);
 	    if (d->last_time)
 		fprintf (stderr, " idle %d seconds\n",
-			 now - d->last_time);
+			 (int)(now - d->last_time));
 	    else
 		fprintf (stderr, " never used\n");
 	}
     }
-    return 0;
+    return;
 }
 
 void dump_users(struct descriptor_data *e)
@@ -790,7 +796,7 @@ void dump_users(struct descriptor_data *e)
 	    if (d->last_time)
 		sprintf (buf, "%s idle %d seconds\n",
 			 db[d->player].name,
-			 now - d->last_time);
+			 (int)(now - d->last_time));
 	    else
 		sprintf (buf, "%s idle forever\n",
 			 db[d->player].name);

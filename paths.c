@@ -1,6 +1,6 @@
 #include "copyright.h"
 
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "db.h"
 #include "config.h"
@@ -144,7 +144,7 @@ void print_paths()
     }
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     dbref start = 0;
 

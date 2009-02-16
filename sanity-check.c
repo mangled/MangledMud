@@ -1,9 +1,10 @@
 #include "copyright.h"
 
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "db.h"
 #include "config.h"
+#include "externs.h"
 
 void check_exits(dbref i)
 {
@@ -23,7 +24,7 @@ void check_exits(dbref i)
 	db[exit].flags = 4;	/* nonexistent type */
 
 	if(count-- < 0) {
-	    printf("%d has looping exits\n");
+	    printf("%d has looping exits\n", i);
 	    break;
 	}
     }
@@ -48,7 +49,7 @@ void check_contents(dbref i)
 	    db[thing].flags = 4; /* nonexistent type */
 	}
 	if(count-- < 0) {
-	    printf("%d has looping contents\n");
+	    printf("%d has looping contents\n", i);
 	    break;
 	}
     }
@@ -90,7 +91,7 @@ void check_pennies(dbref i)
     }
 }
 
-void main(int argc, char **argv)
+int main(void)
 {
     dbref i;
 

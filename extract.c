@@ -1,9 +1,11 @@
 #include "copyright.h"
 
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/param.h>
 
 #include "db.h"
+#include "externs.h"
 
 int include_all = 0;		/* include everything unless specified */
 
@@ -14,6 +16,8 @@ dbref *trans;			/* translation vector */
 
 #define DEFAULT_LOCATION (0)
 #define DEFAULT_OWNER (1)
+
+int isok(dbref x);
 
 /* returns 1 if it is not excluded */
 int not_excluded(dbref x)
@@ -200,7 +204,7 @@ void do_write(void)
     puts("***END OF DUMP***");
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     dbref i;
     int top_in;

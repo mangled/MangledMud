@@ -1,7 +1,8 @@
 #include "copyright.h"
 
 /* commands which set parameters */
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #include "db.h"
@@ -170,7 +171,7 @@ void do_lock(dbref player, const char *name, const char *keyname)
     }
 
     /* now we know it's ok to lock */
-    if(antilock = (*keyname == NOT_TOKEN)) {
+    if((antilock = (*keyname == NOT_TOKEN))) {
 	/* skip past ! and any following whitespace */
 	for(keyname++; *keyname && isspace(*keyname); keyname++);
     }
@@ -326,7 +327,7 @@ void do_set(dbref player, const char *name, const char *flag)
 	   || f == BUILDER
 #endif /* RESTRICTED_BUILDING */
 	   || f == TEMPLE
-	   || f == DARK && Typeof(thing) != TYPE_ROOM)) {
+	   || (f == DARK && Typeof(thing) != TYPE_ROOM))) {
 	notify(player, "Permission denied.");
 	return;
     }

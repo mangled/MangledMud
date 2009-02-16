@@ -2,7 +2,7 @@
 # Whatever you put in for $(CC) must be able to grok ANSI C.
 #
 CC=gcc
-OPTIM= -O -g -pipe -W -Wreturn-type -Wunused -Wcomment -Wwrite-strings
+OPTIM= -O -g -pipe -Wall -Wextra -Werror -Wwrite-strings
 # 
 # To log failed commands (HUH's) to stderr, include -DLOG_FAILED_COMMANDS
 # To restricted object-creating commands to users with the BUILDER bit,
@@ -28,12 +28,9 @@ DISTFILES= $(CFILES) config.h db.h externs.h interface.h match.h \
 
 DESTDIR= /usr/asp/tinymud
 
-OUTFILES= netmud dump paths sanity-check extract TAGS
+OUTFILES= netmud dump paths sanity-check extract
 
-all: extract sanity-check dump paths netmud TAGS
-
-TAGS: *.c *.h
-	etags *.c *.h
+all: extract sanity-check dump paths netmud
 
 netmud: interface.o $(OFILES)
 	-mv -f netmud netmud~

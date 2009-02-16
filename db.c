@@ -1,14 +1,13 @@
 #include "copyright.h"
 
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 #include "db.h"
 
 struct object *db = 0;
 dbref db_top = 0;
-
-extern void *malloc(unsigned long);
-extern void *realloc(void *, unsigned long);
 
 const char *alloc_string(const char *string)
 {
@@ -152,7 +151,8 @@ static dbref getref(FILE *f)
 {
     static char buf[DB_MSGLEN];
 
-    fgets(buf, sizeof(buf), f);
+    char* s = fgets(buf, sizeof(buf), f);
+    (void) s;
     return(atol(buf));
 }
 
@@ -161,7 +161,9 @@ static const char *getstring(FILE *f)
     static char buf[DB_MSGLEN];
     char *p;
 
-    fgets(buf, sizeof(buf), f);
+    char* s = fgets(buf, sizeof(buf), f);
+    (void) s;
+
     for(p = buf; *p; p++) {
 	if(*p == '\n') {
 	    *p = '\0';
@@ -184,13 +186,13 @@ void db_free()
     if(db) {
 	for(i = 0; i < db_top; i++) {
 	    o = &db[i];
-	    if(o->name) free(o->name);
-	    if(o->description) free(o->description);
-	    if(o->succ_message) free(o->succ_message);
-	    if(o->fail_message) free(o->fail_message);
-	    if(o->ofail) free(o->ofail);
-	    if(o->osuccess) free(o->osuccess);
-	    if(o->password) free(o->password);
+	    if(o->name) free((void*) o->name);
+	    if(o->description) free((void*) o->description);
+	    if(o->succ_message) free((void*) o->succ_message);
+	    if(o->fail_message) free((void*) o->fail_message);
+	    if(o->ofail) free((void*) o->ofail);
+	    if(o->osuccess) free((void*) o->osuccess);
+	    if(o->password) free((void*) o->password);
 	}
 	free(db);
 	db = 0;
@@ -237,10 +239,10 @@ dbref db_read(FILE *f)
 	  case '*':
 	    end = getstring(f);
 	    if(strcmp(end, "**END OF DUMP***")) {
-		free(end);
+		free((void*) end);
 		return -1;
 	    } else {
-		free(end);
+		free((void*) end);
 		return db_top;
 	    }
 	  default:

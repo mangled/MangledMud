@@ -1,6 +1,7 @@
 #include "copyright.h"
 
 /* commands which look at things */
+#include <string.h>
 
 #include "db.h"
 #include "config.h"

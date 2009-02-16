@@ -6,6 +6,7 @@
 #include "config.h"
 #include "interface.h"
 #include "externs.h"
+#include "match.h"
 
 /* utility for open and link */
 static dbref parse_linkable_room(dbref player, const char *room_name)

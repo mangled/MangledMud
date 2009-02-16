@@ -1,5 +1,8 @@
 #include "copyright.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "db.h"
 #include "config.h"
 #include "interface.h"
@@ -58,7 +61,7 @@ void do_password(dbref player, const char *old, const char *newobj)
     if(strcmp(old, db[player].password)) {
 	notify(player, "Sorry");
     } else {
-	free(db[player].password);
+	free((void*) db[player].password);
 	db[player].password = alloc_string(newobj);
 	notify(player, "Password changed.");
     }

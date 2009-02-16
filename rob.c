@@ -1,6 +1,7 @@
 #include "copyright.h"
 
 /* rob and kill */
+#include <stdlib.h>
 
 #include "db.h"
 #include "config.h"
