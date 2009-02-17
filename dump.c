@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	if(owner != NOTHING && o->owner != owner) continue;
 
 	printf("#%d: %s [%s] at %s(%d) Pennies: %d Type: ",
-	       o - db, o->name, db[o->owner].name,
+	       (int)(o - db), o->name, db[o->owner].name,
 	       getname(o->location),
 	       o->location,
 	       o->pennies);
