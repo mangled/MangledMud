@@ -1,3 +1,10 @@
 # Ignore objects
 *.o
 
+# Ignore output files
+dump
+extract
+netmud
+paths
+sanity-check
+
