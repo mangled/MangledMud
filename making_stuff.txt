@@ -1,0 +1,126 @@
+first connected as the wizard:
+
+>connect wizard potrzebie
+
+For fun, created a room "The Stairwell"
+
+>@dig The Stairwell
+
+returns 35
+
+Now I want to connect this to the Entrance (#2)
+
+@open s=2
+
+And open in the other direction (go into the other room)!
+
+@open n=35
+
+Yay, can go south! Lets make the room more interesting!
+
+>@desc s=South is the Entrance hall, you can hear noise
+>@succ s=You stroll into the party!
+>@osucc n=enters the party
+>@desc here=A blue stairwell, slightly fading, in front of you is a blue door with a lovely letter box and a small brass plaque. The party lies to the south.
+
+Now lets make the letter box and plaque objects
+
+>@open letterbox=here
+>@lock letterbox=me&!me
+>@desc letterbox=Well it is a letterbox!
+>@fail letterbox=You can't fit!
+>@ofail hole=can't fit through the hole
+
+>look letterbox (gives the description)
+
+! can't lock it to fail, the program keeps failing!
+! debugger!?!?
+
+! Just make a person called nobody, then lock to nobody :-)
+! Seems to work
+
+Home: Want people to start in the right place, also objects can have homes
+
+New objects:
+>@create statue=10
+>@link statue=here (home set)
+
+When an object is dropped send it somewhere (from a location):
+> @link #23=home
+> drop statue (then goes home) I think setting STICKY flag would also work and is universal.
+
+How to give people the ability to build more?
+Note, @open creates an exit, if you specify a number it goes on to link. Without the number the exit can be used by anyone.
+
+matthew>@dig tunnel (worked #41)
+wizard>@open feet=
+matthew>@open feet=41 (worked and I can go and set the description)
+wizard>@set here=LINK_OK (not sure if I need to do this or not - I think it allows you to link back)
+
+Yes - It implies someone can place a link back to this room, I probably want to set it on all the rooms
+
+Want people to be able to build stuff without my help. Does this mean I have to go round doing lots of @open's? Or may-be people ask me? Then-again I would like people to be able to update descriptions. I think that (for total mayhem) I should make everyone wizards! But this might be a bad idea :-)
+
+** LOOK AT THE SOURCE CODE, WHAT FLAGS CAN I SET? **
+
+How to stop yourself being robbed
+>@lock me=me
+
+! set pennies or give (prefer to have a set amount initially)
+
+
+** EXITS **
+
+Ok, I suggest setting all available links in the initial descriptions and LINK_OK to all start rooms. The question is, can I lock a link so people can't move it? Lets try!
+
+In the front room (11), add an exit (new direction - up), this is unlinked, lets see if matthew can pick it up. NOTE: LINK_OK set in room
+wizard>@open up
+wizard>@desc up=This might lead somewhere!
+wizard>@fail up=This might lead somewhere!
+matthew>up (gives "This might lead somewhere!")
+
+So this is a clue, can matthew build and link
+matthew>@dig sponge (37)
+matthew>@link up=37 (success)
+matthew>@succ up=Up you go
+matthew>@osucc up=flies upwards
+matthew>@fail up=You do not have the power!
+matthew>@ofail up=Failed to go up!
+matthew>@desc up=To the sponge
+matthew>@open down=11
+
+WARNING: once a lock is set I cannot seem to make it general, i.e. no option for "*". Possibly just do a !fake (fake being the person I create to allow global lock failure) - use @unlock :-)
+
+** TEMPLE **
+wizard>@set here=T
+wizard>n (or somewhere)
+wizard>create tree=20
+wizard>@link tree=here
+wizard>drop tree
+
+matthew>take tree
+matthew>back to temple
+matthew>drop tree (get value=(cost/5)-1 = 3)
+
+** home **
+@link home=here (want the start not to be limbo - can the wizard change this - YES!!!)
+
+** talking **
+say foo (x says "foo")
+:foo (x "foo")
+
+** exit **
+QUIT (I should use @shutdown to dump db during designing)
+
+Notes:
+
+@open j;jump=<room number>
+
+Should set something to be a temple, for sacrificing!
+
+Why not advertise: http://toccobrator.com/classic.html
+
+!!! REMEMBER TO DUMP @DUMP!!!
+!!! REMEMBER TO SET PERMISSIONS TO MAKE THINGS !!!
+
+
