@@ -1,0 +1,39 @@
+Will try out SWIG
+
+For each .c file, copy it into the ruby folder and get it interfacing to ruby. The only aspects that will take some careful attention are those related to networking, I think most functions are in interface.c
+
+My suggestion is to stub out these - They only send or receive and if you look at how this occurs you might want to change the logic to passing in function pointers? So you can mock? You will need to experiment a little.
+
+The idea is to get each file working with ruby and tested, then to switch to a pure ruby implementation and get it passing the tests. Once this is done move on. As said the main issue is methods calling on, I suspect there aren't many in this category. Where there are you will need to mock (its ok if methods call within a single .c file) - Until you have implemented all the methods at which point you can un-mock. I.e. define the method as doing nowt, then mock it in ruby! Need to take careful notes for "todo" related to each file.
+
+As said I recommend you pick a small file first to play with - utils.c (?) actually you will need a database so db.c might be the best? Then possibly methods which add the player, the room etc. finally methods related to moving about? I.e. build up from the basics.
+
+Files to Convert
+================
+
+create.c
+db.c
+dump.c
+extract.c
+game.c
+help.c
+interface.c
+look.c
+match.c
+move.c
+paths.c
+player.c
+predicates.c
+rob.c
+sanity-check.c
+set.c
+speech.c
+stringutil.c
+utils.c
+wiz.c
+
+Files Converted (and notes)
+===============
+
+None!
+
