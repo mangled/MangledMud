@@ -17,7 +17,7 @@ static VALUE db_length(VALUE self)
 	return INT2FIX(db_top);
 }
 
-static void record_free(struct object* record)
+static void free_record_elements(struct object* record)
 {
     if (record->name) free((void*) record->name);
     if (record->description) free((void*) record->description);
@@ -26,6 +26,11 @@ static void record_free(struct object* record)
     if (record->ofail) free((void*) record->ofail);
     if (record->osuccess) free((void*) record->osuccess);
 	if (record->password) free((void*) record->password);
+}
+
+static void record_free(struct object* record)
+{
+	free_record_elements(record);
 	free(record);
 }
 
@@ -62,6 +67,32 @@ static VALUE get_record(VALUE self, VALUE at)
 	}
 
 	return Data_Wrap_Struct(db_record, 0, record_free, new_record);
+}
+
+static VALUE db_put_record(VALUE self, VALUE at, VALUE record)
+{
+	if (db == 0) { rb_raise(rb_eRuntimeError, "db is empty!"); }
+	dbref where = FIX2INT(at);
+	if (where < 0 || where >= db_top) { rb_raise(rb_eRuntimeError, "invalid at"); }
+
+	struct object* source;
+	Data_Get_Struct(record, struct object, source);
+
+	struct object* destination = &(db[where]);
+	free_record_elements(destination);
+	memcpy(destination, source, sizeof(struct object));
+
+	return Qnil;
+}
+
+static VALUE db_read_from_file(VALUE self, VALUE db_name)
+{
+	char* filename = STR2CSTR(db_name);
+	FILE* file = fopen(filename, "r");
+	if (file == 0) { rb_raise(rb_eRuntimeError, "failed opening file"); }
+	db_read(file);
+	fclose(file);
+	return Qnil;
 }
 
 /* Database struct/"object"/record */
@@ -291,6 +322,67 @@ static VALUE record_pennies_set(VALUE self, VALUE i)
 	return Qnil;
 }
 
+static VALUE record_type_s(VALUE self)
+{
+	struct object* record;
+	Data_Get_Struct(self, struct object, record);
+
+	int type  = (record->flags) & TYPE_MASK;
+	char* description = 0;
+	switch (type) {
+		case TYPE_ROOM:
+			description = strdup("TYPE_ROOM");
+		break;
+		case TYPE_THING:
+			description = strdup("TYPE_THING");
+		break;
+		case TYPE_EXIT:
+			description = strdup("TYPE_EXIT");
+		break;
+		case TYPE_PLAYER:
+			description = strdup("TYPE_PLAYER");
+		break;
+		case NOTYPE:
+			description = strdup("NOTYPE");
+		break;
+		default:
+			description = strdup("Unknown!");
+		break;
+	}
+	if (description != 0) {
+		return rb_str_new2(description);
+	} else {
+		return Qnil;
+	}
+}
+
+static VALUE record_desc_s(VALUE self)
+{
+	struct object* record;
+	Data_Get_Struct(self, struct object, record);
+
+	int type  = (record->flags);
+	char* description = 0;
+	if ((type & ANTILOCK) != 0) {
+		description = strdup("ANTILOCK");
+	} else if ((type & WIZARD) != 0) {
+		description = strdup("WIZARD");
+	} else if ((type & LINK_OK) != 0) {
+		description = strdup("LINK_OK");
+	} else if ((type & DARK) != 0) {
+		description = strdup("DARK");
+	} else if ((type & TEMPLE) != 0) {
+		description = strdup("TEMPLE");
+	} else if ((type & STICKY) != 0) {
+		description = strdup("STICKY");
+	}
+	if (description != 0) {
+		return rb_str_new2(description);
+	} else {
+		return Qnil;
+	}
+}
+
 static VALUE record_flags(VALUE self)
 {
 	struct object* record;
@@ -333,8 +425,10 @@ void Init_db() {
 
 	db_class = rb_define_class_under(tinymud_module, "Db", rb_cObject);
 	rb_define_method(db_class, "add_new_record", db_new_object, 0);
+	rb_define_method(db_class, "put", db_put_record, 2);
+	rb_define_method(db_class, "get", get_record, 1);
 	rb_define_method(db_class, "length", db_length, 0);
-	rb_define_method(db_class, "record", get_record, 1);
+	rb_define_method(db_class, "read", db_read_from_file, 1);
 
 	db_record = rb_define_class_under(tinymud_module, "Record", rb_cObject);
 	rb_define_method(db_record, "name", record_name, 0);
@@ -363,14 +457,11 @@ void Init_db() {
 	rb_define_method(db_record, "owner=", record_owner_set, 1);
 	rb_define_method(db_record, "pennies", record_pennies, 0);
 	rb_define_method(db_record, "pennies=", record_pennies_set, 1);
+	rb_define_method(db_record, "type", record_type_s, 0);
+	rb_define_method(db_record, "desc", record_desc_s, 0);
 	rb_define_method(db_record, "flags", record_flags, 0);
 	rb_define_method(db_record, "flags=", record_flags_set, 1);
 	rb_define_method(db_record, "password", record_password, 0);
 	rb_define_method(db_record, "password=", record_password_set, 1);
-	
-
-
- 	/*rb_define_method(db_record, "location", db_location, 0);*/
-	/*  rb_define_method(db_class, "pennies", db_pennies, 1);*/
 }
 
