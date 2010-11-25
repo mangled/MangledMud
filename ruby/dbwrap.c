@@ -12,6 +12,12 @@ static VALUE db_new_object(VALUE self)
 	return INT2FIX(new_object());
 }
 
+static VALUE db_free_content(VALUE self)
+{
+	db_free();
+	return Qnil;
+}
+
 static VALUE db_length(VALUE self)
 {
 	return INT2FIX(db_top);
@@ -26,6 +32,31 @@ static void free_record_elements(struct object* record)
     if (record->ofail) free((void*) record->ofail);
     if (record->osuccess) free((void*) record->osuccess);
 	if (record->password) free((void*) record->password);
+}
+
+static void copy_record_elements(const struct object* src, struct object* dst)
+{
+	if (src->name) {
+		dst->name = strdup(src->name);
+	}
+    if (src->description) {
+		dst->description = strdup(src->description);
+	}
+    if (src->succ_message) {
+		dst->succ_message = strdup(src->succ_message);
+	}
+    if (src->fail_message) {
+		dst->fail_message = strdup(src->fail_message);
+	}
+    if (src->ofail) {
+		dst->ofail = strdup(src->ofail);
+	}
+    if (src->osuccess) {
+		dst->osuccess = strdup(src->osuccess);
+	}
+	if (src->password) {
+		dst->password = strdup(src->password);
+	}
 }
 
 static void record_free(struct object* record)
@@ -44,27 +75,7 @@ static VALUE get_record(VALUE self, VALUE at)
 	struct object* new_record = malloc(sizeof(struct object));
 	memcpy(new_record, record, sizeof(struct object));
 
-	if (record->name) {
-		new_record->name = strdup(record->name);
-	}
-    if (record->description) {
-		new_record->description = strdup(record->description);
-	}
-    if (record->succ_message) {
-		new_record->succ_message = strdup(record->succ_message);
-	}
-    if (record->fail_message) {
-		new_record->fail_message = strdup(record->fail_message);
-	}
-    if (record->ofail) {
-		new_record->ofail = strdup(record->ofail);
-	}
-    if (record->osuccess) {
-		new_record->osuccess = strdup(record->osuccess);
-	}
-	if (record->password) {
-		new_record->password = strdup(record->password);
-	}
+	copy_record_elements(record, new_record);
 
 	return Data_Wrap_Struct(db_record, 0, record_free, new_record);
 }
@@ -81,6 +92,7 @@ static VALUE db_put_record(VALUE self, VALUE at, VALUE record)
 	struct object* destination = &(db[where]);
 	free_record_elements(destination);
 	memcpy(destination, source, sizeof(struct object));
+	copy_record_elements(source, destination);
 
 	return Qnil;
 }
@@ -429,6 +441,7 @@ void Init_db() {
 	rb_define_method(db_class, "get", get_record, 1);
 	rb_define_method(db_class, "length", db_length, 0);
 	rb_define_method(db_class, "read", db_read_from_file, 1);
+	rb_define_method(db_class, "free", db_free_content, 0);
 
 	db_record = rb_define_class_under(tinymud_module, "Record", rb_cObject);
 	rb_define_method(db_record, "name", record_name, 0);
