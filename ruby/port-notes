@@ -22,13 +22,13 @@ look.c
 match.c
 move.c
 paths.c
-[started on] player.c
+player.c
 predicates.c
 rob.c
 sanity-check.c
 set.c
 speech.c
-stringutil.c
+[started on] stringutil.c
 utils.c
 wiz.c
 
