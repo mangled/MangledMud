@@ -9,17 +9,20 @@ static VALUE db_record;
 
 static VALUE db_new_object(VALUE self)
 {
+	(void) self;
 	return INT2FIX(new_object());
 }
 
 static VALUE db_free_content(VALUE self)
 {
+	(void) self;
 	db_free();
 	return Qnil;
 }
 
 static VALUE db_length(VALUE self)
 {
+	(void) self;
 	return INT2FIX(db_top);
 }
 
@@ -67,6 +70,7 @@ static void record_free(struct object* record)
 
 static VALUE get_record(VALUE self, VALUE at)
 {
+	(void) self;
 	if (db == 0) { rb_raise(rb_eRuntimeError, "db is empty!"); }
 	dbref where = FIX2INT(at);
 	if (where < 0 || where >= db_top) { rb_raise(rb_eRuntimeError, "invalid at"); }
@@ -82,6 +86,7 @@ static VALUE get_record(VALUE self, VALUE at)
 
 static VALUE db_put_record(VALUE self, VALUE at, VALUE record)
 {
+	(void) self;
 	if (db == 0) { rb_raise(rb_eRuntimeError, "db is empty!"); }
 	dbref where = FIX2INT(at);
 	if (where < 0 || where >= db_top) { rb_raise(rb_eRuntimeError, "invalid at"); }
@@ -99,6 +104,7 @@ static VALUE db_put_record(VALUE self, VALUE at, VALUE record)
 
 static VALUE db_read_from_file(VALUE self, VALUE db_name)
 {
+	(void) self;
 	char* filename = STR2CSTR(db_name);
 	FILE* file = fopen(filename, "r");
 	if (file == 0) { rb_raise(rb_eRuntimeError, "failed opening file"); }
