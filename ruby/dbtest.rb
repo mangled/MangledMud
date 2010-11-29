@@ -114,6 +114,8 @@ module TinyMud
     end
 end
 
+# PUT RECORD TEST!!!!
+
 # REGRESSION?
 ## READ!!!!
 #puts "Reading file..."
