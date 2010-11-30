@@ -1,21 +1,8 @@
 require 'rubygems'
 require 'test/unit'
+require 'defines'
 require 'db'
 require 'pp'
-
-# These need to go into the TinyMud Module (ruby side)
-TYPE_ROOM =	0x0
-TYPE_THING = 0x1
-TYPE_EXIT =	0x2
-TYPE_PLAYER = 0x3
-NOTYPE	= 0x7
-TYPE_MASK = 0x7
-ANTILOCK =	0x8
-WIZARD = 0x10
-LINK_OK	= 0x20
-DARK = 0x40
-TEMPLE = 0x80
-STICKY = 0x100
 
 def print(record) # to_s?
 	puts "Name: #{record.name}"
@@ -110,6 +97,46 @@ module TinyMud
 			record.password = "password"
 			assert_equal("password", record.password)
 			# None of the derived flag methods warrant testing (for now)
+		end
+		
+		def test_minimal
+			Db.Minimal()
+
+			assert_equal(2, @db.length)
+
+			record = @db.get(0)
+			assert_equal("Limbo", record.name)
+			assert_equal("You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.", record.description)
+			assert_equal(NOTHING, record.location)
+			assert_equal(1, record.contents)
+			assert_equal(NOTHING, record.exits)
+			assert_equal(NOTHING, record.next)
+			assert_equal(NOTHING, record.key)
+			assert_equal(nil, record.fail)
+			assert_equal(nil, record.succ)
+			assert_equal(nil, record.ofail)
+			assert_equal("is briefly visible through the mist.", record.osucc)
+			assert_equal(1, record.owner)
+			assert_equal(0, record.pennies)
+			assert_equal(TYPE_ROOM, record.flags)
+			assert_equal(nil, record.password)
+
+			record = @db.get(1)
+			assert_equal("Wizard", record.name)
+			assert_equal("You see The Wizard.", record.description)
+			assert_equal(0, record.location)
+			assert_equal(NOTHING, record.contents)
+			assert_equal(0, record.exits)
+			assert_equal(NOTHING, record.next)
+			assert_equal(NOTHING, record.key)
+			assert_equal('"Get an honest job!" snarls the Wizard.', record.fail)
+			assert_equal(nil, record.succ)
+			assert_equal("foolishly tried to rob the Wizard!", record.ofail)
+			assert_equal(nil, record.osucc)
+			assert_equal(1, record.owner)
+			assert_equal(0, record.pennies)
+			assert_equal(TYPE_PLAYER | WIZARD, record.flags)
+			assert_equal("potrzebie", record.password)
 		end
     end
 end

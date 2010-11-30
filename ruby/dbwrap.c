@@ -102,6 +102,19 @@ static VALUE db_put_record(VALUE self, VALUE at, VALUE record)
 	return Qnil;
 }
 
+// Note: This does read from file, but I'm not concerned as at some point
+// this will be replaced by ruby code
+static VALUE minimal(VALUE self) // Fixme: Almost the same as below (not DRY)
+{
+	(void) self;
+	const char* filename = "minimal.db";
+	FILE* file = fopen(filename, "r");
+	if (file == 0) { rb_raise(rb_eRuntimeError, "failed opening file"); }
+	db_read(file);
+	fclose(file);
+	return Qnil;
+}
+
 static VALUE db_read_from_file(VALUE self, VALUE db_name)
 {
 	(void) self;
@@ -442,6 +455,7 @@ void Init_db() {
 	tinymud_module = rb_define_module("TinyMud");
 
 	db_class = rb_define_class_under(tinymud_module, "Db", rb_cObject);
+	rb_define_module_function(db_class, "Minimal", minimal, 0);
 	rb_define_method(db_class, "add_new_record", db_new_object, 0);
 	rb_define_method(db_class, "put", db_put_record, 2);
 	rb_define_method(db_class, "get", get_record, 1);
