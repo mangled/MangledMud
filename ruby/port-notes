@@ -18,7 +18,7 @@ Files to Convert
 ================
 
 create.c
-[done - enough of for now] db.c
+[done] db.c
 dump.c
 extract.c
 game.c
@@ -28,8 +28,8 @@ look.c
 match.c
 move.c
 paths.c
-[started on] player.c
-predicates.c
+[done] player.c
+[working on] predicates.c
 rob.c
 sanity-check.c
 set.c

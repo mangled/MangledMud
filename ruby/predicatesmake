@@ -5,9 +5,9 @@ CC = gcc
 CFLAGS   = -O -g -pipe -Wall -Wextra -Wwrite-strings
 INCFLAGS = -I. -I$(topdir)
 RM = rm -f
-SRCS = dbwrap.c db.c player.c playerwrap.c stringutil.c predicates.c utils.c speech.c match.c
-OBJS = dbwrap.o db.o player.o playerwrap.o stringutil.o predicates.o utils.o speech.o match.o
-TARGET = player
+SRCS = dbwrap.c db.c player.c playerwrap.c stringutil.c predicates.c utils.c speech.c match.c predicateswrap.c
+OBJS = dbwrap.o db.o player.o playerwrap.o stringutil.o predicates.o utils.o speech.o match.o predicateswrap.o
+TARGET = predicates
 DLLIB = $(TARGET).so
 
 all: $(DLLIB)
@@ -18,7 +18,7 @@ clean:
 .c.o:
 	$(CC) $(INCFLAGS) $(CFLAGS) -c $<
 
-$(DLLIB): $(OBJS) playermake
+$(DLLIB): $(OBJS) predicatesmake
 	@-$(RM) $@
 	$(CC) -shared -o $@ $(OBJS)
 
