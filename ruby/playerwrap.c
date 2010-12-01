@@ -15,13 +15,13 @@ void notify(dbref player_ref, const char *msg)
   ID method = rb_intern("do_notify");
   VALUE player = INT2FIX(player_ref);
   VALUE message = rb_str_new2(msg);
-  rb_funcall(player_class, method, player, message);
+  rb_funcall(tinymud_module, method, player, message);
 }
 
 void emergency_shutdown(void)
 {
   ID method = rb_intern("do_emergency_shutdown");
-  rb_funcall(player_class, method, 0);
+  rb_funcall(tinymud_module, method, 0);
 }
 
 /* These are defined in ruby and called from the above - To allow mocking in ruby */
@@ -81,13 +81,12 @@ static VALUE do_do_password(VALUE self, VALUE player_ref, VALUE old_pwd, VALUE n
 void Init_player()
 {
 	tinymud_module = rb_define_module("TinyMud");
-    
+    rb_define_method(tinymud_module, "do_notify", do_notify, 2);
+    rb_define_method(tinymud_module, "do_emergency_shutdown", do_emergency_shutdown, 0);
+	
     player_class = rb_define_class_under(tinymud_module, "Player", rb_cObject);
     rb_define_method(player_class, "lookup_player", do_lookup_player, 1);
     rb_define_method(player_class, "connect_player", do_connect_player, 2);
     rb_define_method(player_class, "create_player", do_create_player, 2);
     rb_define_method(player_class, "change_password", do_do_password, 3);
-    
-    rb_define_singleton_method(player_class, "do_notify", do_notify, 2);
-    rb_define_singleton_method(player_class, "do_emergency_shutdown", do_emergency_shutdown, 0);
 }

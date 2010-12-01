@@ -108,9 +108,9 @@ module TinyMud
 		def test_change_password
 			player = Player.new
 			ref = player.create_player("bob", "pwd")
-			Player.expects(:do_notify).with("Password changed.")
+			TinyMud.expects(:do_notify).with("Password changed.")
 			player.change_password(ref, "pwd", "ham")
-			Player.expects(:do_notify).with("Sorry")
+			TinyMud.expects(:do_notify).with("Sorry")
 			player.change_password(ref, "hamy", "cheese")
 		end
     end
