@@ -1,25 +1,35 @@
 # TinyMud Ruby Port Makefile
-topdir = /usr/lib/ruby/1.8/i486-linux
-VPATH = $(srcdir):$(topdir)
+RUBY = /usr/lib/ruby/1.8/i486-linux
+IN_DIR =./src
+OUT_DIR=./bin
+VPATH = $(RUBY):$(IN_DIR):$(OUT_DIR)
 CC = gcc
 CFLAGS   = -O -g -pipe -Wall -Wextra -Wwrite-strings
-INCFLAGS = -I. -I$(topdir)
+INCFLAGS = -I. -I$(RUBY) -I$(IN_DIR)
 RM = rm -f
-SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c dbwrap.c playerwrap.c predicateswrap.c tinymud.c
+SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c
+TSRC = dbwrap.c playerwrap.c predicateswrap.c tinymud.c
 OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o dbwrap.o playerwrap.o predicateswrap.o tinymud.o
-SOS  = tinymud.so
-#SOS  = db.so player.so predicates.so
-all: $(SOS)
+OUT_OBJS = $(addprefix $(OUT_DIR)/,$(OBJS))
+LIB=./tinymud.so
+
+all: $(LIB)
 
 clean:
-	@-$(RM) $(OBJS)
-	@-$(RM) $(SOS)
+	@-$(RM) $(OUT_OBJS)
+	@-$(RM) $(LIB)
 
-.c.o:
-	$(CC) $(INCFLAGS) $(CFLAGS) -c $<
+$(OUT_DIR)/%.o : %.c
+	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
 
-tinymud.so : $(OBJS) Makefile
+$(OUT_DIR)/%.o : $(IN_DIR)/%.c
+	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
+
+$(LIB) : $(OUT_OBJS) Makefile
 	@-$(RM) $@
-	$(CC) -shared -o $@ $(OBJS)
+	$(CC) -shared -o $@ $(OUT_OBJS)
 
-$(OBJS): ruby.h defines.h
+$(OUT_DIR):
+	test -d $(OUT_DIR) || mkdir $(OUT_DIR)
+
+$(OUT_OBJS): ruby.h defines.h $(OUT_DIR)
