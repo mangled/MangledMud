@@ -2,11 +2,13 @@
 RUBY = /usr/lib/ruby/1.8/i486-linux
 IN_DIR =../src
 OUT_DIR=../obj
+EXT_DIR=../ext
 VPATH = $(RUBY):$(IN_DIR):$(OUT_DIR)
 CC = gcc
 CFLAGS   = -O -g -pipe -Wall -Wextra -Wwrite-strings
 INCFLAGS = -I. -I$(RUBY) -I$(IN_DIR)
 RM = rm -f
+# This is rubbish, tidy up!!!
 SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c
 TSRC = dbwrap.c playerwrap.c predicateswrap.c tinymud.c
 OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o dbwrap.o playerwrap.o predicateswrap.o tinymud.o
@@ -19,7 +21,7 @@ clean:
 	@-$(RM) $(OUT_OBJS)
 	@-$(RM) $(LIB)
 
-$(OUT_DIR)/%.o : ../%.c
+$(OUT_DIR)/%.o : $(EXT_DIR)%.c
 	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
 
 $(OUT_DIR)/%.o : $(IN_DIR)/%.c
