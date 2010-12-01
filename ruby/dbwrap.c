@@ -1,7 +1,7 @@
 #include "ruby.h"
 #include "db.h"
+#include "tinymud.h"
 
-static VALUE tinymud_module;
 static VALUE db_class;
 static VALUE db_record;
 
@@ -452,8 +452,6 @@ static VALUE record_password_set(VALUE self, VALUE s)
 
 /* INIT */
 void Init_db() {
-	tinymud_module = rb_define_module("TinyMud");
-
 	db_class = rb_define_class_under(tinymud_module, "Db", rb_cObject);
 	rb_define_module_function(db_class, "Minimal", minimal, 0);
 	rb_define_method(db_class, "add_new_record", db_new_object, 0);

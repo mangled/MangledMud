@@ -2,8 +2,7 @@ require 'rubygems'
 require 'mocha'
 require 'test/unit'
 require 'defines'
-require 'db'
-require 'predicates'
+require 'tinymud'
 require 'pp'
 
 module TinyMud
