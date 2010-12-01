@@ -8,6 +8,7 @@ CC = gcc
 CFLAGS   = -O -g -pipe -Wall -Wextra -Wwrite-strings
 INCFLAGS = -I. -I$(RUBY) -I$(IN_DIR)
 RM = rm -f
+RMD = rmdir
 # This is rubbish, tidy up!!!
 SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c
 TSRC = dbwrap.c playerwrap.c predicateswrap.c tinymud.c
@@ -20,6 +21,7 @@ all: $(LIB)
 clean:
 	@-$(RM) $(OUT_OBJS)
 	@-$(RM) $(LIB)
+	@-$(RMD) $(OUT_DIR)
 
 $(OUT_DIR)/%.o : $(EXT_DIR)%.c
 	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
