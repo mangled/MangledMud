@@ -11,7 +11,7 @@ SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c
 TSRC = dbwrap.c playerwrap.c predicateswrap.c tinymud.c
 OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o dbwrap.o playerwrap.o predicateswrap.o tinymud.o
 OUT_OBJS = $(addprefix $(OUT_DIR)/,$(OBJS))
-LIB=./tinymud.so
+LIB=./test/tinymud.so
 
 all: $(LIB)
 
