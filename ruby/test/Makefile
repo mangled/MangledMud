@@ -1,7 +1,7 @@
 # TinyMud Ruby Port Makefile
 RUBY = /usr/lib/ruby/1.8/i486-linux
-IN_DIR =./src
-OUT_DIR=./bin
+IN_DIR =../src
+OUT_DIR=../obj
 VPATH = $(RUBY):$(IN_DIR):$(OUT_DIR)
 CC = gcc
 CFLAGS   = -O -g -pipe -Wall -Wextra -Wwrite-strings
@@ -11,7 +11,7 @@ SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c
 TSRC = dbwrap.c playerwrap.c predicateswrap.c tinymud.c
 OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o dbwrap.o playerwrap.o predicateswrap.o tinymud.o
 OUT_OBJS = $(addprefix $(OUT_DIR)/,$(OBJS))
-LIB=./test/tinymud.so
+LIB=./tinymud.so
 
 all: $(LIB)
 
@@ -19,7 +19,7 @@ clean:
 	@-$(RM) $(OUT_OBJS)
 	@-$(RM) $(LIB)
 
-$(OUT_DIR)/%.o : %.c
+$(OUT_DIR)/%.o : ../%.c
 	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
 
 $(OUT_DIR)/%.o : $(IN_DIR)/%.c
