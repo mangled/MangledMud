@@ -23,7 +23,7 @@ clean:
 	@-$(RM) $(LIB)
 	@-$(RMD) $(OUT_DIR)
 
-$(OUT_DIR)/%.o : $(EXT_DIR)%.c
+$(OUT_DIR)/%.o : $(EXT_DIR)/%.c
 	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
 
 $(OUT_DIR)/%.o : $(IN_DIR)/%.c
