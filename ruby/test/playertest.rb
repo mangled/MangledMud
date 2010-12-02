@@ -52,6 +52,8 @@ module TinyMud
 			player = Player.new
 			assert_equal(NOTHING, player.create_player("", ""))
 			assert_equal(NOTHING, player.create_player("", "pwd"))
+			assert_equal(NOTHING, player.create_player(" ", "pwd"))
+			assert_equal(NOTHING, player.create_player(4.chr, "pwd"))
 			assert_equal(NOTHING, player.create_player("*", "pwd"))
 			assert_equal(NOTHING, player.create_player("#", "pwd"))
 			assert_equal(NOTHING, player.create_player("me", "pwd"))
