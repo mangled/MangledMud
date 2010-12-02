@@ -1,3 +1,3 @@
-require 'dbtest'
-require 'playertest'
-require 'predicatestest'
+require 'db'
+require 'player'
+require 'predicates'
