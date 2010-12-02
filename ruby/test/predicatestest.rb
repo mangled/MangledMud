@@ -35,7 +35,7 @@ module TinyMud
 			record = @db.get(0)
 			record.flags = TYPE_ROOM | LINK_OK
 			@db.put(0, record)
-			assert_equal(1, pred.can_link_to(player_ref, 0)) # who = "bob" = 2 = controls nothing, limbo no LINK_OK
+			assert_equal(1, pred.can_link_to(player_ref, 0)) # who = "bob" = 2 = controls nothing, limbo LINK_OK
 
 			# Create an object "bob" owns
 			obj_ref = @db.add_new_record
