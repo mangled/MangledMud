@@ -144,7 +144,10 @@ static VALUE record_name_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->name) { free((void*) record->name); }
-	record->name = strdup(STR2CSTR(s));
+	record->name = 0;
+	if (s != Qnil) {
+		record->name = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 
@@ -164,7 +167,10 @@ static VALUE record_description_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->description) { free((void*) record->description); }
-	record->description = strdup(STR2CSTR(s));
+	record->description = 0;
+	if (s != Qnil) {
+		record->description = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 
@@ -259,7 +265,10 @@ static VALUE record_fail_message_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->fail_message) { free((void*) record->fail_message); }
-	record->fail_message = strdup(STR2CSTR(s));
+	record->fail_message = 0;
+	if (s != Qnil) {
+		record->fail_message = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 
@@ -279,7 +288,10 @@ static VALUE record_succ_message_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->succ_message) { free((void*) record->succ_message); }
-	record->succ_message = strdup(STR2CSTR(s));
+	record->succ_message = 0;
+	if (s != Qnil) {
+		record->succ_message = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 
@@ -299,7 +311,10 @@ static VALUE record_ofail_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->ofail) { free((void*) record->ofail); }
-	record->ofail = strdup(STR2CSTR(s));
+	record->ofail = 0;
+	if (s != Qnil) {
+		record->ofail = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 
@@ -319,7 +334,10 @@ static VALUE record_osuccess_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->osuccess) { free((void*) record->osuccess); }
-	record->osuccess = strdup(STR2CSTR(s));
+	record->osuccess = 0;
+	if (s != Qnil) {
+		record->osuccess = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 
@@ -445,7 +463,10 @@ static VALUE record_password_set(VALUE self, VALUE s)
 	struct object* record;
 	Data_Get_Struct(self, struct object, record);
 	if (record->password) { free((void*) record->password); }
-	record->password = strdup(STR2CSTR(s));
+	record->password = 0;
+	if (s != Qnil) {
+		record->password = strdup(STR2CSTR(s));
+	}
 	return Qnil;
 }
 

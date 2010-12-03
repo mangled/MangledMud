@@ -15,8 +15,8 @@ module TinyMud
 			@db.free()
 		end
 
+		# where must be valid, the where must be a room, who must either control (own) where or where is LINK_OK
 		def test_can_link_to
-			# where must be valid, the where must be a room, who must either control (own) where or where is LINK_OK
 			Db.Minimal()
 
 			# Make a minimal new player - This should be a helper at some point?
@@ -44,6 +44,81 @@ module TinyMud
 			assert_equal(1, pred.can_link_to(player_ref, obj_ref)) # who = "bob" = 2 = doesn't control object but it allows links
 		end
 		
+		def test_could_doit
+			Db.Minimal()
+			wizard = 1
+			uninitialized_thing_ref = @db.add_new_record
+			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
+			
+			pred = Predicates.new
+
+			# if thing isn't a room then its location can't be nothing
+			assert_equal(0, pred.could_doit(-1, uninitialized_thing_ref));
+			
+			# if key is nothing then could!
+			record(uninitialized_thing_ref) {|r| r.merge!({ :flags => TYPE_ROOM, :key => NOTHING }) }
+			assert_equal(1, pred.could_doit(-1, uninitialized_thing_ref));
+			
+			# If the player is the key, return based on antilock flag - i.e. item needs player
+			record(uninitialized_thing_ref) {|r| r.merge!({ :key => wizard, :flags => TYPE_ROOM }) }
+			assert_equal(1, pred.could_doit(wizard, uninitialized_thing_ref));
+			record(uninitialized_thing_ref) {|r| r.merge!({ :key => wizard, :flags => TYPE_ROOM | ANTILOCK }) }
+			assert_equal(0, pred.could_doit(wizard, uninitialized_thing_ref));
+			
+			# If the player isn't the key, and key isn't a member of the players contents
+			record(uninitialized_thing_ref) {|r| r.merge!({ :key => 10, :flags => TYPE_ROOM }) }
+			assert_equal(0, pred.could_doit(wizard, uninitialized_thing_ref));
+			record(uninitialized_thing_ref) {|r| r.merge!({ :flags => TYPE_ROOM | ANTILOCK }) }
+			assert_equal(1, pred.could_doit(wizard, uninitialized_thing_ref));
+
+			# If the player isn't the key, and the key is a member of the players contents
+			record(uninitialized_thing_ref) {|r| r.merge!({ :key => uninitialized_thing_ref, :flags => TYPE_ROOM }) }
+			record(wizard) {|r| r.merge!({ :contents => uninitialized_thing_ref }) }
+			assert_equal(1, pred.could_doit(wizard, uninitialized_thing_ref));
+			record(uninitialized_thing_ref) {|r| r.merge!({ :flags => TYPE_ROOM | ANTILOCK }) }
+			assert_equal(0, pred.could_doit(wizard, uninitialized_thing_ref));
+		end
+		
+		def test_can_doit
+			Db.Minimal()
+			uninitialized_thing_ref = @db.add_new_record
+			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
+
+			wizard = 1
+			pred = Predicates.new
+
+			# If player location nothing
+			record(wizard) {|r| r.merge!({ :location => NOTHING }) }
+			assert_equal(0, pred.can_doit(wizard, -1, ""))
+			
+			# If can't do-it with thing, use either things fail message or the default
+			Interface.expects(:do_notify).with(wizard, "Sandwich")
+			record(wizard) {|r| r.merge!({ :location => 0 }) }
+			record(uninitialized_thing_ref) {|r| r[:fail] = "Sandwich" }
+			assert_equal(0, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
+			Interface.expects(:do_notify).with(wizard, "Ooops")
+			record(uninitialized_thing_ref) {|r| r[:fail] = nil }
+			assert_equal(0, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
+			
+			# Lastly, if ofail is set on the thing then all "contents" in the things location should be notified, except player
+			player_ref = Player.new.create_player("bob", "pwd")
+			record(uninitialized_thing_ref) {|r| r[:ofail] = "Fails Eating Sandwich" }
+			record(0) {|r| r[:contents] = player_ref }
+			Interface.expects(:do_notify).with(wizard, "Ooops")
+			Interface.expects(:do_notify).with(player_ref, "Wizard Fails Eating Sandwich");
+			assert_equal(0, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
+			
+			# If can do it (set player to key) then use success message if present
+			record(uninitialized_thing_ref) {|r| r.merge!({ :key => wizard, :flags => TYPE_ROOM }) }
+			record(uninitialized_thing_ref) {|r| r[:succ] = "Eat Sandwich" }
+			Interface.expects(:do_notify).with(wizard, "Eat Sandwich")
+			assert_equal(1, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
+			record(uninitialized_thing_ref) {|r| r[:osucc] = "He Eat Sandwich" }
+			Interface.expects(:do_notify).with(wizard, "Eat Sandwich")
+			Interface.expects(:do_notify).with(player_ref, "Wizard He Eat Sandwich")
+			assert_equal(1, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
+		end
+
 		def record(i)
 			record = @db.get(i)
 
@@ -69,9 +144,9 @@ module TinyMud
 			args.each do |key, value|
 				case key
 				when :name
-					record.name = value if value
+					record.name = value
 				when :description
-					record.description = value if value
+					record.description = value
 				when :location
 					record.location = value
 				when :contents
@@ -83,13 +158,13 @@ module TinyMud
 				when :key
 					record.key = value
 				when :fail
-					record.fail = value if value
+					record.fail = value
 				when :succ
-					record.succ = value if value
+					record.succ = value
 				when :ofail
-					record.ofail = value if value
+					record.ofail = value
 				when :osucc
-					record.osucc = value if value
+					record.osucc = value
 				when :owner
 					record.owner = value
 				when :pennies
@@ -97,7 +172,7 @@ module TinyMud
 				when :flags
 					record.flags = value
 				when :password
-					record.password = value if value
+					record.password = value
 				else
 					raise("Record - unknown key #{key} with #{value}")
 				end

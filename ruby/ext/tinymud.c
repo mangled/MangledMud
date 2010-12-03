@@ -4,6 +4,7 @@
 #include "tinymud.h"
 
 VALUE tinymud_module;
+static VALUE interface_class;
 
 /******************************************************************************/
 /* These are in the TinyMud module so I can mock them from ruby, see below    */
@@ -33,7 +34,7 @@ void notify(dbref player_ref, const char *msg)
   ID method = rb_intern("do_notify");
   VALUE player = INT2FIX(player_ref);
   VALUE message = rb_str_new2(msg);
-  rb_funcall(tinymud_module, method, player, message);
+  rb_funcall(interface_class, method, 2, player, message);
 }
 
 /******************************************************************************/
@@ -41,15 +42,16 @@ void notify(dbref player_ref, const char *msg)
 void emergency_shutdown(void)
 {
   ID method = rb_intern("do_emergency_shutdown");
-  rb_funcall(tinymud_module, method, 0);
+  rb_funcall(interface_class, method, 0);
 }
 
 void Init_tinymud()
 {
 	tinymud_module = rb_define_module("TinyMud");
-    rb_define_method(tinymud_module, "do_notify", do_notify, 2);
-    rb_define_method(tinymud_module, "do_emergency_shutdown", do_emergency_shutdown, 0);
-    
+	interface_class = rb_define_class_under(tinymud_module, "Interface", rb_cObject);
+    rb_define_module_function(interface_class, "do_notify", do_notify, 2);
+    rb_define_module_function(interface_class, "do_emergency_shutdown", do_emergency_shutdown, 0);
+
     Init_db();
     Init_player();
     Init_predicates();
