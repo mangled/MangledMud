@@ -120,8 +120,8 @@ module TinyMud
 		end
 
 		def test_can_see
-			# TODO - Complete!
 			Db.Minimal()
+			player_ref = Player.new.create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new
 			# player is thing
@@ -129,9 +129,105 @@ module TinyMud
 			# thing is an exit
 			record(0) {|r| r[:flags] = TYPE_EXIT }
 			assert_equal(0, pred.can_see(wizard, 0, -1))
-			# Can see location
+			# Can see location, not dark
 			record(0) {|r| r[:flags] = TYPE_ROOM }
-			#assert_equal(0, pred.can_see(wizard, 0, -1))
+			assert_equal(1, pred.can_see(wizard, 0, 1))
+			# Is dark, but a wizard - controls everything
+			record(0) {|r| r[:flags] = TYPE_ROOM | DARK }
+			assert_equal(1, pred.can_see(wizard, 0, 1))
+			# Is dark, but the player owns the item
+			record(0) {|r| r[:owner] = player_ref }
+			assert_equal(1, pred.can_see(player_ref, 0, 1))
+			# Can't see location, but wizard
+			assert_equal(1, pred.can_see(wizard, 0, 0))
+			# Can't see location, but owns
+			assert_equal(1, pred.can_see(player_ref, 0, 0))
+			# Can't see location, but doesn't own
+			record(0) {|r| r[:owner] = player_ref + 1 }
+			assert_equal(0, pred.can_see(player_ref, 0, 0))
+		end
+
+		def test_controls
+			Db.Minimal()
+			player_ref = Player.new.create_player("bob", "pwd")
+			wizard = 1
+			pred = Predicates.new
+			assert_equal(0, pred.controls(0, -1)) # Where < 0
+			assert_equal(0, pred.controls(0, @db.length)) # where > db_top
+			# Wizard controls everything
+			assert_equal(1, pred.controls(wizard, 0))
+			assert_equal(1, pred.controls(wizard, player_ref))
+			# Player controls only if owns
+			assert_equal(0, pred.controls(player_ref, 0))
+			record(0) {|r| r[:owner] = player_ref }
+			assert_equal(1, pred.controls(player_ref, 0))
+		end
+		
+		def test_can_link
+			Db.Minimal()
+			player_ref = Player.new.create_player("bob", "pwd")
+			wizard = 1
+			pred = Predicates.new
+			# Can link to something only if its an exit going to nothing
+			record(0) {|r| r.merge!({:flags => TYPE_EXIT, :location => 22}) }
+			assert_equal(0, pred.can_link(player_ref, 0))
+			record(0) {|r| r[:location] = NOTHING }
+			assert_equal(1, pred.can_link(player_ref, 0))
+			# Or the player controls
+			record(0) {|r| r[:flags] = TYPE_ROOM }
+			assert_equal(1, pred.can_link(wizard, 0)) # Wizard controls everything
+			assert_equal(0, pred.can_link(player_ref, 0))
+			record(0) {|r| r[:owner] = player_ref }
+			assert_equal(1, pred.can_link(player_ref, 0))
+		end
+
+		def test_payfor
+			Db.Minimal()
+			player_ref = Player.new.create_player("bob", "pwd")
+			wizard = 1
+			pred = Predicates.new
+			# Wizard is automatic
+			assert_equal(0, @db.get(wizard).pennies)
+			assert_equal(1, pred.payfor(wizard, 123))
+			assert_equal(0, @db.get(wizard).pennies)
+			# If player has the money then ok and do
+			record(player_ref) {|r| r[:pennies] = 123 }
+			assert_equal(1, pred.payfor(player_ref, 23))
+			assert_equal(100, @db.get(player_ref).pennies)
+			# Else no
+			assert_equal(0, pred.payfor(player_ref, 101))
+		end
+		
+		def test_ok_name
+			pred = Predicates.new
+			assert_equal(0, pred.ok_name(nil))
+			assert_equal(0, pred.ok_name(0.chr))
+			assert_equal(0, pred.ok_name(LOOKUP_TOKEN))
+			assert_equal(0, pred.ok_name(NUMBER_TOKEN))
+			assert_equal(0, pred.ok_name("me"))
+			assert_equal(0, pred.ok_name("home"))
+			assert_equal(0, pred.ok_name("here"))
+			assert_equal(1, pred.ok_name("cheese"))
+		end
+		
+		def test_ok_player_name
+			Db.Minimal()
+			player_ref = Player.new.create_player("bob", "pwd")
+			pred = Predicates.new
+			# Must be an ok name
+			assert_equal(0, pred.ok_player_name(nil))
+			assert_equal(0, pred.ok_player_name(0.chr))
+			assert_equal(0, pred.ok_player_name(LOOKUP_TOKEN))
+			assert_equal(0, pred.ok_player_name(NUMBER_TOKEN))
+			assert_equal(0, pred.ok_player_name("me"))
+			assert_equal(0, pred.ok_player_name("home"))
+			assert_equal(0, pred.ok_player_name("here"))
+			# Musn't contain a non printing character
+			assert_equal(0, pred.ok_player_name("he#{4.chr}lp"))
+			# Musn't already be used
+			assert_equal(0, pred.ok_player_name("Wizard"))
+			assert_equal(0, pred.ok_player_name("bob"))
+			assert_equal(1, pred.ok_player_name("bab"))
 		end
 
 		def record(i)

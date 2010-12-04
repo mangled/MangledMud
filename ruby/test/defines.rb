@@ -20,4 +20,9 @@ module TinyMud
     
     # Special dbref positions
 	PLAYER_START = 0
+	
+	# magic cookies
+	NOT_TOKEN = '!'
+	LOOKUP_TOKEN = '*'
+	NUMBER_TOKEN = '#'
 end

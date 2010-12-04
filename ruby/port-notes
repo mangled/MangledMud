@@ -25,11 +25,11 @@ game.c
 help.c
 interface.c
 look.c
-match.c
+[started on] match.c
 move.c
 paths.c
 [done] player.c
-[working on] predicates.c
+[done] predicates.c
 rob.c
 sanity-check.c
 set.c
