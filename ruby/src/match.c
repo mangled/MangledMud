@@ -116,15 +116,14 @@ void match_absolute()
 void match_me()
 {
     if(!string_compare(match_name, "me")) {
-	exact_match = match_who;
+		exact_match = match_who;
     }
 }
 
 void match_here()
 {
-    if(!string_compare(match_name, "here")
-       && db[match_who].location != NOTHING) {
-	exact_match = db[match_who].location;
+    if(!string_compare(match_name, "here") && db[match_who].location != NOTHING) {
+		exact_match = db[match_who].location;
     }
 }
 

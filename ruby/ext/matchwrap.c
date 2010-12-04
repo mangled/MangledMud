@@ -45,6 +45,34 @@ static VALUE do_match_absolute(VALUE self)
     return Qnil;
 }
 
+static VALUE do_match_me(VALUE self)
+{
+    (void) self;
+    match_me();
+    return Qnil;
+}
+
+static VALUE do_match_here(VALUE self)
+{
+    (void) self;
+    match_here();
+    return Qnil;
+}
+
+static VALUE do_match_possession(VALUE self)
+{
+    (void) self;
+    match_possession();
+    return Qnil;
+}
+
+static VALUE do_match_neighbor(VALUE self)
+{
+    (void) self;
+    match_neighbor();
+    return Qnil;
+}
+
 static VALUE do_match_result(VALUE self)
 {
     (void) self;
@@ -70,7 +98,11 @@ void Init_match()
     rb_define_method(match_class, "init_match_check_keys", do_init_match_check_keys, 3);
     rb_define_method(match_class, "match_player", do_match_player, 0);
     rb_define_method(match_class, "match_absolute", do_match_absolute, 0);
-    
+    rb_define_method(match_class, "match_me", do_match_me, 0);
+    rb_define_method(match_class, "match_here", do_match_here, 0);
+    rb_define_method(match_class, "match_possession", do_match_possession, 0);
+    rb_define_method(match_class, "match_neighbor", do_match_neighbor, 0);
+
     rb_define_method(match_class, "match_result", do_match_result, 0);
     rb_define_method(match_class, "last_match_result", do_last_match_result, 0);
     rb_define_method(match_class, "noisy_match_result", do_noisy_match_result, 0);
