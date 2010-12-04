@@ -30,10 +30,20 @@ static VALUE do_can_doit(VALUE self, VALUE player, VALUE thing, VALUE default_fa
     return INT2FIX(can_doit(player_ref, thing_ref, fail_msg));
 }
 
+static VALUE do_can_see(VALUE self, VALUE player, VALUE thing, VALUE can_see_loc)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    dbref thing_ref = FIX2INT(thing);
+    int can_see_loc_ref = FIX2INT(can_see_loc);
+    return INT2FIX(can_see(player_ref, thing_ref, can_see_loc_ref));
+}
+
 void Init_predicates()
 {   
     predicates_class = rb_define_class_under(tinymud_module, "Predicates", rb_cObject);
     rb_define_method(predicates_class, "can_link_to", do_can_link_to, 2);
     rb_define_method(predicates_class, "could_doit", do_could_doit, 2);
     rb_define_method(predicates_class, "can_doit", do_can_doit, 3);
+    rb_define_method(predicates_class, "can_see", do_can_see, 3);
 }

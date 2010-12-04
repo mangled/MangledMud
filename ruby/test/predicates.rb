@@ -119,6 +119,21 @@ module TinyMud
 			assert_equal(1, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 		end
 
+		def test_can_see
+			# TODO - Complete!
+			Db.Minimal()
+			wizard = 1
+			pred = Predicates.new
+			# player is thing
+			assert_equal(0, pred.can_see(wizard, wizard, -1))
+			# thing is an exit
+			record(0) {|r| r[:flags] = TYPE_EXIT }
+			assert_equal(0, pred.can_see(wizard, 0, -1))
+			# Can see location
+			record(0) {|r| r[:flags] = TYPE_ROOM }
+			#assert_equal(0, pred.can_see(wizard, 0, -1))
+		end
+
 		def record(i)
 			record = @db.get(i)
 
