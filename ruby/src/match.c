@@ -79,12 +79,11 @@ void match_player()
     dbref match;
     const char *p;
 
-    if(*match_name == LOOKUP_TOKEN
-       && payfor(match_who, LOOKUP_COST)) {
-	for(p = match_name + 1; isspace(*p); p++);
-	if((match = lookup_player(p)) != NOTHING) {
-	    exact_match = match;
-	}
+    if(*match_name == LOOKUP_TOKEN && payfor(match_who, LOOKUP_COST)) {
+		for(p = match_name + 1; isspace(*p); p++);
+		if((match = lookup_player(p)) != NOTHING) {
+		    exact_match = match;
+		}
     }
 }
 
@@ -94,14 +93,14 @@ static dbref absolute_name()
     dbref match;
 
     if(*match_name == NUMBER_TOKEN) {
-	match = parse_dbref(match_name+1);
-	if(match < 0 || match >= db_top) {
-	    return NOTHING;
-	} else {
-	    return match;
-	}
+		match = parse_dbref(match_name+1);
+		if(match < 0 || match >= db_top) {
+			return NOTHING;
+		} else {
+			return match;
+		}
     } else {
-	return NOTHING;
+		return NOTHING;
     }
 }
 

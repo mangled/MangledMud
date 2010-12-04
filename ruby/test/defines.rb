@@ -28,4 +28,8 @@ module TinyMud
 	NOT_TOKEN = '!'
 	LOOKUP_TOKEN = '*'
 	NUMBER_TOKEN = '#'
+
+	# Match messages	
+	NOMATCH_MESSAGE = "I don't see that here."
+	AMBIGUOUS_MESSAGE = "I don't know which one you mean!"
 end

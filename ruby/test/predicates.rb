@@ -230,6 +230,7 @@ module TinyMud
 			assert_equal(1, pred.ok_player_name("bab"))
 		end
 
+		# MOVE THIS SOMEWHERE - DRY
 		def record(i)
 			record = @db.get(i)
 

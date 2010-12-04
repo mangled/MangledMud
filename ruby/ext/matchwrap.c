@@ -38,6 +38,13 @@ static VALUE do_match_player(VALUE self)
     return Qnil;
 }
 
+static VALUE do_match_absolute(VALUE self)
+{
+    (void) self;
+    match_absolute();
+    return Qnil;
+}
+
 static VALUE do_match_result(VALUE self)
 {
     (void) self;
@@ -62,6 +69,7 @@ void Init_match()
     rb_define_method(match_class, "init_match", do_init_match, 3);
     rb_define_method(match_class, "init_match_check_keys", do_init_match_check_keys, 3);
     rb_define_method(match_class, "match_player", do_match_player, 0);
+    rb_define_method(match_class, "match_absolute", do_match_absolute, 0);
     
     rb_define_method(match_class, "match_result", do_match_result, 0);
     rb_define_method(match_class, "last_match_result", do_last_match_result, 0);
