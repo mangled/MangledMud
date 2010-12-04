@@ -15,8 +15,14 @@ module TinyMud
 			@db.free()
 		end
 		
-		def test_wrapper
+		def test_match_player
+			Db.Minimal()
+			player_ref = Player.new.create_player("bob", "pwd")
+			assert_equal(2, player_ref)
+			wizard = 1
+
 			match = Match.new
+			match.init_match(wizard, "bob", NOTYPE)
 		end
     end
 end

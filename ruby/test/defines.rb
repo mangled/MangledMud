@@ -21,6 +21,9 @@ module TinyMud
     # Special dbref positions
 	PLAYER_START = 0
 	
+	# cost to do a scan
+	LOOKUP_COST = 1
+
 	# magic cookies
 	NOT_TOKEN = '!'
 	LOOKUP_TOKEN = '*'
