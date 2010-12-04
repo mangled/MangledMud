@@ -6,7 +6,7 @@ require 'tinymud'
 require 'pp'
 
 module TinyMud
-    class TestPlayer < Test::Unit::TestCase
+    class TestPredicates < Test::Unit::TestCase
 		def setup
 			@db = TinyMud::Db.new
 		end
