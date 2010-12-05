@@ -57,4 +57,5 @@ void Init_tinymud()
     Init_predicates();
 	Init_match();
 	Init_utils();
+	Init_speech();
 }

@@ -33,9 +33,9 @@ paths.c
 rob.c
 sanity-check.c
 set.c
-speech.c
+[working on] speech.c
 stringutil.c
-[started on] utils.c
+[done] utils.c
 wiz.c
 
 Files Converted (and notes)
