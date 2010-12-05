@@ -32,4 +32,7 @@ module TinyMud
 	# Match messages	
 	NOMATCH_MESSAGE = "I don't see that here."
 	AMBIGUOUS_MESSAGE = "I don't know which one you mean!"
+	
+	# Delimeter for lists of exit aliases
+	EXIT_DELIMITER = ';'
 end

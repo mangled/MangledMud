@@ -73,6 +73,20 @@ static VALUE do_match_neighbor(VALUE self)
     return Qnil;
 }
 
+static VALUE do_match_exit(VALUE self)
+{
+    (void) self;
+    match_exit();
+    return Qnil;    
+}
+
+static VALUE do_match_everything(VALUE self)
+{
+    (void) self;
+    match_everything();
+    return Qnil;    
+}
+
 static VALUE do_match_result(VALUE self)
 {
     (void) self;
@@ -102,6 +116,8 @@ void Init_match()
     rb_define_method(match_class, "match_here", do_match_here, 0);
     rb_define_method(match_class, "match_possession", do_match_possession, 0);
     rb_define_method(match_class, "match_neighbor", do_match_neighbor, 0);
+    rb_define_method(match_class, "match_exit", do_match_exit, 0);
+    rb_define_method(match_class, "match_everything", do_match_everything, 0);
 
     rb_define_method(match_class, "match_result", do_match_result, 0);
     rb_define_method(match_class, "last_match_result", do_last_match_result, 0);

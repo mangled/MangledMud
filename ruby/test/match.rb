@@ -99,68 +99,143 @@ module TinyMud
 		# branch points.
 		def test_match_possession
 			Db.Minimal()
-			wizard = 1
 			bob = Player.new.create_player("bob", "pwd")
-			# Some fake things for the player
+			f = lambda {|match| match.match_possession }
+			check_match_list(bob, bob, f)
+		end
+		
+		# Similar comments to the above!
+		def test_match_neighbor
+			Db.Minimal()
+			bob = Player.new.create_player("bob", "pwd")
+			record(bob) {|r| r[:location] = 0}
+			f = lambda {|match| match.match_neighbor }
+			check_match_list(bob, 0, f)
+		end
+		
+		def test_match_exit
+			Db.Minimal()
+			bob = Player.new.create_player("bob", "pwd")
+			wizard = 1
+			match = Match.new
+
+			# Person can't be at NOTHING
+			record(bob) {|r| r[:location] = NOTHING }
+			match.init_match(bob, "fig", -1)
+			match.match_exit()
+			check_match_states(match, NOTHING, bob)
+			record(bob) {|r| r[:location] = 0 }
+			# Set-up
+			exitn = @db.add_new_record
+			exitw = @db.add_new_record
+			exits = @db.add_new_record
+			exite = @db.add_new_record
+			record(exitn) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "n;north", :owner => bob, :next => exitw }) }
+			record(exitw) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "w;west", :owner => bob, :next => exits }) }
+			record(exits) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "s ;south", :owner => bob }) }
+			record(exite) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "e;east", :owner => wizard }) }
+			record(0) {|r| r[:exits] = exitn }
+
+			# If we specify an absolute name we should find it (if we own it), first a garbage reference
+			match.init_match(bob, "#32", -1)
+			match.match_exit()
+			check_match_states(match, NOTHING, bob)
+			match.init_match(bob, "##{exite}", -1)
+			match.match_exit()
+			check_match_states(match, NOTHING, bob)
+			match.init_match(bob, "##{exits}", -1)
+			match.match_exit()
+			check_match_states(match, exits)
+			match.init_match(wizard, "##{exits}", -1) # wizard can see all
+			match.match_exit()
+			check_match_states(match, exits)
+			
+			# Now see if we can find exits by name
+			match.init_match(bob, "south", -1)
+			match.match_exit()
+			check_match_states(match, exits)
+			match.init_match(wizard, "south", -1)
+			match.match_exit()
+			check_match_states(match, exits)
+			match.init_match(bob, "e", -1)
+			match.match_exit()
+			check_match_states(match, NOTHING, bob)
+			
+			# Note: The code does call check_keys, but the result doesn't go anywhere (exit_status)
+			# so there isn't any point in testing "init_match_check_keys"!!! Dead code!
+		end
+		
+		def test_match_everything
+			# This calls all the match methods - I don't have the energy or desire to test this!
+			# It has a switch on the wizard. Once I have a ruby version it will be easy to mock
+			# to verify - I have tests for the underlying methods.
+			# Check calling it works though!
+			Db.Minimal()
+			wizard = 1
+			match = Match.new
+			match.init_match(wizard, "foo", -1)
+			match.match_everything
+			check_match_states(match, NOTHING, wizard)
+		end
+		
+		# The match results are tested indirectly, again once I have a ruby version, testing of them
+		# will be easier.
+		
+		# Helpers
+		#########
+		
+		def check_match_list(person, owner, f)
+			# Some fake things for the owner
 			thing1 = @db.add_new_record
 			thing2 = @db.add_new_record
 			thing3 = @db.add_new_record
 			# Join them up
-			record(thing1) {|r| r.merge!({ :flags => TYPE_THING, :name => "glove", :owner => bob, :next => thing2 }) }
-			record(thing2) {|r| r.merge!({ :flags => TYPE_THING, :name => "socks", :owner => bob, :next => thing3 }) }
-			record(thing3) {|r| r.merge!({ :flags => TYPE_THING, :name => "pants", :owner => bob }) }
+			record(thing1) {|r| r.merge!({ :flags => TYPE_THING, :name => "glove", :owner => owner, :next => thing2 }) }
+			record(thing2) {|r| r.merge!({ :flags => TYPE_THING, :name => "socks", :owner => owner, :next => thing3 }) }
+			record(thing3) {|r| r.merge!({ :flags => TYPE_THING, :name => "pants", :owner => owner }) }
 			
 			match = Match.new
-			# Bob has nothing
-			match.init_match(bob, "fig", -1)
-			match.match_possession
-			check_match_states(match, NOTHING, bob)
-			# Give bob some things
-			record(bob) {|r| r[:contents] = thing1 }
-			match.init_match(bob, "glove", -1)
-			match.match_possession
+			# owner has nothing
+			match.init_match(person, "fig", -1)
+			f.call(match)
+			check_match_states(match, NOTHING, person)
+			# Give owner some things
+			record(owner) {|r| r[:contents] = thing1 }
+			match.init_match(person, "glove", -1)
+			f.call(match)
 			check_match_states(match, thing1)
-			match.init_match(bob, "pants", -1)
-			match.match_possession
+			match.init_match(person, "pants", -1)
+			f.call(match)
 			check_match_states(match, thing3)
-			# Try absolute name for thing
-			match.init_match(bob, "#5", -1)
-			match.match_possession
+			# Try absolute name for thing - person must own for this (for neighbour check i.e. in room and owner! This is a bug?)
+			record(thing3) {|r| r[:owner] = person }
+			match.init_match(person, "#5", -1)
+			f.call(match)
 			check_match_states(match, thing3)
 			# Try sub string match
-			match.init_match(bob, "pa", -1)
-			match.match_possession
-			check_match_states(match, thing3, bob)
+			match.init_match(person, "pa", -1)
+			f.call(match)
+			check_match_states(match, thing3, person)
 			# Now add another similarly names thing - We should get an AMBIGUOUS match
 			thing4 = @db.add_new_record
 			record(thing3) {|r| r[:next] = thing4 }
-			record(thing4) {|r| r.merge!({ :flags => TYPE_THING, :name => "pan", :owner => bob }) }
-			match.init_match(bob, "pa", -1)
-			match.match_possession
+			record(thing4) {|r| r.merge!({ :flags => TYPE_THING, :name => "pan", :owner => owner }) }
+			match.init_match(person, "pa", -1)
+			f.call(match)
 			Interface.expects(:do_notify).never
 			assert_equal(AMBIGUOUS, match.match_result())
 			assert_equal(thing4, match.last_match_result())
-			Interface.expects(:do_notify).with(bob, AMBIGUOUS_MESSAGE)
+			Interface.expects(:do_notify).with(person, AMBIGUOUS_MESSAGE)
 			assert_equal(NOTHING, match.noisy_match_result())
 			# If he had multiple items of the same name then a random ref would be returned
 			# This isn't a perfect test but will do for now - Really need to mock inner methods
 			record(thing4) {|r| r.merge!({ :name => "pants", :flags => TYPE_EXIT}) }
-			match.init_match(bob, "pants", TYPE_THING) # Type does effect
-			match.match_possession
+			match.init_match(person, "pants", TYPE_THING) # Type does effect
+			f.call(match)
 			assert_equal(thing3, match.match_result())
-			match.init_match(bob, "pants", TYPE_EXIT) # Type does effect
-			match.match_possession
+			match.init_match(person, "pants", TYPE_EXIT) # Type does effect
+			f.call(match)
 			assert_equal(thing4, match.match_result())
-		end
-		
-		def test_match_neighbor
-			Db.Minimal()
-			match = Match.new
-			match.init_match(0, "", NOTYPE)
-			match.match_neighbor
-			# TODO - This is basically the same as the above! Except it looks
-			# in the persons location's contents - Could I weld the tests
-			# together?
 		end
 		
 		def check_match_states(match, match_who = NOTHING, notify_who = NOTHING)
