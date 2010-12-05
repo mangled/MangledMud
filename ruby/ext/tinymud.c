@@ -56,4 +56,5 @@ void Init_tinymud()
     Init_player();
     Init_predicates();
 	Init_match();
+	Init_utils();
 }

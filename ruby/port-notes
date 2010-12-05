@@ -25,7 +25,7 @@ game.c
 help.c
 interface.c
 look.c
-[started on] match.c
+[done] match.c
 move.c
 paths.c
 [done] player.c
@@ -35,7 +35,7 @@ sanity-check.c
 set.c
 speech.c
 stringutil.c
-utils.c
+[started on] utils.c
 wiz.c
 
 Files Converted (and notes)
