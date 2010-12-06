@@ -14,6 +14,8 @@ Set gcc to high warning level
 
 !!! Config.h defines some things which I will need as constants in ruby ? !!!
 
+!!! Single place for record helper
+
 Files to Convert
 ================
 
