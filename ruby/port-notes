@@ -28,14 +28,14 @@ help.c
 interface.c
 look.c
 [done] match.c
-move.c
+[working on] move.c
 paths.c
 [done] player.c
 [done] predicates.c
 rob.c
 sanity-check.c
 set.c
-[working on] speech.c
+[done] speech.c
 stringutil.c
 [done] utils.c
 wiz.c

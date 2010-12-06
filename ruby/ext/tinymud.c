@@ -58,4 +58,5 @@ void Init_tinymud()
 	Init_match();
 	Init_utils();
 	Init_speech();
+	Init_move();
 }
