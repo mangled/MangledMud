@@ -1,6 +1,6 @@
 require 'rubygems'
-require 'mocha'
 require 'test/unit'
+require 'mocha'
 require 'defines'
 require 'tinymud'
 require 'pp'

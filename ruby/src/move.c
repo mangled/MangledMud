@@ -95,41 +95,36 @@ void enter_room(dbref player, dbref loc)
     /* self-loops don't do move or other player notification */
     /* but you still get autolook and penny check */
     if(loc != old) {
-
-	if(old != NOTHING) {
-	    /* notify others unless DARK */
-	    if(!Dark(old) && !Dark(player)) {
-		sprintf(buf, "%s has left.", db[player].name);
-		notify_except(db[old].contents, player, buf);
-	    }
-	}
-
-	/* go there */
-	moveto(player, loc);
-
-	/* if old location has STICKY dropto, send stuff through it */
-	if(old != NOTHING
-	   && (dropto = db[old].location) != NOTHING
-	   && (db[old].flags & STICKY)) {
-	    maybe_dropto(old, dropto);
-	}
-
-	/* tell other folks in new location if not DARK */
-	if(!Dark(loc) && !Dark(player)) {
-	    sprintf(buf, "%s has arrived.", db[player].name);
-	    notify_except(db[loc].contents, player, buf);
-	}
+		if(old != NOTHING) {
+			/* notify others unless DARK */
+			if(!Dark(old) && !Dark(player)) {
+				sprintf(buf, "%s has left.", db[player].name);
+				notify_except(db[old].contents, player, buf);
+			}
+		}
+	
+		/* go there */
+		moveto(player, loc);
+	
+		/* if old location has STICKY dropto, send stuff through it */
+		if(old != NOTHING && (dropto = db[old].location) != NOTHING && (db[old].flags & STICKY)) {
+			maybe_dropto(old, dropto);
+		}
+	
+		/* tell other folks in new location if not DARK */
+		if(!Dark(loc) && !Dark(player)) {
+			sprintf(buf, "%s has arrived.", db[player].name);
+			notify_except(db[loc].contents, player, buf);
+		}
     }
 
     /* autolook */
     look_room(player, loc);
 
     /* check for pennies */
-    if(!controls(player, loc)
-       && db[player].pennies <= MAX_PENNIES
-       && random() % PENNY_RATE == 0) {
-	notify(player, "You found a penny!");
-	db[player].pennies++;
+    if(!controls(player, loc) && db[player].pennies <= MAX_PENNIES && random() % PENNY_RATE == 0) {
+		notify(player, "You found a penny!");
+		db[player].pennies++;
     }
 }
 	    

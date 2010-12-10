@@ -16,32 +16,31 @@ Set gcc to high warning level
 
 !!! Single place for record helper
 
-Files to Convert
+Files to Convert (not all are required i.e. some are executable helpers, others are tested indirectly)
 ================
 
-create.c
-[done] db.c
-dump.c
-extract.c
-game.c
-help.c
-interface.c
-look.c
-[done] match.c
-[working on] move.c
-paths.c
-[done] player.c
-[done] predicates.c
-rob.c
-sanity-check.c
-set.c
-[done] speech.c
-stringutil.c
-[done] utils.c
-wiz.c
+1. create.c
+2. dump.c
+3. extract.c
+4. game.c
+5. help.c
+6. interface.c
+7. look.c
+8. [working on] move.c
+9. paths.c
+10. rob.c
+11. sanity-check.c
+12. set.c
+13. stringutil.c
+14. wiz.c
 
-Files Converted (and notes)
-===============
+Files under Test (done)
+=======================
 
-None!
+1. db.c
+2. match.c
+3. player.c
+4. predicates.c
+5. speech.c
+6. utils.c
 
