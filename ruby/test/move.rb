@@ -206,25 +206,103 @@ module TinyMud
 			
 			# Check players directions
 			bob = Player.new.create_player("bob", "pwd")
+			anne = Player.new.create_player("anne", "pod")
 			place = @db.add_new_record
+			exit = @db.add_new_record
 
 			# First no exits
 			record(bob) {|r| r[:exits] = NOTHING}
 			assert_equal(0, move.can_move(bob, "east"))
 			
 			# General test (note it really pulls on match so limited testing is needed here)
-			record(place) {|r| r.merge!({:name => "some place;nice", :description => "yellow", :flags => TYPE_ROOM, :next => NOTHING }) }
-			record(bob) {|r| r[:exits] = place }
-			assert_equal(1, move.can_move(bob, "some place"))
-			assert_equal(0, move.can_move(bob, "some plac"))
-			assert_equal(1, move.can_move(bob, "nice"))
-			assert_equal(0, move.can_move(bob, "#1")) # Need to own
-			record(place) {|r| r[:owner] = bob }
-			assert_equal(1, move.can_move(bob, "#1")) # Need to own
+			record(place) {|r| r.merge!({:name => "some place", :description => "yellow", :flags => TYPE_ROOM, :exits => exit, :next => NOTHING }) }
+			record(exit) {|r| r.merge!( :name => "an exit;thing", :location => place, :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
+			record(bob) {|r| r[:exits] = exit }
+			assert_equal(1, move.can_move(bob, "an exit"))
+			assert_equal(0, move.can_move(bob, "an"))
+			assert_equal(1, move.can_move(bob, "thing"))
+			
+			# Test absolute
+			assert_equal(0, move.can_move(bob, "##{exit}"))
+			record(exit) {|r| r[:owner] = bob }
+			assert_equal(1, move.can_move(bob, "##{exit}"))
+			
+			# Non-owning exit
+			record(exit) {|r| r[:name] = "an exit" }
+			record(exit) {|r| r.merge!( :owner => anne ) }
+			assert_equal(1, move.can_move(bob, "an exit"))
 		end
 		
 		def test_do_move
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			bob = Player.new.create_player("bob", "pwd")
+			anne = Player.new.create_player("anne", "pod")
+			jim = Player.new.create_player("jim", "pds")
+			start_loc = @db.add_new_record
+			place = @db.add_new_record
+			cheese = @db.add_new_record
+
+			move = TinyMud::Move.new
+
+			# Move to same location
+			set_up_objects(start_loc, bob, anne, jim, place)
+			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => start_loc, :owner => bob, :next => NOTHING, :exits => place }) }
+			record(bob) {|r| r[:contents] = cheese }
+
+			# Move bob home (cheese went home too - different home)
+			notify = sequence('notify')
+			Interface.expects(:do_notify).with(anne, 'bob goes home.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "There's no place like home...").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "There's no place like home...").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "There's no place like home...").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "You wake up back home, without your possessions.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, 'bob has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(limbo).name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(limbo).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, 'bob is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
+			move.do_move(bob, "home")
+			assert_equal(place, @db.get(cheese).location)
+			assert_equal(bob, @db.get(cheese).owner)
+			assert_equal(NOTHING, @db.get(bob).contents)
 			
+			# Normal move checks
+			set_up_objects(start_loc, bob, anne, jim, place)
+			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
+			record(bob) {|r| r[:contents] = cheese }
+
+			# Made up/non-existant exit
+			Interface.expects(:do_notify).with(bob, "You can't go that way.").in_sequence(notify)
+			move.do_move(bob, "tree house")
+			
+			# Ambiguous exit - ***THIS LOOKS BROKEN*** re. getting an ambiguous match - Need to look closer!
+			exits = @db.add_new_record
+			exitw = @db.add_new_record
+			#record(exits) {|r| r.merge!( :location => place, :name => "spooky", :description => "long", :flags => TYPE_EXIT, :next => exitw ) }
+			#record(exitw) {|r| r.merge!( :location => limbo, :name => "spooky", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
+			#record(start_loc) {|r| r[:exits] = exits }
+			#move.do_move(bob, "spooky")
+
+			# "Normal" - The exits location is where it goes.
+			record(exits) {|r| r.merge!( :location => place, :name => "exits;jam", :description => "long", :flags => TYPE_EXIT, :next => exitw ) }
+			record(exitw) {|r| r.merge!( :location => place, :name => "exitw", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
+			record(start_loc) {|r| r[:exits] = exits }
+			
+			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, 'bob has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, "bob " + @db.get(place).osucc).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
+			move.do_move(bob, "jam")
+			assert_equal(place, @db.get(bob).location)
+			assert_equal(cheese, @db.get(bob).contents)
+			assert_equal(place, @db.get(cheese).location)
 		end
 
 		def set_up_objects(start_loc, bob, anne, jim, place)
