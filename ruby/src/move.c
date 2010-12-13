@@ -132,16 +132,16 @@ void send_home(dbref thing)
 {
     switch(Typeof(thing)) {
       case TYPE_PLAYER:
-	/* send his possessions home first! */
-	/* that way he sees them when he arrives */
-	send_contents(thing, HOME);
-	enter_room(thing, db[thing].exits); /* home */
+		/* send his possessions home first! */
+		/* that way he sees them when he arrives */
+		send_contents(thing, HOME);
+		enter_room(thing, db[thing].exits); /* home */
 	break;
       case TYPE_THING:
-	moveto(thing, db[thing].exits);	/* home */
+		moveto(thing, db[thing].exits);	/* home */
 	break;
       default:
-	/* no effect */
+		/* no effect */
 	break;
     }
 }

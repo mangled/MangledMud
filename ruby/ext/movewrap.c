@@ -23,9 +23,42 @@ static VALUE do_enter_room(VALUE self, VALUE player, VALUE loc)
     return Qnil;
 }
 
+static VALUE do_send_home(VALUE self, VALUE thing)
+{
+    (void) self;
+    send_home(FIX2INT(thing));
+    return Qnil;
+}
+
+static VALUE do_can_move(VALUE self, VALUE player, VALUE direction)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    char* direction_s = 0;
+    if (direction != Qnil) {
+        direction_s = STR2CSTR(direction);
+    }
+    return INT2FIX(can_move(player_ref, direction_s));
+}
+
+static VALUE do_do_move(VALUE self, VALUE player, VALUE direction)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    char* direction_s = 0;
+    if (direction != Qnil) {
+        direction_s = STR2CSTR(direction);
+    }
+    do_move(player_ref, direction_s);
+    return Qnil;
+}
+
 void Init_move()
 {   
     move_class = rb_define_class_under(tinymud_module, "Move", rb_cObject);
     rb_define_method(move_class, "moveto", do_moveto, 2);
     rb_define_method(move_class, "enter_room", do_enter_room, 2);
+    rb_define_method(move_class, "send_home", do_send_home, 1);
+    rb_define_method(move_class, "can_move", do_can_move, 2);
+    rb_define_method(move_class, "do_move", do_do_move, 2);
 }

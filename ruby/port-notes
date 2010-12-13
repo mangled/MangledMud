@@ -16,6 +16,8 @@ Set gcc to high warning level
 
 !!! Single place for record helper
 
+!!! Suspect I'm leaking memory when I convert ruby to c strings
+
 Files to Convert (not all are required i.e. some are executable helpers, others are tested indirectly)
 ================
 
