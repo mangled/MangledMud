@@ -209,44 +209,43 @@ void do_get(dbref player, const char *what)
     if(Wizard(player)) match_absolute(); /* the wizard has long fingers */
 
     if((thing = noisy_match_result()) != NOTHING) {
-	if(db[thing].location == player) {
-	    notify(player, "You already have that!");
-	    return;
-	}
-	switch(Typeof(thing)) {
-	  case TYPE_THING:
-	    if(can_doit(player, thing, "You can't pick that up.")) {
-		moveto(thing, player);
-		notify(player, "Taken.");
-	    }
-	    break;
-	  case TYPE_EXIT:
-	    if(!controls(player, thing)) {
-		notify(player, "You can't pick that up.");
-	    } else if(db[thing].location != NOTHING) {
-		notify(player, "You can't pick up a linked exit.");
-#ifdef RESTRICTED_BUILDING
-	    } else if(!Builder(player)) {
-		notify(player, "Only authorized builders may pick up exits.");
-#endif /* RESTRICTED_BUILDING */
-	    } else {
-		/* take it out of location */
-		if((loc = getloc(player)) == NOTHING) return;
-		if(!member(thing, db[loc].exits)) {
-		    notify(player,
-			   "You can't pick up an exit from another room.");
-		    return;
+		if(db[thing].location == player) {
+			notify(player, "You already have that!");
+			return;
 		}
-		db[loc].exits = remove_first(db[loc].exits, thing);
-		PUSH(thing, db[player].contents);
-		db[thing].location = player;
-		notify(player, "Exit taken.");
-	    }
-	    break;
-	  default:
-	    notify(player, "You can't take that!");
-	    break;
-	}
+		switch(Typeof(thing)) {
+		  case TYPE_THING:
+			if(can_doit(player, thing, "You can't pick that up.")) {
+				moveto(thing, player);
+				notify(player, "Taken.");
+			}
+			break;
+		  case TYPE_EXIT:
+			if(!controls(player, thing)) {
+				notify(player, "You can't pick that up.");
+			} else if(db[thing].location != NOTHING) {
+				notify(player, "You can't pick up a linked exit.");
+	#ifdef RESTRICTED_BUILDING
+			} else if(!Builder(player)) {
+				notify(player, "Only authorized builders may pick up exits.");
+	#endif /* RESTRICTED_BUILDING */
+			} else {
+				/* take it out of location */
+				if((loc = getloc(player)) == NOTHING) return;
+				if(!member(thing, db[loc].exits)) {
+					notify(player, "You can't pick up an exit from another room.");
+					return;
+				}
+				db[loc].exits = remove_first(db[loc].exits, thing);
+				PUSH(thing, db[player].contents);
+				db[thing].location = player;
+				notify(player, "Exit taken.");
+			}
+			break;
+		  default:
+				notify(player, "You can't take that!");
+			break;
+		}
     }
 }
 

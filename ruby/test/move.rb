@@ -172,7 +172,7 @@ module TinyMud
 			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM, :next => NOTHING }) }
 			record(anne) {|r| r.merge!({ :location => limbo, :exits => NOTHING, :flags => TYPE_PLAYER, :next => NOTHING, :contents => NOTHING }) }
 			record(bob) {|r| r.merge!({ :location => place, :exits => limbo, :flags => TYPE_PLAYER, :next => NOTHING, :contents => cheese }) } # Home is at limbo
-			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => place, :owner => bob, :next => NOTHING, :exits => limbo }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => bob, :owner => bob, :next => NOTHING, :exits => limbo }) }
 
 			# Send bob home (note it hangs!!! if only the wizard is in limbo - possibly limbo can't be home)
 			notify = sequence('notify')
@@ -248,7 +248,7 @@ module TinyMud
 
 			# Move to same location
 			set_up_objects(start_loc, bob, anne, jim, place)
-			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => start_loc, :owner => bob, :next => NOTHING, :exits => place }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => bob, :owner => bob, :next => NOTHING, :exits => place }) }
 			record(bob) {|r| r[:contents] = cheese }
 
 			# Move bob home (cheese went home too - different home)
@@ -303,6 +303,108 @@ module TinyMud
 			assert_equal(place, @db.get(bob).location)
 			assert_equal(cheese, @db.get(bob).contents)
 			assert_equal(place, @db.get(cheese).location)
+		end
+		
+		def test_do_get
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			place = @db.add_new_record
+			bob = Player.new.create_player("bob", "pwd")
+			cheese = @db.add_new_record
+			exit = @db.add_new_record
+			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM, :exits => exit }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => NOTHING ) }
+			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => wizard, :next => NOTHING ) }
+			
+			move = TinyMud::Move.new
+			notify = sequence('notify')
+
+			# Try to pick up non-existant something
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			move.do_get(bob, "bread")
+			
+			# Try to pick up an exit (don't own)
+			Interface.expects(:do_notify).with(bob, "You can't pick that up.").in_sequence(notify)
+			move.do_get(bob, "exit")
+			
+			# Try to pick up a linked exit
+			record(exit) {|r| r[:owner] = bob }
+			Interface.expects(:do_notify).with(bob, "You can't pick up a linked exit.").in_sequence(notify)
+			move.do_get(bob, "exit")
+			
+			# Unlink the exit i.e. still in room but not end location specified
+			record(exit) {|r| r[:location] = NOTHING }
+			Interface.expects(:do_notify).with(bob, "Exit taken.").in_sequence(notify)
+			assert_equal(cheese, @db.get(bob).contents)
+			assert_equal(exit, @db.get(place).exits)
+			move.do_get(bob, "exit")
+			assert_equal(NOTHING, @db.get(place).exits)
+			assert_equal(exit, @db.get(bob).contents)
+			assert_equal(bob, @db.get(exit).location)
+			assert_equal(cheese, @db.get(exit).next)
+			
+			# Absolute should work on an exit
+			record(bob) {|r| r.merge!( { :contents => cheese } ) }
+			record(exit) {|r| r.merge!( :location => NOTHING, :next => NOTHING )}
+			record(place) {|r| r[:exits] = exit }
+			Interface.expects(:do_notify).with(bob, "Exit taken.").in_sequence(notify)
+			move.do_get(bob, "##{exit}")
+			assert_equal(NOTHING, @db.get(place).exits)
+			assert_equal(exit, @db.get(bob).contents)
+			assert_equal(bob, @db.get(exit).location)
+			assert_equal(cheese, @db.get(exit).next)
+			
+			# Drop the cheese and try to take it
+			record(exit) {|r| r[:next] = NOTHING }
+			record(cheese) {|r| r[:location] = place }
+			record(bob) {|r| r[:next] = cheese } # Room content list
+			Interface.expects(:do_notify).with(bob, "Taken.").in_sequence(notify)
+			move.do_get(bob, "cheese")
+			assert_equal(NOTHING, @db.get(bob).next)
+			assert_equal(cheese, @db.get(bob).contents)
+			assert_equal(exit, @db.get(cheese).next)
+			
+			# Again with absolute
+			record(exit) {|r| r[:next] = NOTHING }
+			record(cheese) {|r| r.merge!({ :location => place, :next => NOTHING }) }
+			record(bob) {|r| r.merge!({ :next => cheese, :contents => exit }) } # Room content list
+			Interface.expects(:do_notify).with(bob, "Taken.").in_sequence(notify)
+			move.do_get(bob, "##{cheese}")
+			assert_equal(NOTHING, @db.get(bob).next)
+			assert_equal(cheese, @db.get(bob).contents)
+			assert_equal(exit, @db.get(cheese).next)
+			
+			# The wizard can reach about the place!
+			# Put the cheese down again and pick-up from limbo
+			record(exit) {|r| r[:next] = NOTHING }
+			record(cheese) {|r| r.merge!({ :location => place, :next => NOTHING }) }
+			record(bob) {|r| r.merge!({ :next => NOTHING, :contents => exit, :location => limbo }) }
+			record(place) {|r| r.merge!({ :contents => cheese })}
+			record(wizard) {|r| r[:next] = bob }
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			move.do_get(bob, "cheese")
+			Interface.expects(:do_notify).with(wizard, "I don't see that here.").in_sequence(notify)
+			move.do_get(wizard, "cheese")
+			Interface.expects(:do_notify).with(wizard, "Taken.").in_sequence(notify)
+			move.do_get(wizard, "##{cheese}")
+			assert_equal(cheese, @db.get(wizard).contents)
+			assert_equal(wizard, @db.get(cheese).location)
+			
+			# Note: Code has message related to picking up exits from other rooms
+			# I can't see how this can be fired (match exits only searches the room)
+			# Possibly the wizard with absolute?
+			#
+			# Also can't the code to give "You already have that!" seems odd
+			# it checks the objects location it needs to be the player. But
+			# the match code looks for exits or contents in the room. I can
+			# only trigger it so far by screwing up the logic and having it
+			# in the room content but having the things location equal to the
+			# player - Which seems broken.
+			# **Try in running version.**
+			#
+			# This test is yukky!
 		end
 
 		def set_up_objects(start_loc, bob, anne, jim, place)
