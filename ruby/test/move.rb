@@ -404,7 +404,16 @@ module TinyMud
 			# player - Which seems broken.
 			# **Try in running version.**
 			#
-			# This test is yukky!
+			# This test is yukky! In fact most are. Need to refactor construction
+			# and linkage code - Suspect it will be easier when I have the higher
+			# level functions under test. E.g. create player, drop things etc.
+			# Can then wrap them in a DSL/helpers for testing.
+		end
+		
+		def test_do_drop # WIP - Todo
+			Db.Minimal()
+			move = TinyMud::Move.new
+			move.do_drop(0, "foo") # Check linkage
 		end
 
 		def set_up_objects(start_loc, bob, anne, jim, place)

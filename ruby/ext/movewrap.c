@@ -65,6 +65,18 @@ static VALUE do_do_get(VALUE self, VALUE player, VALUE what)
     return Qnil;
 }
 
+static VALUE do_do_drop(VALUE self, VALUE player, VALUE name)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    char* name_s = 0;
+    if (name != Qnil) {
+        name_s = STR2CSTR(name);
+    }
+    do_drop(player_ref, name_s);
+    return Qnil;
+}
+
 void Init_move()
 {   
     move_class = rb_define_class_under(tinymud_module, "Move", rb_cObject);
@@ -74,4 +86,5 @@ void Init_move()
     rb_define_method(move_class, "can_move", do_can_move, 2);
     rb_define_method(move_class, "do_move", do_do_move, 2);
     rb_define_method(move_class, "do_get", do_do_get, 2);
+    rb_define_method(move_class, "do_drop", do_do_drop, 2);
 }
