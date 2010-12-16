@@ -18,21 +18,25 @@ Set gcc to high warning level
 
 !!! Suspect I'm leaking memory when I convert ruby to c strings
 
-Files to Convert (not all are required i.e. some are executable helpers, others are tested indirectly)
+Files I *suspect* I do not need to Convert
+==========================================
+
+paths.c
+dump.c
+extract.c
+sanity-check.c
+
+Files to Convert
 ================
 
-1. create.c
-2. dump.c
-3. extract.c
-4. game.c
-5. help.c
-6. interface.c
-7. paths.c
-8. rob.c
-9. sanity-check.c
-10. set.c
-11. stringutil.c
-12. wiz.c
+1. create.c [this I should have done ages ago!]
+2. game.c [probably only process command needed]
+3. help.c [possibly, not much in it anyway]
+4. interface.c [most of this is networking which I will switch to ruby for, some might be needed - pulled out]
+5. rob.c 
+6. set.c
+7. stringutil.c [I doubt it, but I may need to if the routines are atypical]
+8. wiz.c
 
 Files Being Converted
 =====================
