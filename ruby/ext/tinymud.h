@@ -12,3 +12,4 @@ extern void Init_match();
 extern void Init_utils();
 extern void Init_speech();
 extern void Init_move();
+extern void Init_look();

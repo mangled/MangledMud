@@ -5,4 +5,3 @@ extern void do_examine(dbref player, const char *name);
 extern void do_score(dbref player);
 extern void do_inventory(dbref player);
 extern void do_find(dbref player, const char *name);
-
