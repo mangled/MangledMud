@@ -294,19 +294,19 @@ void do_drop(dbref player, const char *name)
 
 	    /* check for reward */
 	    if(!controls(player, thing)) {
-		reward = db[thing].pennies;
-		if(reward < 1 || db[player].pennies > MAX_PENNIES) {
-		    reward = 1;
-		} else if(reward > MAX_OBJECT_ENDOWMENT) {
-		    reward = MAX_OBJECT_ENDOWMENT;
-		}
-
-		db[player].pennies += reward;
-		sprintf(buf,
-			"You have received %d %s for your sacrifice.",
-			reward,
-			reward == 1 ? "penny" : "pennies");
-		notify(player, buf);
+			reward = db[thing].pennies;
+			if(reward < 1 || db[player].pennies > MAX_PENNIES) {
+				reward = 1;
+			} else if(reward > MAX_OBJECT_ENDOWMENT) {
+				reward = MAX_OBJECT_ENDOWMENT;
+			}
+	
+			db[player].pennies += reward;
+			sprintf(buf,
+				"You have received %d %s for your sacrifice.",
+				reward,
+				reward == 1 ? "penny" : "pennies");
+			notify(player, buf);
 	    }
 	} else if(db[thing].flags & STICKY) {
 	    send_home(thing);

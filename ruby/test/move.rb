@@ -412,8 +412,109 @@ module TinyMud
 		
 		def test_do_drop # WIP - Todo
 			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			place = @db.add_new_record
+			place2 = @db.add_new_record
+			bob = Player.new.create_player("bob", "pwd")
+			anne = Player.new.create_player("anne", "pod")
+			cheese = @db.add_new_record
+			cheese2 = @db.add_new_record
+			ear = @db.add_new_record
+			exit = @db.add_new_record
+			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM, :exits => NOTHING, :owner => anne }) }
+			record(place2) {|r| r.merge!({:name => "place2", :description => "blue", :osucc => "ping", :contents => NOTHING, :flags => TYPE_ROOM, :exits => NOTHING, :owner => NOTHING }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => cheese2, :exits => limbo }) }
+			record(cheese2) {|r| r.merge!({ :name => "cheese2", :location => place, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => exit, :exits => limbo }) }
+			record(ear) {|r| r.merge!({ :name => "ear", :location => place, :description => "pinkish", :flags => TYPE_THING, :owner => anne, :next => NOTHING, :exits => limbo }) }
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
+			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => ear ) }
+			record(exit) {|r| r.merge!( :location => bob, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
+			
 			move = TinyMud::Move.new
-			move.do_drop(0, "foo") # Check linkage
+			notify = sequence('notify')
+
+			# Drop cheese whilst nowhere!
+			record(bob) {|r| r[:location] = NOTHING }
+			move.do_drop(bob, "cheese")
+			assert_equal(cheese, @db.get(bob).contents)
+			
+			# Drop something you don't have (put bob back first)
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
+			Interface.expects(:do_notify).with(bob, "You don't have that!").in_sequence(notify)
+			move.do_drop(bob, "ear")
+			
+			# Drop something you own but its location isn't on you (shouldn't occur)
+			Interface.expects(:do_notify).with(bob, "You can't drop that.").in_sequence(notify)
+			move.do_drop(bob, "cheese2")
+			
+			# Drop an exit in a room you don't own
+			Interface.expects(:do_notify).with(bob, "You can't put an exit down here.").in_sequence(notify)
+			move.do_drop(bob, "exit")
+			
+			# Drop an exit in a place you own
+			record(place) {|r| r[:owner] = bob }
+			Interface.expects(:do_notify).with(bob, "Exit dropped.").in_sequence(notify)
+			move.do_drop(bob, "exit")
+			assert_equal(exit, @db.get(place).exits)
+			assert_equal(NOTHING, @db.get(exit).location)
+			assert_equal(NOTHING, @db.get(cheese2).next)
+			
+			# Drop something you own onto a temple
+			record(place) {|r| r[:flags] = r[:flags] | TEMPLE }
+			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			assert_equal(cheese2, @db.get(bob).contents)
+			assert_equal(limbo, @db.get(cheese).location)
+			
+			# The same but you don't own it
+			# NOTE: Penny logic is more complicated than this, test is minimal and could do with expanding
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 5 )}
+			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "You have received 5 pennies for your sacrifice.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			assert_equal(cheese2, @db.get(bob).contents)
+			assert_equal(limbo, @db.get(cheese).location)
+			
+			# Drop a sticky thing (goes home)
+			record(place) {|r| r[:flags] = TYPE_ROOM } # Undo temple
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => bob )}
+			record(cheese) {|r| r[:flags] = r[:flags] | STICKY }
+			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			assert_equal(cheese2, @db.get(bob).contents)
+			assert_equal(limbo, @db.get(cheese).location)
+			
+			# Drop in a non sticky place that has a location!
+			record(place) {|r| r[:location] = place2 }
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :flags => TYPE_THING, :location => bob, :next => NOTHING, :owner => bob )}
+			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			assert_equal(place2, @db.get(cheese).location)
+			
+			# Drop in a sticky place that has a location (location ignored!
+			record(place) {|r| r[:flags] = r[:flags] | STICKY }
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :flags => TYPE_THING, :location => bob, :next => NOTHING, :owner => bob )}
+			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob dropped cheese.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			assert_equal(place, @db.get(cheese).location)
+			assert_equal(cheese, @db.get(place).contents)
+			
+			# Finally thing drops as expected!
+			record(place) {|r| r.merge!( { :flags => TYPE_ROOM, :location => NOTHING, :contents => bob } ) } # Undo above
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :flags => TYPE_THING, :location => bob, :next => NOTHING, :owner => bob )}
+			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob dropped cheese.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			assert_equal(place, @db.get(cheese).location)
 		end
 
 		def set_up_objects(start_loc, bob, anne, jim, place)
