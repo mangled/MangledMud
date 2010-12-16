@@ -27,13 +27,17 @@ Files to Convert (not all are required i.e. some are executable helpers, others 
 4. game.c
 5. help.c
 6. interface.c
-7. look.c
-8. paths.c
-9. rob.c
-10. sanity-check.c
-11. set.c
-12. stringutil.c
-13. wiz.c
+7. paths.c
+8. rob.c
+9. sanity-check.c
+10. set.c
+11. stringutil.c
+12. wiz.c
+
+Files Being Converted
+=====================
+
+look.c
 
 Files under Test (done)
 =======================
