@@ -64,10 +64,10 @@ void look_room(dbref player, dbref loc)
 
     /* tell him the name, and the number if he can link to it */
     if(can_link_to(player, loc)) {
-	sprintf(buf, "%s (#%d)", getname(loc), loc);
-	notify(player, buf);
+		sprintf(buf, "%s (#%d)", getname(loc), loc);
+		notify(player, buf);
     } else {
-	notify(player, getname(loc));
+		notify(player, getname(loc));
     }
 
     /* tell him the description */

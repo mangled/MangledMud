@@ -18,6 +18,8 @@ Set gcc to high warning level
 
 !!! Suspect I'm leaking memory when I convert ruby to c strings
 
+!!! Ensure success/failure strings set in test (when I tidy them again!)
+
 Files I *suspect* I do not need to Convert
 ==========================================
 
