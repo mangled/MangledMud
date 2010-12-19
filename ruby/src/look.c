@@ -173,21 +173,21 @@ void do_examine(dbref player, const char *name)
     char buf[BUFFER_LEN];
 
     if(*name == '\0') {
-	if((thing = getloc(player)) == NOTHING) return;
+		if((thing = getloc(player)) == NOTHING) return;
     } else {
-	/* look it up */
-	init_match(player, name, NOTYPE);
-	match_exit();
-	match_neighbor();
-	match_possession();
-	match_absolute();
-	/* only Wizards can examine other players */
-	if(Wizard(player)) match_player();
-	match_here();
-	match_me();
-
-	/* get result */
-	if((thing = noisy_match_result()) == NOTHING) return;
+		/* look it up */
+		init_match(player, name, NOTYPE);
+		match_exit();
+		match_neighbor();
+		match_possession();
+		match_absolute();
+		/* only Wizards can examine other players */
+		if(Wizard(player)) match_player();
+		match_here();
+		match_me();
+	
+		/* get result */
+		if((thing = noisy_match_result()) == NOTHING) return;
     }
 
     if(!can_link(player, thing)) {

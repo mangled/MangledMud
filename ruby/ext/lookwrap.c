@@ -26,11 +26,51 @@ static VALUE do_do_look_at(VALUE self, VALUE player, VALUE name)
 {
     (void) self;
     dbref player_ref = FIX2INT(player);
-    char* name_s = 0;
+    char* name_s = strdup("\0");
     if (name != Qnil) {
         name_s = STR2CSTR(name);
     }
     do_look_at(player_ref, name_s);
+    return Qnil;
+}
+
+static VALUE do_do_examine(VALUE self, VALUE player, VALUE name)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    char* name_s = strdup("\0");
+    if (name != Qnil) {
+        name_s = STR2CSTR(name);
+    }
+    do_examine(player_ref, name_s);
+    return Qnil;
+}
+
+static VALUE do_do_score(VALUE self, VALUE player)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    do_score(player_ref);
+    return Qnil;
+}
+
+static VALUE do_do_inventory(VALUE self, VALUE player)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    do_inventory(player_ref);
+    return Qnil;
+}
+
+static VALUE do_do_find(VALUE self, VALUE player, VALUE name)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    char* name_s = strdup("\0");
+    if (name != Qnil) {
+        name_s = STR2CSTR(name);
+    }
+    do_find(player_ref, name_s);
     return Qnil;
 }
 
@@ -40,4 +80,8 @@ void Init_look()
     rb_define_method(look_class, "look_room", do_look_room, 2);
     rb_define_method(look_class, "do_look_around", do_do_look_around, 1);
     rb_define_method(look_class, "do_look_at", do_do_look_at, 2);
+    rb_define_method(look_class, "do_examine", do_do_examine, 2);
+    rb_define_method(look_class, "do_score", do_do_score, 1);
+    rb_define_method(look_class, "do_inventory", do_do_inventory, 1);
+    rb_define_method(look_class, "do_find", do_do_find, 2);
 }
