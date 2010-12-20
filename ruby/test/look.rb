@@ -305,7 +305,42 @@ module TinyMud
 		end
 		
 		def test_do_find
-			# Todo (the last for look!)
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			place = @db.add_new_record
+			bob = Player.new.create_player("bob", "pwd")
+			anne = Player.new.create_player("anne", "pwd")
+			cheese = @db.add_new_record
+			fish = @db.add_new_record
+			jam = @db.add_new_record
+			exit = @db.add_new_record
+			record(place) {|r| r.merge!({:location => limbo, :name => "place", :description => "yellow", :succ=>"yippee", :fail => "shucks", :osucc => "ping", :ofail => "darn", :contents => bob, :flags => TYPE_ROOM, :exits => exit }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
+			record(fish) {|r| r.merge!({ :name => "fish", :location => place, :description => "slimy", :flags => TYPE_THING, :owner => anne, :next => wizard, :exits => limbo }) }
+			record(jam) {|r| r.merge!({ :name => "jam", :location => anne, :description => "red", :flags => TYPE_THING, :owner => anne, :next => NOTHING, :exits => limbo }) }
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
+			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
+			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
+			
+			look = TinyMud::Look.new
+			notify = sequence('notify')
+			# Find without enough money!
+			Interface.expects(:do_notify).with(bob, "You don't have enough pennies.").in_sequence(notify)
+			look.do_find(bob, "place")
+			# Find on an exit (shouldn't)
+			record(bob) {|r| r.merge!( :pennies => LOOKUP_COST ) }
+			Interface.expects(:do_notify).with(bob, "***End of List***").in_sequence(notify)
+			look.do_find(bob, "exit")
+			# Find on someone (do not control)
+			record(bob) {|r| r.merge!( :pennies => LOOKUP_COST ) }
+			Interface.expects(:do_notify).with(bob, "***End of List***").in_sequence(notify)
+			look.do_find(bob, "anne")
+			# Find on something we control
+			record(bob) {|r| r.merge!( :pennies => LOOKUP_COST ) }
+			Interface.expects(:do_notify).with(bob, "cheese(##{cheese})").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "***End of List***").in_sequence(notify)
+			look.do_find(bob, "cheese")
 		end
 
 		# MOVE THIS SOMEWHERE - DRY
