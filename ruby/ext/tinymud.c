@@ -60,4 +60,5 @@ void Init_tinymud()
 	Init_speech();
 	Init_move();
 	Init_look();
+	Init_create();
 }

@@ -31,7 +31,6 @@ sanity-check.c
 Files to Convert
 ================
 
-1. create.c [this I should have done ages ago!]
 2. game.c [probably only process command needed]
 3. help.c [possibly, not much in it anyway]
 4. interface.c [most of this is networking which I will switch to ruby for, some might be needed - pulled out]
@@ -43,7 +42,7 @@ Files to Convert
 Files Being Converted
 =====================
 
-look.c
+create.c [this I should have done ages ago!]
 
 Files under Test (done)
 =======================
@@ -55,3 +54,4 @@ Files under Test (done)
 5. speech.c
 6. utils.c
 7. move.c
+8. look.c
