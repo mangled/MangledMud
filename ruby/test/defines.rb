@@ -20,6 +20,12 @@ module TinyMud
     
     # Special dbref positions
 	PLAYER_START = 0
+
+	# Minimum cost to create various things */
+	OBJECT_COST = 10
+	EXIT_COST = 1
+	LINK_COST = 1
+	ROOM_COST = 10
 	
 	# cost to do a scan
 	LOOKUP_COST = 1

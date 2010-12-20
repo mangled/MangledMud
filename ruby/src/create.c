@@ -51,47 +51,48 @@ void do_open(dbref player, const char *direction, const char *linkto)
 #endif /* RESTRICTED_BUILDING */
 
     if((loc = getloc(player)) == NOTHING) return;
+
     if(!*direction) {
-	notify(player, "Open where?");
-	return;
+		notify(player, "Open where?");
+		return;
     } else if(!ok_name(direction)) {
-	notify(player, "That's a strange name for an exit!");
-	return;
+		notify(player, "That's a strange name for an exit!");
+		return;
     }
 
     if(!controls(player, loc)) {
-	notify(player, "Permission denied.");
+		notify(player, "Permission denied.");
     } else if(!payfor(player, EXIT_COST)) {
-	notify(player,
+		notify(player,
 	       "Sorry, you don't have enough pennies to open an exit.");
     } else {
-	/* create the exit */
-	exit = new_object();
-
-	/* initialize everything */
-	db[exit].name = alloc_string(direction);
-	db[exit].owner = player;
-	db[exit].flags = TYPE_EXIT;
-
-	/* link it in */
-	PUSH(exit, db[loc].exits);
-
-	/* and we're done */
-	notify(player, "Opened.");
-
-	/* check second arg to see if we should do a link */
-	if(*linkto != '\0') {
-	    notify(player, "Trying to link...");
-	    if((loc = parse_linkable_room(player, linkto)) != NOTHING) {
-		if(!payfor(player, LINK_COST)) {
-		    notify(player, "You don't have enough pennies to link.");
-		} else {
-		    /* it's ok, link it */
-		    db[exit].location = loc;
-		    notify(player, "Linked.");
+		/* create the exit */
+		exit = new_object();
+	
+		/* initialize everything */
+		db[exit].name = alloc_string(direction);
+		db[exit].owner = player;
+		db[exit].flags = TYPE_EXIT;
+	
+		/* link it in */
+		PUSH(exit, db[loc].exits);
+	
+		/* and we're done */
+		notify(player, "Opened.");
+	
+		/* check second arg to see if we should do a link */
+		if(*linkto != '\0') {
+			notify(player, "Trying to link...");
+			if((loc = parse_linkable_room(player, linkto)) != NOTHING) {
+				if(!payfor(player, LINK_COST)) {
+					notify(player, "You don't have enough pennies to link.");
+				} else {
+					/* it's ok, link it */
+					db[exit].location = loc;
+					notify(player, "Linked.");
+				}
+			}
 		}
-	    }
-	}
     }
 }
 
