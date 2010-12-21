@@ -126,45 +126,42 @@ void do_link(dbref player, const char *name, const char *room_name)
 	  case TYPE_EXIT:
 	    /* we're ok, check the usual stuff */
 	    if(db[thing].location != NOTHING) {
-		if(controls(player, thing)) {
-		    if(Typeof(db[thing].location) == TYPE_PLAYER) {
-			notify(player, "That exit is being carried.");
-		    } else {
-			notify(player, "That exit is already linked.");
-		    }
-		} else {
-		    notify(player, "Permission denied.");
-		}
+			if(controls(player, thing)) {
+				if(Typeof(db[thing].location) == TYPE_PLAYER) {
+				notify(player, "That exit is being carried.");
+				} else {
+				notify(player, "That exit is already linked.");
+				}
+			} else {
+				notify(player, "Permission denied.");
+			}
 	    } else {
-		/* handle costs */
-		if(db[thing].owner == player) {
-		    if(!payfor(player, LINK_COST)) {
-			notify(player,
-			       "It costs a penny to link this exit.");
-			return;
-		    }
-		} else {
-		    if(!payfor(player, LINK_COST + EXIT_COST)) {
-			notify(player,
-			       "It costs two pennies to link this exit.");
-			return;
-#ifdef RESTRICTED_BUILDING
-		    } else if(!Builder(player)) {
-			notify(player,
-			       "Only authorized builders may seize exits.");
-#endif /* RESTRICTED_BUILDING */			
-		    } else {
-			/* pay the owner for his loss */
-			db[db[thing].owner].pennies += EXIT_COST;
-		    }
-		}
-
-		/* link has been validated and paid for; do it */
-		db[thing].owner = player;
-		db[thing].location = room;
-
-		/* notify the player */
-		notify(player, "Linked.");
+			/* handle costs */
+			if(db[thing].owner == player) {
+				if(!payfor(player, LINK_COST)) {
+					notify(player, "It costs a penny to link this exit.");
+					return;
+				}
+			} else {
+				if(!payfor(player, LINK_COST + EXIT_COST)) {
+					notify(player, "It costs two pennies to link this exit.");
+					return;
+	#ifdef RESTRICTED_BUILDING
+				} else if(!Builder(player)) {
+					notify(player, "Only authorized builders may seize exits.");
+	#endif /* RESTRICTED_BUILDING */			
+				} else {
+					/* pay the owner for his loss */
+					db[db[thing].owner].pennies += EXIT_COST;
+				}
+			}
+	
+			/* link has been validated and paid for; do it */
+			db[thing].owner = player;
+			db[thing].location = room;
+	
+			/* notify the player */
+			notify(player, "Linked.");
 	    }
 	    break;
 	  case TYPE_THING:

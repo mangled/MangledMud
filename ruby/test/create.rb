@@ -122,8 +122,126 @@ module TinyMud
 			assert_equal(limbo, @db.get(south).location)
 		end
 		
-		def test_do_link
-			# TODO!
+		def test_do_link # link player via an exit to a room that they own
+			# Note: RESTRICTED_BUILDING is not defined and will not be tested
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			bob = Player.new.create_player("bob", "pwd")
+			place = @db.add_new_record
+			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
+			record(wizard) {|r| r.merge!({ :next => bob }) }
+			record(place) {|r| r.merge!({ :name => "place", :flags => TYPE_ROOM }) }
+
+			create = TinyMud::Create.new
+			notify = sequence('notify')
+
+			# We must be somewhere (not NOTHING)
+			record(bob) {|r| r.merge!( { :location => NOTHING, :next => NOTHING } ) }
+			Interface.expects(:do_notify).never.in_sequence(notify)
+			create.do_link(bob, nil, nil)
+			
+			# The room name must be parsable, "me", "home" or owned
+			record(bob) {|r| r.merge!( { :location => limbo } ) }
+			Interface.expects(:do_notify).with(bob, "That's not a room!").in_sequence(notify)
+			create.do_link(bob, nil, "fig") # Not real!
+			Interface.expects(:do_notify).with(bob, "You can't link to that.").in_sequence(notify)
+			create.do_link(bob, nil, "#{place}") # Not owned
+			
+			# Now create an exit and move it about (matches in numerous locations!)
+			# Not using the above as I want to control it step by step
+			exit = @db.add_new_record
+			record(place) {|r| r.merge!({ :owner => bob }) }
+			record(exit) {|r| r.merge!( { :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING } ) }
+			
+			# Missing exit (exists but not here, note - not testing the match logic to the full, calls on, will mock in ruby)
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			
+			# Exit in a location: link, own, but its in use
+			record(limbo) {|r| r.merge!({ :exits => exit }) }
+			Interface.expects(:do_notify).with(bob, "That exit is already linked.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			# Exit in a location: link, own, but its being carried
+			record(exit) {|r| r.merge!({ :location => wizard }) }
+			Interface.expects(:do_notify).with(bob, "That exit is being carried.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			# Exit in a location: link, don't own
+			record(exit) {|r| r.merge!({ :owner => wizard }) }
+			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+
+			# Exit not in a location: Ok, but poor, link to it, own it and its "free" (location is where it goes to)
+			record(exit) {|r| r.merge!({ :owner => bob, :location => NOTHING }) }
+			Interface.expects(:do_notify).with(bob, "It costs a penny to link this exit.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			
+			# Rich enough now!
+			record(bob) {|r| r.merge!({ :pennies => LINK_COST }) }
+			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			assert_equal(bob, @db.get(exit).owner)
+			assert_equal(place, @db.get(exit).location)
+			assert_equal(0, @db.get(bob).pennies)
+
+			# Exit not in a location: Ok, but poor, link to it, *don't* own it and its "free" (location is where it goes to)
+			record(exit) {|r| r.merge!({ :owner => wizard, :location => NOTHING }) }
+			Interface.expects(:do_notify).with(bob, "It costs two pennies to link this exit.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			
+			# Rich enough now!
+			record(bob) {|r| r.merge!({ :pennies => LINK_COST + EXIT_COST }) }
+			assert_equal(0, @db.get(wizard).pennies)
+			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
+			create.do_link(bob, "exit", "#{place}")
+			assert_equal(EXIT_COST, @db.get(wizard).pennies)
+			assert_equal(0, @db.get(bob).pennies)
+			assert_equal(bob, @db.get(exit).owner)
+			assert_equal(place, @db.get(exit).location)
+
+			# Now we try to link a player - Sets their home (must control them)
+			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
+			create.do_link(bob, "wizard", "HOME")
+			
+			# Can't set home to home!
+			Interface.expects(:do_notify).with(bob, "Can't set home to home.").in_sequence(notify)
+			create.do_link(bob, "bob", "HOME")
+			
+			# Set home
+			Interface.expects(:do_notify).with(bob, "Home set.").in_sequence(notify)
+			assert_equal(limbo, @db.get(bob).exits)
+			create.do_link(bob, "bob", "#{place}")
+			assert_equal(place, @db.get(bob).exits)
+
+			# Now set a room's drop-to location (we must control the room)
+			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
+			create.do_link(bob, "here", "#{place}")
+
+			# We own it now :-)
+			record(limbo) {|r| r.merge!({ :owner => bob }) }
+			Interface.expects(:do_notify).with(bob, "Dropto set.").in_sequence(notify)
+			assert_equal(NOTHING, @db.get(limbo).location)
+			create.do_link(bob, "here", "#{place}")
+			assert_equal(place, @db.get(limbo).location)
+
+			# Cause default to be hit!
+			record(limbo) {|r| r.merge!({ :flags => 0xffff }) }
+			Interface.expects(:do_notify).with(bob, "Internal error: weird object type.").in_sequence(notify)
+			create.do_link(bob, "here", "#{place}")
+
+			# Last of all a wizard can use absolute names for things
+			record(limbo) {|r| r.merge!({ :owner => wizard, :exits => exit }) }
+			record(exit) {|r| r.merge!({ :owner => bob, :exits => NOTHING, :location => NOTHING }) }
+			Interface.expects(:do_notify).with(wizard, "Linked.").in_sequence(notify)
+			create.do_link(wizard, "##{exit}", "#{place}")
+			
+			# And can do the same for players
+			Interface.expects(:do_notify).with(wizard, "Home set.").in_sequence(notify)
+			create.do_link(wizard, "##{bob}", "#{place}")
+			
+			# And can do the same for players
+			Interface.expects(:do_notify).with(wizard, "Home set.").in_sequence(notify)
+			create.do_link(wizard, "*bob", "#{place}")
 		end
 
 		# MOVE THIS SOMEWHERE - DRY

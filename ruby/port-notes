@@ -20,6 +20,8 @@ Set gcc to high warning level
 
 !!! Ensure success/failure strings set in test (when I tidy them again!)
 
+!!! Need to document what each part of db object does e.g. exit location is where it goes to, person exits is home (create.c is informative in this regard)
+
 Files I *suspect* I do not need to Convert
 ==========================================
 
