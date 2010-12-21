@@ -244,6 +244,10 @@ module TinyMud
 			create.do_link(wizard, "*bob", "#{place}")
 		end
 
+		def test_do_dig
+			# Todo!
+		end
+
 		# MOVE THIS SOMEWHERE - DRY
 		def record(i)
 			record = @db.get(i)

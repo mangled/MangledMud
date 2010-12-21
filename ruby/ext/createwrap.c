@@ -37,9 +37,22 @@ static VALUE do_do_link(VALUE self, VALUE player, VALUE name, VALUE room_name)
     return Qnil;
 }
 
+static VALUE do_do_dig(VALUE self, VALUE player, VALUE name)
+{
+    (void) self;
+    dbref player_ref = FIX2INT(player);
+    char* name_s = strdup("\0");
+    if (name != Qnil) {
+        name_s = STR2CSTR(name);
+    }
+    do_dig(player_ref, name_s);
+    return Qnil;
+}
+
 void Init_create()
 {   
     create_class = rb_define_class_under(tinymud_module, "Create", rb_cObject);
     rb_define_method(create_class, "do_open", do_do_open, 3);
     rb_define_method(create_class, "do_link", do_do_link, 3);
+    rb_define_method(create_class, "do_dig", do_do_dig, 2);
 }
