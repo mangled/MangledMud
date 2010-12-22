@@ -244,8 +244,99 @@ module TinyMud
 			create.do_link(wizard, "*bob", "#{place}")
 		end
 
-		def test_do_dig
-			# Todo!
+		def test_do_dig # Creates a room
+			# Note: RESTRICTED_BUILDING is not defined and will not be tested
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			bob = Player.new.create_player("bob", "pwd")
+			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
+			record(wizard) {|r| r.merge!({ :next => bob }) }
+
+			create = TinyMud::Create.new
+			notify = sequence('notify')
+			
+			# don't specify what you want to dig
+			Interface.expects(:do_notify).with(bob, "Dig what?").in_sequence(notify)
+			create.do_dig(bob, nil)
+			
+			# Bad name (only testing one case as underlying code will be tested elsewhere)
+			Interface.expects(:do_notify).with(bob, "That's a silly name for a room!").in_sequence(notify)
+			create.do_dig(bob, "me")
+			
+			# Not enough money!
+			Interface.expects(:do_notify).with(bob, "Sorry, you don't have enough pennies to dig a room.").in_sequence(notify)
+			create.do_dig(bob, "treehouse")
+			
+			# Go for it!
+			record(bob) {|r| r[:pennies] = ROOM_COST }
+			Interface.expects(:do_notify).with(bob, "treehouse created with room number 3.").in_sequence(notify)
+			create.do_dig(bob, "treehouse")
+			assert_equal(0, @db.get(bob).pennies)
+			assert_equal("treehouse", @db.get(3).name)
+			assert_equal(bob, @db.get(3).owner)
+			assert_equal(TYPE_ROOM, @db.get(3).flags)
+		end
+		
+		def test_do_create # creates an object
+			# Note: RESTRICTED_BUILDING is not defined and will not be tested
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			bob = Player.new.create_player("bob", "pwd")
+			exit = @db.add_new_record
+			record(exit) {|r| r.merge!( { :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING } ) }
+			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
+			record(wizard) {|r| r.merge!({ :next => bob }) }
+			record(bob) {|r| r.merge!({ :location => limbo, :exits => exit }) }
+
+			create = TinyMud::Create.new
+			notify = sequence('notify')
+			
+			# don't specify what you want to create
+			Interface.expects(:do_notify).with(bob, "Create what?").in_sequence(notify)
+			create.do_create(bob, nil, 0)
+			
+			# Bad name (only testing one case as underlying code will be tested elsewhere)
+			Interface.expects(:do_notify).with(bob, "That's a silly name for a thing!").in_sequence(notify)
+			create.do_create(bob, "me", 0)
+			
+			# Weird cheap :-)
+			Interface.expects(:do_notify).with(bob, "You can't create an object for less than nothing!").in_sequence(notify)
+			create.do_create(bob, "tree", -1)
+			
+			# Too cheap (< OBJECT_COST), not enough money on you
+			Interface.expects(:do_notify).with(bob, "Sorry, you don't have enough pennies.").in_sequence(notify)
+			create.do_create(bob, "tree", OBJECT_COST - 1)
+			
+			# Enough money (can't link here)
+			record(bob) {|r| r[:pennies] = OBJECT_COST } # If an object is less than OBJECT_COST it will be set to it
+			Interface.expects(:do_notify).with(bob, "Created.").in_sequence(notify)
+			tree = @db.length
+			create.do_create(bob, "tree", OBJECT_COST - 1)
+			assert_equal("tree", @db.get(tree).name)
+			assert_equal(bob, @db.get(tree).location)
+			assert_equal(bob, @db.get(tree).owner)
+			assert_equal((OBJECT_COST - 5) / 5, @db.get(tree).pennies)
+			assert_equal(TYPE_THING, @db.get(tree).flags)
+			# Objects home is here (limbo, can't link to, so home will be bob's home)
+			assert_equal(exit, @db.get(tree).exits)
+			assert_equal(tree, @db.get(bob).contents)
+			
+			# Enough money (can link here, cost is greater than MAX_OBJECT_ENDOWMENT)
+			cost = ((MAX_OBJECT_ENDOWMENT + 1) * 5) + 5
+			record(limbo) {|r| r.merge!({ :owner => bob }) }
+			record(bob) {|r| r[:pennies] = cost }
+			Interface.expects(:do_notify).with(bob, "Created.").in_sequence(notify)
+			fish = @db.length
+			create.do_create(bob, "fish", cost)
+			assert_equal("fish", @db.get(fish).name)
+			assert_equal(bob, @db.get(fish).location)
+			assert_equal(bob, @db.get(fish).owner)
+			assert_equal(MAX_OBJECT_ENDOWMENT, @db.get(fish).pennies)
+			assert_equal(TYPE_THING, @db.get(fish).flags)
+			assert_equal(limbo, @db.get(fish).exits)
+			assert_equal(fish, @db.get(bob).contents)
 		end
 
 		# MOVE THIS SOMEWHERE - DRY

@@ -35,6 +35,9 @@ module TinyMud
 	LOOKUP_TOKEN = '*'
 	NUMBER_TOKEN = '#'
 
+	# Maximum amount an object can be worth
+	MAX_OBJECT_ENDOWMENT = 100
+
 	# Match messages	
 	NOMATCH_MESSAGE = "I don't see that here."
 	AMBIGUOUS_MESSAGE = "I don't know which one you mean!"
