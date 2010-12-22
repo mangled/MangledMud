@@ -386,7 +386,87 @@ module TinyMud
 		end
 		
 		def test_do_set
-			# TODO!!! Brain ran out of steam tonight!!!
+			place = @db.add_new_record
+			bob = Player.new.create_player("bob", "sprout")
+			anne = Player.new.create_player("anne", "treacle")
+			cheese = @db.add_new_record
+			record(place) {|r| r.merge!({ :name => "place", :contents => bob, :flags => TYPE_ROOM, :owner => bob }) }
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
+			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
+			
+			set = TinyMud::Set.new
+			notify = sequence('notify')
+			
+			# Thing must exist
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			set.do_set(bob, "sock", nil)
+			
+			# Check unknown flags - Need not be a wizard at this point
+			Interface.expects(:do_notify).with(bob, "I don't recognized that flag.").in_sequence(notify)
+			# This confirms restricted building is disabled (I have not tested for it)
+			# If this fails then need to write loads more tests
+			set.do_set(bob, "cheese", "BUILDER")
+			
+			# Only wizards can change anything, restrictions on normal players
+			# Can't set wizard flag
+			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
+			set.do_set(bob, "cheese", "WIZARD")
+			# Or Temple
+			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
+			set.do_set(bob, "cheese", "TEMPLE")
+			# Or dark if thing isn't a room
+			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
+			set.do_set(bob, "cheese", "DARK")
+			
+			# Can set rooms as dark (as a non wizard) (if own)
+			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
+			set.do_set(bob, "here", "DARK")
+			assert_equal(TYPE_ROOM | DARK, @db.get(place).flags)
+			# And even the reverse
+			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
+			set.do_set(bob, "here", "!DARK")
+			assert_equal(TYPE_ROOM, @db.get(place).flags)
+			
+			# Wizards can do the above (but there are no checks on dest. e.g. a wizard cheese!)
+			record(bob) {|r| r[:flags] = TYPE_PLAYER | WIZARD }
+			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
+			set.do_set(bob, "cheese", "WIZARD")
+			assert_equal(TYPE_THING | WIZARD, @db.get(cheese).flags)
+			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
+			set.do_set(bob, "cheese", "TEMPLE")
+			assert_equal(TYPE_THING | TEMPLE | WIZARD, @db.get(cheese).flags)
+			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
+			set.do_set(bob, "cheese", "DARK")
+			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK, @db.get(cheese).flags)
+			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
+			set.do_set(bob, "cheese", "STICKY")
+			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK | STICKY, @db.get(cheese).flags)
+			# Reverse also true
+			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
+			set.do_set(bob, "cheese", "!STICKY")
+			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK, @db.get(cheese).flags)
+			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
+			set.do_set(bob, "cheese", "!DARK")
+			assert_equal(TYPE_THING | TEMPLE | WIZARD, @db.get(cheese).flags)
+			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
+			set.do_set(bob, "cheese", "!TEMPLE")
+			assert_equal(TYPE_THING | WIZARD, @db.get(cheese).flags)
+			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
+			set.do_set(bob, "cheese", "!WIZARD")
+			assert_equal(TYPE_THING, @db.get(cheese).flags)
+			
+			# Can't lower yourself
+			Interface.expects(:do_notify).with(bob, "You cannot make yourself mortal.").in_sequence(notify)
+			set.do_set(bob, "bob", "!WIZARD")
+			
+			# Can convert to wizard
+			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify) # Poor message
+			set.do_set(bob, "anne", "WIZARD")
+			
+			# Can convert back to normal
+			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
+			set.do_set(bob, "anne", "!WIZARD")
 		end
 
 		# MOVE THIS SOMEWHERE - DRY
