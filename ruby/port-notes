@@ -37,14 +37,13 @@ Files to Convert
 3. help.c [possibly, not much in it anyway]
 4. interface.c [most of this is networking which I will switch to ruby for, some might be needed - pulled out]
 5. rob.c 
-6. set.c
 7. stringutil.c [I doubt it, but I may need to if the routines are atypical]
 8. wiz.c
 
 Files Being Converted
 =====================
 
-create.c [this I should have done ages ago!]
+set.c
 
 Files under Test (done)
 =======================
@@ -57,3 +56,4 @@ Files under Test (done)
 6. utils.c
 7. move.c
 8. look.c
+9. create.c [this I should have done ages ago!]
