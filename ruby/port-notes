@@ -36,14 +36,13 @@ Files to Convert
 2. game.c [probably only process command needed]
 3. help.c [possibly, not much in it anyway]
 4. interface.c [most of this is networking which I will switch to ruby for, some might be needed - pulled out]
-5. rob.c 
 7. stringutil.c [I doubt it, but I may need to if the routines are atypical]
 8. wiz.c
 
 Files Being Converted
 =====================
 
-set.c
+rob.c 
 
 Files under Test (done)
 =======================
@@ -57,3 +56,4 @@ Files under Test (done)
 7. move.c
 8. look.c
 9. create.c [this I should have done ages ago!]
+10. set.c
