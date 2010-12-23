@@ -44,4 +44,9 @@ module TinyMud
 	
 	# Delimeter for lists of exit aliases
 	EXIT_DELIMITER = ';'
+	
+	# Costs of kill command
+	KILL_BASE_COST = 100 # prob = expenditure/KILL_BASE_COST
+	KILL_MIN_COST = 10
+	KILL_BONUS = 50	# paid to victim
 end

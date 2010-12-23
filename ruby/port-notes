@@ -22,6 +22,8 @@ Set gcc to high warning level
 
 !!! Need to document what each part of db object does e.g. exit location is where it goes to, person exits is home (create.c is informative in this regard)
 
+!!! Suggest a standard test db set-up, I seem to use the same for most of the tests - Ideally an object, so I can access things by name, think about
+
 Files I *suspect* I do not need to Convert
 ==========================================
 
