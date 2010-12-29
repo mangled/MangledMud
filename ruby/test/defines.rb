@@ -27,6 +27,9 @@ module TinyMud
 	LINK_COST = 1
 	ROOM_COST = 10
 	
+	# amount at which temple stops being so profitable
+	MAX_PENNIES = 10000
+	
 	# cost to do a scan
 	LOOKUP_COST = 1
 

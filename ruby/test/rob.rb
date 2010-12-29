@@ -180,7 +180,99 @@ module TinyMud
 		end
 		
 		def test_do_give
-			# TODO - The last for rob!!! :-)
+			Db.Minimal()
+			limbo = 0
+			wizard = 1
+			place = @db.add_new_record
+			bob = Player.new.create_player("bob", "sprout")
+			anne = Player.new.create_player("anne", "treacle")
+			cheese = @db.add_new_record
+			jam = @db.add_new_record
+			exit = @db.add_new_record
+			record(place) {|r| r.merge!({ :location => limbo, :name => "place", :contents => bob, :flags => TYPE_ROOM, :exits => exit }) }
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
+			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
+			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => NOTHING  }) }
+			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
+			
+			rob = TinyMud::Rob.new
+			notify = sequence('notify')
+			
+			# Wizards can "rob" this way, but bob isn't!
+			Interface.expects(:do_notify).with(bob, "Try using the \"rob\" command.").in_sequence(notify)
+			rob.do_give(bob, "anne", -1)
+			
+			# Zero give
+			Interface.expects(:do_notify).with(bob, "You must specify a positive number of pennies.").in_sequence(notify)
+			rob.do_give(bob, "anne", 0)
+			
+			# Person not real
+			Interface.expects(:do_notify).with(bob, "Give to whom?").in_sequence(notify)
+			rob.do_give(bob, "tulip", 1)
+
+			# Person not here
+			Interface.expects(:do_notify).with(bob, "Give to whom?").in_sequence(notify)
+			rob.do_give(bob, "wizard", 1)
+			
+			# Again, not sure how to generate ambiguous test!!!
+			
+			# Not a person (and in location) - silent!!!
+			Interface.expects(:do_notify).with(bob, "You can only give to other players.").in_sequence(notify)
+			rob.do_give(bob, "jam", 1)
+			
+			# Amount trips max
+			record(anne) {|r| r[:pennies] = MAX_PENNIES - 1 }
+			Interface.expects(:do_notify).with(bob, "That player doesn't need that many pennies!").in_sequence(notify)
+			rob.do_give(bob, "anne", 2)
+			
+			# Ok, but poor
+			record(anne) {|r| r[:pennies] = 0 }
+			Interface.expects(:do_notify).with(bob, "You don't have that many pennies to give!").in_sequence(notify)
+			rob.do_give(bob, "anne", 1)
+			
+			# Ok
+			record(bob) {|r| r[:pennies] = 4 }
+			Interface.expects(:do_notify).with(bob, "You give 1 penny to anne.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob gives you 1 penny.").in_sequence(notify)
+			rob.do_give(bob, "anne", 1)
+			assert_equal(3, @db.get(bob).pennies)
+			assert_equal(1, @db.get(anne).pennies)
+			
+			# Ok, but plural
+			Interface.expects(:do_notify).with(bob, "You give 2 pennies to anne.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob gives you 2 pennies.").in_sequence(notify)
+			rob.do_give(bob, "anne", 2)
+			assert_equal(1, @db.get(bob).pennies)
+			assert_equal(3, @db.get(anne).pennies)
+			
+			# Wizard can use absolute and rob!
+			Interface.expects(:do_notify).with(wizard, "You give -1 pennies to anne.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "Wizard gives you -1 pennies.").in_sequence(notify)
+			rob.do_give(wizard, "##{anne}", -1)
+			assert_equal(2, @db.get(anne).pennies)
+			
+			# Wizard can use name (not in room)
+			Interface.expects(:do_notify).with(wizard, "You give -1 pennies to anne.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "Wizard gives you -1 pennies.").in_sequence(notify)
+			rob.do_give(wizard, "anne", -1)
+			assert_equal(1, @db.get(anne).pennies)
+			
+			# Wizard can give to non player objects!!!!
+			Interface.expects(:do_notify).with(wizard, "You give 1 penny to jam.").in_sequence(notify)
+			rob.do_give(wizard, "jam", 1)
+			assert_equal(1, @db.get(jam).pennies)
+
+			# Need to be in a location?
+			Interface.expects(:do_notify).with(wizard, "Give to whom?").in_sequence(notify)
+			rob.do_give(wizard, "cheese", 1)
+			
+			# Wizard can give more than max
+			record(anne) {|r| r[:pennies] = MAX_PENNIES - 1 }
+			Interface.expects(:do_notify).with(wizard, "You give 2 pennies to anne.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "Wizard gives you 2 pennies.").in_sequence(notify)
+			rob.do_give(wizard, "anne", 2)
+			assert_equal(MAX_PENNIES + 1, @db.get(anne).pennies)
 		end
 
 		# MOVE THIS SOMEWHERE - DRY
