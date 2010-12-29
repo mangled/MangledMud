@@ -24,6 +24,14 @@ static VALUE do_emergency_shutdown(VALUE self)
   return Qnil;
 }
 
+static VALUE do_process_command(VALUE self, VALUE player, VALUE command)
+{
+  (void) self;
+  (void) player;
+  (void) command;
+  return Qnil;
+}
+
 /******************************************************************************/
 /* These are part of interface.h, they call tinymud network code which for now*/
 /* I want to leave out of the tests                                           */
@@ -35,6 +43,15 @@ void notify(dbref player_ref, const char *msg)
   VALUE player = INT2FIX(player_ref);
   VALUE message = rb_str_new2(msg);
   rb_funcall(interface_class, method, 2, player, message);
+}
+
+/* Actually this is part of game.c, but for now */
+void process_command(dbref player_ref, char *command)
+{
+  ID method = rb_intern("do_process_command");
+  VALUE player = INT2FIX(player_ref);
+  VALUE command_s = rb_str_new2(command);
+  rb_funcall(interface_class, method, 2, player, command_s);
 }
 
 /******************************************************************************/
@@ -51,6 +68,7 @@ void Init_tinymud()
 	interface_class = rb_define_class_under(tinymud_module, "Interface", rb_cObject);
     rb_define_module_function(interface_class, "do_notify", do_notify, 2);
     rb_define_module_function(interface_class, "do_emergency_shutdown", do_emergency_shutdown, 0);
+	rb_define_module_function(interface_class, "do_process_command", do_process_command, 2);
 
     Init_db();
     Init_player();
@@ -63,4 +81,5 @@ void Init_tinymud()
 	Init_create();
 	Init_set();
 	Init_rob();
+	Init_wiz();
 }

@@ -16,3 +16,4 @@ extern void Init_look();
 extern void Init_create();
 extern void Init_set();
 extern void Init_rob();
+extern void Init_wiz();

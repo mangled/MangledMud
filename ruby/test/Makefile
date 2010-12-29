@@ -10,9 +10,9 @@ INCFLAGS = -I. -I$(RUBY) -I$(IN_DIR)
 RM = rm -f
 RMD = rmdir
 # This is rubbish, tidy up!!!
-SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c move.c look.c create.c set.c rob.c
-TSRC = dbwrap.c playerwrap.c predicateswrap.c matchwrap.c utilswrap.c speechwrap.c movewrap.c lookwrap.c createwrap.c setwrap.c robwrap.c tinymud.c
-OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o move.o look.o create.o set.o rob.o dbwrap.o playerwrap.o predicateswrap.o matchwrap.o utilswrap.o speechwrap.o movewrap.o lookwrap.o createwrap.o setwrap.o robwrap.o tinymud.o
+SRCS = db.c player.c stringutil.c predicates.c utils.c speech.c match.c move.c look.c create.c set.c rob.c wiz.c
+TSRC = dbwrap.c playerwrap.c predicateswrap.c matchwrap.c utilswrap.c speechwrap.c movewrap.c lookwrap.c createwrap.c setwrap.c robwrap.c wizwrap.c tinymud.c
+OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o move.o look.o create.o set.o rob.o wiz.o dbwrap.o playerwrap.o predicateswrap.o matchwrap.o utilswrap.o speechwrap.o movewrap.o lookwrap.o createwrap.o setwrap.o robwrap.o wizwrap.o tinymud.o
 OUT_OBJS = $(addprefix $(OUT_DIR)/,$(OBJS))
 LIB=./tinymud.so
 
