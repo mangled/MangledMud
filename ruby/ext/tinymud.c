@@ -82,4 +82,5 @@ void Init_tinymud()
 	Init_set();
 	Init_rob();
 	Init_wiz();
+	Init_stringutil();
 }

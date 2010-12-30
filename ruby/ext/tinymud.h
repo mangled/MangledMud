@@ -17,3 +17,4 @@ extern void Init_create();
 extern void Init_set();
 extern void Init_rob();
 extern void Init_wiz();
+extern void Init_stringutil();
