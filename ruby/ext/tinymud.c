@@ -29,7 +29,7 @@ static VALUE do_process_command(VALUE self, VALUE player, VALUE command)
   (void) self;
   (void) player;
   (void) command;
-  return Qnil;
+  return INT2FIX(1);
 }
 
 /******************************************************************************/

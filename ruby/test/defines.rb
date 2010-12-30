@@ -38,6 +38,10 @@ module TinyMud
 	LOOKUP_TOKEN = '*'
 	NUMBER_TOKEN = '#'
 
+	# magic command cookies
+	SAY_TOKEN  = '"'
+	POSE_TOKEN = ':'
+
 	# Maximum amount an object can be worth
 	MAX_OBJECT_ENDOWMENT = 100
 

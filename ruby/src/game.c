@@ -200,7 +200,9 @@ void process_command(dbref player, char *command)
 	VALUE command_s = rb_str_new2(command);
 	VALUE result = rb_funcall(interface_class, method, 2, player_id, command_s);
 	int do_continue = FIX2INT(result);
-	if (do_continue == 0) return;
+	if (do_continue == 0) {
+		return;
+	}
 	/* See above */
 
     char *arg1;
