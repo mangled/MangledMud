@@ -21,3 +21,4 @@ clean:
 	@ruby commands.rb $(patsubst %.ok, %.cmd, $@) > $(patsubst %.ok, %.log, $@)
 	@diff $(patsubst %.ok, %.pass, $@) $(patsubst %.ok, %.log, $@)
 	@touch $@
+	@-$(RM) $(patsubst %.ok, %.log, $@)
