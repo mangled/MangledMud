@@ -4,6 +4,7 @@
 
 /* ruby port */
 extern VALUE tinymud_module;
+extern VALUE interface_class;
 
 extern void Init_db();
 extern void Init_player();
@@ -18,3 +19,4 @@ extern void Init_set();
 extern void Init_rob();
 extern void Init_wiz();
 extern void Init_stringutil();
+extern void Init_game();

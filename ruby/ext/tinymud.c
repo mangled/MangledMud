@@ -4,7 +4,7 @@
 #include "tinymud.h"
 
 VALUE tinymud_module;
-static VALUE interface_class;
+VALUE interface_class;
 
 /******************************************************************************/
 /* These are in the TinyMud module so I can mock them from ruby, see below    */
@@ -45,15 +45,6 @@ void notify(dbref player_ref, const char *msg)
   rb_funcall(interface_class, method, 2, player, message);
 }
 
-/* Actually this is part of game.c, but for now */
-void process_command(dbref player_ref, char *command)
-{
-  ID method = rb_intern("do_process_command");
-  VALUE player = INT2FIX(player_ref);
-  VALUE command_s = rb_str_new2(command);
-  rb_funcall(interface_class, method, 2, player, command_s);
-}
-
 /******************************************************************************/
 
 void emergency_shutdown(void)
@@ -83,4 +74,5 @@ void Init_tinymud()
 	Init_rob();
 	Init_wiz();
 	Init_stringutil();
+	Init_game();
 }
