@@ -44,7 +44,6 @@ Files to Convert
 Files Being Converted
 =====================
 
-7. stringutil.c [I doubt it, but I may need to if the routines are atypical]
 
 Files under Test (done)
 =======================
@@ -61,3 +60,4 @@ Files under Test (done)
 10. set.c
 11. rob.c
 12. wiz.c
+13. stringutil.c [I doubt it, but I may need to if the routines are atypical]
