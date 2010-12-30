@@ -8,12 +8,14 @@ OTHER = test_commands commands.rb
 CMDS = $(wildcard $(CMD_DIR)/*.cmd)
 PASS = $(wildcard $(CMD_DIR)/*.pass)
 OUT = $(patsubst %.cmd, %.ok, $(CMDS))
+LOGS = $(patsubst %.cmd, %.log, $(CMDS))
 RM = rm -f
 
 all: $(OUT)
 
 clean:
 	@-$(RM) $(OUT)
+	@-$(RM) $(LOGS)
 
 %.ok: $(OTHER) $(CMDS) $(PASS)
 	@ruby commands.rb $(patsubst %.ok, %.cmd, $@) > $(patsubst %.ok, %.log, $@)
