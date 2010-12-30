@@ -24,20 +24,20 @@ void do_teleport(dbref player, const char *arg1, const char *arg2)
 
     /* get victim, destination */
     if(*arg2 == '\0') {
-	victim = player;
-	to = arg1;
+		victim = player;
+		to = arg1;
     } else {
-	init_match(player, arg1, NOTYPE);
-	match_neighbor();
-	match_possession();
-	match_me();
-	match_absolute();
-	match_player();
-
-	if((victim = noisy_match_result()) == NOTHING) {
-	    return;
-	}
-	to = arg2;
+		init_match(player, arg1, NOTYPE);
+		match_neighbor();
+		match_possession();
+		match_me();
+		match_absolute();
+		match_player();
+	
+		if((victim = noisy_match_result()) == NOTHING) {
+			return;
+		}
+		to = arg2;
     }
 
     /* get destination */
