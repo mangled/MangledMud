@@ -8,6 +8,8 @@ The idea is to get each file working with ruby and tested, then to switch to a p
 
 As said I recommend you pick a small file first to play with - utils.c (?) actually you will need a database so db.c might be the best? Then possibly methods which add the player, the room etc. finally methods related to moving about? I.e. build up from the basics.
 
+!!! Run on ruby 1.9.x ??? I really should at least test it at the end and see the differences. I doubt I will write any incompatible code, but its worth the test.
+
 !!! Sort out Makefile's etc. once a pattern emerges !!!
 
 Set gcc to high warning level
@@ -29,6 +31,10 @@ Set gcc to high warning level
 !!! Initially the ruby port will stay faithful to the original code to the point where order of events are maintained. Once I'm happy the new code is functioning I will start refactoring it to be more ruby like, at this point in time tests may break wrt when messages are sent, e.g. player a gets message after player b. I also wish to experiment with cucumber as I think it will allow some high level assertions to be made. E.g. "When a player speaks in an empty room nobody hears them". For now I will rely on regression tests.
 
 !!! A future hope is to refactor the "database" to actually be one. This will remove memory burden. Given the code uses indexes (akin to db ID's) it may be relatively simple to switch.
+
+!!! Considering putting this behind a web-server. I don't want to have to write a terminal emulator! Chat window on ruby, hunt about. Possibly XMPP? It might be possible for the mud to be an XMPP client, i.e. people send it messages and it responds but also pings others :-) This sounds neat. This might help: http://www.stevegibson.com/blog/ I still have a way to go before I reach this though :-)
+
+!!! The source I grabbed is missing some more advanced features e.g. the !lock action (see making stuff). Possibly I should fix this in the ruby code rather than through the C to ruby root.
 
 Files I *suspect* I do not need to Convert
 ==========================================
