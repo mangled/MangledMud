@@ -17,7 +17,14 @@ module TinyMud
             Dir.glob(cmd_file.gsub(".cmd", ".pass"))
         end
         
-        def collect_responses(content)
+        def find(db, name)
+            for i in 0..(db.length - 1)
+                return i if db.get(i).name == name
+            end
+            raise "Find #{name} failed!"
+        end
+        
+        def collect_responses(db, content)
 
             players = { "wizard" => 1 }
             game = TinyMud::Game.new
@@ -39,6 +46,12 @@ module TinyMud
                         command = $2.strip
                         raise "Unkown player: \"#{player}\"" unless players.has_key?(player)
                         result << "\e[32;1m#{player}(#{players[player]}): #{command}\e[0m\n"
+                        # Replace #{name} with identifier - This makes the text tests more robust
+                        # Can only handle one per line at present (all I need for now)
+                        if command =~ /\{(.*?)\}/
+                            what = $1
+                            command.gsub!(/\{(.*?)\}/, "#{find(db, what)}")
+                        end
                         game.process_command(players[player], command)
                     elsif line.strip.length != 0
                         result << "Failed parsing line: #{line}\n"
@@ -67,7 +80,7 @@ module TinyMud
             cmd_files().each do |cmd_file|
                 db = TinyMud::Db.new
                 Db.Minimal()
-                current_result = open(cmd_file) {|content| collect_responses(content) }
+                current_result = open(cmd_file) {|content| collect_responses(db, content) }
                 tmp_file = cmd_file.gsub(".cmd", ".tmp")
                 open(tmp_file, "w") {|file| file.write(current_result.join)}
                 pass_file = pass_file(cmd_file)
@@ -75,9 +88,12 @@ module TinyMud
                     raise "Missing pass file for #{cmd_file}"
                 else
                     diff = `diff #{pass_file} #{tmp_file}`
-                    puts diff unless $? == 0
+                    unless $? == 0
+                        puts diff
+                    else
+                        File.delete(tmp_file)
+                    end
                 end
-                File.delete(tmp_file)
                 db.free()
             end
 

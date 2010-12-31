@@ -1,0 +1,24 @@
+Creating player: "bob" with password "bar"
+Creating player: "sam" with password "bar"
+[32;1mwizard(1): give #{sam}=100[0m
+	[31;1m1 You give 100 pennies to sam.[0m
+	[31;1m3 Wizard gives you 100 pennies.[0m
+[32;1msam(3): @create Cheese String[0m
+	[31;1m3 Created.[0m
+[32;1msam(3): @create Cheese WigWam[0m
+	[31;1m3 Created.[0m
+[32;1msam(3): drop cheese[0m
+	[31;1m3 I don't know which you mean![0m
+[32;1msam(3): drop wigwam[0m
+	[31;1m3 Dropped.[0m
+	[31;1m2 sam dropped Cheese WigWam.[0m
+	[31;1m1 sam dropped Cheese WigWam.[0m
+[32;1msam(3): look[0m
+	[31;1m3 Limbo[0m
+	[31;1m3 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
+	[31;1m2 sam is briefly visible through the mist.[0m
+	[31;1m1 sam is briefly visible through the mist.[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 Cheese WigWam(#5)[0m
+	[31;1m3 bob[0m
+	[31;1m3 Wizard[0m
