@@ -141,16 +141,3 @@ module TinyMud
     end
 end
 
-# PUT RECORD TEST!!!!
-
-# REGRESSION?
-## READ!!!!
-#puts "Reading file..."
-#db.read("minimal.db")
-#puts "Read file... #{db.length} entries found"
-#for i in 0..(db.length - 1)
-#	puts "Record #{i}"
-#	puts "-----------"
-#	print(db.get(i))
-#	puts
-#end
