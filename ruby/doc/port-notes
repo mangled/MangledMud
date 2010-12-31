@@ -47,15 +47,12 @@ sanity-check.c
 Files to Convert
 ================
 
-3. help.c [possibly, not much in it anyway]
 4. interface.c [most of this is networking which I will switch to ruby for, some might be needed - pulled out]
 
 Files Being Converted
 =====================
 
 2. game.c [probably only process command needed]
-
-!!! DISABLED do_help and do_news in game.c - FIX ASAP
 
 Files under Test (done)
 =======================
@@ -73,3 +70,4 @@ Files under Test (done)
 11. rob.c
 12. wiz.c
 13. stringutil.c [I doubt it, but I may need to if the routines are atypical]
+14. help.c

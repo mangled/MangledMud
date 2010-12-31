@@ -75,4 +75,5 @@ void Init_tinymud()
 	Init_wiz();
 	Init_stringutil();
 	Init_game();
+    Init_help();
 }

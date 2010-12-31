@@ -20,3 +20,4 @@ extern void Init_rob();
 extern void Init_wiz();
 extern void Init_stringutil();
 extern void Init_game();
+extern void Init_help();

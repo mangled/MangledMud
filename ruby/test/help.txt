@@ -1,0 +1,2 @@
+This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.
+Basic commands: 

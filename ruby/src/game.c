@@ -24,6 +24,7 @@
 #include "player.h"
 #include "set.h"
 #include "utils.h"
+#include "help.h"
 #include "game.h"
 
 /* This will move out, once I have an interface.c, only here because I need it defined */
@@ -501,7 +502,7 @@ void process_command(dbref player, char *command)
 	  case 'h':
 	  case 'H':
 	    Matched("help");
-	    /* do_help(player); -- DISABLED FOR NOW, FIX MNC */
+	    do_help(player);
 	    break;
 	  case 'i':
 	  case 'I':
@@ -527,7 +528,7 @@ void process_command(dbref player, char *command)
 	  case 'N':
 	    /* news */
 	    if(string_compare(command, "news")) goto bad;
-	    /* do_news(player); -- DISABLED FOR NOW, FIX MNC */
+	    do_news(player);
 	    break;
 	  case 'p':
 	  case 'P':
