@@ -160,9 +160,12 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, "anne " + @db.get(limbo).osucc).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Wizard").in_sequence(notify)
+			# This is random and may or may not trigger, need to resolve as tests become unreliable
+			# Comment out this line and remove +1 below if this test "randomly" fails!
+			#Interface.expects(:do_notify).with(anne, "You found a penny!").in_sequence(notify)
 			Interface.expects(:do_notify).with(sue, "bob killed anne!").in_sequence(notify)
 			rob.do_kill(bob, "anne", KILL_BASE_COST)
-			assert_equal(KILL_BONUS, @db.get(anne).pennies)
+			assert_equal(KILL_BONUS + 0, @db.get(anne).pennies) # The +1 is a result of the random, see comment above
 			assert_equal(limbo, @db.get(anne).location)
 			assert_equal(jam, @db.get(bob).next)
 			assert_equal(1, @db.get(bob).pennies)

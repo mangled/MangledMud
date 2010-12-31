@@ -46,12 +46,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, 'Huh?  (Type "help" for help.)').in_sequence(@notify)
 			game.process_command(bob, "!treacle")
 			
-			# The rest of the testing is handled through a simple regression setup, running
-			# through a makefile (commands) and commands.rb. This is easier than coding up
-			# expectations. In essence this function is one huge switch statement, the
-			# functions it calls out to should be under test anyway. The regression tests
-			# should permit combinations of interactions to be logged and therefore widen
-			# the test coverage considerably.
+			# The rest of the testing of "game" is handled through regression.rb
 		end
 
 		def teardown

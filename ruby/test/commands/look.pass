@@ -1,0 +1,35 @@
+Creating player: "bob" with password "bar"
+Creating player: "sam" with password "bar"
+[32;1mbob(2): "hello[0m
+	[31;1m2 You say "hello"[0m
+	[31;1m3 bob says "hello"[0m
+	[31;1m1 bob says "hello"[0m
+[32;1mbob(2): :hello[0m
+	[31;1m3 bob hello[0m
+	[31;1m2 bob hello[0m
+	[31;1m1 bob hello[0m
+[32;1mbob(2): look[0m
+	[31;1m2 Limbo[0m
+	[31;1m2 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
+	[31;1m3 bob is briefly visible through the mist.[0m
+	[31;1m1 bob is briefly visible through the mist.[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 sam[0m
+	[31;1m2 Wizard[0m
+[32;1mbob(2): look sam[0m
+	[31;1m2 You see nothing special.[0m
+[32;1msam(3): @describe me=hairy[0m
+	[31;1m3 Description set.[0m
+[32;1mbob(2): look sam[0m
+	[31;1m2 hairy[0m
+[32;1mbob(2): score[0m
+	[31;1m2 You have 0 pennies.[0m
+[32;1mbob(2): examine sam[0m
+	[31;1m2 You can only examine what you own.  Try using "look."[0m
+[32;1mbob(2): examine me[0m
+	[31;1m2 bob(#2) [bob] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Player[0m
+	[31;1m2 Home: Limbo(#0)[0m
+[32;1mwizard(1): examine bob[0m
+	[31;1m1 bob(#2) [bob] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Player[0m
+	[31;1m1 Home: Limbo(#0)[0m
+	[31;1m1 Location: Limbo(#0)[0m

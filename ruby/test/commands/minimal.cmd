@@ -4,21 +4,6 @@
 !create_player bob bar
 !create_player sam bar
 
-# Looking and Talking
-#####################
-
-bob> "hello
-bob> :hello
-bob> look
-bob> look sam
-sam> @describe me=hairy
-bob> look sam
-# This isn't a command (in docs it is one) bob> whisper sam=boo
-bob> score
-bob> examine sam
-bob> examine me
-wizard> examine bob
-
 # Dig a room and link it
 wizard> @dig treehouse
 # Create an exit north
@@ -34,5 +19,12 @@ wizard> @open e;east
 bob> @link east=6
 bob> e
 
-# TEMPLE!!!
+# Make some things
+wizard> give #3=100
+sam> @create Cheese String
+sam> @create Cheese WigWam
+sam> drop cheese
+sam> drop wigwam
+sam> look
 
+# TEMPLE!!!
