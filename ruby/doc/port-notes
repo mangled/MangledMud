@@ -22,6 +22,8 @@ Set gcc to high warning level
 
 !!! Ensure success/failure strings set in test (when I tidy them again!)
 
+!!! Consider restricted builder option, it might make things simpler. Again possibly do this on the pure ruby version?
+
 !!! Need to document what each part of db object does e.g. exit location is where it goes to, person exits is home (create.c is informative in this regard). This should be on the blog and in general help with the ruby port
 
 !!! Suggest a standard test db set-up, I seem to use the same for most of the tests - Ideally an object, so I can access things by name, think about
