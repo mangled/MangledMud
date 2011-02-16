@@ -1,3 +1,40 @@
+Links
+=====
+
+http://ruby-doc.org/docs/ProgrammingRuby/html/ext_ruby.html
+
+Getting Environment up and running [clean ubuntu]
+==================================
+
+Default ubuntu had gcc etc. but ruby.h seems to have gone walkies. It was at: /usr/lib/ruby/1.8/i486-linux
+
+sudo apt-get install ruby1.8-dev
+
+F*cking brilliant, faulty tree! This machine is getting beyond broken!
+> sudo rm /var/cache/apt/*.bin !!!
+
+Double F*cking brilliant - The machine crashed again, mid-way!!!
+
+Doing a make seemed to work, ruby test.rb - no ruby gems...
+
+> sudo apt-get install rubygems
+> sudo gem install rubygems-update
+> sudo (/var/lib/gems/1.8/bin/!!!)update_rubygems
+
+Had a line, but add into .bashrc: export PATH=$PATH:/var/lib/gems/1.8/bin
+
+Now need mocha
+
+> sudo gem install mocha (again I find the sudo/non-sudo gem stuff a mystery)
+
+> ruby test.rb (now passed)
+
+Will also need git installed (for accessing content)
+
+Notes
+=====
+
+
 Will try out SWIG
 
 For each .c file, copy it into the ruby folder and get it interfacing to ruby. The only aspects that will take some careful attention are those related to networking, I think most functions are in interface.c
