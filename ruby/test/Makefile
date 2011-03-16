@@ -1,11 +1,14 @@
 # TinyMud Ruby Port Makefile
-RUBY = /usr/lib/ruby/1.8/i486-linux
+
+# Fix this hardwired stuff...
+# RUBY = /usr/lib/ruby/1.8/i486-linux
+RUBY = /usr/lib/ruby/1.8/x86_64-linux
 IN_DIR =../src
 OUT_DIR=../obj
 EXT_DIR=../ext
 VPATH = $(RUBY):$(IN_DIR):$(OUT_DIR)
 CC = gcc
-CFLAGS   = -O -g -pipe -Wall -Wextra -Wwrite-strings
+CFLAGS   = -m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings
 INCFLAGS = -I. -I$(RUBY) -I$(IN_DIR)
 RM = rm -f
 RMD = rmdir

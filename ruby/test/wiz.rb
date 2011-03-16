@@ -113,7 +113,7 @@ module TinyMud
 			wiz.do_force(wizard, "spider", nil)
 			
 			# Pass the call on to process_command
-			Interface.expects(:do_process_command).with(bob, "twig").returns(false).in_sequence(notify)
+			Interface.expects(:do_process_command).with(bob, "twig").returns(0).in_sequence(notify)
 			wiz.do_force(wizard, "bob", "twig")
 		end
 

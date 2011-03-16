@@ -8,6 +8,10 @@ Getting Environment up and running [clean ubuntu]
 
 Default ubuntu had gcc etc. but ruby.h seems to have gone walkies. It was at: /usr/lib/ruby/1.8/i486-linux
 
+on 64-bit: /usr/lib/ruby/1.8/x86_64-linux/ruby.h
+FIX this switch!!!
+
+
 sudo apt-get install ruby1.8-dev
 
 F*cking brilliant, faulty tree! This machine is getting beyond broken!
