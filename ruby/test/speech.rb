@@ -1,9 +1,9 @@
 require 'rubygems'
 require 'test/unit'
 require 'mocha'
-require 'defines'
-require 'tinymud'
-require 'helpers'
+require_relative 'defines'
+require_relative 'tinymud'
+require_relative 'helpers'
 require 'pp'
 
 module TinyMud

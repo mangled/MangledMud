@@ -28,7 +28,7 @@ static VALUE do_do_look_at(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_look_at(player_ref, name_s);
     return Qnil;
@@ -40,7 +40,7 @@ static VALUE do_do_examine(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_examine(player_ref, name_s);
     return Qnil;
@@ -68,7 +68,7 @@ static VALUE do_do_find(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_find(player_ref, name_s);
     return Qnil;

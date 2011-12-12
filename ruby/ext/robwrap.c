@@ -11,7 +11,7 @@ static VALUE do_do_rob(VALUE self, VALUE player, VALUE what)
     dbref player_ref = FIX2INT(player);
     char* what_s = strdup("\0");
     if (what != Qnil) {
-        what_s = STR2CSTR(what);
+        what_s = StringValuePtr(what);
     }
     do_rob(player_ref, what_s);
     return Qnil;
@@ -23,7 +23,7 @@ static VALUE do_do_kill(VALUE self, VALUE player, VALUE what, VALUE cost)
     dbref player_ref = FIX2INT(player);
     char* what_s = strdup("\0");
     if (what != Qnil) {
-        what_s = STR2CSTR(what);
+        what_s = StringValuePtr(what);
     }
     int cost_val = FIX2INT(cost);
     do_kill(player_ref, what_s, cost_val);
@@ -36,7 +36,7 @@ static VALUE do_do_give(VALUE self, VALUE player, VALUE recipient, VALUE amount)
     dbref player_ref = FIX2INT(player);
     char* recipient_s = strdup("\0");
     if (recipient != Qnil) {
-        recipient_s = STR2CSTR(recipient);
+        recipient_s = StringValuePtr(recipient);
     }
     int amount_val = FIX2INT(amount);
     do_give(player_ref, recipient_s, amount_val);

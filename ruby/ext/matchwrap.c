@@ -12,7 +12,7 @@ static VALUE do_init_match(VALUE self, VALUE player, VALUE name, VALUE type)
     int type_is = FIX2INT(type);
     const char* name_s = 0;
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     init_match(player_ref, name_s, type_is);
     return Qnil;
@@ -25,7 +25,7 @@ static VALUE do_init_match_check_keys(VALUE self, VALUE player, VALUE name, VALU
     dbref type_is = FIX2INT(type);
     const char* name_s = 0;
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     init_match_check_keys(player_ref, name_s, type_is);
     return Qnil;

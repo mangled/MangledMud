@@ -2,9 +2,9 @@
 require 'rubygems'
 require 'test/unit'
 require 'mocha'
-require 'defines'
-require 'tinymud'
-require 'commands'
+require_relative 'defines'
+require_relative 'tinymud'
+require_relative 'commands'
 require 'pp'
 
 module TinyMud
@@ -16,7 +16,9 @@ module TinyMud
         end
         
         def pass_file(cmd_file)
-            Dir.glob(cmd_file.gsub(".cmd", ".pass"))
+            pass_file = Dir.glob(cmd_file.gsub(".cmd", ".pass"))
+            assert_equal(1, pass_file.length)
+            pass_file[0]
         end
 
         def test_process_command_regressions

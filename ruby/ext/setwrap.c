@@ -11,11 +11,11 @@ static VALUE do_do_name(VALUE self, VALUE player, VALUE name, VALUE newname)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* newname_s = strdup("\0");
     if (newname != Qnil) {
-        newname_s = STR2CSTR(newname);
+        newname_s = StringValuePtr(newname);
     }
     do_name(player_ref, name_s, newname_s);
     return Qnil;
@@ -27,11 +27,11 @@ static VALUE do_do_describe(VALUE self, VALUE player, VALUE name, VALUE descript
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* description_s = strdup("\0");
     if (description != Qnil) {
-        description_s = STR2CSTR(description);
+        description_s = StringValuePtr(description);
     }
     do_describe(player_ref, name_s, description_s);
     return Qnil;
@@ -43,11 +43,11 @@ static VALUE do_do_fail(VALUE self, VALUE player, VALUE name, VALUE message)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* message_s = strdup("\0");
     if (message != Qnil) {
-        message_s = STR2CSTR(message);
+        message_s = StringValuePtr(message);
     }
     do_fail(player_ref, name_s, message_s);
     return Qnil;
@@ -59,11 +59,11 @@ static VALUE do_do_success(VALUE self, VALUE player, VALUE name, VALUE message)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* message_s = strdup("\0");
     if (message != Qnil) {
-        message_s = STR2CSTR(message);
+        message_s = StringValuePtr(message);
     }
     do_success(player_ref, name_s, message_s);
     return Qnil;
@@ -75,11 +75,11 @@ static VALUE do_do_osuccess(VALUE self, VALUE player, VALUE name, VALUE message)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* message_s = strdup("\0");
     if (message != Qnil) {
-        message_s = STR2CSTR(message);
+        message_s = StringValuePtr(message);
     }
     do_osuccess(player_ref, name_s, message_s);
     return Qnil;
@@ -91,11 +91,11 @@ static VALUE do_do_ofail(VALUE self, VALUE player, VALUE name, VALUE message)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* message_s = strdup("\0");
     if (message != Qnil) {
-        message_s = STR2CSTR(message);
+        message_s = StringValuePtr(message);
     }
     do_ofail(player_ref, name_s, message_s);
     return Qnil;
@@ -107,11 +107,11 @@ static VALUE do_do_lock(VALUE self, VALUE player, VALUE name, VALUE keyname)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* keyname_s = strdup("\0");
     if (keyname != Qnil) {
-        keyname_s = STR2CSTR(keyname);
+        keyname_s = StringValuePtr(keyname);
     }
     do_lock(player_ref, name_s, keyname_s);
     return Qnil;
@@ -123,7 +123,7 @@ static VALUE do_do_unlock(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_unlock(player_ref, name_s);
     return Qnil;
@@ -135,7 +135,7 @@ static VALUE do_do_unlink(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_unlink(player_ref, name_s);
     return Qnil;
@@ -147,11 +147,11 @@ static VALUE do_do_chown(VALUE self, VALUE player, VALUE name, VALUE newobj)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* newobj_s = strdup("\0");
     if (newobj != Qnil) {
-        newobj_s = STR2CSTR(newobj);
+        newobj_s = StringValuePtr(newobj);
     }
     do_chown(player_ref, name_s, newobj_s);
     return Qnil;
@@ -163,11 +163,11 @@ static VALUE do_do_set(VALUE self, VALUE player, VALUE name, VALUE flag)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* flag_s = strdup("\0");
     if (flag != Qnil) {
-        flag_s = STR2CSTR(flag);
+        flag_s = StringValuePtr(flag);
     }
     do_set(player_ref, name_s, flag_s);
     return Qnil;

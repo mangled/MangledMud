@@ -2,3 +2,5 @@
 *.so
 *.log
 *.ok
+test/env
+

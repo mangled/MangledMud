@@ -26,7 +26,7 @@ static VALUE do_can_doit(VALUE self, VALUE player, VALUE thing, VALUE default_fa
     (void) self;
     dbref player_ref = FIX2INT(player);
     dbref thing_ref = FIX2INT(thing);
-    const char* fail_msg = STR2CSTR(default_fail_msg);
+    const char* fail_msg = StringValuePtr(default_fail_msg);
     return INT2FIX(can_doit(player_ref, thing_ref, fail_msg));
 }
 
@@ -68,7 +68,7 @@ static VALUE do_ok_name(VALUE self, VALUE name)
     (void) self;
     const char* name_s = 0;
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     return INT2FIX(ok_name(name_s));
 }
@@ -78,7 +78,7 @@ static VALUE do_ok_player_name(VALUE self, VALUE name)
     (void) self;
     const char* name_s = 0;
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     return INT2FIX(ok_player_name(name_s));
 }

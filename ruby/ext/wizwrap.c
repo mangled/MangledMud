@@ -11,11 +11,11 @@ static VALUE do_do_teleport(VALUE self, VALUE player, VALUE arg1, VALUE arg2)
     dbref player_ref = FIX2INT(player);
     char* arg1_s = strdup("\0");
     if (arg1 != Qnil) {
-        arg1_s = STR2CSTR(arg1);
+        arg1_s = StringValuePtr(arg1);
     }
     char* arg2_s = strdup("\0");
     if (arg2 != Qnil) {
-        arg2_s = STR2CSTR(arg2);
+        arg2_s = StringValuePtr(arg2);
     }
     do_teleport(player_ref, arg1_s, arg2_s);
     return Qnil;
@@ -27,11 +27,11 @@ static VALUE do_do_force(VALUE self, VALUE player, VALUE what, VALUE command)
     dbref player_ref = FIX2INT(player);
     char* what_s = strdup("\0");
     if (what != Qnil) {
-        what_s = STR2CSTR(what);
+        what_s = StringValuePtr(what);
     }
     char* command_s = strdup("\0");
     if (command != Qnil) {
-        command_s = STR2CSTR(command);
+        command_s = StringValuePtr(command);
     }
     do_force(player_ref, what_s, command_s);
     return Qnil;
@@ -43,7 +43,7 @@ static VALUE do_do_stats(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_stats(player_ref, name_s);
     return Qnil;
@@ -55,7 +55,7 @@ static VALUE do_do_toad(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_toad(player_ref, name_s);
     return Qnil;

@@ -12,7 +12,7 @@ static VALUE do_process_command(VALUE self, VALUE player, VALUE command)
     dbref player_ref = FIX2INT(player);
     char* command_s = strdup("\0");
     if (command != Qnil) {
-        command_s = STR2CSTR(command);
+        command_s = StringValuePtr(command);
     }
     process_command(player_ref, command_s);
     return Qnil;

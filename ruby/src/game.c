@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "/home/matthew/.rvm/rubies/ruby-1.9.2-p290/include/ruby-1.9.1/x86_64-linux/ruby/config.h"
 #include "ruby.h"
 
 #include "db.h"

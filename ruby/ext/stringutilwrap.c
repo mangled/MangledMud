@@ -10,11 +10,11 @@ static VALUE do_string_compare(VALUE self, VALUE s1, VALUE s2)
     (void) self;
     char* s1_s = strdup("\0");
     if (s1 != Qnil) {
-        s1_s = STR2CSTR(s1);
+        s1_s = StringValuePtr(s1);
     }
     char* s2_s = strdup("\0");
     if (s2 != Qnil) {
-        s2_s = STR2CSTR(s2);
+        s2_s = StringValuePtr(s2);
     }
     return INT2FIX(string_compare(s1_s, s2_s));
 }
@@ -24,11 +24,11 @@ static VALUE do_string_prefix(VALUE self, VALUE string, VALUE prefix)
     (void) self;
     char* string_s = strdup("\0");
     if (string != Qnil) {
-        string_s = STR2CSTR(string);
+        string_s = StringValuePtr(string);
     }
     char* prefix_s = strdup("\0");
     if (prefix != Qnil) {
-        prefix_s = STR2CSTR(prefix);
+        prefix_s = StringValuePtr(prefix);
     }
     return INT2FIX(string_prefix(string_s, prefix_s));
 }
@@ -38,11 +38,11 @@ static VALUE do_string_match(VALUE self, VALUE src, VALUE sub)
     (void) self;
     char* src_s = strdup("\0");
     if (src != Qnil) {
-        src_s = STR2CSTR(src);
+        src_s = StringValuePtr(src);
     }
     char* sub_s = strdup("\0");
     if (sub != Qnil) {
-        sub_s = STR2CSTR(sub);
+        sub_s = StringValuePtr(sub);
     }
     return INT2FIX(string_match(src_s, sub_s));
 }

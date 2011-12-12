@@ -8,7 +8,7 @@ static VALUE player_class;
 static VALUE do_lookup_player(VALUE self, VALUE player_name)
 {
     (void) self;
-    const char* name = STR2CSTR(player_name);
+    const char* name = StringValuePtr(player_name);
     dbref ref = lookup_player(name);
     return INT2FIX(ref);
 }
@@ -16,8 +16,8 @@ static VALUE do_lookup_player(VALUE self, VALUE player_name)
 static VALUE do_connect_player(VALUE self, VALUE player_name, VALUE password)
 {
     (void) self;
-    const char* name = STR2CSTR(player_name);
-    const char* pwd = STR2CSTR(password);
+    const char* name = StringValuePtr(player_name);
+    const char* pwd = StringValuePtr(password);
     dbref ref = connect_player(name, pwd);
     return INT2FIX(ref);
 }
@@ -25,8 +25,8 @@ static VALUE do_connect_player(VALUE self, VALUE player_name, VALUE password)
 static VALUE do_create_player(VALUE self, VALUE player_name, VALUE password)
 {
     (void) self;
-    const char* name = STR2CSTR(player_name);
-    const char* pwd = STR2CSTR(password);
+    const char* name = StringValuePtr(player_name);
+    const char* pwd = StringValuePtr(password);
     dbref ref = create_player(name, pwd);
     return INT2FIX(ref);
 }
@@ -35,8 +35,8 @@ static VALUE do_do_password(VALUE self, VALUE player_ref, VALUE old_pwd, VALUE n
 {
     (void) self;
     dbref player = FIX2INT(player_ref);
-    const char* oldp = STR2CSTR(old_pwd);
-    const char* newp = STR2CSTR(new_pwd);
+    const char* oldp = StringValuePtr(old_pwd);
+    const char* newp = StringValuePtr(new_pwd);
     do_password(player, oldp, newp);
     return Qnil;
 }

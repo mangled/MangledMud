@@ -36,7 +36,7 @@ static VALUE do_can_move(VALUE self, VALUE player, VALUE direction)
     dbref player_ref = FIX2INT(player);
     char* direction_s = 0;
     if (direction != Qnil) {
-        direction_s = STR2CSTR(direction);
+        direction_s = StringValuePtr(direction);
     }
     return INT2FIX(can_move(player_ref, direction_s));
 }
@@ -47,7 +47,7 @@ static VALUE do_do_move(VALUE self, VALUE player, VALUE direction)
     dbref player_ref = FIX2INT(player);
     char* direction_s = 0;
     if (direction != Qnil) {
-        direction_s = STR2CSTR(direction);
+        direction_s = StringValuePtr(direction);
     }
     do_move(player_ref, direction_s);
     return Qnil;
@@ -59,7 +59,7 @@ static VALUE do_do_get(VALUE self, VALUE player, VALUE what)
     dbref player_ref = FIX2INT(player);
     char* what_s = 0;
     if (what != Qnil) {
-        what_s = STR2CSTR(what);
+        what_s = StringValuePtr(what);
     }
     do_get(player_ref, what_s);
     return Qnil;
@@ -71,7 +71,7 @@ static VALUE do_do_drop(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = 0;
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_drop(player_ref, name_s);
     return Qnil;

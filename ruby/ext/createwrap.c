@@ -11,11 +11,11 @@ static VALUE do_do_open(VALUE self, VALUE player, VALUE direction, VALUE linkto)
     dbref player_ref = FIX2INT(player);
     char* direction_s = strdup("\0");
     if (direction != Qnil) {
-        direction_s = STR2CSTR(direction);
+        direction_s = StringValuePtr(direction);
     }
     char* linkto_s = strdup("\0");
     if (linkto != Qnil) {
-        linkto_s = STR2CSTR(linkto);
+        linkto_s = StringValuePtr(linkto);
     }
     do_open(player_ref, direction_s, linkto_s);
     return Qnil;
@@ -27,11 +27,11 @@ static VALUE do_do_link(VALUE self, VALUE player, VALUE name, VALUE room_name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     char* room_name_s = strdup("\0");
     if (room_name != Qnil) {
-        room_name_s = STR2CSTR(room_name);
+        room_name_s = StringValuePtr(room_name);
     }
     do_link(player_ref, name_s, room_name_s);
     return Qnil;
@@ -43,7 +43,7 @@ static VALUE do_do_dig(VALUE self, VALUE player, VALUE name)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     do_dig(player_ref, name_s);
     return Qnil;
@@ -55,7 +55,7 @@ static VALUE do_do_create(VALUE self, VALUE player, VALUE name, VALUE cost)
     dbref player_ref = FIX2INT(player);
     char* name_s = strdup("\0");
     if (name != Qnil) {
-        name_s = STR2CSTR(name);
+        name_s = StringValuePtr(name);
     }
     int cost_val = FIX2INT(cost);
     do_create(player_ref, name_s, cost_val);

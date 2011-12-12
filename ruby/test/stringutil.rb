@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'test/unit'
 require 'mocha'
-require 'defines'
-require 'tinymud'
+require_relative 'defines'
+require_relative 'tinymud'
 require 'pp'
 
 # Only testing these as they may be non typical comparison routines

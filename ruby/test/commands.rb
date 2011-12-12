@@ -1,8 +1,8 @@
 # Helpers for running "commands" regressions, used by run_command.rb
 # and regression.rb
 require 'rubygems'
-require 'defines'
-require 'tinymud'
+require_relative 'defines'
+require_relative 'tinymud'
 
 module TinyMud
     

@@ -1,9 +1,9 @@
 require 'rubygems'
 require 'test/unit'
 require 'mocha'
-require 'defines'
-require 'tinymud'
-require 'helpers'
+require_relative 'defines'
+require_relative 'tinymud'
+require_relative 'helpers'
 require 'pp'
 
 module TinyMud
@@ -33,7 +33,7 @@ module TinyMud
 			assert_equal(thing2, utils.remove_first(thing1, thing1))
 			# Not first so it's removed from the chain
 			assert_equal(thing1, utils.remove_first(thing1, thing2))
-			assert(thing3, @db.get(thing1).next)
+			assert_equal(thing3, @db.get(thing1).next)
 		end
 		
 		def test_member
