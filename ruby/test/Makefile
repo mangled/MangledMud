@@ -31,30 +31,42 @@ OBJS = db.o player.o stringutil.o predicates.o utils.o speech.o match.o move.o l
 
 # Where the intermediate object files will go
 OUT_OBJS = $(addprefix $(OUT_DIR)/,$(OBJS))
+OUT_GCDA = $(addprefix $(OUT_DIR)/,$(patsubst %.o,%.gcda,$(OBJS)))
+OUT_GCNO = $(addprefix $(OUT_DIR)/,$(patsubst %.o,%.gcno,$(OBJS)))
 
 # The final shared library
 LIB=./tinymud.so
 
+# Ensure all (w/o coverage is the default goal)
+.DEFAULT_GOAL := all
+
 # Rules
+# Only when building with coverage (i.e. the coverage target)
+coverage: COVFLAGS = -fprofile-arcs -ftest-coverage
+coverage: COVLINK = -lgcov
+coverage: $(LIB)
+
 all: $(LIB)
 
+# Paranoid deletion over rm *!
 clean:
 	@-$(RM) $(OUT_OBJS)
+	@-$(RM) $(OUT_GCDA)
+	@-$(RM) $(OUT_GCNO)
 	@-$(RM) $(LIB)
 	@-$(RMD) $(OUT_DIR)
 
 $(OUT_DIR)/%.o : $(EXT_DIR)/%.c
-	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(INCFLAGS) $(CFLAGS) $(COVFLAGS) -c $< -o $@
 
 $(OUT_DIR)/%.o : $(IN_DIR)/%.c
-	$(CC) $(INCFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(INCFLAGS) $(CFLAGS) $(COVFLAGS) -c $< -o $@
 
 $(LIB) : $(OUT_OBJS) Makefile env
 	@-$(RM) $@
-	$(CC) -shared -o $@ $(OUT_OBJS)
+	$(CC) -shared -o $@ $(OUT_OBJS) $(COVLINK)
 
 $(OUT_OBJS): | $(OUT_DIR)
 
 $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
-

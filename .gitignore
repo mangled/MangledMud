@@ -1,6 +1,10 @@
 # Ignore objects
 *.o
 
+# Ignore coverage files
+*.gcda
+*.gcno
+
 # Ignore output files
 dump
 extract
