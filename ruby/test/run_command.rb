@@ -4,9 +4,9 @@
 # During development its easier to see the output, hence this tiny script
 require 'rubygems'
 require 'mocha'
-require 'defines'
-require 'tinymud'
-require 'commands'
+require_relative 'defines'
+require_relative 'include'
+require_relative 'commands'
 
 if __FILE__ == $0
     if ARGV.length != 1

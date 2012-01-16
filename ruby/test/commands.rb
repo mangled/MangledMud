@@ -2,7 +2,7 @@
 # and regression.rb
 require 'rubygems'
 require_relative 'defines'
-require_relative 'tinymud'
+require_relative 'include'
 
 module TinyMud
     

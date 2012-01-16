@@ -1,5 +1,5 @@
 # Test helpers
-require_relative 'tinymud'
+require_relative 'include'
 
 module TestHelpers
     # Used all over the place: Simplify setting a records content - Note, assumes

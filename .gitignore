@@ -1,9 +1,14 @@
 # Ignore objects
 *.o
 
-# Ignore coverage files
+# Ignore temp folders
+tmp
+tmp2
+
+# Ignore coverage files and folders
 *.gcda
 *.gcno
+coverage
 
 # Ignore output files
 dump

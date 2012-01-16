@@ -3,7 +3,7 @@ require 'rubygems'
 require 'test/unit'
 require 'mocha'
 require_relative 'defines'
-require_relative 'tinymud'
+require_relative 'include'
 require_relative 'commands'
 require 'pp'
 
@@ -12,7 +12,7 @@ module TinyMud
     class TestRegression < Test::Unit::TestCase
         
         def cmd_files
-            Dir.glob("./commands/*.cmd")
+            Dir.glob("./test/commands/*.cmd")
         end
         
         def pass_file(cmd_file)

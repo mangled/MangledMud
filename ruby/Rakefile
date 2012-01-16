@@ -1,0 +1,48 @@
+require 'rubygems'
+require 'rake/extensiontask'
+
+task :default => [:test]
+
+# TODO: Common pull ext.config_options into arrays here and join them below?
+
+# This builds the tinymud which wraps the original extensions - The #define BUILD_ORIGINAL is set, which when defined
+# will switch in all the C extensions in tinymud.c, if it isn't defined then it indicates the conversion path
+# which will slowly define less and less extension classes in the .so defined after this.
+Rake::ExtensionTask.new do |ext|
+  ext.name = 'tinymud'
+  ext.ext_dir = './ext/'
+  ext.lib_dir = './lib'
+  ext.tmp_dir = './tmp'
+  ext.source_pattern = "*.{c}"
+  ext.config_options << '--with-cflags="-DBUILD_ORIGINAL -m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
+end
+
+# This builds the (when we have figured it all out) tinymud being converted (i.e. it slowly holds less extensions)
+# until it can be removed. This is WIP, the name is clearly rubbish
+Rake::ExtensionTask.new do |ext|
+  ext.name = 'tinymud2'
+  ext.ext_dir = './ext/'
+  ext.lib_dir = './lib'
+  ext.config_script = 'extconf2.rb'
+  ext.tmp_dir = './tmp2'
+  ext.source_pattern = "*.{c}"
+  ext.config_options << '--with-cflags="-m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
+end
+
+desc "Run all tests (the clue is in the name :-))"
+task :test => [:compile] do |t|
+  system "ruby ./test/test.rb"
+end
+
+# TODO: This is a bit pants - all the relative folder stuff, tidy/fix
+desc "Generate line coverage information"
+task :coverage => [:test] do |t|
+  remove_dir('./coverage') if File.directory? './coverage'
+  mkdir('./coverage')
+  object_path = File.dirname(Dir['./tmp/**/tinymud.so'][0]) # yuk
+  cwd = Dir.pwd
+  Dir.chdir(object_path) # yuk
+  system "lcov --base-directory . --directory . -c -o coverage.info"
+  system "genhtml coverage.info -o #{File.join(cwd, 'coverage')}"
+  Dir.chdir(cwd) # yuk
+end

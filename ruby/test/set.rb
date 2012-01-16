@@ -2,7 +2,7 @@ require 'rubygems'
 require 'test/unit'
 require 'mocha'
 require_relative 'defines'
-require_relative 'tinymud'
+require_relative 'include'
 require_relative 'helpers'
 require 'pp'
 

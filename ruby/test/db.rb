@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'test/unit'
 require_relative 'defines'
-require_relative 'tinymud'
+require_relative 'include'
 require 'pp'
 
 def print(record) # to_s?
