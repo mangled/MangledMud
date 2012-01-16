@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake/extensiontask'
 
-task :default => [:test]
+task :default => [:test_original]
 
 # TODO: Common pull ext.config_options into arrays here and join them below?
 
@@ -28,8 +28,15 @@ Rake::ExtensionTask.new do |ext|
   ext.config_options << '--with-cflags="-m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
 end
 
-desc "Run all tests (the clue is in the name :-))"
-task :test => [:compile] do |t|
+desc "Run all tests on the original tinymud code"
+task :test_original => [:compile] do |t|
+  ENV['TEST_TYPE']='ORIGINAL'
+  system "ruby ./test/test.rb"
+end
+
+desc "Run all tests on the current conversion code"
+task :test_converted => [:compile] do |t|
+  ENV['TEST_TYPE']='CONVERTED'
   system "ruby ./test/test.rb"
 end
 
