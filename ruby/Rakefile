@@ -11,8 +11,8 @@ task :default => [:test]
 Rake::ExtensionTask.new do |ext|
   ext.name = 'tinymud'
   ext.ext_dir = './ext/'
-  ext.lib_dir = './lib'
-  ext.tmp_dir = './tmp'
+  ext.lib_dir = './lib/original'
+  ext.tmp_dir = './tmp/original'
   ext.source_pattern = "*.{c}"
   ext.config_options << '--with-cflags="-DBUILD_ORIGINAL -m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
 end
@@ -20,11 +20,10 @@ end
 # This builds the (when we have figured it all out) tinymud being converted (i.e. it slowly holds less extensions)
 # until it can be removed. This is WIP, the name is clearly rubbish
 Rake::ExtensionTask.new do |ext|
-  ext.name = 'tinymud2'
+  ext.name = 'tinymud'
   ext.ext_dir = './ext/'
-  ext.lib_dir = './lib'
-  ext.config_script = 'extconf2.rb'
-  ext.tmp_dir = './tmp2'
+  ext.lib_dir = './lib/converted'
+  ext.tmp_dir = './tmp/converted'
   ext.source_pattern = "*.{c}"
   ext.config_options << '--with-cflags="-m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
 end
