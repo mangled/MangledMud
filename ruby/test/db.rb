@@ -36,6 +36,11 @@ module TinyMud
 
 		def test_db_starts_empty
 			assert_equal(0, @db.length)
+			assert_raise(RuntimeError) { @db.get(0) } # Should really check error message
+			assert_raise(RuntimeError) { @db.put(0, nil) } # Should really check error message
+			@db.add_new_record
+			assert_raise(RuntimeError) { @db.get(1) } # Should really check error message
+			assert_raise(RuntimeError) { @db.put(1, nil) } # Should really check error message
 		end
 		
 		def test_new_record
@@ -61,6 +66,40 @@ module TinyMud
 			assert_equal(0, record.pennies)
 			# Flags is unitialized so methods which depend on it are unreliable
 			assert_equal(nil, record.password)
+		end
+
+		def test_type_flags
+			@db.add_new_record
+			record = @db.get(0)
+			record.flags = TYPE_ROOM;
+			assert_equal("TYPE_ROOM", record.type);
+			record.flags = TYPE_THING;
+			assert_equal("TYPE_THING", record.type);
+			record.flags = TYPE_EXIT;
+			assert_equal("TYPE_EXIT", record.type);
+			record.flags = TYPE_PLAYER;
+			assert_equal("TYPE_PLAYER", record.type);
+			record.flags = NOTYPE;
+			assert_equal("NOTYPE", record.type);
+			record.flags = 0x4;
+			assert_equal("UNKNOWN", record.type);
+		end
+
+		def test_meta_flags
+			@db.add_new_record
+			record = @db.get(0)
+			record.flags = ANTILOCK;
+			assert_equal("ANTILOCK", record.desc);
+			record.flags = WIZARD;
+			assert_equal("WIZARD", record.desc);
+			record.flags = LINK_OK;
+			assert_equal("LINK_OK", record.desc);
+			record.flags = DARK;
+			assert_equal("DARK", record.desc);
+			record.flags = TEMPLE;
+			assert_equal("TEMPLE", record.desc);
+			record.flags = STICKY;
+			assert_equal("STICKY", record.desc);
 		end
 		
 		def test_set_record_content

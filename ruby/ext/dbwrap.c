@@ -102,19 +102,6 @@ static VALUE db_put_record(VALUE self, VALUE at, VALUE record)
 	return Qnil;
 }
 
-// Note: This does read from file, but I'm not concerned as at some point
-// this will be replaced by ruby code
-static VALUE minimal(VALUE self) // Fixme: Almost the same as below (not DRY)
-{
-	(void) self;
-	const char* filename = "minimal.db";
-	FILE* file = fopen(filename, "r");
-	if (file == 0) { rb_raise(rb_eRuntimeError, "failed opening file"); }
-	db_read(file);
-	fclose(file);
-	return Qnil;
-}
-
 static VALUE db_read_from_file(VALUE self, VALUE db_name)
 {
 	(void) self;
@@ -124,6 +111,13 @@ static VALUE db_read_from_file(VALUE self, VALUE db_name)
 	db_read(file);
 	fclose(file);
 	return Qnil;
+}
+
+// Note: This does read from file, but I'm not concerned as at some point
+// this will be replaced by ruby code
+static VALUE minimal(VALUE self) // Fixme: Almost the same as below (not DRY)
+{
+	return db_read_from_file(self, rb_str_new2("minimal.db"));
 }
 
 /* Database struct/"object"/record */
@@ -395,7 +389,7 @@ static VALUE record_type_s(VALUE self)
 			description = strdup("NOTYPE");
 		break;
 		default:
-			description = strdup("Unknown!");
+			description = strdup("UNKNOWN");
 		break;
 	}
 	if (description != 0) {

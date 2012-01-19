@@ -55,7 +55,7 @@ void emergency_shutdown(void)
 
 void Init_tinymud()
 {
-#ifdef ORIGINAL
+#ifdef BUILD_ORIGINAL
   tinymud_module = rb_define_module("TinyMud");
   interface_class = rb_define_class_under(tinymud_module, "Interface", rb_cObject);
   rb_define_module_function(interface_class, "do_notify", do_notify, 2);

@@ -42,7 +42,7 @@ end
 
 # TODO: This is a bit pants - all the relative folder stuff, tidy/fix
 desc "Generate line coverage information"
-task :coverage => [:test] do |t|
+task :coverage => [:test_original] do |t|
   remove_dir('./coverage') if File.directory? './coverage'
   mkdir('./coverage')
   object_path = File.dirname(Dir['./tmp/**/tinymud.so'][0]) # yuk
