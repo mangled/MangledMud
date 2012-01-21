@@ -113,7 +113,7 @@ module TinyMud
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
-			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :fail => "fail"  }) }
 			
 			set = TinyMud::Set.new
 			notify = sequence('notify')
@@ -139,7 +139,7 @@ module TinyMud
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
-			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :succ => "success"  }) }
 			
 			set = TinyMud::Set.new
 			notify = sequence('notify')
@@ -165,7 +165,7 @@ module TinyMud
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
-			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :osucc => "osuccess"  }) }
 			
 			set = TinyMud::Set.new
 			notify = sequence('notify')
@@ -191,7 +191,7 @@ module TinyMud
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
-			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :ofail => "ofail"  }) }
 			
 			set = TinyMud::Set.new
 			notify = sequence('notify')
@@ -411,6 +411,10 @@ module TinyMud
 			# This confirms restricted building is disabled (I have not tested for it)
 			# If this fails then need to write loads more tests
 			set.do_set(bob, "cheese", "BUILDER")
+
+			# Fail to set a flag
+			Interface.expects(:do_notify).with(bob, "You must specify a flag to set.").in_sequence(notify)
+			set.do_set(bob, "cheese", "")
 			
 			# Only wizards can change anything, restrictions on normal players
 			# Can't set wizard flag

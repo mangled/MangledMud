@@ -96,12 +96,20 @@ module TinyMud
 		def test_do_look_around
 			# This basically has one check then calls Look.look_room!!!
 			# Not going to repeat all the look tests (above) again here.
-			# Will check the gaurd though - Player @ nothing
+			# Will check the guard though - Player @ nothing
 			bob = Player.new.create_player("bob", "pwd")
-			record(bob) {|r| r.merge!( :location => NOTHING ) }
+			place = @db.add_new_record
+			record(bob) {|r| r.merge!( :contents => NOTHING, :location => NOTHING, :next => NOTHING ) }
+			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM | LINK_OK, :exits => NOTHING }) }
 			look = TinyMud::Look.new
 			notify = sequence('notify')
-			Interface.expects(:do_notify).never.in_sequence(notify)
+			look.do_look_around(bob) # Should be a no-op
+
+			# But I will sanity check the logic with one call - the look location
+			# is extracted from the players current location, so
+			record(bob) {|r| r.merge!({ :location => place }) }
+			Interface.expects(:do_notify).with(bob, "#{@db.get(place).name} (##{place})").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
 			look.do_look_around(bob)
 		end
 
@@ -265,6 +273,14 @@ module TinyMud
 			look.do_examine(bob, "anne")
 			# Wizards match players
 			Interface.expects(:do_notify).with(wizard, "anne(#4) [anne] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Player").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "jam(#7)").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "Home: Limbo(#0)").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "Location: place(#2)").in_sequence(notify)
+			look.do_examine(wizard, "anne")
+			# Check flags - just manipulate them to check this code, bit hacky bit covers a case
+			record(anne) {|r| r.merge!( :flags => TYPE_PLAYER | WIZARD | STICKY | DARK | LINK_OK | TEMPLE) }
+			Interface.expects(:do_notify).with(wizard, "anne(#4) [anne] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Player Flags: WIZARD STICKY DARK LINK_OK TEMPLE").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "jam(#7)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Home: Limbo(#0)").in_sequence(notify)
