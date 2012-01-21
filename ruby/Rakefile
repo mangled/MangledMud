@@ -49,6 +49,8 @@ task :coverage => [:test_original] do |t|
   cwd = Dir.pwd
   Dir.chdir(object_path) # yuk
   system "lcov --base-directory . --directory . -c -o coverage.info"
+  system 'lcov --base-directory . --directory . -r coverage.info "*wrap*" -o coverage.info'
+  system 'lcov --base-directory . --directory . -r coverage.info tinymud.c -o coverage.info'
   system "genhtml coverage.info -o #{File.join(cwd, 'coverage')}"
   Dir.chdir(cwd) # yuk
 end
