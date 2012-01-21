@@ -28,13 +28,17 @@ module TinyMud
 			anne = Player.new.create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
+			another_jam = @db.add_new_record
 			exit = @db.add_new_record
+			another_place = @db.add_new_record
 			record(limbo) {|r| r.merge!({ :contents => wizard }) }
 			record(place) {|r| r.merge!({ :location => limbo, :name => "place", :contents => bob, :flags => TYPE_ROOM, :exits => NOTHING }) }
+			record(another_place) {|r| r.merge!({ :location => limbo, :name => "placeplace", :contents => NOTHING, :flags => TYPE_ROOM, :exits => NOTHING }) }
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
-			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
+			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => another_jam  }) }
+			record(another_jam) {|r| r.merge!({ :name => "jamm", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 
 			wiz = TinyMud::Wiz.new
@@ -61,6 +65,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, "bob(#3)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "anne(#4)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "jam(#6)").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "jamm(#7)").in_sequence(notify)
 			wiz.do_teleport(wizard, "##{place}", nil)
 			assert_equal(place, @db.get(wizard).location)
 			assert_equal(wizard, @db.get(place).contents)
@@ -91,7 +96,44 @@ module TinyMud
 			wiz.do_teleport(wizard, "##{jam}", "here")
 			assert_equal(place, @db.get(jam).location)
 			
-			# Didn't test ambiguous - Not resolved how yet!
+			# Ambiguous
+			wiz.do_teleport(wizard, "##{another_jam}", "here")
+			assert_equal(place, @db.get(another_jam).location)
+			Interface.expects(:do_notify).with(wizard, 'I don\'t know which one you mean!')
+			wiz.do_teleport(wizard, "ja", "##{limbo}")
+
+			another_bob = Player.new.create_player("bobby", "sprout")
+			record(another_bob) {|r| r.merge!( :contents => NOTHING, :location => limbo, :next => NOTHING ) }
+			record(limbo) {|r| r.merge!({ :contents => another_bob }) }
+			Interface.expects(:do_notify).with(bob, "You feel a wrenching sensation...").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, 'bob has left.').in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
+			Interface.expects(:do_notify).with(another_bob, 'bob has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "Limbo").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "#{@db.get(limbo).description}").in_sequence(notify)
+			Interface.expects(:do_notify).with(another_bob, 'bob is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, 'bobby').in_sequence(notify)
+			wiz.do_teleport(wizard, "##{bob}", "##{limbo}")
+			assert_equal(limbo, @db.get(bob).location)
+			assert_equal(limbo, @db.get(another_bob).location)
+			assert_equal(place, @db.get(wizard).location)
+
+			Interface.expects(:do_notify).with(wizard, "You feel a wrenching sensation...").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, 'Wizard has left.').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, 'Wizard has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(another_bob, 'Wizard has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "Limbo (#0)").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "#{@db.get(limbo).description}").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, 'Wizard is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(another_bob, 'Wizard is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, 'bob(#3)').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, 'bobby(#10)').in_sequence(notify)
+			wiz.do_teleport(wizard, "##{limbo}", nil)
+			
+			Interface.expects(:do_notify).with(wizard, 'I don\'t know which destination you mean!')
+			wiz.do_teleport(wizard, "##{jam}", "bo")
 		end
 
 		def test_do_force
@@ -127,13 +169,15 @@ module TinyMud
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
 			exit = @db.add_new_record
+			unknown = @db.add_new_record
 			record(limbo) {|r| r.merge!({ :contents => wizard }) }
 			record(place) {|r| r.merge!({ :location => limbo, :name => "place", :owner => bob, :contents => bob, :flags => TYPE_ROOM, :exits => NOTHING }) }
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
-			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
+			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => NOTHING  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
+			record(unknown) {|r| r.merge!( :flags => 0xFF ) }
 			
 			wiz = TinyMud::Wiz.new
 			notify = sequence('notify')
@@ -143,7 +187,7 @@ module TinyMud
 			wiz.do_stats(bob, nil)
 			
 			# Wizard can get stats on any player, will count all non-owned items and (if "player" matches their matches), no player match...
-			Interface.expects(:do_notify).with(wizard, "8 objects = 2 rooms, 1 exits, 2 things, 3 players, 0 unknowns.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "9 objects = 2 rooms, 1 exits, 2 things, 3 players, 1 unknowns.").in_sequence(notify)
 			wiz.do_stats(wizard, "wig")
 			Interface.expects(:do_notify).with(wizard, "3 objects = 1 rooms, 0 exits, 1 things, 1 players, 0 unknowns.").in_sequence(notify)
 			wiz.do_stats(wizard, "bob")

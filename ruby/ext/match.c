@@ -44,31 +44,32 @@ static dbref choose_thing(dbref thing1, dbref thing2)
     int has2;
 
     if(thing1 == NOTHING) {
-	return thing2;
+		return thing2;
     } else if(thing2 == NOTHING) {
-	return thing1;
+		return thing1;
     }
 
     if(preferred_type != NOTYPE) {
-	if(Typeof(thing1) == preferred_type) {
-	    if(Typeof(thing2) != preferred_type) {
-		return thing1;
-	    }
-	} else if(Typeof(thing2) == preferred_type) {
-	    return thing2;
-	}
+		if(Typeof(thing1) == preferred_type) {
+			if(Typeof(thing2) != preferred_type) {
+				return thing1;
+			}
+		} else if(Typeof(thing2) == preferred_type) {
+			return thing2;
+		}
     }
 
     if(check_keys) {
-	has1 = could_doit(match_who, thing1);
-	has2 = could_doit(match_who, thing2);
+		has1 = could_doit(match_who, thing1);
+		has2 = could_doit(match_who, thing2);
 
-	if(has1 && !has2) {
-	    return thing1;
-	} else if (has2 && !has1) {
-	    return thing2;
-	}
-	/* else fall through */
+
+		if(has1 && !has2) {
+			return thing1;
+		} else if (has2 && !has1) {
+			return thing2;
+		}
+		/* else fall through */
     }
 
     return (random() % 2 ? thing1 : thing2);
@@ -158,7 +159,7 @@ void match_neighbor()
     dbref loc;
 
     if((loc = db[match_who].location) != NOTHING) {
-	match_list(db[loc].contents);
+		match_list(db[loc].contents);
     }
 }
 
@@ -166,7 +167,7 @@ void match_exit()
 {
     dbref loc;
     dbref exit;
-    int exit_status;
+    int exit_status; // This appears not to be used
     dbref absolute;
     const char *match;
     const char *p;

@@ -104,6 +104,14 @@ module TinyMud
 			record(anne) {|r| r.merge!({ :pennies => 1, :key => bob, :flags => TYPE_PLAYER }) }
 			Interface.expects(:do_notify).with(wizard, "Your conscience tells you not to.").in_sequence(notify)
 			rob.do_rob(wizard, "##{anne}")
+
+			# Ambiguous
+			another_anne = Player.new.create_player("annie", "treacle")
+			record(anne) {|r| r.merge!( :next => wizard ) }
+			record(wizard) {|r| r.merge!( :location => place, :next => another_anne ) }
+			record(another_anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }
+			Interface.expects(:do_notify).with(wizard, "I don't know who you mean!")
+			rob.do_rob(wizard, "an")
 		end
 
 		def test_do_kill
@@ -184,6 +192,13 @@ module TinyMud
 			assert_equal(place, @db.get(sue).location)
 			assert_equal(sue, @db.get(jam).next)
 			assert_equal(KILL_MIN_COST, @db.get(bob).pennies)
+
+			# Ambiguous
+			another_sue = Player.new.create_player("susan", "treacle")
+			record(sue) {|r| r.merge!( :next => another_sue ) }
+			record(another_sue) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
+			Interface.expects(:do_notify).with(bob, "I don't know who you mean!")
+			rob.do_kill(bob, "su", 1)
 		end
 		
 		def test_do_give
@@ -280,6 +295,14 @@ module TinyMud
 			Interface.expects(:do_notify).with(anne, "Wizard gives you 2 pennies.").in_sequence(notify)
 			rob.do_give(wizard, "anne", 2)
 			assert_equal(MAX_PENNIES + 1, @db.get(anne).pennies)
+
+			# Ambiguous
+			another_anne = Player.new.create_player("annie", "treacle")
+			record(anne) {|r| r.merge!( :next => wizard ) }
+			record(wizard) {|r| r.merge!( :location => place, :next => another_anne ) }
+			record(another_anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }
+			Interface.expects(:do_notify).with(wizard, "I don't know who you mean!")
+			rob.do_give(wizard, "an", 2)
 		end
     end
 end

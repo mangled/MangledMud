@@ -166,9 +166,14 @@ module TinyMud
 			check_match_states(match, NOTHING, bob)
 			
 			# Note: The code does call check_keys, but the result doesn't go anywhere (exit_status)
-			# so there isn't any point in testing "init_match_check_keys"!!! Dead code!
+			# so there isn't any point in testing "init_match_check_keys"!!! Dead code! Still, lets
+			# prod it anyway...
+			record(exits) {|r| r.merge!({ :key => NOTHING }) }
+			match.init_match_check_keys(bob, "south", -1)
+			match.match_exit()
+			check_match_states(match, exits)
 		end
-		
+
 		def test_match_everything
 			# This calls all the match methods - I don't have the energy or desire to test this!
 			# It has a switch on the wizard. Once I have a ruby version it will be easy to mock
@@ -220,7 +225,7 @@ module TinyMud
 			match.init_match(person, "pa", -1)
 			f.call(match)
 			check_match_states(match, thing3, person)
-			# Now add another similarly names thing - We should get an AMBIGUOUS match
+			# Now add another similarly named thing - We should get an AMBIGUOUS match
 			thing4 = @db.add_new_record
 			record(thing3) {|r| r[:next] = thing4 }
 			record(thing4) {|r| r.merge!({ :flags => TYPE_THING, :name => "pan", :owner => owner }) }
@@ -234,10 +239,24 @@ module TinyMud
 			# If he had multiple items of the same name then a random ref would be returned
 			# This isn't a perfect test but will do for now - Really need to mock inner methods
 			record(thing4) {|r| r.merge!({ :name => "pants", :flags => TYPE_EXIT}) }
-			match.init_match(person, "pants", TYPE_THING) # Type does effect
+			match.init_match(person, "pants", TYPE_THING)
 			f.call(match)
 			assert_equal(thing3, match.match_result())
-			match.init_match(person, "pants", TYPE_EXIT) # Type does effect
+			match.init_match(person, "pants", TYPE_EXIT)
+			f.call(match)
+			assert_equal(thing4, match.match_result())
+			# Now match with keys - This occurs when we have ambiguity - multiple matches
+			# as above, but each item is checked to see if the person can perform actions
+			# on the things.
+			location = @db.add_new_record
+			record(thing3) {|r| r.merge!({ :location => location, :key => NOTHING, :flags =>  TYPE_THING }) } # printf, no idea whats going on!
+			record(thing4) {|r| r.merge!({ :location => NOTHING, :key => NOTHING, :flags =>  TYPE_THING }) }
+			match.init_match_check_keys(person, "pants", NOTYPE)
+			f.call(match)
+			assert_equal(thing3, match.match_result())
+			record(thing3) {|r| r.merge!({ :location => NOTHING, :key => NOTHING, :flags =>  TYPE_THING }) } # printf, no idea whats going on!
+			record(thing4) {|r| r.merge!({ :location => location, :key => NOTHING, :flags =>  TYPE_THING }) }
+			match.init_match_check_keys(person, "pants", NOTYPE)
 			f.call(match)
 			assert_equal(thing4, match.match_result())
 		end

@@ -14,4 +14,3 @@ require_relative 'stringutil_test'
 require_relative 'game_test'
 require_relative 'regression'
 require_relative 'help_test'
-
