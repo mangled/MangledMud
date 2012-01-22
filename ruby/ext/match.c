@@ -167,50 +167,46 @@ void match_exit()
 {
     dbref loc;
     dbref exit;
-    int exit_status; // This appears not to be used
     dbref absolute;
     const char *match;
     const char *p;
 
     if((loc = db[match_who].location) != NOTHING) {
-	absolute = absolute_name();
-	if(!controls(match_who, absolute)) absolute = NOTHING;
-
-	DOLIST(exit, db[loc].exits) {
-	    if(exit == absolute) {
-		exact_match = exit;
-	    } else {
-		match = db[exit].name;
-		while(*match) {
-		    /* check out this one */
-		    for(p = match_name;
-			(*p
-			 && DOWNCASE(*p) == DOWNCASE(*match)
-			 && *match != EXIT_DELIMITER);
-			p++, match++);
-		    /* did we get it? */
-		    if(*p == '\0') {
-			/* make sure there's nothing afterwards */
-			while(isspace(*match)) match++;
-			if(check_keys) {
-			    exit_status = could_doit(match_who, exit);
+		absolute = absolute_name();
+		if(!controls(match_who, absolute)) absolute = NOTHING;
+	
+		DOLIST(exit, db[loc].exits) {
+			if(exit == absolute) {
+				exact_match = exit;
 			} else {
-			    exit_status = 1;
+				match = db[exit].name;
+				while(*match) {
+					/* check out this one */
+					for(p = match_name; (*p && DOWNCASE(*p) == DOWNCASE(*match) && *match != EXIT_DELIMITER); p++, match++);
+					/* did we get it? */
+					if(*p == '\0') {
+						/* make sure there's nothing afterwards */
+						while(isspace(*match)) match++;
+						if(check_keys) {
+							int exit_status = could_doit(match_who, exit); // ! Modified original code -> Bug fix?
+							match_count += exit_status; 				   // ! Modified original code -> Bug fix?
+						} else {
+							match_count++; // ! Modified original code -> Bug fix?
+						}
+						if(*match == '\0' || *match == EXIT_DELIMITER) {
+							/* we got it */
+							exact_match = choose_thing(exact_match, exit);
+							goto next_exit;	/* got this match */
+						}
+					}
+					/* we didn't get it, find next match */
+					while(*match && *match++ != EXIT_DELIMITER);
+					while(isspace(*match)) match++;
+				}
 			}
-			if(*match == '\0' || *match == EXIT_DELIMITER) {
-			    /* we got it */
-			    exact_match = choose_thing(exact_match, exit);
-			    goto next_exit;	/* got this match */
-			}
-		    }
-		    /* we didn't get it, find next match */
-		    while(*match && *match++ != EXIT_DELIMITER);
-		    while(isspace(*match)) match++;
+		  next_exit:
+			;
 		}
-	    }
-	  next_exit:
-	    ;
-	}
     }
 }
 
@@ -230,7 +226,7 @@ void match_everything()
 dbref match_result()
 {
     if(exact_match != NOTHING) {
-	return exact_match;
+		return exact_match;
     } else {
 	switch(match_count) {
 	  case 0:
