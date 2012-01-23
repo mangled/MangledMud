@@ -14,7 +14,7 @@ Rake::ExtensionTask.new do |ext|
   ext.lib_dir = './lib/original'
   ext.tmp_dir = './tmp/original'
   ext.source_pattern = "*.{c}"
-  ext.config_options << '--with-cflags="-DBUILD_ORIGINAL -m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
+  ext.config_options << '--with-cflags="-DBUILD_ORIGINAL -m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'
 end
 
 # This builds the (when we have figured it all out) tinymud being converted (i.e. it slowly holds less extensions)
@@ -25,7 +25,7 @@ Rake::ExtensionTask.new do |ext|
   ext.lib_dir = './lib/converted'
   ext.tmp_dir = './tmp/converted'
   ext.source_pattern = "*.{c}"
-  ext.config_options << '--with-cflags="-m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'      # supply additional options to configure script.
+  ext.config_options << '--with-cflags="-m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'
 end
 
 desc "Run all tests on the original tinymud code"
@@ -34,15 +34,30 @@ task :test_original => [:compile] do |t|
   system "ruby ./test/test.rb"
 end
 
+desc "Run just the regression tests on the original tinymud code"
+task :test_regression => [:compile] do |t|
+  ENV['TEST_TYPE']='ORIGINAL'
+  system "ruby ./test/regression.rb"
+end
+
 desc "Run all tests on the current conversion code"
 task :test_converted => [:compile] do |t|
   ENV['TEST_TYPE']='CONVERTED'
   system "ruby ./test/test.rb"
 end
 
+desc "Generate line coverage information for regression tests"
+task :regression_coverage => [:test_regression] do |t|
+  do_coverage()
+end
+
 # TODO: This is a bit pants - all the relative folder stuff, tidy/fix
-desc "Generate line coverage information"
+desc "Generate line coverage information for all the tests"
 task :coverage => [:test_original] do |t|
+  do_coverage()
+end
+
+def do_coverage()
   remove_dir('./coverage') if File.directory? './coverage'
   mkdir('./coverage')
   object_path = File.dirname(Dir['./tmp/**/tinymud.so'][0]) # yuk
