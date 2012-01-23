@@ -1,9 +1,10 @@
 #include "ruby.h"
 #include "db.h"
 #include "move.h"
+#include "config.h"
 #include "tinymud.h"
 
-static VALUE move_class;
+VALUE move_class;
 
 static VALUE do_moveto(VALUE self, VALUE what, VALUE where)
 {
@@ -77,6 +78,15 @@ static VALUE do_do_drop(VALUE self, VALUE player, VALUE name)
     return Qnil;
 }
 
+// To allow mocking in move.c - enter_room()
+static VALUE do_get_penny(VALUE self)
+{
+    (void) self;
+
+    // The original code 1 => have a penny, 0 => don't: random() % PENNY_RATE == 0
+    return INT2FIX(0); // We never give pennies, unless the mock says so - Does this make sense? Possibly we need the old code alive?
+}
+
 void Init_move()
 {   
     move_class = rb_define_class_under(tinymud_module, "Move", rb_cObject);
@@ -87,4 +97,5 @@ void Init_move()
     rb_define_method(move_class, "do_move", do_do_move, 2);
     rb_define_method(move_class, "do_get", do_do_get, 2);
     rb_define_method(move_class, "do_drop", do_do_drop, 2);
+    rb_define_module_function(move_class, "get_penny_check", do_get_penny, 0);
 }

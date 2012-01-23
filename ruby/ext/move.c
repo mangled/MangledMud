@@ -1,7 +1,7 @@
 #include "copyright.h"
 
 #include <stdlib.h>
-
+#include "movewrap.h" // For mocking penny giving
 #include "db.h"
 #include "config.h"
 #include "interface.h"
@@ -122,7 +122,14 @@ void enter_room(dbref player, dbref loc)
     look_room(player, loc);
 
     /* check for pennies */
-    if(!controls(player, loc) && db[player].pennies <= MAX_PENNIES && random() % PENNY_RATE == 0) {
+
+	/* Added to allow mocking/control over when someone gets a penny */
+	ID method = rb_intern("get_penny_check");
+	VALUE result = rb_funcall(move_class, method, 0, Qnil);
+	int give_penny = FIX2INT(result);
+	/* end mocking */
+
+    if(!controls(player, loc) && db[player].pennies <= MAX_PENNIES && give_penny) {
 		notify(player, "You found a penny!");
 		db[player].pennies++;
     }

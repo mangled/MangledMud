@@ -156,10 +156,18 @@ module TinyMud
 			move.enter_room(bob, place)
 			assert_equal(place, @db.get(cheese).location)
 			
-			###############################################
-			# !!! Work out how to test finding a penny !!!!
-			###############################################
-			# Doesn't show up because the random number generator is reset each time
+			# Now trigger a penny event by mocking the default behaviour
+			set_up_objects(start_loc, bob, anne, jim, place)
+			Move.expects(:get_penny_check).returns(1)
+			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "You found a penny!").in_sequence(notify)
+			move.enter_room(bob, place)
 		end
 		
 		def test_send_home
@@ -324,17 +332,40 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
+			cake = @db.add_new_record
 			bob = Player.new.create_player("bob", "pwd")
 			cheese = @db.add_new_record
 			exit = @db.add_new_record
+			exit2 = @db.add_new_record
+			record(wizard) {|r| r.merge!({ :contents => cake }) }
 			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM, :exits => exit }) }
+			record(cake) {|r| r.merge!({:name => "cake", :location => wizard, :description => "creamy", :osucc => "pong", :contents => NOTHING, :flags => TYPE_THING, :exits => NOTHING }) }
+			record(exit2) {|r| r.merge!( :location => NOTHING, :name => "exit2", :description => "long2", :flags => TYPE_EXIT, :owner => NOTHING, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => NOTHING ) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => wizard, :next => NOTHING ) }
 			
 			move = TinyMud::Move.new
 			notify = sequence('notify')
-		
+
+			# Pick up a person
+			Interface.expects(:do_notify).with(wizard, "You can't take that!").in_sequence(notify)
+			move.do_get(wizard, "##{place}")
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			move.do_get(bob, "place")
+
+			# Pick up something you are already carrying - Only a wizard can generate this message
+			Interface.expects(:do_notify).with(wizard, "You already have that!").in_sequence(notify)
+			move.do_get(wizard, "##{cake}")
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			move.do_get(bob, "cheese")
+
+			# Pick up an exit in another room (not linked) - HAS to be in a location of NOTHING! WEIRD!
+			Interface.expects(:do_notify).with(wizard, "You can't pick up an exit from another room.").in_sequence(notify)
+			move.do_get(wizard, "##{exit2}")
+			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			move.do_get(bob, "exit2")
+
 			# Try to pick up non-existant something
 			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
 			move.do_get(bob, "bread")
@@ -405,26 +436,9 @@ module TinyMud
 			move.do_get(wizard, "##{cheese}")
 			assert_equal(cheese, @db.get(wizard).contents)
 			assert_equal(wizard, @db.get(cheese).location)
-			
-			# Note: Code has message related to picking up exits from other rooms
-			# I can't see how this can be fired (match exits only searches the room)
-			# Possibly the wizard with absolute?
-			#
-			# Also can't the code to give "You already have that!" seems odd
-			# it checks the objects location it needs to be the player. But
-			# the match code looks for exits or contents in the room. I can
-			# only trigger it so far by screwing up the logic and having it
-			# in the room content but having the things location equal to the
-			# player - Which seems broken.
-			# **Try in running version.**
-			#
-			# This test is yukky! In fact most are. Need to refactor construction
-			# and linkage code - Suspect it will be easier when I have the higher
-			# level functions under test. E.g. create player, drop things etc.
-			# Can then wrap them in a DSL/helpers for testing.
 		end
 		
-		def test_do_drop # WIP - Todo
+		def test_do_drop
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
@@ -481,9 +495,34 @@ module TinyMud
 			move.do_drop(bob, "cheese")
 			assert_equal(cheese2, @db.get(bob).contents)
 			assert_equal(limbo, @db.get(cheese).location)
+
+			# Drop again, don't own, but make the reward < 1
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 0 )}
+			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "You have received 1 penny for your sacrifice.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+
+			# Drop again, don't own, have more than MAX_PENNIES
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 10 )}
+			record(bob) {|r| r.merge!( :pennies => MAX_PENNIES + 1 ) }
+			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "You have received 1 penny for your sacrifice.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
+			record(bob) {|r| r.merge!( :pennies => 5 ) }
+
+			# Drop again, don't own, but make the reward > MAX_OBJECT_ENDOWMENT
+			record(cheese2) {|r| r[:next] = cheese }
+			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => MAX_OBJECT_ENDOWMENT + 1 )}
+			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "You have received #{MAX_OBJECT_ENDOWMENT} pennies for your sacrifice.").in_sequence(notify)
+			move.do_drop(bob, "cheese")
 			
 			# The same but you don't own it
-			# NOTE: Penny logic is more complicated than this, test is minimal and could do with expanding
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 5 )}
 			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)

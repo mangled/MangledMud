@@ -40,6 +40,7 @@ static int alarm_block = 0;
 static void fork_and_dump(void);
 void dump_database(void);
 
+#if 0 // Start: Not being used in the port at present
 void do_dump(dbref player)
 {
     if(Wizard(player)) {
@@ -190,6 +191,7 @@ int init_game(const char *infile, const char *outfile)
    
    return 0;
 }
+#endif // End: Not being used in the port at present
 
 /* use this only in process_command */
 #define Matched(string) { if(!string_prefix((string), command)) goto bad; }

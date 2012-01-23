@@ -211,16 +211,19 @@ module TinyMud
 		end
 
 		def test_do_lock
-			# I can't work out *still* how to get ambigous matches!!! So far none of the tests cover this match case!!!
 			place = @db.add_new_record
 			bob = Player.new.create_player("bob", "sprout")
 			anne = Player.new.create_player("anne", "treacle")
+			anna = Player.new.create_player("anna", "sponge")
 			cheese = @db.add_new_record
+			cheese2 = @db.add_new_record
 			exit = @db.add_new_record
-			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
+			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anna ) }
+			record(anna) {|r| r.merge!( :contents => NOTHING, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
-			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => exit  }) }
-			record(exit) {|r| r.merge!( :location => NOTHING, :name => "exit", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
+			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => cheese2  }) }
+			record(cheese2) {|r| r.merge!({ :name => "cheesey", :location => bob, :description => "smelly", :flags => TYPE_THING, :owner => bob, :next => exit  }) }
+			record(exit) {|r| r.merge!( :location => bob, :name => "exit", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 
 			set = TinyMud::Set.new
 			notify = sequence('notify')
@@ -233,6 +236,12 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "You can't lock that!").in_sequence(notify)
 			set.do_lock(bob, "anne", "sauce")
 			
+			# Ambiguous
+			Interface.expects(:do_notify).with(bob, "I don't know which one you want to lock!").in_sequence(notify)
+			set.do_lock(bob, "che", "anne")
+			Interface.expects(:do_notify).with(bob, "I don't know which key you want!").in_sequence(notify)
+			set.do_lock(bob, "cheese", "an")
+
 			# Ok, now onto the "key" - Doesn't exist!
 			Interface.expects(:do_notify).with(bob, "I can't find that key!").in_sequence(notify)
 			set.do_lock(bob, "cheese", "sauce")
@@ -293,7 +302,6 @@ module TinyMud
 		end
 
 		def test_do_unlink
-			# I can't work out *still* how to get ambigous matches!!! So far none of the tests cover this match case!!!
 			Db.Minimal()
 			limbo = 0
 			place = @db.add_new_record
@@ -301,13 +309,15 @@ module TinyMud
 			anne = Player.new.create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			exit = @db.add_new_record
+			exit2 = @db.add_new_record
 			jam = @db.add_new_record
 			record(place) {|r| r.merge!({ :location => limbo, :name => "place", :contents => bob, :flags => TYPE_ROOM, :exits => exit }) }
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => bob, :next => NOTHING }) }
-			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
+			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => exit2 ) }
+			record(exit2) {|r| r.merge!( :location => limbo, :name => "exitw", :description => "w", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
 			set = TinyMud::Set.new
 			notify = sequence('notify')
@@ -321,6 +331,10 @@ module TinyMud
 			# Must own
 			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
 			set.do_unlink(bob, "exit")
+
+			# Ambiguous
+			Interface.expects(:do_notify).with(bob, "I don't know which one you mean!").in_sequence(notify)
+			set.do_unlink(bob, "ex")
 			
 			# Must be an exit or room
 			# But I think only a wizard can hit this logic as the normal match code won't pick up things!
