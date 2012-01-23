@@ -211,6 +211,9 @@ void match_exit()
 	    ;
 	}
     }
+    // Stop GCC complaining - Note there is a bug related to this which we have
+    // fixed in the code being ported, see, ext/match.c
+    exit_status = exit_status;
 }
 
 void match_everything()

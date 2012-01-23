@@ -1,3 +1,10 @@
+Using tt++ (I have set-up a macro to connect):
+./run then press F2
+
+#log o mylog.raw
+
+#end
+
 first connected as the wizard:
 
 >connect wizard potrzebie
