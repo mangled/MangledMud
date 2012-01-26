@@ -46,6 +46,7 @@ static void db_grow(dbref newtop)
     }
 }
 
+//objects are records.
 dbref new_object()
 {
     dbref newobj;

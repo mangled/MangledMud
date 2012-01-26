@@ -3,6 +3,7 @@
 #Email:	 amo3@umbc.edu
 
 require_relative 'include'
+require 'pp'
 module TinyMud
 
 	#Db class is used to handle administrative database changes.  Holds records.
@@ -70,7 +71,12 @@ module TinyMud
 		#Adds a new blank record to the end of the database.
 		def add_new_record()
 			@@record_array << Record.new()
-			return (@@record_array.length() - 1)
+			
+			#pp @@record_array
+			#Some sort of issue here... returning -1 all the time?
+			#Or issue may be in put function recieving a fixnum.
+			index = @@record_array.length() -1
+			return index
 		end
 		
 		#Adds a record to the database at the specified index.
@@ -79,11 +85,14 @@ module TinyMud
 		#	Putting an object that is not a record			->		Error.
 		def put(index,record)
 			if(record.class() != Record)
-				raise RuntimeError
+				#raise RuntimeError
+				raise "argument is not a record"
 			elsif(@@record_array.length() == 0)
-				raise RuntimeError
+				#raise RuntimeError
+				raise "record array empty"
 			elsif(@@record_array.length() < index || index < 0)
-				raise RuntimeError
+				#raise RuntimeError
+				raise "record array length is less than index or index is less than 0"
 			else
 				@@record_array[index] = record
 			end
@@ -94,9 +103,11 @@ module TinyMud
 		#	Getting from a location that doesn't exist		->		Error.
 		def get(index)
 			if(@@record_array.length() == 0)
-				raise RuntimeError
+				#raise RuntimeError
+				raise "record array length is 0"
 			elsif(@@record_array.length() <= index || index < 0)
-				raise RuntimeError
+				#raise RuntimeError
+				raise "trying to get #{index}, but array length is #{@@record_array.length()}"
 			else
 				return @@record_array[index]
 			end
@@ -115,6 +126,7 @@ module TinyMud
 		
 		#free clears the database and does administrative work
 		def free()
+			@@record_array = Array.new()
 			
 		end
 		
