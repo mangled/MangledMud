@@ -82,6 +82,11 @@ static VALUE do_ok_player_name(VALUE self, VALUE name)
     }
     return INT2FIX(ok_player_name(name_s));
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_predicates()
 {   
@@ -95,4 +100,6 @@ void Init_predicates()
     rb_define_method(predicates_class, "payfor", do_payfor, 2);
     rb_define_method(predicates_class, "ok_name", do_ok_name, 1);
     rb_define_method(predicates_class, "ok_player_name", do_ok_player_name, 1);
+	rb_define_method(predicates_class, "initialize", do_initialize, 1);
+	
 }

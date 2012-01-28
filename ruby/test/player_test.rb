@@ -8,7 +8,7 @@ require 'pp'
 module TinyMud
     class TestPlayer < Test::Unit::TestCase
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -16,7 +16,7 @@ module TinyMud
 		end
 
 		def test_lookup_player
-			player = Player.new
+			player = Player.new(@db)
 			assert_equal(NOTHING, player.lookup_player("sir green nose"))
 			
 			@db.add_new_record
@@ -32,7 +32,7 @@ module TinyMud
 		end
 
 		def test_connect_player
-			player = Player.new
+			player = Player.new(@db)
 			assert_equal(NOTHING, player.connect_player("name", "password"))
 			
 			@db.add_new_record
@@ -49,7 +49,7 @@ module TinyMud
 		end
 		
 		def test_create_player
-			player = Player.new
+			player = Player.new(@db)
 			assert_equal(NOTHING, player.create_player("", ""))
 			assert_equal(NOTHING, player.create_player("", "pwd"))
 			assert_equal(NOTHING, player.create_player(" ", "pwd"))
@@ -107,7 +107,7 @@ module TinyMud
 		end
 		
 		def test_change_password
-			player = Player.new
+			player = Player.new(@db)
 			ref = player.create_player("bob", "pwd")
 			Interface.expects(:do_notify).with(0, "Password changed.")
 			player.change_password(ref, "pwd", "ham")

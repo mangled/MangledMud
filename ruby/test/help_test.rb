@@ -9,7 +9,7 @@ module TinyMud
     class TestHelp < Test::Unit::TestCase
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -17,7 +17,7 @@ module TinyMud
 		end
 		
 		def test_do_help
-			help = TinyMud::Help.new
+			help = TinyMud::Help.new(@db)
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(0, "This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.").in_sequence(notify)
 			Interface.expects(:do_notify).with(0, "Basic commands: ").in_sequence(notify)
@@ -25,7 +25,7 @@ module TinyMud
 		end
 
 		def test_do_news
-			help = TinyMud::Help.new
+			help = TinyMud::Help.new(@db)
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(0, "Sorry, news.txt is broken.  Management has been notified.").in_sequence(notify)
 			help.do_news(0)
