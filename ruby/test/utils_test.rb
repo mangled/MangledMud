@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -26,7 +26,7 @@ module TinyMud
 			record(thing1) {|r| r.merge!({ :next => thing2 }) }
 			record(thing2) {|r| r.merge!({ :next => thing3 }) }
 
-			utils = Utils.new
+			utils = Utils.new(@db)
 			# Not in the list - returns the first!
 			assert_equal(thing1, utils.remove_first(thing1, 100))
 			# First in the list then it skips it
@@ -43,7 +43,7 @@ module TinyMud
 			record(thing1) {|r| r.merge!({ :next => thing2 }) }
 			record(thing2) {|r| r.merge!({ :next => thing3 }) }
 
-			utils = Utils.new
+			utils = Utils.new(@db)
 			assert_equal(0, utils.member(thing3 + 1, thing1))
 			assert_equal(1, utils.member(thing1, thing1))
 			assert_equal(1, utils.member(thing2, thing1))
@@ -62,7 +62,7 @@ module TinyMud
 			assert_equal(thing2, @db.get(0).next)
 			assert_equal(thing3, @db.get(0).next.next)
 
-			utils = Utils.new
+			utils = Utils.new(@db)
 			reversed = utils.reverse(thing1)
 			assert_equal(NOTHING, @db.get(thing1).next)
 			assert_equal(thing1, @db.get(thing2).next)
@@ -75,7 +75,7 @@ module TinyMud
 		def test_getname
 			thing1 = @db.add_new_record
 			record(thing1) {|r| r.merge!({ :name => "cheese", :location => NOTHING }) }
-			utils = Utils.new
+			utils = Utils.new(@db)
 			assert_equal("***NOTHING***", utils.getname(NOTHING))
 			assert_equal("***HOME***", utils.getname(HOME))
 			assert_equal("cheese", utils.getname(thing1))

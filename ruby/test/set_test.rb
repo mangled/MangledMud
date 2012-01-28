@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -21,8 +21,8 @@ module TinyMud
 		
 		def test_do_name
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			fish = @db.add_new_record
 			record(place) {|r| r.merge!({ :name => "place", :description => "yellow", :succ=>"yippee", :fail => "shucks", :osucc => "ping", :ofail => "darn", :contents => bob, :flags => TYPE_ROOM }) }
@@ -31,7 +31,7 @@ module TinyMud
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			record(fish) {|r| r.merge!({ :name => "fish", :location => place, :description => "slimy", :flags => TYPE_THING, :owner => anne  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist
@@ -82,14 +82,14 @@ module TinyMud
 		# The next few tests could/should be common'd up (they only differ by field tested)
 		def test_do_describe
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -108,14 +108,14 @@ module TinyMud
 		
 		def test_do_fail
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :fail => "fail"  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -134,14 +134,14 @@ module TinyMud
 		
 		def test_do_success
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :succ => "success"  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -160,14 +160,14 @@ module TinyMud
 		
 		def test_do_osuccess
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :osucc => "osuccess"  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -186,14 +186,14 @@ module TinyMud
 		
 		def test_do_ofail
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :ofail => "ofail"  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -212,9 +212,9 @@ module TinyMud
 
 		def test_do_lock
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
-			anna = Player.new.create_player("anna", "sponge")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
+			anna = Player.new(@db).create_player("anna", "sponge")
 			cheese = @db.add_new_record
 			cheese2 = @db.add_new_record
 			exit = @db.add_new_record
@@ -225,7 +225,7 @@ module TinyMud
 			record(cheese2) {|r| r.merge!({ :name => "cheesey", :location => bob, :description => "smelly", :flags => TYPE_THING, :owner => bob, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => bob, :name => "exit", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist
@@ -266,14 +266,14 @@ module TinyMud
 
 		def test_do_unlock
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist
@@ -305,8 +305,8 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			exit = @db.add_new_record
 			exit2 = @db.add_new_record
@@ -319,7 +319,7 @@ module TinyMud
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => exit2 ) }
 			record(exit2) {|r| r.merge!( :location => limbo, :name => "exitw", :description => "w", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist or is a player
@@ -366,8 +366,8 @@ module TinyMud
 		
 		def test_do_chown
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			exit = @db.add_new_record
 			jam = @db.add_new_record
@@ -378,7 +378,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => bob, :next => NOTHING }) }
 			record(exit) {|r| r.merge!( :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => anne, :next => NOTHING ) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 			
 			# Person must be a wizard
@@ -405,15 +405,15 @@ module TinyMud
 		
 		def test_do_set
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			record(place) {|r| r.merge!({ :name => "place", :contents => bob, :flags => TYPE_ROOM, :owner => bob }) }
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			
-			set = TinyMud::Set.new
+			set = TinyMud::Set.new(@db)
 			notify = sequence('notify')
 			
 			# Thing must exist

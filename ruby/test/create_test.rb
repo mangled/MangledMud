@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,10 +24,10 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			record(bob) {|r| r.merge!( :location => NOTHING ) }
 			
-			create = TinyMud::Create.new
+			create = TinyMud::Create.new(@db)
 			notify = sequence('notify')
 
 			# We must be somewhere (not NOTHING)
@@ -131,13 +131,13 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			place = @db.add_new_record
 			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
 			record(wizard) {|r| r.merge!({ :next => bob }) }
 			record(place) {|r| r.merge!({ :name => "place", :flags => TYPE_ROOM }) }
 
-			create = TinyMud::Create.new
+			create = TinyMud::Create.new(@db)
 			notify = sequence('notify')
 
 			# We must be somewhere (not NOTHING)
@@ -253,11 +253,11 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
 			record(wizard) {|r| r.merge!({ :next => bob }) }
 
-			create = TinyMud::Create.new
+			create = TinyMud::Create.new(@db)
 			notify = sequence('notify')
 			
 			# don't specify what you want to dig
@@ -287,14 +287,14 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			exit = @db.add_new_record
 			record(exit) {|r| r.merge!( { :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING } ) }
 			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
 			record(wizard) {|r| r.merge!({ :next => bob }) }
 			record(bob) {|r| r.merge!({ :location => limbo, :exits => exit }) }
 
-			create = TinyMud::Create.new
+			create = TinyMud::Create.new(@db)
 			notify = sequence('notify')
 			
 			# don't specify what you want to create

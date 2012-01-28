@@ -27,7 +27,7 @@ end
 module TinyMud
     class TestDb < Test::Unit::TestCase
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown

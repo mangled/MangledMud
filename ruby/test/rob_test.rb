@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,8 +24,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
 			exit = @db.add_new_record
@@ -36,7 +36,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => NOTHING  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			rob = TinyMud::Rob.new
+			rob = TinyMud::Rob.new(@db)
 			notify = sequence('notify')
 			
 			# Player in nothing
@@ -106,7 +106,7 @@ module TinyMud
 			rob.do_rob(wizard, "##{anne}")
 
 			# Ambiguous
-			another_anne = Player.new.create_player("annie", "treacle")
+			another_anne = Player.new(@db).create_player("annie", "treacle")
 			record(anne) {|r| r.merge!( :next => wizard ) }
 			record(wizard) {|r| r.merge!( :location => place, :next => another_anne ) }
 			record(another_anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }
@@ -120,10 +120,10 @@ module TinyMud
 			wizard = 1
 			place = @db.add_new_record
 			cabin = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
-			sam = Player.new.create_player("sam", "sam")
-			sue = Player.new.create_player("sue", "sam")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
+			sam = Player.new(@db).create_player("sam", "sam")
+			sue = Player.new(@db).create_player("sue", "sam")
 			jam = @db.add_new_record
 			record(limbo) {|r| r.merge!({ :contents => wizard, :flags => TYPE_ROOM, :next => NOTHING }) }
 			record(place) {|r| r.merge!({ :location => NOTHING, :name => "place", :contents => bob, :flags => TYPE_ROOM, :next => NOTHING }) }
@@ -134,7 +134,7 @@ module TinyMud
 			record(cabin) {|r| r.merge!({ :location => NOTHING, :name => "cabin", :contents => sam, :flags => TYPE_ROOM, :next => NOTHING }) }
 			record(sam) {|r| r.merge!( :contents => NOTHING, :location => cabin, :next => NOTHING, :exits => limbo ) }
 			
-			rob = TinyMud::Rob.new
+			rob = TinyMud::Rob.new(@db)
 			notify = sequence('notify')
 			
 			# Player somewhere else
@@ -194,7 +194,7 @@ module TinyMud
 			assert_equal(KILL_MIN_COST, @db.get(bob).pennies)
 
 			# Ambiguous
-			another_sue = Player.new.create_player("susan", "treacle")
+			another_sue = Player.new(@db).create_player("susan", "treacle")
 			record(sue) {|r| r.merge!( :next => another_sue ) }
 			record(another_sue) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			Interface.expects(:do_notify).with(bob, "I don't know who you mean!")
@@ -206,8 +206,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
 			exit = @db.add_new_record
@@ -218,7 +218,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => NOTHING  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			rob = TinyMud::Rob.new
+			rob = TinyMud::Rob.new(@db)
 			notify = sequence('notify')
 			
 			# Wizards can "rob" this way, but bob isn't!
@@ -297,7 +297,7 @@ module TinyMud
 			assert_equal(MAX_PENNIES + 1, @db.get(anne).pennies)
 
 			# Ambiguous
-			another_anne = Player.new.create_player("annie", "treacle")
+			another_anne = Player.new(@db).create_player("annie", "treacle")
 			record(anne) {|r| r.merge!( :next => wizard ) }
 			record(wizard) {|r| r.merge!( :location => place, :next => another_anne ) }
 			record(another_anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => jam ) }

@@ -8,7 +8,7 @@ require 'pp'
 module TinyMud
     class TestGame < Test::Unit::TestCase
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 			@notify = sequence('notify')
 		end
 
@@ -17,10 +17,10 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			# We need some players - Creation elsewhere (interface.c - tested elsewhere)
-			bob = Player.new.create_player("bob", "sprout")
-			sam = Player.new.create_player("sam", "sprout")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			sam = Player.new(@db).create_player("sam", "sprout")
 
-			game = TinyMud::Game.new
+			game = TinyMud::Game.new(@db)
 			Interface.expects(:do_emergency_shutdown).never
 			
 			# Bad player ref goes to stderr!
