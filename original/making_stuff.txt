@@ -1,9 +1,21 @@
+./netmud minimal.db foo.dump
+
 Using tt++ (I have set-up a macro to connect):
 ./run then press F2
 
-#log o mylog.raw
+F3 to set #log o mylog.raw
 
 #end
+
+Building:
+You can @dig a new room and you then own. To get to it you need a link. This requires someone
+to @open <dir> a link, you can then get to your room and build. To link back they have to set
+link ok.
+
+I'm starting to see how to-do stuff, need to play with some flags such as haven/home etc.
+
+You can't see exits as I think they should be in the description!
+
 
 first connected as the wizard:
 

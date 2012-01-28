@@ -20,6 +20,10 @@
 {
 	#session tinymud localhost 4201
 }
+#MACRO {\eOR}
+{
+	#log o mylog.raw
+}
 
 #PATHDIR          {d}  {u}  {32}
 #PATHDIR          {e}  {w}  {2}

@@ -14,7 +14,7 @@ if __FILE__ == $0
         exit(-1)
     end
     
-    cmd_file = File.join("./commands", ARGV[0])
+    cmd_file = ARGV[0]
     unless File.exists?(cmd_file)
         puts "Cannot find #{cmd_file}"
         exit(-1)

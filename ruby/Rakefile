@@ -40,6 +40,12 @@ task :test_regression => [:compile] do |t|
   system "ruby ./test/regression.rb"
 end
 
+desc "Run a specific regression file on the original tinymud code (rake :test_script name=foo])"
+task :test_script => [:compile] do |t|
+  ENV['TEST_TYPE']='ORIGINAL'
+  system "ruby ./test/run_command.rb #{ENV['name']}"
+end
+
 desc "Run all tests on the current conversion code"
 task :test_converted => [:compile] do |t|
   ENV['TEST_TYPE']='CONVERTED'
