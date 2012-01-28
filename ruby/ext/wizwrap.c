@@ -61,6 +61,12 @@ static VALUE do_do_toad(VALUE self, VALUE player, VALUE name)
     return Qnil;
 }
 
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
+
 void Init_wiz()
 {   
     wiz_class = rb_define_class_under(tinymud_module, "Wiz", rb_cObject);
@@ -68,4 +74,5 @@ void Init_wiz()
     rb_define_method(wiz_class, "do_force", do_do_force, 3);
     rb_define_method(wiz_class, "do_stats", do_do_stats, 2);
     rb_define_method(wiz_class, "do_toad", do_do_toad, 2);
+	rb_define_method(wiz_class, "initialize", do_initialize, 1);
 }

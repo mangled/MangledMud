@@ -34,6 +34,11 @@ static VALUE do_getname(VALUE self, VALUE loc)
     dbref loc_ref = FIX2INT(loc);
     return rb_str_new2(getname(loc_ref));
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_utils()
 {   
@@ -42,4 +47,5 @@ void Init_utils()
     rb_define_method(utils_class, "member", do_member, 2);
     rb_define_method(utils_class, "reverse", do_reverse, 1);
     rb_define_method(utils_class, "getname", do_getname, 1);
+	rb_define_method(utils_class, "initialize", do_initialize, 1);
 }
