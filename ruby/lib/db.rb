@@ -2,7 +2,7 @@
 #Author: Alexander Morrow
 #Email:	 amo3@umbc.edu
 
-require_relative 'include'
+require_relative '../test/include'
 require 'pp'
 module TinyMud
 
@@ -23,6 +23,7 @@ module TinyMud
 		
 		#Helper function, parses a database from a file.
 		def self.parse_database(location)
+			@@record_array = Array.new()
 			if(File.exist?(location))
 				file = File.new(location, "r")
 				string_array = file.readlines()
@@ -122,6 +123,17 @@ module TinyMud
 		
 		#Helper function, parses a database from a file.
 		def read(location)
+			Db.parse_database(location)
+		end
+		
+		#Writes current database to location
+		def write(location)
+			file = File.new(location, "w")
+			
+			for i in (0..record_array.length())
+			end
+			
+			
 		end
 		
 		#free clears the database and does administrative work
@@ -162,8 +174,5 @@ module TinyMud
 		end
 		
 	end
-		
-		
-	
 	
 end
