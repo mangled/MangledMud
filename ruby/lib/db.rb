@@ -154,11 +154,31 @@ module TinyMud
 		end
 		
 		#Writes current database to location
-		def write(location)
+		def self.write(location)
 			file = File.new(location, "w")
 			
-			for i in (0..record_array.length())
+			for i in (0..@@record_array.length()-1)
+				current_record = @@record_array[i]
+				file.puts("##{i}\n")
+				file.puts(current_record.name.to_s + "\n")
+				file.puts(current_record.description.to_s + "\n")
+				file.puts(current_record.location.to_s + "\n")
+				file.puts(current_record.contents.to_s + "\n")
+				file.puts(current_record.exits.to_s + "\n")
+				file.puts(current_record.next.to_s + "\n")
+				file.puts(current_record.key.to_s + "\n")
+				file.puts(current_record.fail.to_s + "\n")
+				file.puts(current_record.succ.to_s + "\n")
+				file.puts(current_record.ofail.to_s + "\n")
+				file.puts(current_record.osucc.to_s + "\n")
+				file.puts(current_record.owner.to_s + "\n")
+				file.puts(current_record.pennies.to_s + "\n")
+				file.puts(current_record.flags.to_s + "\n")
+				file.puts(current_record.password.to_s + "\n")
 			end
+			
+			file.puts("***END OF DUMP***")
+			file.close()
 			
 			
 		end
