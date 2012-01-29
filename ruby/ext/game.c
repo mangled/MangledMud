@@ -40,7 +40,17 @@ static int alarm_block = 0;
 static void fork_and_dump(void);
 void dump_database(void);
 
-#if 0 // Start: Not being used in the port at present
+void dump_database_to_file(const char* filename)
+{
+	dumpfile = filename;
+	dump_database();
+}
+
+void set_dumpfile_name(const char* filename)
+{
+	dumpfile = filename;
+}
+
 void do_dump(dbref player)
 {
     if(Wizard(player)) {
@@ -50,6 +60,8 @@ void do_dump(dbref player)
 	notify(player, "Sorry, you are in a no dumping zone.");
     }
 }
+
+#if 0 // Start: Not being used in the port at present
 
 void do_shutdown(dbref player)
 {
@@ -72,6 +84,7 @@ static void alarm_handler(int sig)
     }
     return;
 }
+#endif
 
 static void dump_database_internal()
 {
@@ -91,6 +104,17 @@ static void dump_database_internal()
 	perror(tmpfile);
     }
 }
+
+void dump_database()
+{
+    epoch++;
+
+    fprintf(stderr, "DUMPING: %s.#%d#\n", dumpfile, epoch);
+    dump_database_internal();
+    fprintf(stderr, "DUMPING: %s.#%d# (done)\n", dumpfile, epoch);
+}
+
+#if 0
 
 void panic(const char *message)
 {
@@ -121,15 +145,7 @@ void panic(const char *message)
 	_exit(136);
     }
 }
-
-void dump_database()
-{
-    epoch++;
-
-    fprintf(stderr, "DUMPING: %s.#%d#\n", dumpfile, epoch);
-    dump_database_internal();
-    fprintf(stderr, "DUMPING: %s.#%d# (done)\n", dumpfile, epoch);
-}
+#endif
 
 static void fork_and_dump()
 {
@@ -154,6 +170,7 @@ static void fork_and_dump()
     alarm(DUMP_INTERVAL);
 }
 
+#if 0
 static void reaper(int sig)
 {
     (void) sig;

@@ -84,6 +84,10 @@ mat> look
 mat> score
 mat> @open down=home
 mat> examine down
+mat> examine me
+mat> examine #{down}
+mat> zoing
+mat> go mad
 
 # Wizard makes an empty room
 wizard> @dig empty room
@@ -444,6 +448,7 @@ max> @unlink foo
 max> @lock foo=me
 mat> @link foo={mat's place}
 max> @lock here=me
+max> @lock me=cheese
 mat> @link here={mat's place}
 max> @link me=home
 max> @dig
@@ -466,6 +471,14 @@ max> look
 max> @link me=here
 max> examine here
 max> examine #{max's house}
+max> zoing
+wizard> @unlink #{ball}
+wizard> @teleport #{ball}=0
+wizard> give *max=10
+max> @create thing
+max> @set thing=STICKY
+max> go exit
+max> drop thing
 
 mat>@wall
 mat>page felix
@@ -489,5 +502,16 @@ wizard> i
 wizard> drop foof
 wizard> examine #{foof}
 
-# do a dump --> FIX THIS
-#wizard>@dump
+!dumpfile peanut.dump
+mat>@dump
+wizard>@dump mat
+
+# dump and shutdown - separate test files?
+#wizard>@shutdown
+
+# do a dump --> FIX THIS -> PENNY drops are hard, need to trigger through mocha?
+!@dump
+!load minimal.db
+wizard>@stats
+!load cheese.dump
+wizard>@stats

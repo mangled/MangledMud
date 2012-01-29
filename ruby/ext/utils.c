@@ -51,7 +51,7 @@ const char *getname(dbref loc)
       case NOTHING:
 	return "***NOTHING***";
       case HOME:
-	return "***HOME***";
+	return "***HOME***"; /* suspect you need LOG_FAILED_COMMANDS enabled for this to happen */
       default:
 	return db[loc].name;
     }

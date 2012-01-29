@@ -58,6 +58,15 @@ module TinyMud
                         if cmds[0] == "create_player"
                             result << "Creating player: \"#{cmds[1]}\" with password \"#{cmds[2]}\"\n"
                             players[cmds[1]] = TinyMud::Player.new.create_player(cmds[1], cmds[2])
+                        elsif cmds[0] == "dumpfile"
+                            result << "Setting dump file name to #{cmds[1]}\n"
+                            Game::set_dumpfile_name(cmds[1])
+                        elsif cmds[0] == "@dump"
+                            result << "Dumping database\n"
+                            Game::dump_database_to_file('cheese.dump')
+                        elsif cmds[0] == "load"
+                            result << "Reading database from: " << cmds[1] << "\n"
+                            db.read(cmds[1])
                         end
                     elsif line =~ /^(\w+)>(.*)/
                         player = $1

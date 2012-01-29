@@ -212,6 +212,20 @@ Creating player: "bob" with password "bar"
 [32;1mmat(2): examine down[0m
 	[31;1m2 down(#14) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Exit[0m
 	[31;1m2 Destination: ***HOME***[0m
+[32;1mmat(2): examine me[0m
+	[31;1m2 mat(#2) [mat] Key:  ***NOTHING***(#-1) Pennies: 62 Type: Player[0m
+	[31;1m2 Very handsome[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 strong cheese(#13)[0m
+	[31;1m2 Home: mat's place(#8)[0m
+	[31;1m2 Location: mat's place(#8)[0m
+[32;1mmat(2): examine #{down}[0m
+	[31;1m2 down(#14) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Exit[0m
+	[31;1m2 Destination: ***HOME***[0m
+[32;1mmat(2): zoing[0m
+	[31;1m2 Huh?  (Type "help" for help.)[0m
+[32;1mmat(2): go mad[0m
+	[31;1m2 You can't go that way.[0m
 [32;1mwizard(1): @dig empty room[0m
 	[31;1m1 empty room created with room number 15.[0m
 [32;1mwizard(1): @open down={empty room}[0m
@@ -1371,6 +1385,8 @@ Creating player: "max" with password "bar"
 	[31;1m2 Linked.[0m
 [32;1mmax(55): @lock here=me[0m
 	[31;1m55 Locked.[0m
+[32;1mmax(55): @lock me=cheese[0m
+	[31;1m55 I can't find that key![0m
 [32;1mmat(2): @link here={mat's place}[0m
 	[31;1m2 Permission denied.[0m
 [32;1mmax(55): @link me=home[0m
@@ -1441,6 +1457,32 @@ Creating player: "max" with password "bar"
 	[31;1m55 exit(#61)[0m
 	[31;1m55 exit(#60)[0m
 	[31;1m55 exit[0m
+[32;1mmax(55): zoing[0m
+	[31;1m55 Huh?  (Type "help" for help.)[0m
+[32;1mwizard(1): @unlink #{ball}[0m
+	[31;1m1 You can't unlink that![0m
+[32;1mwizard(1): @teleport #{ball}=0[0m
+	[31;1m1 Send it where?[0m
+[32;1mwizard(1): give *max=10[0m
+	[31;1m1 You give 10 pennies to max.[0m
+	[31;1m55 Wizard gives you 10 pennies.[0m
+[32;1mmax(55): @create thing[0m
+	[31;1m55 Created.[0m
+[32;1mmax(55): @set thing=STICKY[0m
+	[31;1m55 Flag set.[0m
+[32;1mmax(55): go exit[0m
+	[31;1m2 max has left.[0m
+	[31;1m1 max has arrived.[0m
+	[31;1m3 max has arrived.[0m
+	[31;1m55 mat's place (#8)[0m
+	[31;1m55 A lovely snug den for Mat to sleep in[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 a slimy toad named greg[0m
+	[31;1m55 Wizard[0m
+	[31;1m55 bob[0m
+	[31;1m55 desk[0m
+[32;1mmax(55): drop thing[0m
+	[31;1m55 Dropped.[0m
 [32;1mmat(2): @wall[0m
 	[31;1m2 But what do you want to do with the wall?[0m
 [32;1mmat(2): page felix[0m
@@ -1459,6 +1501,7 @@ Creating player: "max" with password "bar"
 	[31;1m1 Huh?  (Type "help" for help.)[0m
 [32;1mwizard(1): @teleport #0[0m
 	[31;1m1 You feel a wrenching sensation...[0m
+	[31;1m55 Wizard has left.[0m
 	[31;1m3 Wizard has left.[0m
 	[31;1m46 Wizard has arrived.[0m
 	[31;1m27 Wizard has arrived.[0m
@@ -1486,3 +1529,15 @@ Creating player: "max" with password "bar"
 	[31;1m1 foof(#53) [mat] Key:  ***NOTHING***(#-1) Pennies: 1 Type: Thing[0m
 	[31;1m1 Home: mat's place(#8)[0m
 	[31;1m1 Location: Limbo(#0)[0m
+Setting dump file name to peanut.dump
+[32;1mmat(2): @dump[0m
+	[31;1m2 Sorry, you are in a no dumping zone.[0m
+[32;1mwizard(1): @dump mat[0m
+	[31;1m1 Dumping...[0m
+Dumping database
+Reading database from: minimal.db
+[32;1mwizard(1): @stats[0m
+	[31;1m1 2 objects = 1 rooms, 0 exits, 0 things, 1 players, 0 unknowns.[0m
+Reading database from: cheese.dump
+[32;1mwizard(1): @stats[0m
+	[31;1m1 66 objects = 11 rooms, 32 exits, 17 things, 6 players, 0 unknowns.[0m

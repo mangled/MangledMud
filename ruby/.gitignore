@@ -2,5 +2,7 @@
 *.so
 *.log
 *.ok
+cheese.dump
+peanut.dump
 test/env
 
