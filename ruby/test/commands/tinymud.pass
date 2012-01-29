@@ -1,7 +1,9 @@
 Creating player: "mat" with password "bar"
 Creating player: "bob" with password "bar"
-[32;1mmat(2): @password bar=boo[0m
+[32;1mmat(2): @password bar=bar[0m
 	[31;1m2 Password changed.[0m
+[32;1mmat(2): @password boo=boo[0m
+	[31;1m2 Sorry[0m
 [32;1mmat(2): @describe me=Very handsome[0m
 	[31;1m2 Description set.[0m
 [32;1mbob(3): @describe me=Strange but nice[0m
@@ -11,6 +13,8 @@ Creating player: "bob" with password "bar"
 	[31;1m2 Basic commands: [0m
 [32;1mbob(3): gripe I'm clueless[0m
 	[31;1m3 Your complaint has been duly noted.[0m
+[32;1mmat(2): news[0m
+	[31;1m2 Sorry, news.txt is broken.  Management has been notified.[0m
 [32;1mmat(2): look bob[0m
 	[31;1m2 Strange but nice[0m
 [32;1mbob(3): look wizard[0m
@@ -152,8 +156,19 @@ Creating player: "bob" with password "bar"
 	[31;1m2 Message set.[0m
 [32;1mmat(2): @ofail paper=Tried to take matthew's memoirs![0m
 	[31;1m2 Message set.[0m
+[32;1mmat(2): @link me=paper[0m
+	[31;1m2 That's not a room![0m
 [32;1mmat(2): @link me=here[0m
 	[31;1m2 Home set.[0m
+[32;1mmat(2): examine here[0m
+	[31;1m2 mat's place(#8) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 mat(#2)[0m
+	[31;1m2 Exits:[0m
+	[31;1m2 paper(#12)[0m
+	[31;1m2 s(#10)[0m
+	[31;1m2 s(#9)[0m
 [32;1mmat(2): @create cheese[0m
 	[31;1m2 Created.[0m
 [32;1mmat(2): @describe cheese=Lovely and whiffy[0m
@@ -190,14 +205,44 @@ Creating player: "bob" with password "bar"
 	[31;1m2 desk(#11)[0m
 [32;1mmat(2): score[0m
 	[31;1m2 You have 64 pennies.[0m
+[32;1mmat(2): @open down=home[0m
+	[31;1m2 Opened.[0m
+	[31;1m2 Trying to link...[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): examine down[0m
+	[31;1m2 down(#14) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Exit[0m
+	[31;1m2 Destination: ***HOME***[0m
+[32;1mwizard(1): @dig empty room[0m
+	[31;1m1 empty room created with room number 15.[0m
+[32;1mwizard(1): @open down={empty room}[0m
+	[31;1m1 Opened.[0m
+	[31;1m1 Trying to link...[0m
+	[31;1m1 Linked.[0m
+[32;1mwizard(1): go down[0m
+	[31;1m1 empty room (#15)[0m
+[32;1mwizard(1): @open up={the lounge}[0m
+	[31;1m1 Opened.[0m
+	[31;1m1 Trying to link...[0m
+	[31;1m1 Linked.[0m
+[32;1mwizard(1): @link here={the lounge}[0m
+	[31;1m1 Dropto set.[0m
+[32;1mwizard(1): examine here[0m
+	[31;1m1 empty room(#15) [Wizard] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 Wizard(#1)[0m
+	[31;1m1 Exits:[0m
+	[31;1m1 up(#17)[0m
+	[31;1m1 Dropped objects go to: the lounge(#4)[0m
+[32;1mwizard(1): go up[0m
+	[31;1m1 the lounge (#4)[0m
 [32;1mwizard(1): @dig temple[0m
-	[31;1m1 temple created with room number 14.[0m
+	[31;1m1 temple created with room number 18.[0m
 [32;1mwizard(1): @open up={temple}[0m
 	[31;1m1 Opened.[0m
 	[31;1m1 Trying to link...[0m
 	[31;1m1 Linked.[0m
 [32;1mwizard(1): go up[0m
-	[31;1m1 temple (#14)[0m
+	[31;1m1 temple (#18)[0m
 [32;1mwizard(1): @open down={the lounge}[0m
 	[31;1m1 Opened.[0m
 	[31;1m1 Trying to link...[0m
@@ -209,28 +254,28 @@ Creating player: "bob" with password "bar"
 [32;1mwizard(1): @describe here=The temple of DOOM, sacrifices always welcome[0m
 	[31;1m1 Description set.[0m
 [32;1mwizard(1): look[0m
-	[31;1m1 temple (#14)[0m
+	[31;1m1 temple (#18)[0m
 	[31;1m1 The temple of DOOM, sacrifices always welcome[0m
 [32;1mwizard(1): @dig the crypt[0m
-	[31;1m1 the crypt created with room number 17.[0m
+	[31;1m1 the crypt created with room number 21.[0m
 [32;1mwizard(1): @open w;west={the crypt}[0m
 	[31;1m1 Opened.[0m
 	[31;1m1 Trying to link...[0m
 	[31;1m1 Linked.[0m
 [32;1mwizard(1): examine here[0m
-	[31;1m1 temple(#14) [Wizard] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room Flags: TEMPLE[0m
+	[31;1m1 temple(#18) [Wizard] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room Flags: TEMPLE[0m
 	[31;1m1 The temple of DOOM, sacrifices always welcome[0m
 	[31;1m1 Contents:[0m
 	[31;1m1 Wizard(#1)[0m
 	[31;1m1 Exits:[0m
-	[31;1m1 w;west(#18)[0m
-	[31;1m1 down(#16)[0m
+	[31;1m1 w;west(#22)[0m
+	[31;1m1 down(#20)[0m
 [32;1mwizard(1): go west[0m
-	[31;1m1 the crypt (#17)[0m
+	[31;1m1 the crypt (#21)[0m
 [32;1mwizard(1): @describe here=A dark place[0m
 	[31;1m1 Description set.[0m
 [32;1mwizard(1): look[0m
-	[31;1m1 the crypt (#17)[0m
+	[31;1m1 the crypt (#21)[0m
 	[31;1m1 A dark place[0m
 [32;1mwizard(1): @set here=DARK[0m
 	[31;1m1 Flag set.[0m
@@ -239,19 +284,21 @@ Creating player: "bob" with password "bar"
 [32;1mwizard(1): @describe chair=The chair of scary stuff[0m
 	[31;1m1 Description set.[0m
 [32;1mwizard(1): look[0m
-	[31;1m1 the crypt (#17)[0m
+	[31;1m1 the crypt (#21)[0m
 	[31;1m1 A dark place[0m
 [32;1mwizard(1): @open e={temple}[0m
 	[31;1m1 Opened.[0m
 	[31;1m1 Trying to link...[0m
 	[31;1m1 Linked.[0m
+[32;1mwizard(1): @force kate=get tree[0m
+	[31;1m1 That player does not exist.[0m
 [32;1mwizard(1): @force bob=look[0m
 	[31;1m3 Limbo[0m
 	[31;1m3 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
 [32;1mwizard(1): give bob=10[0m
 	[31;1m1 Give to whom?[0m
 [32;1mwizard(1): go e[0m
-	[31;1m1 temple (#14)[0m
+	[31;1m1 temple (#18)[0m
 	[31;1m1 The temple of DOOM, sacrifices always welcome[0m
 [32;1mwizard(1): go down[0m
 	[31;1m1 the lounge (#4)[0m
@@ -262,7 +309,7 @@ Creating player: "bob" with password "bar"
 	[31;1m1 Home: the lounge(#4)[0m
 	[31;1m1 Location: mat(#2)[0m
 [32;1mwizard(1): examine *mat[0m
-	[31;1m1 mat(#2) [mat] Key:  ***NOTHING***(#-1) Pennies: 64 Type: Player[0m
+	[31;1m1 mat(#2) [mat] Key:  ***NOTHING***(#-1) Pennies: 62 Type: Player[0m
 	[31;1m1 Very handsome[0m
 	[31;1m1 Contents:[0m
 	[31;1m1 strong cheese(#13)[0m
@@ -280,9 +327,9 @@ Creating player: "bob" with password "bar"
 	[31;1m3 Wizard[0m
 [32;1mbob(3): page mat=ooohhh spooky[0m
 	[31;1m3 You don't have enough pennies.[0m
-[32;1mwizard(1): give bob=20[0m
-	[31;1m1 You give 20 pennies to bob.[0m
-	[31;1m3 Wizard gives you 20 pennies.[0m
+[32;1mwizard(1): give bob=13[0m
+	[31;1m1 You give 13 pennies to bob.[0m
+	[31;1m3 Wizard gives you 13 pennies.[0m
 [32;1mbob(3): page mat=ooohhh spooky[0m
 	[31;1m2 You sense that bob is looking for you in the lounge.[0m
 	[31;1m3 Your message has been sent.[0m
@@ -298,6 +345,12 @@ Creating player: "bob" with password "bar"
 	[31;1m3 Locked.[0m
 [32;1mbob(3): @fail socks=Why would you want to?[0m
 	[31;1m3 Message set.[0m
+[32;1mbob(3): @ofail socks=is getting smelly hands[0m
+	[31;1m3 Message set.[0m
+[32;1mbob(3): @osucc socks=picks up the stripy socks[0m
+	[31;1m3 Message set.[0m
+[32;1mbob(3): @success socks=You got a lovely pair of socks[0m
+	[31;1m3 Message set.[0m
 [32;1mbob(3): @link socks={the lounge}[0m
 	[31;1m3 Home set.[0m
 [32;1mbob(3): drop socks[0m
@@ -305,9 +358,18 @@ Creating player: "bob" with password "bar"
 [32;1mwizard(1): look[0m
 	[31;1m1 the lounge (#4)[0m
 	[31;1m1 Contents:[0m
-	[31;1m1 socks(#21)[0m
+	[31;1m1 socks(#25)[0m
 [32;1mwizard(1): look socks[0m
 	[31;1m1 From granny with love[0m
+[32;1mwizard(1): examine socks[0m
+	[31;1m1 socks(#25) [bob] Key:  bob(#3) Pennies: 1 Type: Thing[0m
+	[31;1m1 From granny with love[0m
+	[31;1m1 Fail: Why would you want to?[0m
+	[31;1m1 Success: You got a lovely pair of socks[0m
+	[31;1m1 Ofail: is getting smelly hands[0m
+	[31;1m1 Osuccess: picks up the stripy socks[0m
+	[31;1m1 Home: the lounge(#4)[0m
+	[31;1m1 Location: the lounge(#4)[0m
 [32;1mbob(3): go w[0m
 	[31;1m3 the crypt[0m
 	[31;1m3 A dark place[0m
@@ -326,13 +388,16 @@ Creating player: "bob" with password "bar"
 	[31;1m1 bob has arrived.[0m
 	[31;1m3 the lounge (#4)[0m
 	[31;1m3 Contents:[0m
-	[31;1m3 socks(#21)[0m
+	[31;1m3 socks(#25)[0m
 	[31;1m3 Wizard[0m
 [32;1mwizard(1): take socks[0m
 	[31;1m1 Why would you want to?[0m
+	[31;1m3 Wizard is getting smelly hands[0m
 [32;1mbob(3): @unlock socks=[0m
 	[31;1m3 Unlocked.[0m
 [32;1mwizard(1): take socks[0m
+	[31;1m1 You got a lovely pair of socks[0m
+	[31;1m3 Wizard picks up the stripy socks[0m
 	[31;1m1 Taken.[0m
 [32;1mbob(3): go e[0m
 	[31;1m1 bob has left.[0m
@@ -347,3 +412,1077 @@ Creating player: "bob" with password "bar"
 	[31;1m2 bob Tried to take matthew's memoirs![0m
 [32;1mbob(3): look paper[0m
 	[31;1m3 The memoirs of matthew[0m
+[32;1mbob(3): look here[0m
+	[31;1m3 mat's place[0m
+	[31;1m3 A lovely snug den for Mat to sleep in[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 desk[0m
+	[31;1m3 mat[0m
+[32;1mbob(3): i[0m
+	[31;1m3 You aren't carrying anything.[0m
+	[31;1m3 You have 2 pennies.[0m
+[32;1mbob(3): @find mat[0m
+	[31;1m3 ***End of List***[0m
+[32;1mbob(3): @find sock[0m
+	[31;1m3 socks(#25)[0m
+	[31;1m3 ***End of List***[0m
+[32;1mbob(3): @find sock[0m
+	[31;1m3 You don't have enough pennies.[0m
+[32;1mmat(2): give bob=10[0m
+	[31;1m2 You give 10 pennies to bob.[0m
+	[31;1m3 mat gives you 10 pennies.[0m
+[32;1mmat(2): give bob=-5[0m
+	[31;1m2 Try using the "rob" command.[0m
+[32;1mwizard(1): go e[0m
+	[31;1m3 Wizard has arrived.[0m
+	[31;1m2 Wizard has arrived.[0m
+	[31;1m1 mat's place (#8)[0m
+	[31;1m1 A lovely snug den for Mat to sleep in[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 bob(#3)[0m
+	[31;1m1 desk(#11)[0m
+	[31;1m1 mat(#2)[0m
+[32;1mwizard(1): give bob=20[0m
+	[31;1m1 You give 20 pennies to bob.[0m
+	[31;1m3 Wizard gives you 20 pennies.[0m
+[32;1mbob(3): @create socks[0m
+	[31;1m3 Created.[0m
+[32;1mbob(3): @describe=My second favourite pair![0m
+	[31;1m3 Huh?  (Type "help" for help.)[0m
+[32;1mbob(3): drop socks[0m
+	[31;1m3 Dropped.[0m
+	[31;1m1 bob dropped socks.[0m
+	[31;1m2 bob dropped socks.[0m
+[32;1mwizard(1): drop socks[0m
+	[31;1m1 Dropped.[0m
+	[31;1m3 Wizard dropped socks.[0m
+	[31;1m2 Wizard dropped socks.[0m
+[32;1mbob(3): get so[0m
+	[31;1m3 I don't know which one you mean![0m
+[32;1mbob(3): get w[0m
+	[31;1m3 You can't take that![0m
+[32;1mmat(2): @force bob=look[0m
+	[31;1m2 Only Wizards may use this command.[0m
+Creating player: "mark" with password "bar"
+[32;1mmark(27): go n[0m
+	[31;1m27 You escape[0m
+	[31;1m27 the lounge (#4)[0m
+[32;1mmark(27): go east[0m
+	[31;1m1 mark has arrived.[0m
+	[31;1m3 mark has arrived.[0m
+	[31;1m2 mark has arrived.[0m
+	[31;1m27 mat's place[0m
+	[31;1m27 A lovely snug den for Mat to sleep in[0m
+	[31;1m27 Contents:[0m
+	[31;1m27 socks[0m
+	[31;1m27 socks[0m
+	[31;1m27 Wizard[0m
+	[31;1m27 bob[0m
+	[31;1m27 desk[0m
+	[31;1m27 mat[0m
+[32;1mmat(2): give ma=5[0m
+	[31;1m2 I don't know who you mean![0m
+[32;1mmat(2): give socks=5[0m
+	[31;1m2 You can only give to other players.[0m
+[32;1mmat(2): give bob=100000[0m
+	[31;1m2 That player doesn't need that many pennies![0m
+[32;1mmat(2): give bob=500[0m
+	[31;1m2 You don't have that many pennies to give![0m
+[32;1mbob(3): rob ma[0m
+	[31;1m3 I don't know who you mean![0m
+[32;1mbob(3): rob socks[0m
+	[31;1m3 Sorry, you can only rob other players.[0m
+[32;1mbob(3): rob mat[0m
+	[31;1m3 You stole a penny.[0m
+	[31;1m2 bob stole one of your pennies![0m
+[32;1mmat(2): @teleport socks={the lounge}[0m
+	[31;1m2 Only a Wizard may teleport at will.[0m
+[32;1mwizard(1): @teleport mat=#{the lounge}[0m
+	[31;1m2 You feel a wrenching sensation...[0m
+	[31;1m27 mat has left.[0m
+	[31;1m1 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m2 the lounge (#4)[0m
+[32;1mwizard(1): @teleport ma=here[0m
+	[31;1m27 You feel a wrenching sensation...[0m
+	[31;1m27 mat's place[0m
+	[31;1m27 A lovely snug den for Mat to sleep in[0m
+	[31;1m27 Contents:[0m
+	[31;1m27 socks[0m
+	[31;1m27 socks[0m
+	[31;1m27 Wizard[0m
+	[31;1m27 bob[0m
+	[31;1m27 desk[0m
+[32;1mbob(3): @stats[0m
+	[31;1m3 The universe contains 28 objects.[0m
+[32;1mwizard(1): @stats[0m
+	[31;1m1 28 objects = 6 rooms, 14 exits, 4 things, 4 players, 0 unknowns.[0m
+[32;1mmat(2): move home[0m
+	[31;1m2 There's no place like home...[0m
+	[31;1m2 There's no place like home...[0m
+	[31;1m2 There's no place like home...[0m
+	[31;1m2 You wake up back home, without your possessions.[0m
+	[31;1m27 mat has arrived.[0m
+	[31;1m1 mat has arrived.[0m
+	[31;1m3 mat has arrived.[0m
+	[31;1m2 mat's place (#8)[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 mark[0m
+	[31;1m2 socks[0m
+	[31;1m2 socks[0m
+	[31;1m2 Wizard[0m
+	[31;1m2 bob[0m
+	[31;1m2 desk(#11)[0m
+[32;1mmat(2): @dig mats bedroom[0m
+	[31;1m2 mats bedroom created with room number 28.[0m
+[32;1mmat(2): @open sleep={mats bedroom}[0m
+	[31;1m2 Opened.[0m
+	[31;1m2 Trying to link...[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): go sleep[0m
+	[31;1m27 mat has left.[0m
+	[31;1m1 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m2 mats bedroom (#28)[0m
+[32;1mmat(2): @link here={mat's place}[0m
+	[31;1m2 Dropto set.[0m
+[32;1mmat(2): @open wake={mat's place}[0m
+	[31;1m2 Opened.[0m
+	[31;1m2 Trying to link...[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): @open woken={mat's place}[0m
+	[31;1m2 Opened.[0m
+	[31;1m2 Trying to link...[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): get wake[0m
+	[31;1m2 You can't pick up a linked exit.[0m
+[32;1mmat(2): @create pillow[0m
+	[31;1m2 Created.[0m
+[32;1mmat(2): drop pillow[0m
+	[31;1m2 Dropped.[0m
+[32;1mmat(2): @open bathroom[0m
+	[31;1m2 Opened.[0m
+[32;1mmat(2): examine[0m
+	[31;1m2 mats bedroom(#28) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 mat(#2)[0m
+	[31;1m2 Exits:[0m
+	[31;1m2 bathroom(#33)[0m
+	[31;1m2 woken(#31)[0m
+	[31;1m2 wake(#30)[0m
+	[31;1m2 Dropped objects go to: mat's place(#8)[0m
+[32;1mmat(2): examine bathroom[0m
+	[31;1m2 bathroom(#33) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Exit[0m
+[32;1mmat(2): examine here[0m
+	[31;1m2 mats bedroom(#28) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 mat(#2)[0m
+	[31;1m2 Exits:[0m
+	[31;1m2 bathroom(#33)[0m
+	[31;1m2 woken(#31)[0m
+	[31;1m2 wake(#30)[0m
+	[31;1m2 Dropped objects go to: mat's place(#8)[0m
+[32;1mmat(2): get #{bathroom}[0m
+	[31;1m2 Exit taken.[0m
+[32;1mmat(2): get #{bathroom}[0m
+	[31;1m2 I don't see that here.[0m
+[32;1mmat(2): go w[0m
+	[31;1m2 I don't know which way you mean![0m
+[32;1mwizard(1): get #{bathroom}[0m
+	[31;1m1 You can't pick up a linked exit.[0m
+[32;1mmat(2): drop bathroom[0m
+	[31;1m2 Exit dropped.[0m
+[32;1mmat(2): drop bathroom[0m
+	[31;1m2 You don't have that![0m
+[32;1mwizard(1): get #{bathroom}[0m
+	[31;1m1 You can't pick up an exit from another room.[0m
+[32;1mwizard(1): go sleep[0m
+	[31;1m27 Wizard has left.[0m
+	[31;1m3 Wizard has left.[0m
+	[31;1m2 Wizard has arrived.[0m
+	[31;1m1 mats bedroom (#28)[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 mat(#2)[0m
+[32;1mwizard(1): get #{bathroom}[0m
+	[31;1m1 Exit taken.[0m
+[32;1mwizard(1): get #{bathroom}[0m
+	[31;1m1 You already have that![0m
+[32;1mwizard(1): drop bathroom[0m
+	[31;1m1 Exit dropped.[0m
+[32;1mwizard(1): go wake[0m
+	[31;1m2 Wizard has left.[0m
+	[31;1m27 Wizard has arrived.[0m
+	[31;1m3 Wizard has arrived.[0m
+	[31;1m1 mat's place (#8)[0m
+	[31;1m1 A lovely snug den for Mat to sleep in[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 pillow(#32)[0m
+	[31;1m1 mark(#27)[0m
+	[31;1m1 socks(#25)[0m
+	[31;1m1 socks(#26)[0m
+	[31;1m1 bob(#3)[0m
+	[31;1m1 desk(#11)[0m
+[32;1mmat(2): go wake[0m
+	[31;1m1 mat has arrived.[0m
+	[31;1m27 mat has arrived.[0m
+	[31;1m3 mat has arrived.[0m
+	[31;1m2 mat's place (#8)[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 Wizard[0m
+	[31;1m2 pillow(#32)[0m
+	[31;1m2 mark[0m
+	[31;1m2 socks[0m
+	[31;1m2 socks[0m
+	[31;1m2 bob[0m
+	[31;1m2 desk(#11)[0m
+[32;1mmat(2): get pillow[0m
+	[31;1m2 Taken.[0m
+[32;1mmat(2): @lock sleep=me[0m
+	[31;1m2 Locked.[0m
+[32;1mmat(2): @ofail sleep=Failed to go to sleep[0m
+	[31;1m2 Message set.[0m
+[32;1mmat(2): @fail sleep=No way, its mats room of sleep[0m
+	[31;1m2 Message set.[0m
+[32;1mmat(2): go sleep[0m
+	[31;1m1 mat has left.[0m
+	[31;1m27 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m2 mats bedroom (#28)[0m
+[32;1mbob(3): go sleep[0m
+	[31;1m3 No way, its mats room of sleep[0m
+	[31;1m1 bob Failed to go to sleep[0m
+	[31;1m27 bob Failed to go to sleep[0m
+[32;1mmat(2): @set here=STICKY[0m
+	[31;1m2 Flag set.[0m
+[32;1mmat(2): drop pillow[0m
+	[31;1m2 Dropped.[0m
+[32;1mmat(2): get bathroom[0m
+	[31;1m2 Exit taken.[0m
+[32;1mmat(2): go wake[0m
+	[31;1m1 mat has arrived.[0m
+	[31;1m27 mat has arrived.[0m
+	[31;1m3 mat has arrived.[0m
+	[31;1m2 mat's place (#8)[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 pillow(#32)[0m
+	[31;1m2 Wizard[0m
+	[31;1m2 mark[0m
+	[31;1m2 socks[0m
+	[31;1m2 socks[0m
+	[31;1m2 bob[0m
+	[31;1m2 desk(#11)[0m
+[32;1mmat(2): go s[0m
+	[31;1m1 mat has left.[0m
+	[31;1m27 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m2 the lounge (#4)[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 strong cheese(#13)[0m
+[32;1mmat(2): drop bathroom[0m
+	[31;1m2 You can't put an exit down here.[0m
+[32;1mmat(2): go e[0m
+	[31;1m1 mat has arrived.[0m
+	[31;1m27 mat has arrived.[0m
+	[31;1m3 mat has arrived.[0m
+	[31;1m2 mat's place (#8)[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 pillow(#32)[0m
+	[31;1m2 Wizard[0m
+	[31;1m2 mark[0m
+	[31;1m2 socks[0m
+	[31;1m2 socks[0m
+	[31;1m2 bob[0m
+	[31;1m2 desk(#11)[0m
+[32;1mmat(2): @link bathroom={mats bedroom}[0m
+	[31;1m2 That exit is being carried.[0m
+[32;1mmat(2): get socks[0m
+	[31;1m2 You got a lovely pair of socks[0m
+	[31;1m1 mat picks up the stripy socks[0m
+	[31;1m27 mat picks up the stripy socks[0m
+	[31;1m3 mat picks up the stripy socks[0m
+	[31;1m2 Taken.[0m
+[32;1mmat(2): @link socks={the lounge}[0m
+	[31;1m2 Permission denied.[0m
+[32;1mmat(2): @link socks={mats bedroom}[0m
+	[31;1m2 Permission denied.[0m
+[32;1mmat(2): @set socks=STICKY[0m
+	[31;1m2 Permission denied.[0m
+[32;1mmat(2): examine socks[0m
+	[31;1m2 You can only examine what you own.  Try using "look."[0m
+[32;1mmat(2): go s[0m
+	[31;1m1 mat has left.[0m
+	[31;1m27 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m2 the lounge (#4)[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 strong cheese(#13)[0m
+[32;1mmat(2): go up[0m
+	[31;1m2 temple[0m
+	[31;1m2 The temple of DOOM, sacrifices always welcome[0m
+[32;1mmat(2): drop socks[0m
+	[31;1m2 socks is consumed in a burst of flame![0m
+	[31;1m2 You have received 1 penny for your sacrifice.[0m
+[32;1mmat(2): go down[0m
+	[31;1m2 the lounge (#4)[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 socks[0m
+	[31;1m2 strong cheese(#13)[0m
+[32;1mbob(3): go s[0m
+	[31;1m1 bob has left.[0m
+	[31;1m27 bob has left.[0m
+	[31;1m2 bob has arrived.[0m
+	[31;1m3 the lounge (#4)[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 mat[0m
+	[31;1m3 socks(#25)[0m
+	[31;1m3 strong cheese[0m
+[32;1mbob(3): take socks[0m
+	[31;1m3 You got a lovely pair of socks[0m
+	[31;1m2 bob picks up the stripy socks[0m
+	[31;1m3 Taken.[0m
+[32;1mwizard(1): go s[0m
+	[31;1m27 Wizard has left.[0m
+	[31;1m3 Wizard has arrived.[0m
+	[31;1m2 Wizard has arrived.[0m
+	[31;1m1 the lounge (#4)[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 bob(#3)[0m
+	[31;1m1 mat(#2)[0m
+	[31;1m1 strong cheese(#13)[0m
+[32;1mwizard(1): give bob=100000[0m
+	[31;1m1 You give 100000 pennies to bob.[0m
+	[31;1m3 Wizard gives you 100000 pennies.[0m
+[32;1mbob(3): @create gold ring=100000[0m
+	[31;1m3 Created.[0m
+[32;1mbob(3): drop gold ring[0m
+	[31;1m3 Dropped.[0m
+	[31;1m1 bob dropped gold ring.[0m
+	[31;1m2 bob dropped gold ring.[0m
+[32;1mmat(2): get gold ring[0m
+	[31;1m2 Taken.[0m
+[32;1mmat(2): go up[0m
+	[31;1m1 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m2 temple[0m
+	[31;1m2 The temple of DOOM, sacrifices always welcome[0m
+[32;1mmat(2): drop gold ring[0m
+	[31;1m2 gold ring is consumed in a burst of flame![0m
+	[31;1m2 You have received 100 pennies for your sacrifice.[0m
+[32;1mmat(2): go down[0m
+	[31;1m1 mat has arrived.[0m
+	[31;1m3 mat has arrived.[0m
+	[31;1m2 the lounge (#4)[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 gold ring[0m
+	[31;1m2 Wizard[0m
+	[31;1m2 bob[0m
+	[31;1m2 strong cheese(#13)[0m
+[32;1mbob(3): get gold ring[0m
+	[31;1m3 Taken.[0m
+[32;1mwizard(1): @open boing[0m
+	[31;1m1 Opened.[0m
+[32;1mwizard(1): @chown boing=bob[0m
+	[31;1m1 Owner changed.[0m
+[32;1mbob(3): @create twig[0m
+	[31;1m3 Created.[0m
+[32;1mbob(3): @link twig={the lounge}[0m
+	[31;1m3 Home set.[0m
+[32;1mbob(3): @set twig=[0m
+	[31;1m3 You must specify a flag to set.[0m
+[32;1mbob(3): @set twig=STICKY[0m
+	[31;1m3 Flag set.[0m
+[32;1mbob(3): get boing[0m
+	[31;1m3 Exit taken.[0m
+[32;1mbob(3): go home[0m
+	[31;1m2 bob goes home.[0m
+	[31;1m1 bob goes home.[0m
+	[31;1m3 There's no place like home...[0m
+	[31;1m3 There's no place like home...[0m
+	[31;1m3 There's no place like home...[0m
+	[31;1m3 You wake up back home, without your possessions.[0m
+	[31;1m2 bob has left.[0m
+	[31;1m1 bob has left.[0m
+	[31;1m3 Limbo[0m
+	[31;1m3 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
+[32;1mbob(3): get twig[0m
+	[31;1m3 I don't see that here.[0m
+[32;1mwizard(1): go up[0m
+	[31;1m2 Wizard has left.[0m
+	[31;1m1 temple (#18)[0m
+	[31;1m1 The temple of DOOM, sacrifices always welcome[0m
+[32;1mmat(2): go up[0m
+	[31;1m1 mat has arrived.[0m
+	[31;1m2 temple[0m
+	[31;1m2 The temple of DOOM, sacrifices always welcome[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 Wizard[0m
+[32;1mbob(3): go n[0m
+	[31;1m3 You escape[0m
+	[31;1m3 the lounge (#4)[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 socks(#25)[0m
+	[31;1m3 gold ring(#34)[0m
+	[31;1m3 twig(#36)[0m
+	[31;1m3 strong cheese[0m
+[32;1mbob(3): go up[0m
+	[31;1m2 bob has arrived.[0m
+	[31;1m1 bob has arrived.[0m
+	[31;1m3 temple[0m
+	[31;1m3 The temple of DOOM, sacrifices always welcome[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 mat[0m
+	[31;1m3 Wizard[0m
+[32;1mbob(3): go w[0m
+	[31;1m2 bob has left.[0m
+	[31;1m1 bob has left.[0m
+	[31;1m3 the crypt[0m
+	[31;1m3 A dark place[0m
+[32;1mmat(2): go w[0m
+	[31;1m1 mat has left.[0m
+	[31;1m2 the crypt[0m
+	[31;1m2 A dark place[0m
+[32;1mwizard(1): go w[0m
+	[31;1m1 the crypt (#21)[0m
+	[31;1m1 A dark place[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 mat(#2)[0m
+	[31;1m1 bob(#3)[0m
+[32;1mwizard(1): @dig dinge[0m
+	[31;1m1 dinge created with room number 37.[0m
+[32;1mwizard(1): @open n={dinge}[0m
+	[31;1m1 Opened.[0m
+	[31;1m1 Trying to link...[0m
+	[31;1m1 Linked.[0m
+[32;1mwizard(1): go n[0m
+	[31;1m1 dinge (#37)[0m
+[32;1mwizard(1): @describe here=Rather dark, go back s[0m
+	[31;1m1 Description set.[0m
+[32;1mwizard(1): @set here=DARK[0m
+	[31;1m1 Flag set.[0m
+[32;1mwizard(1): @open s={the crypt}[0m
+	[31;1m1 Opened.[0m
+	[31;1m1 Trying to link...[0m
+	[31;1m1 Linked.[0m
+[32;1mwizard(1): s[0m
+	[31;1m1 the crypt (#21)[0m
+	[31;1m1 A dark place[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 mat(#2)[0m
+	[31;1m1 bob(#3)[0m
+[32;1mbob(3): go n[0m
+	[31;1m3 dinge[0m
+	[31;1m3 Rather dark, go back s[0m
+[32;1mmat(2): go n[0m
+	[31;1m2 dinge[0m
+	[31;1m2 Rather dark, go back s[0m
+[32;1mbob(3): go s[0m
+	[31;1m3 the crypt[0m
+	[31;1m3 A dark place[0m
+[32;1mmat(2): go s[0m
+	[31;1m2 the crypt[0m
+	[31;1m2 A dark place[0m
+[32;1mbob(3): go e[0m
+	[31;1m3 temple[0m
+	[31;1m3 The temple of DOOM, sacrifices always welcome[0m
+[32;1mbob(3): go down[0m
+	[31;1m3 the lounge (#4)[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 socks(#25)[0m
+	[31;1m3 gold ring(#34)[0m
+	[31;1m3 twig(#36)[0m
+	[31;1m3 strong cheese[0m
+[32;1mbob(3): go e[0m
+	[31;1m27 bob has arrived.[0m
+	[31;1m3 mat's place[0m
+	[31;1m3 A lovely snug den for Mat to sleep in[0m
+	[31;1m3 Contents:[0m
+	[31;1m3 pillow[0m
+	[31;1m3 mark[0m
+	[31;1m3 socks(#26)[0m
+	[31;1m3 desk[0m
+[32;1mmat(2): go e[0m
+	[31;1m2 temple[0m
+	[31;1m2 The temple of DOOM, sacrifices always welcome[0m
+[32;1mmat(2): go down[0m
+	[31;1m2 the lounge (#4)[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 socks[0m
+	[31;1m2 gold ring[0m
+	[31;1m2 twig[0m
+	[31;1m2 strong cheese(#13)[0m
+[32;1mmat(2): go e[0m
+	[31;1m3 mat has arrived.[0m
+	[31;1m27 mat has arrived.[0m
+	[31;1m2 mat's place (#8)[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 bob[0m
+	[31;1m2 pillow(#32)[0m
+	[31;1m2 mark[0m
+	[31;1m2 socks[0m
+	[31;1m2 desk(#11)[0m
+[32;1mwizard(1): @create hat[0m
+	[31;1m1 Created.[0m
+[32;1mwizard(1): @create wand[0m
+	[31;1m1 Created.[0m
+[32;1mwizard(1): @link wand={temple}[0m
+	[31;1m1 Home set.[0m
+[32;1mwizard(1): @set wand=STICKY[0m
+	[31;1m1 Flag set.[0m
+[32;1mwizard(1): @teleport #0[0m
+	[31;1m1 You feel a wrenching sensation...[0m
+	[31;1m1 Limbo (#0)[0m
+	[31;1m1 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
+[32;1mwizard(1): @name ear=[0m
+	[31;1m1 I don't see that here.[0m
+[32;1mwizard(1): go n[0m
+	[31;1m1 You escape[0m
+	[31;1m1 the lounge (#4)[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 socks(#25)[0m
+	[31;1m1 gold ring(#34)[0m
+	[31;1m1 twig(#36)[0m
+	[31;1m1 strong cheese(#13)[0m
+[32;1mwizard(1): go e[0m
+	[31;1m2 Wizard has arrived.[0m
+	[31;1m3 Wizard has arrived.[0m
+	[31;1m27 Wizard has arrived.[0m
+	[31;1m1 mat's place (#8)[0m
+	[31;1m1 A lovely snug den for Mat to sleep in[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 mat(#2)[0m
+	[31;1m1 bob(#3)[0m
+	[31;1m1 pillow(#32)[0m
+	[31;1m1 mark(#27)[0m
+	[31;1m1 socks(#26)[0m
+	[31;1m1 desk(#11)[0m
+[32;1mwizard(1): @name mark=[0m
+	[31;1m1 Give it what new name?[0m
+[32;1mwizard(1): @name mark=mick[0m
+	[31;1m1 You must specify a password to change a player name.[0m
+	[31;1m1 E.g.: name player = newname password[0m
+[32;1mwizard(1): @name mark=mick boo[0m
+	[31;1m1 Incorrect password.[0m
+[32;1mwizard(1): @name mark=mat bar[0m
+	[31;1m1 You can't give a player that name.[0m
+[32;1mwizard(1): @name mark=mick bar[0m
+	[31;1m1 Name set.[0m
+[32;1mwizard(1): @name mick=mark bar[0m
+	[31;1m1 Name set.[0m
+[32;1mwizard(1): @name socks=home[0m
+	[31;1m1 That is not a reasonable name.[0m
+[32;1mwizard(1): @name socks=me[0m
+	[31;1m1 That is not a reasonable name.[0m
+[32;1mwizard(1): @name socks=here[0m
+	[31;1m1 That is not a reasonable name.[0m
+[32;1mwizard(1): @name socks=*[0m
+	[31;1m1 That is not a reasonable name.[0m
+[32;1mwizard(1): @name socks=#[0m
+	[31;1m1 That is not a reasonable name.[0m
+[32;1mwizard(1): @describe socks=Wizard socks[0m
+	[31;1m1 Description set.[0m
+[32;1mwizard(1): @fail socks=Why would you want to?[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @ofail socks=is getting smelly hands[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @osucc socks=picks up the stripy socks[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @success socks=You got a lovely pair of socks[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @describe socks=Wizard socks[0m
+	[31;1m1 Description set.[0m
+[32;1mwizard(1): @fail socks=Why would you want to?[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @ofail socks=is getting smelly hands[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @osucc socks=picks up the stripy socks[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @success socks=You got a lovely pair of socks[0m
+	[31;1m1 Message set.[0m
+[32;1mwizard(1): @create socks[0m
+	[31;1m1 Created.[0m
+[32;1mwizard(1): get socks[0m
+	[31;1m1 You got a lovely pair of socks[0m
+	[31;1m2 Wizard picks up the stripy socks[0m
+	[31;1m3 Wizard picks up the stripy socks[0m
+	[31;1m27 Wizard picks up the stripy socks[0m
+	[31;1m1 Taken.[0m
+[32;1mwizard(1): examine #26[0m
+	[31;1m1 socks(#26) [bob] Key:  ***NOTHING***(#-1) Pennies: 1 Type: Thing[0m
+	[31;1m1 Wizard socks[0m
+	[31;1m1 Fail: Why would you want to?[0m
+	[31;1m1 Success: You got a lovely pair of socks[0m
+	[31;1m1 Ofail: is getting smelly hands[0m
+	[31;1m1 Osuccess: picks up the stripy socks[0m
+	[31;1m1 Home: Limbo(#0)[0m
+	[31;1m1 Location: Wizard(#1)[0m
+[32;1mwizard(1): examine #42[0m
+	[31;1m1 socks(#42) [Wizard] Key:  ***NOTHING***(#-1) Pennies: 1 Type: Thing[0m
+	[31;1m1 Home: mat's place(#8)[0m
+	[31;1m1 Location: Wizard(#1)[0m
+[32;1mwizard(1): @lock tree[0m
+	[31;1m1 I don't see what you want to lock![0m
+[32;1mwizard(1): @lock soc[0m
+	[31;1m1 I don't know which one you want to lock![0m
+[32;1mwizard(1): @lock #26=m[0m
+	[31;1m1 I don't know which key you want![0m
+[32;1mmat(2): @create leg[0m
+	[31;1m2 Created.[0m
+[32;1mmat(2): @open se[0m
+	[31;1m2 Opened.[0m
+[32;1mmat(2): get se[0m
+	[31;1m2 Exit taken.[0m
+[32;1mmat(2): @lock leg=se[0m
+	[31;1m2 Keys can only be players or things.[0m
+[32;1mmat(2): @lock leg=me[0m
+	[31;1m2 Locked.[0m
+[32;1mmat(2): drop leg[0m
+	[31;1m2 Dropped.[0m
+	[31;1m1 mat dropped leg.[0m
+	[31;1m3 mat dropped leg.[0m
+	[31;1m27 mat dropped leg.[0m
+[32;1mmark(27): @lock leg=me[0m
+	[31;1m27 You can't lock that![0m
+[32;1mmat(2): @lock leg=!mark[0m
+	[31;1m2 Anti-Locked.[0m
+[32;1mmat(2): examine leg[0m
+	[31;1m2 leg(#43) [mat] Key: !mark(#27) Pennies: 1 Type: Thing Flags:[0m
+	[31;1m2 Home: mat's place(#8)[0m
+	[31;1m2 Location: mat's place(#8)[0m
+[32;1mmark(27): get leg[0m
+	[31;1m27 You can't pick that up.[0m
+[32;1mbob(3): get leg[0m
+	[31;1m3 Taken.[0m
+[32;1mbob(3): @chown leg=me[0m
+	[31;1m3 Permission denied.[0m
+[32;1mwizard(1): get pillow[0m
+	[31;1m1 Taken.[0m
+[32;1mwizard(1): @chown pillow=dawn[0m
+	[31;1m1 I couldn't find that player.[0m
+[32;1mwizard(1): @chown mark=mat[0m
+	[31;1m1 Players always own themselves.[0m
+[32;1mbob(3): @set here=DARK[0m
+	[31;1m3 Permission denied.[0m
+[32;1mbob(3): @set here=TEMPLE[0m
+	[31;1m3 Permission denied.[0m
+[32;1mwizard(1): @set me=!WIZARD[0m
+	[31;1m1 You cannot make yourself mortal.[0m
+[32;1mwizard(1): @set pillow=!TEMPLE[0m
+	[31;1m1 Flag reset.[0m
+[32;1mbob(3): @set me=TEMPLE[0m
+	[31;1m3 Permission denied.[0m
+[32;1mbob(3): @set me=DARK[0m
+	[31;1m3 Permission denied.[0m
+[32;1mbob(3): @set leg=!DARK[0m
+	[31;1m3 Permission denied.[0m
+[32;1mbob(3): @unlink e[0m
+	[31;1m3 Unlink what?[0m
+[32;1mmat(2): @unlink s[0m
+	[31;1m2 Unlinked.[0m
+[32;1mmat(2): @open sleepy[0m
+	[31;1m2 Opened.[0m
+[32;1mmat(2): @link sleepy={mats bedroom}[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): @unlink slee[0m
+	[31;1m2 I don't know which one you mean![0m
+[32;1mmat(2): @unlink here[0m
+	[31;1m2 Dropto removed.[0m
+[32;1mmat(2): @chown sleepy=bob[0m
+	[31;1m2 Permission denied.[0m
+[32;1mwizard(1): @chown #{sleepy}=bob[0m
+	[31;1m1 Owner changed.[0m
+[32;1mwizard(1): @unlink #{sleepy}[0m
+	[31;1m1 Unlinked.[0m
+[32;1mmat(2): @unlink sleepy[0m
+	[31;1m2 Permission denied.[0m
+[32;1mwizard(1): rob[0m
+	[31;1m1 Rob whom?[0m
+[32;1mwizard(1): rob mat[0m
+	[31;1m1 You stole a penny.[0m
+	[31;1m2 Wizard stole one of your pennies![0m
+[32;1mwizard(1): rob mark[0m
+	[31;1m1 mark is penniless.[0m
+	[31;1m27 Wizard tried to rob you, but you have no pennies to take.[0m
+[32;1mmat(2): kill[0m
+	[31;1m2 I don't see that player here.[0m
+[32;1mmat(2): kill greg[0m
+	[31;1m2 I don't see that player here.[0m
+[32;1mmat(2): kill m[0m
+	[31;1m2 I don't know who you mean![0m
+[32;1mmat(2): kill desk[0m
+	[31;1m2 Sorry, you can only kill other players.[0m
+[32;1mmat(2): kill wizard[0m
+	[31;1m2 Sorry, Wizards are immortal.[0m
+[32;1mmark(27): kill mat[0m
+	[31;1m27 You don't have enough pennies.[0m
+[32;1mmat(2): kill mark[0m
+	[31;1m2 Your murder attempt failed.[0m
+	[31;1m27 mat tried to kill you![0m
+[32;1mwizard(1): give mat=100000[0m
+	[31;1m1 You give 100000 pennies to mat.[0m
+	[31;1m2 Wizard gives you 100000 pennies.[0m
+[32;1mmat(2): kill mark=100000[0m
+	[31;1m2 You killed mark![0m
+	[31;1m27 mat killed you![0m
+	[31;1m27 Your insurance policy pays 50 pennies.[0m
+	[31;1m1 mark has left.[0m
+	[31;1m2 mark has left.[0m
+	[31;1m3 mark has left.[0m
+	[31;1m27 Limbo[0m
+	[31;1m27 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
+	[31;1m1 mat killed mark![0m
+	[31;1m3 mat killed mark![0m
+Creating player: "jim" with password "bar"
+[32;1mwizard(1): kill #{jim}[0m
+	[31;1m1 Your murder attempt failed.[0m
+	[31;1m46 Wizard tried to kill you![0m
+Creating player: "greg" with password "bar"
+[32;1mgreg(47): go n[0m
+	[31;1m47 You escape[0m
+	[31;1m46 greg Ping[0m
+	[31;1m27 greg Ping[0m
+	[31;1m46 greg has left.[0m
+	[31;1m27 greg has left.[0m
+	[31;1m47 the lounge (#4)[0m
+	[31;1m47 Contents:[0m
+	[31;1m47 socks[0m
+	[31;1m47 gold ring[0m
+	[31;1m47 twig[0m
+	[31;1m47 strong cheese[0m
+[32;1mgreg(47): go e[0m
+	[31;1m1 greg has arrived.[0m
+	[31;1m2 greg has arrived.[0m
+	[31;1m3 greg has arrived.[0m
+	[31;1m47 mat's place[0m
+	[31;1m47 A lovely snug den for Mat to sleep in[0m
+	[31;1m47 Contents:[0m
+	[31;1m47 Wizard[0m
+	[31;1m47 mat[0m
+	[31;1m47 bob[0m
+	[31;1m47 desk[0m
+[32;1mmat(2): @toad mark[0m
+	[31;1m2 Only a Wizard can turn a person into a toad.[0m
+[32;1mwizard(1): @toad[0m
+	[31;1m1 I don't see that here.[0m
+[32;1mwizard(1): @toad desk[0m
+	[31;1m1 You can only turn players into toads![0m
+[32;1mwizard(1): @set mat=WIZARD[0m
+	[31;1m1 Flag set.[0m
+[32;1mwizard(1): @toad mat[0m
+	[31;1m1 You can't turn a Wizard into a toad.[0m
+[32;1mwizard(1): @toad bob[0m
+	[31;1m1 What about what they are carrying?[0m
+[32;1mwizard(1): @toad greg[0m
+	[31;1m47 You have been turned into a toad.[0m
+	[31;1m1 You turned greg into a toad![0m
+[32;1mmat(2): @dig graveyard[0m
+	[31;1m2 graveyard created with room number 48.[0m
+[32;1mmat(2): @dig gym[0m
+	[31;1m2 gym created with room number 49.[0m
+[32;1mmat(2): @open spooky={graveyard}[0m
+	[31;1m2 Opened.[0m
+	[31;1m2 Trying to link...[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): @open spooked={gym}[0m
+	[31;1m2 Opened.[0m
+	[31;1m2 Trying to link...[0m
+	[31;1m2 Linked.[0m
+[32;1mmat(2): @create fig[0m
+	[31;1m2 Created.[0m
+[32;1mmat(2): @teleport fig=gr[0m
+	[31;1m2 Bad destination.[0m
+[32;1mmat(2): examine[0m
+	[31;1m2 mat's place(#8) [mat] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Room[0m
+	[31;1m2 A lovely snug den for Mat to sleep in[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 a slimy toad named greg(#47)[0m
+	[31;1m2 Wizard(#1)[0m
+	[31;1m2 mat(#2)[0m
+	[31;1m2 bob(#3)[0m
+	[31;1m2 desk(#11)[0m
+	[31;1m2 Exits:[0m
+	[31;1m2 spooked(#51)[0m
+	[31;1m2 spooky(#50)[0m
+	[31;1m2 sleepy(#45)[0m
+	[31;1m2 sleep(#29)[0m
+	[31;1m2 down(#14)[0m
+	[31;1m2 paper(#12)[0m
+	[31;1m2 s(#10)[0m
+	[31;1m2 s(#9)[0m
+[32;1mmat(2): @teleport #{mat's place}=wizard[0m
+	[31;1m2 Bad destination.[0m
+[32;1mmat(2): @teleport #{spooked}=wizard[0m
+	[31;1m2 Bad destination.[0m
+[32;1mmat(2): @teleport #{fig}=bob[0m
+[32;1mmat(2): @create foof[0m
+	[31;1m2 Created.[0m
+[32;1mmat(2): @create food[0m
+	[31;1m2 Created.[0m
+[32;1mmat(2): @teleport foo=bob[0m
+	[31;1m2 I don't know which one you mean![0m
+[32;1mbob(3): i[0m
+	[31;1m3 You are carrying:[0m
+	[31;1m3 fig[0m
+	[31;1m3 leg[0m
+	[31;1m3 boing(#35)[0m
+	[31;1m3 You have 11 pennies.[0m
+[32;1mbob(3): @teleport #{fig}=mat[0m
+	[31;1m3 Only a Wizard may teleport at will.[0m
+Creating player: "max" with password "bar"
+[32;1mmax(55): go n[0m
+	[31;1m55 You escape[0m
+	[31;1m46 max Ping[0m
+	[31;1m27 max Ping[0m
+	[31;1m46 max has left.[0m
+	[31;1m27 max has left.[0m
+	[31;1m55 the lounge (#4)[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 socks[0m
+	[31;1m55 gold ring[0m
+	[31;1m55 twig[0m
+	[31;1m55 strong cheese[0m
+[32;1mmax(55): go e[0m
+	[31;1m1 max has arrived.[0m
+	[31;1m2 max has arrived.[0m
+	[31;1m3 max has arrived.[0m
+	[31;1m55 mat's place[0m
+	[31;1m55 A lovely snug den for Mat to sleep in[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 a slimy toad named greg[0m
+	[31;1m55 Wizard[0m
+	[31;1m55 mat[0m
+	[31;1m55 bob[0m
+	[31;1m55 desk[0m
+[32;1mmat(2): @teleport foof=ma[0m
+	[31;1m2 I don't know which destination you mean![0m
+[32;1mmat(2): drop foof[0m
+	[31;1m2 Dropped.[0m
+	[31;1m55 mat dropped foof.[0m
+	[31;1m1 mat dropped foof.[0m
+	[31;1m3 mat dropped foof.[0m
+[32;1mwizard(1): get foof[0m
+	[31;1m1 Taken.[0m
+[32;1mwizard(1): @chown foof=0[0m
+	[31;1m1 I couldn't find that player.[0m
+[32;1mwizard(1): @stats[0m
+	[31;1m1 56 objects = 10 rooms, 25 exits, 15 things, 6 players, 0 unknowns.[0m
+[32;1mwizard(1): examine *mat[0m
+	[31;1m1 mat(#2) [mat] Key:  ***NOTHING***(#-1) Pennies: 101 Type: Player Flags: WIZARD[0m
+	[31;1m1 Very handsome[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 food(#54)[0m
+	[31;1m1 se(#44)[0m
+	[31;1m1 bathroom(#33)[0m
+	[31;1m1 Home: mat's place(#8)[0m
+	[31;1m1 Location: mat's place(#8)[0m
+[32;1mwizard(1): @set mat=!WIZARD[0m
+	[31;1m1 Flag reset.[0m
+[32;1mmat(2): @open[0m
+	[31;1m2 Open where?[0m
+[32;1mmat(2): @open me[0m
+	[31;1m2 That's a strange name for an exit![0m
+[32;1mmat(2): @open here[0m
+	[31;1m2 That's a strange name for an exit![0m
+[32;1mmat(2): @open me;here[0m
+	[31;1m2 Opened.[0m
+[32;1mmat(2): @open *[0m
+	[31;1m2 That's a strange name for an exit![0m
+[32;1mmat(2): @open #[0m
+	[31;1m2 That's a strange name for an exit![0m
+[32;1mmat(2): @open pit[0m
+	[31;1m2 Opened.[0m
+[32;1mwizard(1): give max=10[0m
+	[31;1m1 You give 10 pennies to max.[0m
+	[31;1m55 Wizard gives you 10 pennies.[0m
+[32;1mmax(55): @dig max's house[0m
+	[31;1m55 max's house created with room number 58.[0m
+[32;1mmax(55): @link pit={max's house}[0m
+	[31;1m55 It costs two pennies to link this exit.[0m
+[32;1mwizard(1): give max=2[0m
+	[31;1m1 You give 2 pennies to max.[0m
+	[31;1m55 Wizard gives you 2 pennies.[0m
+[32;1mmax(55): @link pit={max's house}[0m
+	[31;1m55 Linked.[0m
+[32;1mmax(55): go pit[0m
+	[31;1m1 max has left.[0m
+	[31;1m2 max has left.[0m
+	[31;1m3 max has left.[0m
+	[31;1m55 max's house (#58)[0m
+[32;1mmax(55): @open exit[0m
+	[31;1m55 Sorry, you don't have enough pennies to open an exit.[0m
+[32;1mwizard(1): give *max=2[0m
+	[31;1m1 You give 2 pennies to max.[0m
+	[31;1m55 Wizard gives you 2 pennies.[0m
+[32;1mmax(55): @open exit={mat's place}[0m
+	[31;1m55 Opened.[0m
+	[31;1m55 Trying to link...[0m
+	[31;1m55 You can't link to that.[0m
+[32;1mmat(2): @set here=LINK_OK[0m
+	[31;1m2 Flag set.[0m
+[32;1mmax(55): @open exit={mat's place}[0m
+	[31;1m55 Opened.[0m
+	[31;1m55 Trying to link...[0m
+	[31;1m55 You don't have enough pennies to link.[0m
+[32;1mwizard(1): give *max=2[0m
+	[31;1m1 You give 2 pennies to max.[0m
+	[31;1m55 Wizard gives you 2 pennies.[0m
+[32;1mmax(55): @open exit={mat's place}[0m
+	[31;1m55 Opened.[0m
+	[31;1m55 Trying to link...[0m
+	[31;1m55 Linked.[0m
+[32;1mwizard(1): give *max=2[0m
+	[31;1m1 You give 2 pennies to max.[0m
+	[31;1m55 Wizard gives you 2 pennies.[0m
+[32;1mmax(55): @open exit={mat's place}[0m
+	[31;1m55 Opened.[0m
+	[31;1m55 Trying to link...[0m
+	[31;1m55 Linked.[0m
+[32;1mwizard(1): give *max=2[0m
+	[31;1m1 You give 2 pennies to max.[0m
+	[31;1m55 Wizard gives you 2 pennies.[0m
+[32;1mmax(55): @link exit={mat's place}[0m
+	[31;1m55 Linked.[0m
+[32;1mmax(55): @lock exit=me[0m
+	[31;1m55 Locked.[0m
+[32;1mmat(2): go pit[0m
+	[31;1m1 mat has left.[0m
+	[31;1m3 mat has left.[0m
+	[31;1m55 mat has arrived.[0m
+	[31;1m2 max's house[0m
+	[31;1m2 Contents:[0m
+	[31;1m2 max[0m
+[32;1mmat(2): @link exit={mat's place}[0m
+	[31;1m2 Linked.[0m
+[32;1mmax(55): @open foo={mat's place}[0m
+	[31;1m55 Opened.[0m
+	[31;1m55 Trying to link...[0m
+	[31;1m55 Linked.[0m
+[32;1mmat(2): @link foo={mat's place}[0m
+	[31;1m2 Permission denied.[0m
+[32;1mmax(55): @unlink foo[0m
+	[31;1m55 Unlinked.[0m
+[32;1mmax(55): @lock foo=me[0m
+	[31;1m55 Locked.[0m
+[32;1mmat(2): @link foo={mat's place}[0m
+	[31;1m2 Linked.[0m
+[32;1mmax(55): @lock here=me[0m
+	[31;1m55 Locked.[0m
+[32;1mmat(2): @link here={mat's place}[0m
+	[31;1m2 Permission denied.[0m
+[32;1mmax(55): @link me=home[0m
+	[31;1m55 Can't set home to home.[0m
+[32;1mmax(55): @dig[0m
+	[31;1m55 Dig what?[0m
+[32;1mmax(55): @dig home[0m
+	[31;1m55 That's a silly name for a room![0m
+[32;1mmax(55): @dig me[0m
+	[31;1m55 That's a silly name for a room![0m
+[32;1mmax(55): @dig *[0m
+	[31;1m55 That's a silly name for a room![0m
+[32;1mmax(55): @dig #[0m
+	[31;1m55 That's a silly name for a room![0m
+[32;1mmax(55): @create[0m
+	[31;1m55 Create what?[0m
+[32;1mmax(55): @create home[0m
+	[31;1m55 That's a silly name for a thing![0m
+[32;1mmax(55): @create me[0m
+	[31;1m55 That's a silly name for a thing![0m
+[32;1mmax(55): @create *[0m
+	[31;1m55 That's a silly name for a thing![0m
+[32;1mmax(55): @create #[0m
+	[31;1m55 That's a silly name for a thing![0m
+[32;1mmax(55): @create bread=-1[0m
+	[31;1m55 You can't create an object for less than nothing![0m
+[32;1mmax(55): @link exit=*mat[0m
+	[31;1m55 That's not a room![0m
+[32;1mmax(55): read[0m
+	[31;1m55 max's house (#58)[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 mat[0m
+[32;1mmax(55): throw exit[0m
+	[31;1m55 You don't have that![0m
+[32;1mmat(2): @create ball[0m
+	[31;1m2 Created.[0m
+[32;1mmat(2): throw ball[0m
+	[31;1m2 Dropped.[0m
+	[31;1m55 mat dropped ball.[0m
+[32;1mmax(55): look[0m
+	[31;1m55 max's house (#58)[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 ball[0m
+	[31;1m55 mat[0m
+[32;1mmax(55): @link me=here[0m
+	[31;1m55 Home set.[0m
+[32;1mmax(55): examine here[0m
+	[31;1m55 max's house(#58) [max] Key:  max(#55) Pennies: 0 Type: Room[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 ball[0m
+	[31;1m55 mat[0m
+	[31;1m55 max(#55)[0m
+	[31;1m55 Exits:[0m
+	[31;1m55 foo[0m
+	[31;1m55 exit(#62)[0m
+	[31;1m55 exit(#61)[0m
+	[31;1m55 exit(#60)[0m
+	[31;1m55 exit[0m
+[32;1mmax(55): examine #{max's house}[0m
+	[31;1m55 max's house(#58) [max] Key:  max(#55) Pennies: 0 Type: Room[0m
+	[31;1m55 Contents:[0m
+	[31;1m55 ball[0m
+	[31;1m55 mat[0m
+	[31;1m55 max(#55)[0m
+	[31;1m55 Exits:[0m
+	[31;1m55 foo[0m
+	[31;1m55 exit(#62)[0m
+	[31;1m55 exit(#61)[0m
+	[31;1m55 exit(#60)[0m
+	[31;1m55 exit[0m
+[32;1mmat(2): @wall[0m
+	[31;1m2 But what do you want to do with the wall?[0m
+[32;1mmat(2): page felix[0m
+	[31;1m2 I don't recognize that name.[0m
+[32;1mmax(55): quit[0m
+	[31;1m55 Huh?  (Type "help" for help.)[0m
+[32;1mmax(55): QUIT[0m
+	[31;1m55 Huh?  (Type "help" for help.)[0m
+[32;1mwizard(1): @boot[0m
+	[31;1m1 Huh?  (Type "help" for help.)[0m
+[32;1mwizard(1): @boot mat[0m
+	[31;1m1 Huh?  (Type "help" for help.)[0m
+[32;1mwizard(1): who[0m
+	[31;1m1 Huh?  (Type "help" for help.)[0m
+[32;1mwizard(1): whisper[0m
+	[31;1m1 Huh?  (Type "help" for help.)[0m
+[32;1mwizard(1): @teleport #0[0m
+	[31;1m1 You feel a wrenching sensation...[0m
+	[31;1m3 Wizard has left.[0m
+	[31;1m46 Wizard has arrived.[0m
+	[31;1m27 Wizard has arrived.[0m
+	[31;1m1 Limbo (#0)[0m
+	[31;1m1 You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.[0m
+	[31;1m46 Wizard is briefly visible through the mist.[0m
+	[31;1m27 Wizard is briefly visible through the mist.[0m
+	[31;1m1 Contents:[0m
+	[31;1m1 jim(#46)[0m
+	[31;1m1 mark(#27)[0m
+[32;1mwizard(1): i[0m
+	[31;1m1 You are carrying:[0m
+	[31;1m1 foof(#53)[0m
+	[31;1m1 pillow(#32)[0m
+	[31;1m1 socks(#26)[0m
+	[31;1m1 socks(#42)[0m
+	[31;1m1 wand(#41)[0m
+	[31;1m1 hat(#40)[0m
+	[31;1m1 You have 2 pennies.[0m
+[32;1mwizard(1): drop foof[0m
+	[31;1m1 Dropped.[0m
+	[31;1m46 Wizard dropped foof.[0m
+	[31;1m27 Wizard dropped foof.[0m
+[32;1mwizard(1): examine #{foof}[0m
+	[31;1m1 foof(#53) [mat] Key:  ***NOTHING***(#-1) Pennies: 1 Type: Thing[0m
+	[31;1m1 Home: mat's place(#8)[0m
+	[31;1m1 Location: Limbo(#0)[0m
