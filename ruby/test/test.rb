@@ -18,7 +18,7 @@ if ENV['TEST_TYPE'] == 'ORIGINAL'
    require_relative 'help_test'
 elsif ENV['TEST_TYPE'] == 'CONVERTED'
    #Uncomment line for each ported file.
-   #require_relative 'db_test'
+   require_relative 'db_test'
    #require_relative 'player_test'
    #require_relative 'player_test'
    #require_relative 'predicates_test'
