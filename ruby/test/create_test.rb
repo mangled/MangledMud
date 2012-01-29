@@ -26,7 +26,6 @@ module TinyMud
 			wizard = 1
 			bob = Player.new.create_player("bob", "pwd")
 			record(bob) {|r| r.merge!( :location => NOTHING ) }
-			
 			create = TinyMud::Create.new
 			notify = sequence('notify')
 
