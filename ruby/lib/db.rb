@@ -2,7 +2,7 @@
 #Author: Alexander Morrow
 #Email:	 amo3@umbc.edu
 
-require_relative 'include'
+require_relative '../test/include'
 require 'pp'
 module TinyMud
 
