@@ -92,7 +92,6 @@ void Init_tinymud()
   // The main aim is to keep the tests passing (for both build types)
   // Init_db(); In progress -amo3
   Init_player();
-  Init_predicates();
   Init_speech();
   Init_move();
   Init_look();

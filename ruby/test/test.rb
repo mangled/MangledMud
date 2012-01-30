@@ -20,7 +20,7 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED' # The diminishing library
   puts "Running converted tests"
   #require_relative 'db_test'
   #require_relative 'player_test'
-  #require_relative 'predicates_test'
+  require_relative 'predicates_test'
   #require_relative 'match_test'
   require_relative 'utils_test'
   #require_relative 'speech_test'

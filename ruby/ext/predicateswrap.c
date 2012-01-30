@@ -83,9 +83,16 @@ static VALUE do_ok_player_name(VALUE self, VALUE name)
     return INT2FIX(ok_player_name(name_s));
 }
 
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+   (void) self;
+   (void) db;
+}
+
 void Init_predicates()
 {   
     predicates_class = rb_define_class_under(tinymud_module, "Predicates", rb_cObject);
+    rb_define_method(predicates_class, "initialize", do_initialize, 1);
     rb_define_method(predicates_class, "can_link_to", do_can_link_to, 2);
     rb_define_method(predicates_class, "could_doit", do_could_doit, 2);
     rb_define_method(predicates_class, "can_doit", do_can_doit, 3);
