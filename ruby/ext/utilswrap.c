@@ -35,9 +35,16 @@ static VALUE do_getname(VALUE self, VALUE loc)
     return rb_str_new2(getname(loc_ref));
 }
 
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+   (void) self;
+   (void) db;
+}
+
 void Init_utils()
 {   
     utils_class = rb_define_class_under(tinymud_module, "Utils", rb_cObject);
+    rb_define_method(utils_class, "initialize", do_initialize, 1);
     rb_define_method(utils_class, "remove_first", do_remove_first, 2);
     rb_define_method(utils_class, "member", do_member, 2);
     rb_define_method(utils_class, "reverse", do_reverse, 1);

@@ -93,7 +93,6 @@ void Init_tinymud()
   // Init_db(); In progress -amo3
   Init_player();
   Init_predicates();
-  Init_utils();
   Init_speech();
   Init_move();
   Init_look();

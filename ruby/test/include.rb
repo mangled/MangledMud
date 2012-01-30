@@ -7,7 +7,8 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED' # The diminishing library
   puts "Fyi - You are running against the CONVERTED (being converted library)"
   require_relative '../lib/converted/tinymud'
   require_relative '../lib/db.rb'
-  require_relative '../lib/match.rb'
+  #require_relative '../lib/match.rb'
+  require_relative '../lib/utils.rb'
   # To-do - require converted ruby class (new folder?) (and disable in tinymud.c)
 else
   throw "Unknown test type!"
