@@ -107,6 +107,11 @@ static VALUE do_notify_except(VALUE self, VALUE first, VALUE exception, VALUE ms
     notify_except(first_ref, exception_ref, msg_s);
     return Qnil;
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_speech()
 {   
@@ -118,4 +123,5 @@ void Init_speech()
     rb_define_method(speech_class, "do_gripe", do_do_gripe, 3);
     rb_define_method(speech_class, "do_page", do_do_page, 2);
     rb_define_method(speech_class, "notify_except", do_notify_except, 3);
+	rb_define_method(speech_class, "initialize", do_initialize, 1);
 }

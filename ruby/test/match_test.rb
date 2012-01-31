@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -21,11 +21,11 @@ module TinyMud
 		
 		def test_match_player
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
 			wizard = 1
 
-			match = Match.new
+			match = Match.new(@db)
 			match.init_match(player_ref, "bob", -1) # Type doesn't matter for this
 			check_match_states(match, NOTHING, player_ref)
 			# Must have a * and the player must have at least LOOKUP_COST pennies
@@ -47,7 +47,7 @@ module TinyMud
 		def test_match_absolute
 			Db.Minimal()
 			wizard = 1 # Any player will do
-			match = Match.new
+			match = Match.new(@db)
 
 			# No token => No match
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
@@ -70,7 +70,7 @@ module TinyMud
 		def test_match_me
 			Db.Minimal()
 			wizard = 1 # Any player will do
-			match = Match.new
+			match = Match.new(@db)
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
 			match.match_me
 			check_match_states(match, NOTHING, wizard)
@@ -83,7 +83,7 @@ module TinyMud
 			Db.Minimal()
 			wizard = 1 # Any player will do
 
-			match = Match.new
+			match = Match.new(@db)
 			# match name must be here and who mustn't be nowhere
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
 			record(wizard) {|r| r[:location] = NOTHING }
@@ -103,7 +103,7 @@ module TinyMud
 		# branch points.
 		def test_match_possession
 			Db.Minimal()
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			f = lambda {|match| match.match_possession }
 			check_match_list(bob, bob, f)
 		end
@@ -111,7 +111,7 @@ module TinyMud
 		# Similar comments to the above!
 		def test_match_neighbor
 			Db.Minimal()
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			record(bob) {|r| r[:location] = 0}
 			f = lambda {|match| match.match_neighbor }
 			check_match_list(bob, 0, f)
@@ -119,9 +119,9 @@ module TinyMud
 		
 		def test_match_exit
 			Db.Minimal()
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
-			match = Match.new
+			match = Match.new(@db)
 
 			# Person can't be at NOTHING
 			record(bob) {|r| r[:location] = NOTHING }
@@ -181,7 +181,7 @@ module TinyMud
 			# Check calling it works though!
 			Db.Minimal()
 			wizard = 1
-			match = Match.new
+			match = Match.new(@db)
 			match.init_match(wizard, "foo", -1)
 			match.match_everything
 			check_match_states(match, NOTHING, wizard)
@@ -203,7 +203,7 @@ module TinyMud
 			record(thing2) {|r| r.merge!({ :flags => TYPE_THING, :name => "socks", :owner => owner, :next => thing3 }) }
 			record(thing3) {|r| r.merge!({ :flags => TYPE_THING, :name => "pants", :owner => owner }) }
 			
-			match = Match.new
+			match = Match.new(@db)
 			# owner has nothing
 			match.init_match(person, "fig", -1)
 			f.call(match)

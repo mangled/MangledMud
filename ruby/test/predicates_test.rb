@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,10 +24,10 @@ module TinyMud
 			Db.Minimal()
 
 			# Make a minimal new player - This should be a helper at some point?
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
 
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 			assert_equal(0, pred.can_link_to(0, -1)) # Where < 0
 			assert_equal(0, pred.can_link_to(0, @db.length)) # where > db_top
 			assert_equal(0, pred.can_link_to(0, 1)) # where points to non-room (wizard)
@@ -54,7 +54,7 @@ module TinyMud
 			uninitialized_thing_ref = @db.add_new_record
 			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
 			
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 
 			# if thing isn't a room then its location can't be nothing
 			assert_equal(0, pred.could_doit(-1, uninitialized_thing_ref));
@@ -89,7 +89,7 @@ module TinyMud
 			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
 
 			wizard = 1
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 
 			# If player location nothing
 			record(wizard) {|r| r.merge!({ :location => NOTHING }) }
@@ -105,7 +105,7 @@ module TinyMud
 			assert_equal(0, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 			
 			# Lastly, if ofail is set on the thing then all "contents" in the things location should be notified, except player
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			record(uninitialized_thing_ref) {|r| r[:ofail] = "Fails Eating Sandwich" }
 			record(0) {|r| r[:contents] = player_ref }
 			Interface.expects(:do_notify).with(wizard, "Ooops")
@@ -125,9 +125,9 @@ module TinyMud
 
 		def test_can_see
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 			# player is thing
 			assert_equal(0, pred.can_see(wizard, wizard, -1))
 			# thing is an exit
@@ -153,9 +153,9 @@ module TinyMud
 
 		def test_controls
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 			assert_equal(0, pred.controls(0, -1)) # Where < 0
 			assert_equal(0, pred.controls(0, @db.length)) # where > db_top
 			# Wizard controls everything
@@ -169,9 +169,9 @@ module TinyMud
 		
 		def test_can_link
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 			# Can link to something only if its an exit going to nothing
 			record(0) {|r| r.merge!({:flags => TYPE_EXIT, :location => 22}) }
 			assert_equal(0, pred.can_link(player_ref, 0))
@@ -187,9 +187,9 @@ module TinyMud
 
 		def test_payfor
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 			# Wizard is automatic
 			assert_equal(0, @db.get(wizard).pennies)
 			assert_equal(1, pred.payfor(wizard, 123))
@@ -203,7 +203,7 @@ module TinyMud
 		end
 		
 		def test_ok_name
-			pred = Predicates.new
+			pred = Predicates.new(@db)
 			assert_equal(0, pred.ok_name(nil))
 			assert_equal(0, pred.ok_name(0.chr))
 			assert_equal(0, pred.ok_name(LOOKUP_TOKEN))
@@ -216,8 +216,8 @@ module TinyMud
 		
 		def test_ok_player_name
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
-			pred = Predicates.new
+			player_ref = Player.new(@db).create_player("bob", "pwd")
+			pred = Predicates.new(@db)
 			# Must be an ok name
 			assert_equal(0, pred.ok_player_name(nil))
 			assert_equal(0, pred.ok_player_name(0.chr))

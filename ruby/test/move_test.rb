@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,9 +24,9 @@ module TinyMud
 			wizard = 1
 			somewhere = @db.add_new_record
 			record(somewhere) {|r| r[:contents] = NOTHING }
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 		
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 			# bob is in nothing and is going to be moved to "0"
 			record(bob) {|r| r[:location] = NOTHING }
 			record(0) {|r| r[:contents] = NOTHING }
@@ -74,13 +74,13 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pod")
-			jim = Player.new.create_player("jim", "pds")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pod")
+			jim = Player.new(@db).create_player("jim", "pds")
 			start_loc = @db.add_new_record
 			place = @db.add_new_record
 		
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 		
 			# Move to same location
 			set_up_objects(start_loc, bob, anne, jim, place)
@@ -174,15 +174,15 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pod")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pod")
 			cheese = @db.add_new_record
 			egg = @db.add_new_record
 			tomato = @db.add_new_record
 			exit = @db.add_new_record
 			place = @db.add_new_record
 		
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 			record(limbo) {|r| r.merge!( :contents => anne ) }
 			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM, :next => NOTHING }) }
 			record(anne) {|r| r.merge!({ :location => limbo, :exits => place, :flags => TYPE_PLAYER, :next => NOTHING, :contents => NOTHING }) }
@@ -222,12 +222,12 @@ module TinyMud
 		
 		def test_can_move
 			# Going home should always work (no db etc. needed to test)
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 			assert_equal(1, move.can_move(0, "home"))
 			
 			# Check players directions
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pod")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pod")
 			place = @db.add_new_record
 			exit = @db.add_new_record
 		
@@ -258,14 +258,14 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pod")
-			jim = Player.new.create_player("jim", "pds")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pod")
+			jim = Player.new(@db).create_player("jim", "pds")
 			start_loc = @db.add_new_record
 			place = @db.add_new_record
 			cheese = @db.add_new_record
 
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 
 			# Move to same location
 			set_up_objects(start_loc, bob, anne, jim, place)
@@ -333,7 +333,7 @@ module TinyMud
 			wizard = 1
 			place = @db.add_new_record
 			cake = @db.add_new_record
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			cheese = @db.add_new_record
 			exit = @db.add_new_record
 			exit2 = @db.add_new_record
@@ -345,7 +345,7 @@ module TinyMud
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => NOTHING ) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => wizard, :next => NOTHING ) }
 			
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 			notify = sequence('notify')
 
 			# Pick up a person
@@ -444,8 +444,8 @@ module TinyMud
 			wizard = 1
 			place = @db.add_new_record
 			place2 = @db.add_new_record
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pod")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pod")
 			cheese = @db.add_new_record
 			cheese2 = @db.add_new_record
 			ear = @db.add_new_record
@@ -459,7 +459,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => ear ) }
 			record(exit) {|r| r.merge!( :location => bob, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			move = TinyMud::Move.new
+			move = TinyMud::Move.new(@db)
 			notify = sequence('notify')
 		
 			# Drop cheese whilst nowhere!

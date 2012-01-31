@@ -42,6 +42,11 @@ static VALUE do_do_give(VALUE self, VALUE player, VALUE recipient, VALUE amount)
     do_give(player_ref, recipient_s, amount_val);
     return Qnil;
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_rob()
 {   
@@ -49,4 +54,5 @@ void Init_rob()
     rb_define_method(rob_class, "do_rob", do_do_rob, 2);
     rb_define_method(rob_class, "do_kill", do_do_kill, 3);
     rb_define_method(rob_class, "do_give", do_do_give, 3);
+	rb_define_method(rob_class, "initialize", do_initialize, 1);
 }

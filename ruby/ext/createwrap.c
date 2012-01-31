@@ -62,6 +62,12 @@ static VALUE do_do_create(VALUE self, VALUE player, VALUE name, VALUE cost)
     return Qnil;
 }
 
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
+
 void Init_create()
 {   
     create_class = rb_define_class_under(tinymud_module, "Create", rb_cObject);
@@ -69,4 +75,5 @@ void Init_create()
     rb_define_method(create_class, "do_link", do_do_link, 3);
     rb_define_method(create_class, "do_dig", do_do_dig, 2);
     rb_define_method(create_class, "do_create", do_do_create, 3);
+	rb_define_method(create_class, "initialize", do_initialize, 1);
 }

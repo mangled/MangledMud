@@ -104,6 +104,11 @@ static VALUE do_noisy_match_result(VALUE self)
     (void) self;
     return INT2FIX(noisy_match_result());
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_match()
 {   
@@ -118,8 +123,9 @@ void Init_match()
     rb_define_method(match_class, "match_neighbor", do_match_neighbor, 0);
     rb_define_method(match_class, "match_exit", do_match_exit, 0);
     rb_define_method(match_class, "match_everything", do_match_everything, 0);
-
+	
     rb_define_method(match_class, "match_result", do_match_result, 0);
     rb_define_method(match_class, "last_match_result", do_last_match_result, 0);
     rb_define_method(match_class, "noisy_match_result", do_noisy_match_result, 0);
+	rb_define_method(match_class, "initialize", do_initialize, 1);
 }

@@ -18,6 +18,12 @@ static VALUE do_process_command(VALUE self, VALUE player, VALUE command)
     return Qnil;
 }
 
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
+
 static VALUE do_do_dump(VALUE self, VALUE player)
 {
     (void) self;
@@ -55,4 +61,5 @@ void Init_game()
     rb_define_module_function(game_class, "set_dumpfile_name", do_set_dumpfile_name, 1);
     rb_define_method(game_class, "process_command", do_process_command, 2);
     rb_define_method(game_class, "do_dump", do_do_dump, 1);
+	rb_define_method(game_class, "initialize", do_initialize, 1);
 }
