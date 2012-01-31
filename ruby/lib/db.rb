@@ -261,5 +261,4 @@ module TinyMud
 		end
 		
 	end
-	
 end

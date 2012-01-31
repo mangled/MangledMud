@@ -16,10 +16,10 @@ if ENV['TEST_TYPE'] == 'ORIGINAL' # The original
   require_relative 'game_test'
   require_relative 'regression'
   require_relative 'help_test'
-elsif ENV['TEST_TYPE'] == 'CONVERTED' # The diminishing library
+elsif ENV['TEST_TYPE'] == 'CONVERTED'
   puts "Running converted tests"
   require_relative 'db_test'
-  #require_relative 'player_test'
+  require_relative 'player_test'
   #require_relative 'predicates_test'
   #require_relative 'match_test'
   require_relative 'utils_test'
@@ -37,4 +37,3 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED' # The diminishing library
 else
   throw "Unknown test type!"
 end
-
