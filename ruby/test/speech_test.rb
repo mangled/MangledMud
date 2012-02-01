@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -20,7 +20,7 @@ module TinyMud
 		end
 		
 		def test_reconstruct_message
-			speech = Speech.new
+			speech = Speech.new(@db)
 			assert_equal("hello", speech.reconstruct_message("hello", nil))
 			assert_equal("hello = world", speech.reconstruct_message("hello", "world"))
 		end
@@ -28,9 +28,9 @@ module TinyMud
 		def test_do_say
 			Db.Minimal()
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			joe = Player.new.create_player("joe", "pod")
-			speech = Speech.new
+			bob = Player.new(@db).create_player("bob", "pwd")
+			joe = Player.new(@db).create_player("joe", "pod")
+			speech = Speech.new(@db)
 			
 			# If the player is nowhere then nothing is heard
 			Interface.expects(:do_notify).never
@@ -49,9 +49,9 @@ module TinyMud
 		def test_do_pose
 			Db.Minimal()
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			joe = Player.new.create_player("joe", "pod")
-			speech = Speech.new
+			bob = Player.new(@db).create_player("bob", "pwd")
+			joe = Player.new(@db).create_player("joe", "pod")
+			speech = Speech.new(@db)
 
 			# If the player is nowhere then nothing is heard
 			Interface.expects(:do_notify).never
@@ -70,9 +70,9 @@ module TinyMud
 		def test_do_wall
 			Db.Minimal()
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			joe = Player.new.create_player("joe", "pod")
-			speech = Speech.new
+			bob = Player.new(@db).create_player("bob", "pwd")
+			joe = Player.new(@db).create_player("joe", "pod")
+			speech = Speech.new(@db)
 			
 			# Normal player
 			Interface.expects(:do_notify).with(joe, 'But what do you want to do with the wall?')
@@ -90,20 +90,20 @@ module TinyMud
 		def test_do_gripe
 			Db.Minimal()
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			record(bob) {|r| r[:location] = 0 }
 			Interface.expects(:do_notify).with(bob, 'Your complaint has been duly noted.')
-			Speech.new.do_gripe(bob, "darn trolls", "eat cheese")
+			Speech.new(@db).do_gripe(bob, "darn trolls", "eat cheese")
 			# Fixme: write stderr to somewhere else
 		end
 
 		def test_do_page
 			Db.Minimal()
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			joe = Player.new.create_player("joe", "pod")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			joe = Player.new(@db).create_player("joe", "pod")
 
-			speech = Speech.new
+			speech = Speech.new(@db)
 			record(bob) {|r| r[:pennies] = 0 }
 			Interface.expects(:do_notify).with(bob, "You don't have enough pennies.")
 			speech.do_page(bob, "joe")
@@ -121,15 +121,15 @@ module TinyMud
 		def test_notify_except
 			Db.Minimal()
 			wizard = 1
-			bob = Player.new.create_player("bob", "pwd")
-			joe = Player.new.create_player("joe", "pod")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			joe = Player.new(@db).create_player("joe", "pod")
 			
 			# Not sure if you chain people like this but its only testing the "next" chain on an object
 			record(wizard) {|r| r[:next] = bob }
 			record(bob) {|r| r[:next] = joe }
 			record(joe) {|r| r[:next] = NOTHING }
 			
-			speech = Speech.new
+			speech = Speech.new(@db)
 			Interface.expects(:do_notify).with(wizard, "foo")
 			Interface.expects(:do_notify).with(bob, "foo")
 			speech.notify_except(wizard, joe, "foo")

@@ -46,6 +46,11 @@ static VALUE do_string_match(VALUE self, VALUE src, VALUE sub)
     }
     return INT2FIX(string_match(src_s, sub_s));
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_stringutil()
 {   
@@ -53,4 +58,5 @@ void Init_stringutil()
     rb_define_method(stringutil_class, "string_compare", do_string_compare, 2);
     rb_define_method(stringutil_class, "string_prefix", do_string_prefix, 2);
     rb_define_method(stringutil_class, "string_match", do_string_match, 2);
+	//rb_define_method(stringutil_class, "initialize", do_initialize, 1);
 }

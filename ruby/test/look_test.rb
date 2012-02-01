@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,7 +24,7 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			cheese = @db.add_new_record
 			record(limbo) {|r| r.merge!( :contents => wizard ) }
 			record(wizard) {|r| r.merge!( :next => bob ) }
@@ -33,7 +33,7 @@ module TinyMud
 			record(bob) {|r| r.merge!( :contents => NOTHING, :location => limbo, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
 			
-			look = TinyMud::Look.new
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			# look when can link to (owns or link ok set) - first link set (see above room flags)
 			# Note: player doesn't need to be in the room!
@@ -97,11 +97,11 @@ module TinyMud
 			# This basically has one check then calls Look.look_room!!!
 			# Not going to repeat all the look tests (above) again here.
 			# Will check the guard though - Player @ nothing
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			place = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => NOTHING, :location => NOTHING, :next => NOTHING ) }
 			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM | LINK_OK, :exits => NOTHING }) }
-			look = TinyMud::Look.new
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			look.do_look_around(bob) # Should be a no-op
 
@@ -118,8 +118,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pwd")
 			cheese = @db.add_new_record
 			fish = @db.add_new_record
 			jam = @db.add_new_record
@@ -134,7 +134,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
 			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			look = TinyMud::Look.new
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			# Look at nothing
 			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
@@ -196,8 +196,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pwd")
 			cheese = @db.add_new_record
 			fish = @db.add_new_record
 			jam = @db.add_new_record
@@ -212,7 +212,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
 			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			look = TinyMud::Look.new
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			# Look at place (non-owned)
 			Interface.expects(:do_notify).with(bob, "You can only examine what you own.  Try using \"look.\"").in_sequence(notify)
@@ -289,8 +289,8 @@ module TinyMud
 		end
 		
 		def test_do_score
-			bob = Player.new.create_player("bob", "pwd")
-			look = TinyMud::Look.new
+			bob = Player.new(@db).create_player("bob", "pwd")
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(bob, "You have 0 pennies.").in_sequence(notify)
 			look.do_score(bob)
@@ -301,13 +301,13 @@ module TinyMud
 
 		def test_do_inventory
 			limbo = 0
-			bob = Player.new.create_player("bob", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
 			cheese = @db.add_new_record
 			fish = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => NOTHING ) }
 
 			# With nothing
-			look = TinyMud::Look.new
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(bob, "You aren't carrying anything.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "You have 0 pennies.").in_sequence(notify)
@@ -329,8 +329,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "pwd")
-			anne = Player.new.create_player("anne", "pwd")
+			bob = Player.new(@db).create_player("bob", "pwd")
+			anne = Player.new(@db).create_player("anne", "pwd")
 			cheese = @db.add_new_record
 			fish = @db.add_new_record
 			jam = @db.add_new_record
@@ -343,7 +343,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
 			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			look = TinyMud::Look.new
+			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			# Find without enough money!
 			Interface.expects(:do_notify).with(bob, "You don't have enough pennies.").in_sequence(notify)

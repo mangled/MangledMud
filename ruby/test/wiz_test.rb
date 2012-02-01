@@ -12,7 +12,7 @@ module TinyMud
         include TestHelpers
         
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,8 +24,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
 			another_jam = @db.add_new_record
@@ -41,7 +41,7 @@ module TinyMud
 			record(another_jam) {|r| r.merge!({ :name => "jamm", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 
-			wiz = TinyMud::Wiz.new
+			wiz = TinyMud::Wiz.new(@db)
 			notify = sequence('notify')
 			
 			# Only a wizard can do this
@@ -102,7 +102,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, 'I don\'t know which one you mean!')
 			wiz.do_teleport(wizard, "ja", "##{limbo}")
 
-			another_bob = Player.new.create_player("bobby", "sprout")
+			another_bob = Player.new(@db).create_player("bobby", "sprout")
 			record(another_bob) {|r| r.merge!( :contents => NOTHING, :location => limbo, :next => NOTHING ) }
 			record(limbo) {|r| r.merge!({ :contents => another_bob }) }
 			Interface.expects(:do_notify).with(bob, "You feel a wrenching sensation...").in_sequence(notify)
@@ -140,9 +140,9 @@ module TinyMud
 			Db.Minimal()
 			limbo = 0
 			wizard = 1
-			bob = Player.new.create_player("bob", "sprout")
+			bob = Player.new(@db).create_player("bob", "sprout")
 
-			wiz = TinyMud::Wiz.new
+			wiz = TinyMud::Wiz.new(@db)
 			notify = sequence('notify')
 			
 			# Only a wizard can use this
@@ -164,8 +164,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
 			exit = @db.add_new_record
@@ -179,7 +179,7 @@ module TinyMud
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			record(unknown) {|r| r.merge!( :flags => 0xFF ) }
 			
-			wiz = TinyMud::Wiz.new
+			wiz = TinyMud::Wiz.new(@db)
 			notify = sequence('notify')
 			
 			# Non wizards get minimal stats (the second arg is ignored)
@@ -198,8 +198,8 @@ module TinyMud
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
-			bob = Player.new.create_player("bob", "sprout")
-			anne = Player.new.create_player("anne", "treacle")
+			bob = Player.new(@db).create_player("bob", "sprout")
+			anne = Player.new(@db).create_player("anne", "treacle")
 			cheese = @db.add_new_record
 			jam = @db.add_new_record
 			exit = @db.add_new_record
@@ -211,7 +211,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			wiz = TinyMud::Wiz.new
+			wiz = TinyMud::Wiz.new(@db)
 			notify = sequence('notify')
 			
 			# Only wizards can do this

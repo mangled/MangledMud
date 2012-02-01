@@ -172,6 +172,11 @@ static VALUE do_do_set(VALUE self, VALUE player, VALUE name, VALUE flag)
     do_set(player_ref, name_s, flag_s);
     return Qnil;
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_set()
 {   
@@ -187,4 +192,5 @@ void Init_set()
     rb_define_method(set_class, "do_unlink", do_do_unlink, 2);
     rb_define_method(set_class, "do_chown", do_do_chown, 3);
     rb_define_method(set_class, "do_set", do_do_set, 3);
+	rb_define_method(set_class, "initialize", do_initialize, 1);
 }

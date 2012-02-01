@@ -23,6 +23,7 @@ module TinyMud
 		
 		#Helper function, parses a database from a file.
 		def self.parse_database(location)
+			@@record_array = Array.new()
 			if(File.exist?(location))
 				file = File.new(location, "r")
 				string_array = file.readlines()
@@ -33,26 +34,53 @@ module TinyMud
 					raise "Corrupted database."
 				else			
 					counter = 0;
-					for i in (0..((string_array.length()-1)/16))
+					for i in (1..((string_array.length()-1)/16))
 						#Record type and desc (not description) not in file.
 						currentRecord = Record.new()
 						offset = counter * 16
-						currentRecord.name = string_array[offset+1]
-						currentRecord.description = string_array[offset+2]
-						currentRecord.location = string_array[offset+3]
-						currentRecord.contents = string_array[offset+4]
-						currentRecord.exits = string_array[offset+5]
-						currentRecord.next = string_array[offset+6]
-						currentRecord.key = string_array[offset+7]
-						currentRecord.fail_message = string_array[offset+8]
-						currentRecord.succ_message = string_array[offset+9]
-						currentRecord.ofail = string_array[offset+10]
-						currentRecord.osucc = string_array[offset+11]
-						currentRecord.owner = string_array[offset+12]
-						currentRecord.pennies = string_array[offset+13]
-						currentRecord.flags = string_array[offset+14]
-						currentRecord.password = string_array[offset+15]
+						currentRecord.name = string_array[offset+1].strip()
+						currentRecord.description = string_array[offset+2].strip()
+						currentRecord.location = Integer(string_array[offset+3].strip())
+						currentRecord.contents = Integer(string_array[offset+4].strip())
+						currentRecord.exits = Integer(string_array[offset+5].strip())
+						currentRecord.next = Integer(string_array[offset+6].strip())
+						currentRecord.key = Integer(string_array[offset+7].strip())
+						currentRecord.fail = string_array[offset+8].strip()
+						currentRecord.succ = string_array[offset+9].strip()
+						currentRecord.ofail = string_array[offset+10].strip()
+						currentRecord.osucc = string_array[offset+11].strip()
+						currentRecord.owner = Integer(string_array[offset+12].strip())
+						currentRecord.pennies = Integer(string_array[offset+13].strip())
+						currentRecord.flags = Integer(string_array[offset+14].strip())
+						currentRecord.password = string_array[offset+15].strip()
 						counter += 1
+						
+						
+						#Chek to see if any of the messages are empty.
+
+						if currentRecord.name == ""
+							currentRecord.name = nil
+						end
+						if currentRecord.description == ""
+							currentRecord.description = nil
+						end
+						if currentRecord.fail == ""
+							currentRecord.fail = nil
+						end
+						if currentRecord.succ == ""
+							currentRecord.succ = nil
+						end
+						if currentRecord.ofail == ""
+							currentRecord.ofail = nil
+						end
+						if currentRecord.osucc == ""
+							currentRecord.osucc = nil
+						end
+						if currentRecord.password == ""
+							currentRecord.password = nil
+						end
+				
+
 						@@record_array << currentRecord
 					end
 				end
@@ -122,6 +150,37 @@ module TinyMud
 		
 		#Helper function, parses a database from a file.
 		def read(location)
+			Db.parse_database(location)
+		end
+		
+		#Writes current database to location
+		def self.write(location)
+			file = File.new(location, "w")
+			
+			for i in (0..@@record_array.length()-1)
+				current_record = @@record_array[i]
+				file.puts("##{i}\n")
+				file.puts(current_record.name.to_s + "\n")
+				file.puts(current_record.description.to_s + "\n")
+				file.puts(current_record.location.to_s + "\n")
+				file.puts(current_record.contents.to_s + "\n")
+				file.puts(current_record.exits.to_s + "\n")
+				file.puts(current_record.next.to_s + "\n")
+				file.puts(current_record.key.to_s + "\n")
+				file.puts(current_record.fail.to_s + "\n")
+				file.puts(current_record.succ.to_s + "\n")
+				file.puts(current_record.ofail.to_s + "\n")
+				file.puts(current_record.osucc.to_s + "\n")
+				file.puts(current_record.owner.to_s + "\n")
+				file.puts(current_record.pennies.to_s + "\n")
+				file.puts(current_record.flags.to_s + "\n")
+				file.puts(current_record.password.to_s + "\n")
+			end
+			
+			file.puts("***END OF DUMP***")
+			file.close()
+			
+			
 		end
 		
 		#free clears the database and does administrative work
@@ -135,8 +194,8 @@ module TinyMud
 	#Record class is used to store individual information about rooms, things, exits, playes, notypes, and unknowns.
 	class Record
 		
-		#Getteer and Setter methods for the following variables.
-		attr_accessor :name, :description, :location, :contents, :exits, :next, :key, :fail, :succ, :ofail, :osucc, :fail_message, :succ_message, :owner, :pennies, :type, :desc, :flags, :password 
+		#Getter and Setter methods for the following variables.
+		attr_accessor :name, :description, :location, :contents, :exits, :next, :key, :fail, :succ, :ofail, :osucc, :owner, :pennies, :flags, :password 
 		#:type, :desc, :flags default values?
 		#initialize record object to new values.
 		def initialize()
@@ -147,8 +206,8 @@ module TinyMud
 			@exits			=		NOTHING
 			@next			=		NOTHING
 			@key			=		NOTHING
-			@fail_message	=		nil
-			@succ_message	=		nil
+			@fail			=		nil
+			@succ			=		nil
 			@ofail			=		nil
 			@osucc			=		nil
 			@owner			=		NOTHING
@@ -161,9 +220,45 @@ module TinyMud
 		
 		end
 		
+		#Type is defined by the flags, and uses defines.rb
+		def type()
+			type_after_mask = flags & TYPE_MASK
+			
+			#Switch
+			case type_after_mask
+				when TYPE_ROOM
+					return "TYPE_ROOM"
+				when TYPE_THING
+					return "TYPE_THING"
+				when TYPE_EXIT
+					return "TYPE_EXIT"
+				when TYPE_PLAYER
+					return "TYPE_PLAYER"
+				when NOTYPE
+					return "NOTYPE"
+				else
+					return "UNKNOWN"
+			end
+		end
+		
+		def desc()
+			if (flags & ANTILOCK)!= 0
+				return "ANTILOCK"
+			elsif (flags & WIZARD) != 0
+				return "WIZARD"
+			elsif (flags & LINK_OK) != 0
+				return "LINK_OK"
+			elsif (flags & DARK) != 0
+				return "DARK"
+			elsif (flags & TEMPLE) != 0
+				return "TEMPLE"
+			elsif (flags & STICKY) != 0
+				return "STICKY"
+			else
+				return nil
+			end
+		
+		end
+		
 	end
-		
-		
-	
-	
 end

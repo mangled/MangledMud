@@ -40,6 +40,11 @@ static VALUE do_do_password(VALUE self, VALUE player_ref, VALUE old_pwd, VALUE n
     do_password(player, oldp, newp);
     return Qnil;
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_player()
 {	
@@ -48,4 +53,6 @@ void Init_player()
     rb_define_method(player_class, "connect_player", do_connect_player, 2);
     rb_define_method(player_class, "create_player", do_create_player, 2);
     rb_define_method(player_class, "change_password", do_do_password, 3);
+	rb_define_method(player_class, "initialize", do_initialize, 1);
+	
 }

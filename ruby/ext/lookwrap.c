@@ -73,6 +73,11 @@ static VALUE do_do_find(VALUE self, VALUE player, VALUE name)
     do_find(player_ref, name_s);
     return Qnil;
 }
+static VALUE do_initialize(VALUE self, VALUE db)
+{
+	(void) self;
+	(void) db;
+}
 
 void Init_look()
 {   
@@ -84,4 +89,5 @@ void Init_look()
     rb_define_method(look_class, "do_score", do_do_score, 1);
     rb_define_method(look_class, "do_inventory", do_do_inventory, 1);
     rb_define_method(look_class, "do_find", do_do_find, 2);
+	rb_define_method(look_class, "initialize", do_initialize, 1);
 }

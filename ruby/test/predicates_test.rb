@@ -12,7 +12,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new
+			@db = TinyMud::Db.new()
 		end
 
 		def teardown
@@ -24,7 +24,7 @@ module TinyMud
 			Db.Minimal()
 
 			# Make a minimal new player - This should be a helper at some point?
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
 
 			pred = Predicates.new(@db)
@@ -105,7 +105,7 @@ module TinyMud
 			assert_equal(0, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 			
 			# Lastly, if ofail is set on the thing then all "contents" in the things location should be notified, except player
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			record(uninitialized_thing_ref) {|r| r[:ofail] = "Fails Eating Sandwich" }
 			record(0) {|r| r[:contents] = player_ref }
 			Interface.expects(:do_notify).with(wizard, "Ooops")
@@ -125,7 +125,7 @@ module TinyMud
 
 		def test_can_see
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
 			# player is thing
@@ -153,7 +153,7 @@ module TinyMud
 
 		def test_controls
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
 			assert_equal(0, pred.controls(0, -1)) # Where < 0
@@ -169,7 +169,7 @@ module TinyMud
 		
 		def test_can_link
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
 			# Can link to something only if its an exit going to nothing
@@ -187,7 +187,7 @@ module TinyMud
 
 		def test_payfor
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
 			# Wizard is automatic
@@ -216,7 +216,7 @@ module TinyMud
 		
 		def test_ok_player_name
 			Db.Minimal()
-			player_ref = Player.new.create_player("bob", "pwd")
+			player_ref = Player.new(@db).create_player("bob", "pwd")
 			pred = Predicates.new(@db)
 			# Must be an ok name
 			assert_equal(0, pred.ok_player_name(nil))
