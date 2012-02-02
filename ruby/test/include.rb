@@ -9,7 +9,7 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED' # The diminishing library
   require_relative '../lib/converted/tinymud'
   require_relative '../lib/db.rb'
   require_relative '../lib/player.rb'
-  #require_relative '../lib/match.rb'
+  require_relative '../lib/match.rb'
   require_relative '../lib/utils.rb'
   require_relative '../lib/predicates.rb'
   require_relative '../lib/speech.rb'
