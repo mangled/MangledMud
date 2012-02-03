@@ -186,7 +186,38 @@ module TinyMud
 			match.match_everything
 			check_match_states(match, NOTHING, wizard)
 		end
-		
+
+		# Specific test that invokes a random decision for choosing a match - match possesion
+		# isn't the only possible function which will invoke this, but we just want to hit
+		# the random call, so it will do (for coverage)
+		#
+		# Only running it for converted (ported) code as it triggers a change in the
+		# random number generator which can cause failure in the regression checks
+		# - For the original code! Bonkers.
+if ENV['TEST_TYPE'] == 'CONVERTED'
+		# When we enable the regression tests for ported code this might stop head scratching
+		puts "Fyi - If you get changes in the regression output then try disabling this!!!"
+		def test_match_list_for_random_decision
+			Db.Minimal()
+			wizard = 1
+			match = Match.new(@db)
+			# Some fake things for the owner
+			thing1 = @db.add_new_record
+			thing2 = @db.add_new_record
+			thing3 = @db.add_new_record
+			# Join them up
+			record(thing1) {|r| r.merge!({ :flags => TYPE_THING, :name => "glove", :owner => wizard, :next => thing2 }) }
+			record(thing2) {|r| r.merge!({ :flags => TYPE_THING, :name => "spoon", :owner => wizard, :next => thing3 }) }
+			record(thing3) {|r| r.merge!({ :flags => TYPE_THING, :name => "glove", :owner => wizard }) }
+			record(wizard) {|r| r.merge!({ :contents => thing1 })}
+			# Get the wizard to match possesion
+			match.init_match(wizard, "glove", -1)
+			match.match_possession
+			random = match.last_match_result()
+			assert(random == thing2 || random == thing3)
+		end
+end
+
 		# The match results are tested indirectly, again once I have a ruby version, testing of them
 		# will be easier.
 		

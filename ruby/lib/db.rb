@@ -144,15 +144,24 @@ module TinyMud
 		#length returns the number of elements in the database.
 		def length()
 			return @@record_array.length()
-			
-			
 		end
 		
 		#Helper function, parses a database from a file.
 		def read(location)
 			Db.parse_database(location)
 		end
-		
+
+		def self.parse_dbref(s)
+			x = s.to_i
+			if (x > 0)
+				return x
+			elsif (x == 0 && s.lstrip().starts_with?('0'))
+				return 0
+			end
+			# else x < 0 or s != 0
+			return NOTHING;
+		end
+
 		#Writes current database to location
 		def self.write(location)
 			file = File.new(location, "w")

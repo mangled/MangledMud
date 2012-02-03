@@ -10,7 +10,8 @@ module TinyMud
     end
 
     def init_match(player, name, type)
-      @exact_match = last_match = NOTHING
+      @exact_match = NOTHING
+      @last_match = NOTHING
       @match_count = 0
       @match_who = player
       @match_name = name
@@ -25,7 +26,7 @@ module TinyMud
 
     def match_player()
       if (@match_name[0] == LOOKUP_TOKEN && r_truthify(Predicates.new(@db).payfor(@match_who, LOOKUP_COST)))
-          player_id = match_name[1..-1].lstrip()
+          player_id = @match_name[1..-1].lstrip()
           match = Player.new(@db).lookup_player(player_id)
           @exact_match = match if (match != NOTHING)
       end
@@ -41,8 +42,8 @@ module TinyMud
     end
 
     def match_here()
-      if (@match_name.casecmp("here") == 0 && @db.get(match_who).location != NOTHING)
-          @exact_match = @db.get(match_who).location
+      if (@match_name.casecmp("here") == 0 && @db.get(@match_who).location != NOTHING)
+          @exact_match = @db.get(@match_who).location
       end
     end
 
@@ -61,17 +62,17 @@ module TinyMud
       loc = @db.get(@match_who).location
       if (loc != NOTHING)
         absolute = absolute_name()
-        absolute = NOTHING if (!r_truthify(controls(@match_who, absolute)))
+        absolute = NOTHING if (!r_truthify(Predicates.new(@db).controls(@match_who, absolute)))
 
         enum(@db.get(loc).exits).each do |exit|
           if (exit == absolute)
             @exact_match = exit
           else
             @db.get(exit).name.split(EXIT_DELIMITER).each do |name|
-              if (@match_name.casecmp(name.strip!) == 0)
+              if (@match_name.casecmp(name.strip) == 0)
                   # ! Matthew - Modified original code -> Bug fix?
                   if (@check_keys)
-                      int exit_status = Predicates.new(@db).could_doit(match_who, exit)
+                      exit_status = Predicates.new(@db).could_doit(@match_who, exit)
                       @match_count += exit_status		     
                   else
                       @match_count += 1
@@ -98,7 +99,7 @@ module TinyMud
 
     def match_result()
       if (@exact_match != NOTHING)
-        exact_match
+        @exact_match
       else
         case @match_count
           when 0 then NOTHING
@@ -116,10 +117,10 @@ module TinyMud
       match = match_result()
       case match
         when NOTHING
-          Interface.notify(@match_who, NOMATCH_MESSAGE)
+          Interface.do_notify(@match_who, NOMATCH_MESSAGE)
           NOTHING
         when AMBIGUOUS
-          Interface.notify(@match_who, AMBIGUOUS_MESSAGE)
+          Interface.do_notify(@match_who, AMBIGUOUS_MESSAGE)
           NOTHING
         else
           match
@@ -131,7 +132,7 @@ module TinyMud
     # returns nnn if name = #nnn, else NOTHING
     def absolute_name()
       if (@match_name[0] == NUMBER_TOKEN)
-          match = parse_dbref(@match_name[1..-1])
+          match = Db.parse_dbref(@match_name[1..-1])
           if (match < 0 || match >= @db.length)
               return NOTHING
           else
@@ -145,10 +146,10 @@ module TinyMud
     def match_list(first)
         absolute = absolute_name();
         absolute = NOTHING if (!r_truthify(Predicates.new(@db).controls(@match_who, absolute)))
-    
+
         enum(first).each do |i|
           if (i == absolute)
-              @exact_match = first
+              @exact_match = i
               return
           elsif (@db.get(i).name.casecmp(@match_name) == 0)
               # if there are multiple exact matches, randomly choose one
@@ -168,18 +169,18 @@ module TinyMud
         end
   
         if (@preferred_type != NOTYPE)
-            if (typeof(thing1) == preferred_type)
-                if (typeof(thing2) != preferred_type)
+            if (typeof(thing1) == @preferred_type)
+                if (typeof(thing2) != @preferred_type)
                     return thing1
                 end
-            elsif (typeof(thing2) == preferred_type)
+            elsif (typeof(thing2) == @preferred_type)
                 return thing2
             end
         end
     
-        if (check_keys)
-            has1 = r_truthify(Predicates.new(@db).could_doit(match_who, thing1))
-            has2 = r_truthify(Predicates.new(@db).could_doit(match_who, thing2))
+        if (@check_keys)
+            has1 = r_truthify(Predicates.new(@db).could_doit(@match_who, thing1))
+            has2 = r_truthify(Predicates.new(@db).could_doit(@match_who, thing2))
             if (has1 && !has2)
                 return thing1
             elsif (has2 && !has1)
@@ -187,7 +188,8 @@ module TinyMud
             end
             # else fall through
         end
-        return (random() % 2 ? thing1 : thing2)
+
+        return (rand(32768) % 2 ? thing1 : thing2)
     end
   end
 end
