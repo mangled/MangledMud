@@ -94,7 +94,6 @@ void Init_tinymud()
   Init_move();
   Init_look();
   Init_create();
-  Init_set();
   Init_rob();
   Init_wiz();
   Init_stringutil();
