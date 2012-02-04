@@ -95,6 +95,10 @@ module Helpers
     ((@db.get(item).flags & TYPE_MASK) == TYPE_PLAYER)
   end
 
+  def is_thing(item)
+    ((@db.get(item).flags & TYPE_MASK) == TYPE_THING)
+  end
+
   # Was defined in db.h
   def typeof(item)
     (@db.get(item).flags & TYPE_MASK)

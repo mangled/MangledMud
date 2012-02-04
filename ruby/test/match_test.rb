@@ -214,7 +214,7 @@ if ENV['TEST_TYPE'] == 'CONVERTED'
 			match.init_match(wizard, "glove", -1)
 			match.match_possession
 			random = match.last_match_result()
-			assert(random == thing2 || random == thing3)
+			assert(random == thing1 || random == thing3, "expected a choice between #{thing1} and #{thing3}")
 		end
 end
 

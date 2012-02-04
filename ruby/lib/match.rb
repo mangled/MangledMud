@@ -69,7 +69,8 @@ module TinyMud
             @exact_match = exit
           else
             @db.get(exit).name.split(EXIT_DELIMITER).each do |name|
-              if (@match_name.casecmp(name.strip) == 0)
+              # Allow a partial match - for ambiguous matching
+              if (name.downcase.strip.start_with?(@match_name.downcase))
                   # ! Matthew - Modified original code -> Bug fix?
                   if (@check_keys)
                       exit_status = Predicates.new(@db).could_doit(@match_who, exit)
@@ -77,7 +78,10 @@ module TinyMud
                   else
                       @match_count += 1
                   end
-                  @exact_match = choose_thing(@exact_match, exit);
+                  # Only match exact if the names are equal
+                  if (@match_name.casecmp(name) == 0)
+                    @exact_match = choose_thing(@exact_match, exit)
+                  end
               end
             end
           end
