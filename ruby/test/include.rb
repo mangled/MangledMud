@@ -14,6 +14,7 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED' # The ruby port
   require_relative '../lib/predicates.rb'
   require_relative '../lib/speech.rb'
   require_relative '../lib/set.rb'
+  require_relative '../lib/move.rb'
 else
   throw "Unknown test type!"
 end
