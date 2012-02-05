@@ -253,7 +253,7 @@ module TinyMud
     
     # To allow mocking in move.c - enter_room()
     def Move.get_penny_check()
-      (rand(32768) % PENNY_RATE == 0 ? 1 : 0)
+      (rand(0x7FFFFFFF) % PENNY_RATE == 0 ? 1 : 0)
     end
 
     private

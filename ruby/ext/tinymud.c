@@ -92,7 +92,6 @@ void Init_tinymud()
   // The main aim is to keep the tests passing (for both build types)
   Init_look();
   Init_create();
-  Init_rob();
   Init_stringutil();
   Init_game();
   Init_help();

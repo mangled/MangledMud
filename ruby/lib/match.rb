@@ -193,7 +193,7 @@ module TinyMud
             # else fall through
         end
 
-        return (rand(32768) % 2 ? thing1 : thing2)
+        return (rand(0x7FFFFFFF) % 2 ? thing1 : thing2)
     end
   end
 end

@@ -13,6 +13,9 @@ module TinyMud
 		
 		def setup
 			@db = TinyMud::Db.new()
+
+			# Ensure that penny checks are off until we want them to be
+			Move.stubs(:get_penny_check).returns(0)
 		end
 
 		def teardown
@@ -160,7 +163,7 @@ module TinyMud
 			rob.do_kill(bob, "anne", 1)
 			
 			# Kill but rich, setting cost to greater than KILL_BASE_COST to ensure success (uses random in code)
-			record(bob) {|r| r.merge!({ :pennies => KILL_BASE_COST + 1 }) } # 1 < KILL_MIN_COST gets rounded to it
+			record(bob) {|r| r.merge!({ :pennies => KILL_BASE_COST + 1000 }) }
 			Interface.expects(:do_notify).with(bob, "You killed anne!").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob killed you!").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Your insurance policy pays 50 pennies.").in_sequence(notify)
@@ -180,7 +183,7 @@ module TinyMud
 			assert_equal(KILL_BONUS + 0, @db.get(anne).pennies) # The +1 is a result of the random, see comment above
 			assert_equal(limbo, @db.get(anne).location)
 			assert_equal(jam, @db.get(bob).next)
-			assert_equal(1, @db.get(bob).pennies)
+			assert_equal(1000, @db.get(bob).pennies)
 
 			# Kill but almost poor - NOTE this relies on the random number generator!!! It may fail
 			# once in a while!!! Being a wizard so I don't need to move stuff about, also tests wizard
