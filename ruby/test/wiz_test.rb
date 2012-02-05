@@ -13,6 +13,9 @@ module TinyMud
         
 		def setup
 			@db = TinyMud::Db.new()
+
+			# Ensure that penny checks are off until we want them to be
+			Move.stubs(:get_penny_check).returns(0)
 		end
 
 		def teardown

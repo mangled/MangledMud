@@ -155,8 +155,9 @@ module TinyMud
 			x = s.to_i
 			if (x > 0)
 				return x
-			elsif (x == 0 && s.lstrip().starts_with?('0'))
-				return 0
+			elsif (x == 0)
+				s = s.lstrip()
+				return 0 if (s and s.start_with?('0'))
 			end
 			# else x < 0 or s != 0
 			return NOTHING;
