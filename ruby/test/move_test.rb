@@ -13,6 +13,9 @@ module TinyMud
 		
 		def setup
 			@db = TinyMud::Db.new()
+
+			# Ensure that penny checks are off until we want them to be
+			Move.stubs(:get_penny_check).returns(0)
 		end
 
 		def teardown
@@ -86,6 +89,7 @@ module TinyMud
 			set_up_objects(start_loc, bob, anne, jim, place)
 		
 			notify = sequence('notify')
+
 			Interface.expects(:do_notify).with(bob, 'somewhere').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'Contents:').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'anne').in_sequence(notify)
@@ -158,7 +162,7 @@ module TinyMud
 			
 			# Now trigger a penny event by mocking the default behaviour
 			set_up_objects(start_loc, bob, anne, jim, place)
-			Move.expects(:get_penny_check).returns(1)
+			Move.stubs(:get_penny_check).returns(1)
 			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)

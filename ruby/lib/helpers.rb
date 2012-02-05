@@ -5,6 +5,8 @@ module Helpers
   # I will look at fixing this, once I have predicates and speech.c ported.
   # - Matthew
 
+  PENNY_RATE  = 10	# 1/chance of getting a penny per room
+
   # Flags
   TYPE_ROOM =	0x0
   TYPE_THING = 0x1
@@ -97,6 +99,14 @@ module Helpers
 
   def is_thing(item)
     ((@db.get(item).flags & TYPE_MASK) == TYPE_THING)
+  end
+
+  def is_temple(item)
+    ((@db.get(item).flags & TEMPLE) != 0)
+  end
+
+  def is_sticky(item)
+    ((@db.get(item).flags & STICKY) != 0)
   end
 
   # Was defined in db.h
