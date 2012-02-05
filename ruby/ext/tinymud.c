@@ -94,6 +94,5 @@ void Init_tinymud()
   Init_create();
   Init_stringutil();
   Init_game();
-  Init_help();
 #endif
 }

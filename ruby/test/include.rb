@@ -17,6 +17,7 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED' # The ruby port
   require_relative '../lib/move.rb'
   require_relative '../lib/wiz.rb'
   require_relative '../lib/rob.rb'
+  require_relative '../lib/help.rb'
 else
   throw "Unknown test type!"
 end

@@ -56,4 +56,8 @@ module TinyMud
 	KILL_BASE_COST = 100 # prob = expenditure/KILL_BASE_COST
 	KILL_MIN_COST = 10
 	KILL_BONUS = 50	# paid to victim
+
+    # Help and news files
+    HELP_FILE = "help.txt"
+    NEWS_FILE = "news.txt"
 end

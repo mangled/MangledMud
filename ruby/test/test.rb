@@ -33,7 +33,7 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED'
   #require_relative 'stringutil_test'
   #require_relative 'game_test'
   #require_relative 'regression' # Enable this last
-  #require_relative 'help_test'
+  require_relative 'help_test'
 else
   throw "Unknown test type!"
 end
