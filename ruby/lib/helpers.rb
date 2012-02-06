@@ -109,6 +109,10 @@ module Helpers
     ((@db.get(item).flags & STICKY) != 0)
   end
 
+  def is_link_ok(item)
+    ((@db.get(item).flags & LINK_OK) != 0)
+  end
+
   # Was defined in db.h
   def typeof(item)
     (@db.get(item).flags & TYPE_MASK)

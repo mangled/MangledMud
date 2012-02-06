@@ -1,10 +1,6 @@
 require_relative '../test/include'
 require_relative './helpers.rb'
 
-# Fix this - should be required through tests/include, but I needed to partially
-# port...Remove when look.c is fully ported
-require_relative './look.rb'
-
 module TinyMud
   class Move
     include Helpers
