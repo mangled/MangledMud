@@ -1,7 +1,6 @@
 require_relative '../test/include'
 require_relative './helpers.rb'
 
-# ** Partially ported to allow move.c to be ported **
 module TinyMud
   class Look
     include Helpers

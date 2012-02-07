@@ -166,7 +166,6 @@ module TinyMud
 		#Writes current database to location
 		def self.write(location)
 			file = File.new(location, "w")
-			
 			for i in (0..@@record_array.length()-1)
 				current_record = @@record_array[i]
 				file.puts("##{i}\n")
@@ -186,11 +185,8 @@ module TinyMud
 				file.puts(current_record.flags.to_s + "\n")
 				file.puts(current_record.password.to_s + "\n")
 			end
-			
 			file.puts("***END OF DUMP***")
 			file.close()
-			
-			
 		end
 		
 		#free clears the database and does administrative work
