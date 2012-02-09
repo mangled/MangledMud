@@ -156,7 +156,13 @@ module TinyMud
 			if (x > 0)
 				return x
 			elsif (x == 0)
-				s = s.lstrip()
+				#Getting lstrip on null sometimes..
+				#Fixed while checking a function, but may want to add here.
+				#if(s == nil)
+					#return 0
+				#else
+					s = s.lstrip()
+				#end
 				return 0 if (s and s.start_with?('0'))
 			end
 			# else x < 0 or s != 0
