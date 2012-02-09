@@ -20,6 +20,7 @@ module Helpers
   DARK = 0x40
   TEMPLE = 0x80
   STICKY = 0x100
+  BUILDER = 0x200
 
   # Dbref values
   NOTHING = -1
@@ -52,6 +53,9 @@ module Helpers
 
   # Maximum amount an object can be worth
   MAX_OBJECT_ENDOWMENT = 100
+  
+  #Used to calculate the cost of endowment.  Decreasing this makes it larger.
+  ENDOWMENT_CALCULATOR = 5
 
   # Match messages	
   NOMATCH_MESSAGE = "I don't see that here."
@@ -121,6 +125,11 @@ module Helpers
   # Was defined in db.h
   def is_wizard(item)
     ((@db.get(item).flags & WIZARD) != 0)
+  end
+  
+    # Was defined in db.h
+  def is_builder(item)
+    ((@db.get(item).flags & (WIZARD|BUILDER)) != 0)
   end
 
   # Was defined in db.h
