@@ -1,7 +1,7 @@
+#include "ruby.h"
 #include "copyright.h"
 
 #include <stdlib.h>
-#include "movewrap.h" // For mocking penny giving
 #include "db.h"
 #include "config.h"
 #include "interface.h"
@@ -12,6 +12,7 @@
 #include "stringutil.h"
 #include "predicates.h"
 #include "look.h"
+#include "game.h"
 
 void moveto(dbref what, dbref where)
 {
@@ -124,9 +125,9 @@ void enter_room(dbref player, dbref loc)
     /* check for pennies */
 
 	/* Added to allow mocking/control over when someone gets a penny */
-	ID method = rb_intern("get_penny_check");
-	VALUE result = rb_funcall(move_class, method, 0, Qnil);
-	int give_penny = FIX2INT(result);
+	ID method = rb_intern("do_rand");
+	VALUE result = rb_funcall(game_class, method, 0, Qnil);
+	int give_penny = FIX2INT(result) % PENNY_RATE == 0;
 	/* end mocking */
 
     if(!controls(player, loc) && db[player].pennies <= MAX_PENNIES && give_penny) {
@@ -134,7 +135,7 @@ void enter_room(dbref player, dbref loc)
 		db[player].pennies++;
     }
 }
-	    
+
 void send_home(dbref thing)
 {
     switch(Typeof(thing)) {

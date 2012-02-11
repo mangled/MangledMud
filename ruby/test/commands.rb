@@ -47,8 +47,8 @@ module TinyMud
             players = { "wizard" => 1 }
             game = TinyMud::Game.new(db)
 
-            # Stop random pennies
-            Move.stubs(:get_penny_check).returns(0)
+            # Ensure we never give pennies and never manage to kill
+			Game.stubs(:do_rand).returns(17)
 
             result = []
             

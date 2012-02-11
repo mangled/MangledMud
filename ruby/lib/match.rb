@@ -204,7 +204,7 @@ module TinyMud
             # else fall through
         end
 
-        return (rand(0x7FFFFFFF) % 2 ? thing1 : thing2)
+        return (Game.do_rand() % 2 ? thing1 : thing2)
     end
   end
 end

@@ -14,8 +14,8 @@ if ENV['TEST_TYPE'] == 'ORIGINAL' # The original
   require_relative 'wiz_test'
   require_relative 'stringutil_test'
   require_relative 'game_test'
-  require_relative 'regression'
   require_relative 'help_test'
+  require_relative 'regression'
 elsif ENV['TEST_TYPE'] == 'CONVERTED'
   puts "Running converted tests"
   require_relative 'db_test'
@@ -32,7 +32,7 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED'
   require_relative 'wiz_test'
   require_relative 'game_test'
   require_relative 'help_test'
-  #require_relative 'regression'
+  require_relative 'regression'
 else
   throw "Unknown test type!"
 end

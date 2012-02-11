@@ -78,14 +78,6 @@ static VALUE do_do_drop(VALUE self, VALUE player, VALUE name)
     return Qnil;
 }
 
-// To allow mocking in move.c - enter_room()
-static VALUE do_get_penny(VALUE self)
-{
-    (void) self;
-
-    // The original code 1 => have a penny, 0 => don't: random() % PENNY_RATE == 0
-    return INT2FIX(0); // We never give pennies, unless the mock says so - Does this make sense? Possibly we need the old code alive?
-}
 static VALUE do_initialize(VALUE self, VALUE db)
 {
 	(void) self;
@@ -102,6 +94,5 @@ void Init_move()
     rb_define_method(move_class, "do_move", do_do_move, 2);
     rb_define_method(move_class, "do_get", do_do_get, 2);
     rb_define_method(move_class, "do_drop", do_do_drop, 2);
-    rb_define_module_function(move_class, "get_penny_check", do_get_penny, 0);
 	rb_define_method(move_class, "initialize", do_initialize, 1);
 }

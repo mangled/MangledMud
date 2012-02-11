@@ -75,7 +75,7 @@ module TinyMud
             # see if it works 
             if (!r_truthify(@predicates.payfor(player, cost)))
               Interface.do_notify(player, "You don't have enough pennies.")
-            elsif ((rand(0x7FFFFFFF) % KILL_BASE_COST) < cost)
+            elsif ((Game.do_rand() % KILL_BASE_COST) < cost)
               # you killed him
               Interface.do_notify(player, "You killed #{@db.get(victim).name}!")
 

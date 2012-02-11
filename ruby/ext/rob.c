@@ -1,3 +1,4 @@
+#include "ruby.h"
 #include "copyright.h"
 
 /* rob and kill */
@@ -11,6 +12,7 @@
 #include "predicates.h"
 #include "move.h"
 #include "speech.h"
+#include "game.h"
 
 void do_rob(dbref player, const char *what)
 {
@@ -90,10 +92,16 @@ void do_kill(dbref player, const char *what, int cost)
 	    /* set cost */
 	    if(cost < KILL_MIN_COST) cost = KILL_MIN_COST;
 
+		/* Added to allow mocking/control over when someone gets a penny */
+		ID method = rb_intern("do_rand");
+		VALUE result = rb_funcall(game_class, method, 0, Qnil);
+		int rand = FIX2INT(result);
+		/* end mocking */
+
 	    /* see if it works */
 	    if(!payfor(player, cost)) {
 		notify(player, "You don't have enough pennies.");
-	    } else if((random() % KILL_BASE_COST) < cost) {
+	    } else if((rand % KILL_BASE_COST) < cost) {
 		/* you killed him */
 		sprintf(buf, "You killed %s!", db[victim].name);
 		notify(player, buf);

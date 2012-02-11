@@ -5,6 +5,11 @@ module TinyMud
   class Game
     include Helpers
 
+    # To control penny checks and general random choices (via stubbing)
+    def Game.do_rand()
+      return rand(0x7FFFFFFF)
+    end
+
     # These are class level due to the way the original code was structured
     # resulting in this being the easiest way to  "hack" in some control over
     # the "c" static (yes its messy...for now)
@@ -65,7 +70,7 @@ module TinyMud
     end
 
     def do_dump(player)
-      puts "This is non-functional - fix"
+      # This is non-functional, we need the networking code in place...
       if (is_wizard(player))
         # Todo!!!
         Interface.do_notify(player, "Dumping...")
@@ -85,14 +90,14 @@ module TinyMud
         return
       end
 
-  # Consider a replacement to this
-  ##ifdef LOG_COMMANDS
-  #    fprintf(stderr, "COMMAND from %s(%d) in %s(%d): %s\n",
-  #        getname(player), player,
-  #        getname(db[player].location),
-  #        db[player].location,
-  #        command)
-  ##endif # LOG_COMMANDS
+      # Consider a replacement to this
+      ##ifdef LOG_COMMANDS
+      #    fprintf(stderr, "COMMAND from %s(%d) in %s(%d): %s\n",
+      #        getname(player), player,
+      #        getname(db[player].location),
+      #        db[player].location,
+      #        command)
+      ##endif # LOG_COMMANDS
 
       # Check for a nil command
       if (command.nil?)
@@ -166,14 +171,14 @@ module TinyMud
                     @set.do_fail(player, arg1, arg2) if Matched("@fail", command, player)
                   when 'i'
                     @look.do_find(player, arg1) if Matched("@find", command, player)
-# Todo - Enable?
-##ifdef DO_FLUSH
-#          when 'l'
-#          when 'L'
-#            if(string_compare(command, "@flush")) goto bad
-#            do_flush(player)
-#            break
-##endif				# DO_FLUSH 
+                    # Todo - Enable?
+                    ##ifdef DO_FLUSH
+                    #          when 'l'
+                    #          when 'L'
+                    #            if(string_compare(command, "@flush")) goto bad
+                    #            do_flush(player)
+                    #            break
+                    ##endif
                   when 'o'
                      @wiz.do_force_fix_this_soon(self, player, arg1, arg2) if Matched("@force", command, player)
                   else
@@ -313,18 +318,18 @@ module TinyMud
 
     def Huh(player, no_huh = false)
       Interface.do_notify(player, "Huh?  (Type \"help\" for help.)") unless no_huh
-# Todo - Consider a replacement
-##ifdef LOG_FAILED_COMMANDS
-#if(!controls(player, db[player].location)) {
-#  fprintf(stderr, "HUH from %s(%d) in %s(%d)[%s]: %s %s\n",
-#      getname(player), player,
-#      getname(db[player].location),
-#      db[player].location,
-#      getname(db[db[player].location].owner),
-#      command,
-#      reconstruct_message(arg1, arg2))
-#}
-#ifdef LOG_FAILED_COMMANDS
+      # Todo - Consider a replacement
+      ##ifdef LOG_FAILED_COMMANDS
+      #if(!controls(player, db[player].location)) {
+      #  fprintf(stderr, "HUH from %s(%d) in %s(%d)[%s]: %s %s\n",
+      #      getname(player), player,
+      #      getname(db[player].location),
+      #      db[player].location,
+      #      getname(db[db[player].location].owner),
+      #      command,
+      #      reconstruct_message(arg1, arg2))
+      #}
+      #ifdef LOG_FAILED_COMMANDS
       no_huh
     end
 

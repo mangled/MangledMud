@@ -13,9 +13,8 @@ module TinyMud
 		
 		def setup
 			@db = TinyMud::Db.new()
-
-			# Ensure that penny checks are off until we want them to be
-			Move.stubs(:get_penny_check).returns(0)
+			# Ensure we only kill or get pennies when we want to
+			Game.stubs(:do_rand).returns(17)
 		end
 
 		def teardown
@@ -185,9 +184,7 @@ module TinyMud
 			assert_equal(jam, @db.get(bob).next)
 			assert_equal(1000, @db.get(bob).pennies)
 
-			# Kill but almost poor - NOTE this relies on the random number generator!!! It may fail
-			# once in a while!!! Being a wizard so I don't need to move stuff about, also tests wizard
-			# powers
+			# Kill but almost poor, being a wizard so I don't need to move stuff about, also tests wizard powers
 			record(bob) {|r| r.merge!({ :flags => TYPE_PLAYER | WIZARD, :pennies => KILL_MIN_COST }) }
 			Interface.expects(:do_notify).with(bob, "Your murder attempt failed.").in_sequence(notify)
 			Interface.expects(:do_notify).with(sam, "bob tried to kill you!").in_sequence(notify)

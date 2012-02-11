@@ -4,7 +4,6 @@ require 'mocha'
 require_relative 'defines'
 require_relative 'include'
 require_relative 'helpers'
-require 'pp'
 
 module TinyMud
     class TestMove < Test::Unit::TestCase
@@ -14,8 +13,8 @@ module TinyMud
 		def setup
 			@db = TinyMud::Db.new()
 
-			# Ensure that penny checks are off until we want them to be
-			Move.stubs(:get_penny_check).returns(0)
+			# Ensure we never give pennies
+			Game.stubs(:do_rand).returns(1)
 		end
 
 		def teardown
@@ -162,7 +161,7 @@ module TinyMud
 			
 			# Now trigger a penny event by mocking the default behaviour
 			set_up_objects(start_loc, bob, anne, jim, place)
-			Move.stubs(:get_penny_check).returns(1)
+			Game.stubs(:do_rand).returns(10000) # todo 10 = PENNY_RATE - this is fragile
 			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
@@ -172,6 +171,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "You found a penny!").in_sequence(notify)
 			move.enter_room(bob, place)
+			Game.stubs(:do_rand).returns(1)
 		end
 		
 		def test_send_home

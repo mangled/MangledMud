@@ -74,7 +74,7 @@ module TinyMud
       # check for pennies
   
       # Added to allow mocking/control over when someone gets a penny
-      give_penny = r_truthify(Move.get_penny_check())
+      give_penny = (Game.do_rand() % PENNY_RATE) == 0
 
       if (!r_truthify(@predicates.controls(player, loc)) && (@db.get(player).pennies <= MAX_PENNIES) && give_penny)
           Interface.do_notify(player, "You found a penny!")
@@ -245,11 +245,6 @@ module TinyMud
               @speech.notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} dropped #{@db.get(thing).name}.")
           end
       end
-    end
-    
-    # To allow mocking in move.c - enter_room()
-    def Move.get_penny_check()
-      (rand(0x7FFFFFFF) % PENNY_RATE == 0 ? 1 : 0)
     end
 
     private

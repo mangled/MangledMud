@@ -1,3 +1,4 @@
+#include "ruby.h"
 #include "copyright.h"
 
 /* Routines for parsing arguments */
@@ -11,6 +12,7 @@
 #include "predicates.h"
 #include "stringutil.h"
 #include "player.h"
+#include "game.h"
 
 #define DOWNCASE(x) (isupper(x) ? tolower(x) : (x))
 
@@ -72,7 +74,13 @@ static dbref choose_thing(dbref thing1, dbref thing2)
 		/* else fall through */
     }
 
-    return (random() % 2 ? thing1 : thing2);
+	/* Added to allow mocking/control over when someone gets a penny */
+	ID method = rb_intern("do_rand");
+	VALUE result = rb_funcall(game_class, method, 0, Qnil);
+	int rand = FIX2INT(result);
+	/* end mocking */
+
+    return (rand % 2 ? thing1 : thing2);
 }
 
 void match_player()
