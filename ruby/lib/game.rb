@@ -19,6 +19,7 @@ module TinyMud
 
     def self.dump_database_to_file(filename)
       @dump_file_name = filename
+      self.dump_database
     end
 
     def self.set_dumpfile_name(filename)
@@ -35,12 +36,12 @@ module TinyMud
       $stderr.puts("DUMPING: #{@dump_file_name}.##{@epoch}#")
 
       # nuke our predecessor
-      tmpfile = "#{@dump_file_name}.##{epoch - 1}#"
+      tmpfile = "#{@dump_file_name}.##{@epoch - 1}#"
       File.delete(tmpfile) if File.exists?(tmpfile)
   
       # Dump current
-      tmpfile = "#{@dump_file_name}.##{epoch}#"
-      @db_to_dump.write(tmpfile)
+      tmpfile = "#{@dump_file_name}.##{@epoch}#"
+      Db.write(tmpfile)
 
       # Finalize name
       File.rename(tmpfile, @dump_file_name)
