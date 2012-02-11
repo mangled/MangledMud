@@ -90,8 +90,6 @@ void Init_tinymud()
   // db maybe a problem as it uses static's, I'm sure there will be a simple fix
   // for this. Maybe tackle it last...
   // The main aim is to keep the tests passing (for both build types)
-  //Init_create();
   Init_stringutil();
-  Init_game();
 #endif
 }

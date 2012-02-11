@@ -30,9 +30,9 @@ elsif ENV['TEST_TYPE'] == 'CONVERTED'
   require_relative 'set_test'
   require_relative 'rob_test'
   require_relative 'wiz_test'
-  #require_relative 'game_test'
-  #require_relative 'regression' # Enable this last
+  require_relative 'game_test'
   require_relative 'help_test'
+  #require_relative 'regression'
 else
   throw "Unknown test type!"
 end

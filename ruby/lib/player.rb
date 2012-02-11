@@ -11,9 +11,8 @@ module TinyMud
 		#Looks up a player by name, returns their index in the database.
 		#Currently O(N) time, should be worked on after initial port is complete.
 		def lookup_player(player_name)
-			if(@db.length() == 0)
-				return NOTHING
-			end
+			return NOTHING if (@db.length() == 0 or player_name.nil?)
+
 			for i in (0..@db.length()-1)
 				current_record = @db.get(i)
 				#puts "Comparing name: #{current_record.name()} to #{player_name}"
@@ -29,7 +28,6 @@ module TinyMud
 		#If it does, returns that player's index.
 		#Else, returns NOTHING
 		def connect_player(player_name, password)
-			
 			player = lookup_player(player_name)
 			
 			if(player == NOTHING)
@@ -40,7 +38,6 @@ module TinyMud
 				return NOTHING
 			end
 		end
-		
 		
 		#Creates a player with the given name.
 		#Name must be valid and not in use.
@@ -73,7 +70,6 @@ module TinyMud
 			end
 		end
 		
-		
 		#Changes a player's password. Notifies an interface if the password changes or the passwords are not the same.
 		def change_password(player_index, old_password, new_password)
 			player = @db.get(player_index)
@@ -89,12 +85,8 @@ module TinyMud
 			end
 		end
 		
-		
-		
 		def initialize(db)
 			@db = db
 		end
-	
-	
 	end
 end

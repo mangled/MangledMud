@@ -11,7 +11,7 @@ module TinyMud
     end
 
     def reconstruct_message(arg1, arg2)
-      arg2 ? "#{arg1} = #{arg2}" : arg1
+      (arg2 and !arg2.empty?) ? "#{arg1} = #{arg2}" : arg1
     end
 
     def do_say(player, arg1, arg2)

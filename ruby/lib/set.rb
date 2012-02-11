@@ -114,10 +114,12 @@ module TinyMud
       end
 
       # now we know it's ok to lock
-      antilock = (keyname[0] == NOT_TOKEN)
-      if (antilock)
-        keyname = keyname[1..-1]
-        keyname.lstrip!() if keyname
+      if keyname
+        antilock = (keyname[0] == NOT_TOKEN)
+        if (antilock)
+          keyname = keyname[1..-1]
+          keyname.lstrip!() if keyname
+        end
       end
 
       # match keyname
@@ -221,8 +223,10 @@ module TinyMud
       return if (thing == NOTHING)
   
       # move p past NOT_TOKEN if present
-      p = flag.strip
-      p = p[1..-1] if p[0] == NOT_TOKEN
+      unless flag.nil?
+        p = flag.strip
+        p = p[1..-1] if p[0] == NOT_TOKEN
+      end
   
       # identify flag
       f = nil

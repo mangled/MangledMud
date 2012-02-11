@@ -17,7 +17,7 @@ module TinyMud
     def do_rob(player, what)
       loc = getloc(player)
       return if (loc == NOTHING)
-      
+
       @match.init_match(player, what, TYPE_PLAYER)
       @match.match_neighbor()
       @match.match_me()

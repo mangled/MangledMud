@@ -75,7 +75,7 @@ module TinyMud
     end
 
     # Todo- WE REALLY NEED TO break apart this gigantic switch statement
-    def do_process_command(player, command)
+    def process_command(player, command)
       # We need to define a more ruby like way for killing the connection
       # if (command == 0) abort()
   
@@ -114,64 +114,58 @@ module TinyMud
 
       # check for single-character commands 
       if (command[0] == SAY_TOKEN)
-        @speech.do_say(player, command + 1, NULL)
-      else if(command[0] == POSE_TOKEN)
-        @speech.do_pose(player, command + 1, NULL)
-      else if (r_truthify(@move.can_move(player, command)))
+        @speech.do_say(player, command[1..-1], nil)
+      elsif(command[0] == POSE_TOKEN)
+        @speech.do_pose(player, command[1..-1], nil)
+      elsif (r_truthify(@move.can_move(player, command)))
         # command is an exact match for an exit 
         @move.do_move(player, command)
       else
-        # parse arguments - split out the command and possible arguments
-        # Todo- This isn't very robust FIX!
-        args = command.split(" ").collect{|i| i.downcase() }
-        command = args[0]
-        arg1 = args[1]
-        arg2 = args[2]
-        if (arg2 and arg2 == '=')
-          arg2 = args[3]
+        # Todo: This parsing code is rubbish, fix :-)
+        command =~ /^(\S+)(.*)/
+        command = $1
+        arg1 = $2
+        arg2 = nil
+        arg1.strip! unless arg1.nil?
+        arg1 = nil if arg1.empty?
+        if arg1 and arg1.include?('=')
+          args = arg1.split('=')
+          arg1 = args[0]
+          arg2 = args[1]
         end
 
-        case command[0]
+        case command[0].downcase
           when '@'
-            case command[1]
+            case command[1].downcase
               when 'c'
-              when 'C'
                 # chown, create
-                case command[2]
+                case command[2].downcase
                     when 'h'
-                    when 'H'
-                      @set.do_chown(player, arg1, arg2) if Matched("@chown", command)
+                      @set.do_chown(player, arg1, arg2) if Matched("@chown", command, player)
                     when 'r'
-                    when 'R'
-                      @create.do_create(player, arg1, atol(arg2)) if Matched("@create", command)
+                      @create.do_create(player, arg1, arg2.to_i) if Matched("@create", command, player)
                     else
-                      Huh()
+                      Huh(player)
                 end
               when 'd'
-              when 'D'
                 # describe, dig, or dump 
-                case command[2]
+                case command[2].downcase
                   when 'e'
-                  when 'E'
-                    @set.do_describe(player, arg1, arg2) if Matched("@describe", command)
+                    @set.do_describe(player, arg1, arg2) if Matched("@describe", command, player)
                   when 'i'
-                  when 'I'
-                    @create.do_dig(player, arg1) if Matched("@dig", command)
+                    @create.do_dig(player, arg1) if Matched("@dig", command, player)
                   when 'u'
-                  when 'U'
-                    do_dump(player) if Matched("@dump", command)
+                    do_dump(player) if Matched("@dump", command, player)
                   else
-                    Huh()
+                    Huh(player)
                 end
               when 'f'
                 # fail, find, or force 
-                case command[2]
+                case command[2].downcase
                   when 'a'
-                  when 'A'
-                    @set.do_fail(player, arg1, arg2) if Matched("@fail", command)
+                    @set.do_fail(player, arg1, arg2) if Matched("@fail", command, player)
                   when 'i'
-                  when 'I'
-                    @look.do_find(player, arg1) if Matched("@find", command)
+                    @look.do_find(player, arg1) if Matched("@find", command, player)
 # Todo - Enable?
 ##ifdef DO_FLUSH
 #          when 'l'
@@ -181,178 +175,143 @@ module TinyMud
 #            break
 ##endif				# DO_FLUSH 
                   when 'o'
-                  when 'O'
-                     @wiz.do_force(player, arg1, arg2) if Matched("@force", command)
+                     @wiz.do_force_fix_this_soon(self, player, arg1, arg2) if Matched("@force", command, player)
                   else
-                    Huh()
+                    Huh(player)
                 end
               when 'l'
-              when 'L'
                 # lock or link 
-                case command[2]
+                case command[2].downcase
                   when 'i'
-                  when 'I'
-                    @create.do_link(player, arg1, arg2) if Matched("@link", command)
+                    @create.do_link(player, arg1, arg2) if Matched("@link", command, player)
                   when 'o'
-                  when 'O'
-                    @set.do_lock(player, arg1, arg2) if Matched("@lock", command)
+                    @set.do_lock(player, arg1, arg2) if Matched("@lock", command, player)
                   else
-                    Huh()
+                    Huh(player)
                 end
               when 'n'
-              when 'N'
-                @set.do_name(player, arg1, arg2) if Matched("@name", command)
+                @set.do_name(player, arg1, arg2) if Matched("@name", command, player)
               when 'o'
-              when 'O'
-                case command[2]
+                case command[2].downcase
                   when 'f'
-                  when 'F'
-                    @set.do_ofail(player, arg1, arg2) if Matched("@ofail", command)
+                    @set.do_ofail(player, arg1, arg2) if Matched("@ofail", command, player)
                   when 'p'
-                  when 'P'
-                    @create.do_open(player, arg1, arg2) if Matched("@open", command)
+                    @create.do_open(player, arg1, arg2) if Matched("@open", command, player)
                   when 's'
-                  when 'S'
-                    @set.do_osuccess(player, arg1, arg2) if Matched("@osuccess", command)
+                    @set.do_osuccess(player, arg1, arg2) if Matched("@osuccess", command, player)
                   else
-                    Huh()
+                    Huh(player)
                 end
               when 'p'
-              when 'P'
-                do_password(player, arg1, arg2) if Matched("@password", command)
+                @player.change_password(player, arg1, arg2) if Matched("@password", command, player)
               when 's'
-              when 'S'
                 # set, shutdown, success 
-                case command[2]
+                case command[2].downcase
                   when 'e'
-                  when 'E'
-                    @set.do_set(player, arg1, arg2) if Matched("@set", command)
+                    @set.do_set(player, arg1, arg2) if Matched("@set", command, player)
                   when 'h'
-                    do_shutdown(player) if Matched("@shutdown", command)
+                    do_shutdown(player) if Matched("@shutdown", command, player)
                   when 't'
-                  when 'T'
-                    @wiz.do_stats(player, arg1) if Matched("@stats", command)
+                    @wiz.do_stats(player, arg1) if Matched("@stats", command, player)
                   when 'u'
-                  when 'U'
-                    @set.do_success(player, arg1, arg2) if Matched("@success", command)
+                    @set.do_success(player, arg1, arg2) if Matched("@success", command, player)
                   else
-                    Huh()
+                    Huh(player)
                 end
               when 't'
-              when 'T'
-                case command[2]
+                case command[2].downcase
                   when 'e'
-                  when 'E'
-                    @wiz.do_teleport(player, arg1, arg2) if Matched("@teleport", command)
+                    @wiz.do_teleport(player, arg1, arg2) if Matched("@teleport", command, player)
                   when 'o'
-                    @wiz.do_toad(player, arg1) if Matched("@toad", command)
+                    @wiz.do_toad(player, arg1) if Matched("@toad", command, player)
                   else
-                    Huh()
+                    Huh(player)
                 end
               when 'u'
-              when 'U'
                 if command.start_with?("@unli")
-                  @set.do_unlink(player, arg1) if Matched("@unlink", command)
+                  @set.do_unlink(player, arg1) if Matched("@unlink", command, player)
                 elsif command.start_with?("@unlo")
-                  @set.do_unlock(player, arg1) if Matched("@unlock", command)
+                  @set.do_unlock(player, arg1) if Matched("@unlock", command, player)
                 else
-                  Huh()
+                  Huh(player)
                 end
               when 'w'
-                @speech.do_wall(player, arg1, arg2) if Matched("@wall", command)
+                @speech.do_wall(player, arg1, arg2) if Matched("@wall", command, player)
+              else
+                Huh(player)
             end
           when 'd'
-          when 'D'
-            @move.do_drop(player, arg1) if Matched("drop", command)
+            @move.do_drop(player, arg1) if Matched("drop", command, player)
           when 'e'
-          when 'E'
-            @look.do_examine(player, arg1) if Matched("examine", command)
+            @look.do_examine(player, arg1) if Matched("examine", command, player)
           when 'g'
-          when 'G'
             # get, give, go, or gripe 
-            case command[1]
+            case command[1].downcase
                 when 'e'
-                when 'E'
-                  @move.do_get(player, arg1) if Matched("get", command)
+                  @move.do_get(player, arg1) if Matched("get", command, player)
                 when 'i'
-                when 'I'
-                  @rob.do_give(player, arg1, atol(arg2)) if Matched("give", command)
+                  @rob.do_give(player, arg1, arg2.to_i) if Matched("give", command, player)
                 when 'o'
-                when 'O'
-                  @move.do_move(player, arg1) if Matched("goto", command)
+                  @move.do_move(player, arg1) if Matched("goto", command, player)
                 when 'r'
-                when 'R'
-                  @speech.do_gripe(player, arg1, arg2) if Matched("gripe", command)
+                  @speech.do_gripe(player, arg1, arg2) if Matched("gripe", command, player)
                 else
-                  Huh()
+                  Huh(player)
             end
           when 'h'
-          when 'H'
-            @help.do_help(player) if Matched("help", command)
+            @help.do_help(player) if Matched("help", command, player)
           when 'i'
-          when 'I'
-            @look.do_inventory(player) if Matched("inventory", command)
+            @look.do_inventory(player) if Matched("inventory", command, player)
           when 'k'
-          when 'K'
-            @rob.do_kill(player, arg1, atol(arg2)) if Matched("kill", command)
+            @rob.do_kill(player, arg1, arg2.to_i) if Matched("kill", command, player)
           when 'l'
-          when 'L'
-            @look.do_look_at(player, arg1) if Matched("look", command)
+            @look.do_look_at(player, arg1) if Matched("look", command, player)
           when 'm'
-          when 'M'
-            @move.do_move(player, arg1) if Matched("move", command)
+            @move.do_move(player, arg1) if Matched("move", command, player)
           when 'n'
-          when 'N'
             # news 
-            @help.do_news(player) if Matched("news")
+            @help.do_news(player) if Matched("news", command, player)
           when 'p'
-          when 'P'
-            @speech.do_page(player, arg1) if Matched("page", command)
+            @speech.do_page(player, arg1) if Matched("page", command, player)
           when 'r'
-          when 'R'
-            case command[1]
+            case command[1].downcase
               when 'e'
-              when 'E'
-                @look.do_look_at(player, arg1) if Matched("read", command) # undocumented alias for look at 
+                @look.do_look_at(player, arg1) if Matched("read", command, player) # undocumented alias for look at 
               when 'o'
-              when 'O'
-                @rob.do_rob(player, arg1) if Matched("rob", command)
+                @rob.do_rob(player, arg1) if Matched("rob", command, player)
               else
-                Huh()
+                Huh(player)
             end
           when 's'
-          when 'S'
             # say, "score" 
-            case command[1]
+            case command[1].downcase
               when 'a'
-              when 'A'
-                @speech.do_say(player, arg1, arg2) if Matched("say", command)
+                @speech.do_say(player, arg1, arg2) if Matched("say", command, player)
               when 'c'
-              when 'C'
-                @look.do_score(player) if Matched("score", command)
+                @look.do_score(player) if Matched("score", command, player)
               else
-                Huh()
+                Huh(player)
             end
           when 't'
-          when 'T'
-            case command[1]
+            case command[1].downcase
               when 'a'
-              when 'A'
-                @move.do_get(player, arg1) if Matched("take", command)
+                @move.do_get(player, arg1) if Matched("take", command, player)
               when 'h'
-              when 'H'
-                @move.do_drop(player, arg1) if Matched("throw", command)
+                @move.do_drop(player, arg1) if Matched("throw", command, player)
               else
-                Huh()
+                Huh(player)
             end
+        else
+          Huh(player)
         end
+      end
     end
 
-    def Matched(s, cmd)
-        Huh(s.downcase().start_with?(cmd.downcase()))
+    def Matched(s, cmd, player)
+        Huh(player, s.downcase().start_with?(cmd.downcase()))
     end
 
-    def Huh(no_huh = false)
+    def Huh(player, no_huh = false)
       Interface.do_notify(player, "Huh?  (Type \"help\" for help.)") unless no_huh
 # Todo - Consider a replacement
 ##ifdef LOG_FAILED_COMMANDS

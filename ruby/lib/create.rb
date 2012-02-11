@@ -42,9 +42,7 @@ module TinyMud
 		#do_open opens an exit belonging to the player in the specified direction.
 		#Player must be a builder or higher, must supply a valid exit, and must have enough pennies.
 		def do_open(player,direction,linkto)
-			#player = @db.get(player)
 			loc = getloc(player)
-			
 			
 			#Check to see if player is a builder.  Not in use, as restricted building is not currently being ported.
 			#if(!is_builder(player))
@@ -56,7 +54,7 @@ module TinyMud
 				Interface.do_notify(player, "Open where?")
 				return
 			elsif(!r_truthify(@pred.ok_name(direction)))
-				Interface.do_notify(player, "That's a strange name for an exit!");
+				Interface.do_notify(player, "That's a strange name for an exit!")
 				return
 			end
 			
@@ -69,9 +67,9 @@ module TinyMud
 				room = @db.get(exit)
 				room.name = direction
 				room.owner = player
-				room.flags = TYPE_EXIT;
+				room.flags = TYPE_EXIT
 				
-				#PUSH(exit, db[loc].exits);
+				#PUSH(exit, db[loc].exits)
 				##define PUSH(thing, locative) \ ((db[(thing)].next = (locative)), (locative) = (thing))
 				@db.get(exit).next = @db.get(loc).exits
 				@db.get(loc).exits = exit
@@ -100,122 +98,95 @@ module TinyMud
 		# costs 1 penny
 		# plus a penny transferred to the exit owner if they aren't you.
 		# you must own the linked-to room AND specify it by room number.
-		def do_link(player,name,room_name)
-		
-			#puts "Player: #{player} is trying to name a room #{room_name}.  Name is #{name}"
-		
-			#These need to be out of order, else the tests end up passing a null to parse_linkable_room,
-			#and a notify occurs, although function should bail first because "bob" is not anywhere.
-			#Clean up after port.
+		def do_link(player, name, room_name)
 			loc = getloc(player)
-			if(loc == NOTHING)
-				return
-			end
-			
+			return if (loc == NOTHING)
+
 			room = parse_linkable_room(player, room_name)
-			
-			if(room == NOTHING)
-				return
-			end
-			
-	
+			return if (room == NOTHING)
+
 			@match.init_match(player, name, TYPE_EXIT)
-			@match.match_exit();
-			@match.match_neighbor();
-			@match.match_possession();
-			@match.match_me();
-			@match.match_here();
+			@match.match_exit()
+			@match.match_neighbor()
+			@match.match_possession()
+			@match.match_me()
+			@match.match_here()
 			
-			if(is_wizard(player)) 
-				@match.match_absolute();
-				@match.match_player();
+			if (is_wizard(player)) 
+				@match.match_absolute()
+				@match.match_player()
 			end
 			
-			thing = @match.noisy_match_result()
-			
-			#puts "Thing, #{thing} type is #{typeof(thing)}"
-			
-			if(thing != NOTHING)
+			thing = @match.noisy_match_result()		
+			if (thing != NOTHING)
 				case typeof(thing)
-				
-				
-				
-				when TYPE_EXIT
-					#we're ok, check the usual stuff
-					if(@db.get(thing).location != NOTHING)
-						if(r_truthify(@pred.controls(player, thing)))
-							if(typeof(@db.get(thing).location) == TYPE_PLAYER)
-								Interface.do_notify(player, "That exit is being carried.")
+					when TYPE_EXIT
+						#we're ok, check the usual stuff
+						if(@db.get(thing).location != NOTHING)
+							if(r_truthify(@pred.controls(player, thing)))
+								if(typeof(@db.get(thing).location) == TYPE_PLAYER)
+									Interface.do_notify(player, "That exit is being carried.")
+								else
+									Interface.do_notify(player, "That exit is already linked.")
+								end
 							else
-								Interface.do_notify(player, "That exit is already linked.")
+								Interface.do_notify(player, "Permission denied.")
 							end
 						else
+							if(@db.get(thing).owner == player)
+								if(!r_truthify(@pred.payfor(player, LINK_COST)))
+									Interface.do_notify(player, "It costs a penny to link this exit.")
+									return
+								end
+							else
+								if(!r_truthify(@pred.payfor(player, LINK_COST + EXIT_COST)))
+									Interface.do_notify(player, "It costs two pennies to link this exit.")
+									return
+								else
+									#pay the owner for his loss
+									@db.get(@db.get(thing).owner).pennies += EXIT_COST
+								end
+							end
+						
+							#link has been validated and paid for do it
+							@db.get(thing).owner = player
+							@db.get(thing).location = room
+							
+							#notify the player 
+							Interface.do_notify(player, "Linked.")
+						end
+					when TYPE_THING
+						if(!r_truthify(@pred.controls(player,thing)))
 							Interface.do_notify(player, "Permission denied.")
-						end
-					else
-						if(@db.get(thing).owner == player)
-							if(!r_truthify(@pred.payfor(player, LINK_COST)))
-								Interface.do_notify(player, "It costs a penny to link this exit.")
-								return
-							end
+						elsif(room == HOME)
+							Interface.do_notify(player, "Can't set home to home.")
 						else
-							if(!r_truthify(@pred.payfor(player, LINK_COST + EXIT_COST)))
-								Interface.do_notify(player, "It costs two pennies to link this exit.")
-								return
-							else
-								#pay the owner for his loss
-								@db.get(@db.get(thing).owner).pennies += EXIT_COST
-							end
+							#Activate link
+							@db.get(thing).exits = room 
+							Interface.do_notify(player, "Home set.")
 						end
-					
-					#link has been validated and paid for; do it
-					@db.get(thing).owner = player
-					@db.get(thing).location = room
-					
-					#notify the player 
-					Interface.do_notify(player, "Linked.")
-					end
-					
-				
-				
-				
-				
-				
-				when TYPE_THING
-				when TYPE_PLAYER
-					if(!r_truthify(@pred.controls(player,thing)))
-						Interface.do_notify(player, "Permission denied.")
-					elsif(room == HOME)
-						Interface.do_notify(player, "Can't set home to home.")
-					else
-						#Activate link
-						@db.get(thing).exits = room 
-						Interface.do_notify(player, "Home set.")
-					end
-	
-	
-	
-	
-				
-				
-				when TYPE_ROOM
-					if(!r_truthify(@pred.controls(player,thing)))
-						Interface.do_notify(player, "Permission denied.")
-					else
-						@db.get(thing).location = room
-						Interface.do_notify(player, "Dropto set.")
-					end
-					
-					
-				#None of the types.	
-				else
-					Interface.do_notify(player, "Internal error: weird object type.")
-					$stderr.puts("PANIC weird object: typeof(thing) = #{typeof(thing)}\n")
+					when TYPE_PLAYER # todo: no drop-through in ruby, this is a copy of the above
+						if(!r_truthify(@pred.controls(player,thing)))
+							Interface.do_notify(player, "Permission denied.")
+						elsif(room == HOME)
+							Interface.do_notify(player, "Can't set home to home.")
+						else
+							#Activate link
+							@db.get(thing).exits = room 
+							Interface.do_notify(player, "Home set.")
+						end
+					when TYPE_ROOM
+						if(!r_truthify(@pred.controls(player,thing)))
+							Interface.do_notify(player, "Permission denied.")
+						else
+							@db.get(thing).location = room
+							Interface.do_notify(player, "Dropto set.")
+						end
+					else #None of the types.	
+						Interface.do_notify(player, "Internal error: weird object type.")
+						$stderr.puts("PANIC weird object: typeof(thing) = #{typeof(thing)}\n")
 				end
 			end
-			
-			
-		
 		end
 		
 		#do_create creates an object with a particular name under the ownership of a player.
@@ -243,11 +214,11 @@ module TinyMud
 				thing = @db.add_new_record()
 				thing_record = @db.get(thing)
 				
-				thing_record.name = name;
-				thing_record.location = player;
-				thing_record.owner = player;
-				thing_record.pennies = endow(cost);
-				thing_record.flags = TYPE_THING;
+				thing_record.name = name
+				thing_record.location = player
+				thing_record.owner = player
+				thing_record.pennies = endow(cost)
+				thing_record.flags = TYPE_THING
 				
 				#Make sure endowment isn't higher than max.
 				if(thing_record.pennies > MAX_OBJECT_ENDOWMENT)
@@ -262,7 +233,7 @@ module TinyMud
 					thing_record.exits = player_record.exits
 				end
 				
-				#PUSH(thing, db[player].contents);
+				#PUSH(thing, db[player].contents)
 				#define PUSH(thing, locative) \ ((db[(thing)].next = (locative)), (locative) = (thing))
 				thing_record.next = player_record.contents
 				player_record.contents = thing
@@ -288,7 +259,6 @@ module TinyMud
 			elsif(!r_truthify(@pred.payfor(player, ROOM_COST)))
 				Interface.do_notify(player, "Sorry, you don't have enough pennies to dig a room.")
 			else
-			
 				#Everything is okay, create and initialize room
 				room = @db.add_new_record()
 				room_record = @db.get(room)
@@ -300,10 +270,6 @@ module TinyMud
 				
 				Interface.do_notify(player, "#{name} created with room number #{room}.")
 			end
-				
 		end
-
-		
-		
 	end
 end

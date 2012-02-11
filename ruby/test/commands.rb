@@ -45,7 +45,10 @@ module TinyMud
         def CommandHelpers.collect_responses(db, content)
 
             players = { "wizard" => 1 }
-            game = TinyMud::Game.new(@db)
+            game = TinyMud::Game.new(db)
+
+            # Stop random pennies
+            Move.stubs(:get_penny_check).returns(0)
 
             result = []
             
@@ -57,7 +60,7 @@ module TinyMud
                         cmds = $1.split(' ')
                         if cmds[0] == "create_player"
                             result << "Creating player: \"#{cmds[1]}\" with password \"#{cmds[2]}\"\n"
-                            players[cmds[1]] = TinyMud::Player.new(@db).create_player(cmds[1], cmds[2])
+                            players[cmds[1]] = TinyMud::Player.new(db).create_player(cmds[1], cmds[2])
                         elsif cmds[0] == "dumpfile"
                             result << "Setting dump file name to #{cmds[1]}\n"
                             Game::set_dumpfile_name(cmds[1])

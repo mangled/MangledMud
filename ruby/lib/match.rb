@@ -25,7 +25,7 @@ module TinyMud
     end
 
     def match_player()
-      if (@match_name[0] == LOOKUP_TOKEN && r_truthify(Predicates.new(@db).payfor(@match_who, LOOKUP_COST)))
+      if (@match_name and @match_name[0] == LOOKUP_TOKEN && r_truthify(Predicates.new(@db).payfor(@match_who, LOOKUP_COST)))
           player_id = @match_name[1..-1].lstrip()
           match = Player.new(@db).lookup_player(player_id)
           @exact_match = match if (match != NOTHING)
@@ -38,11 +38,13 @@ module TinyMud
     end
 
     def match_me()
-      @exact_match = @match_who if (@match_name.casecmp("me") == 0)
+      if @match_name
+        @exact_match = @match_who if (@match_name.casecmp("me") == 0)
+      end
     end
 
     def match_here()
-      if (@match_name.casecmp("here") == 0 && @db.get(@match_who).location != NOTHING)
+      if (@match_name and @match_name.casecmp("here") == 0 && @db.get(@match_who).location != NOTHING)
           @exact_match = @db.get(@match_who).location
       end
     end
@@ -67,7 +69,7 @@ module TinyMud
         enum(@db.get(loc).exits).each do |exit|
           if (exit == absolute)
             @exact_match = exit
-          else
+          elsif @match_name
             @db.get(exit).name.split(EXIT_DELIMITER).each do |name|
               # Allow a partial match - for ambiguous matching
               if (name.downcase.strip.start_with?(@match_name.downcase))
@@ -135,7 +137,7 @@ module TinyMud
 
     # returns nnn if name = #nnn, else NOTHING
     def absolute_name()
-      if (@match_name[0] == NUMBER_TOKEN)
+      if (@match_name and @match_name[0] == NUMBER_TOKEN)
           match = Db.parse_dbref(@match_name[1..-1])
           if (match < 0 || match >= @db.length)
               return NOTHING
@@ -155,12 +157,21 @@ module TinyMud
           if (i == absolute)
               @exact_match = i
               return
-          elsif (@db.get(i).name.casecmp(@match_name) == 0)
-              # if there are multiple exact matches, randomly choose one
-              @exact_match = choose_thing(@exact_match, i)
-          elsif (@db.get(i).name.include?(@match_name)) # Matthew - This may not be correct - check original string_match (per word?)
-              @last_match = i
-              @match_count += 1
+          elsif @match_name
+            if (@db.get(i).name.casecmp(@match_name) == 0)
+                # if there are multiple exact matches, randomly choose one
+                @exact_match = choose_thing(@exact_match, i)
+            else
+                # Match at the start of words - There must be a neater way
+                name_words = @db.get(i).name.split(/\s+/)
+                name_words.each do |word|
+                  if word.downcase.start_with?(@match_name.downcase)
+                    @last_match = i
+                    @match_count += 1
+                    break
+                  end
+                end
+            end
           end
         end
     end

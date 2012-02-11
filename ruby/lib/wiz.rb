@@ -68,8 +68,10 @@ module TinyMud
           end
       end
     end
-    
-    def do_force(player, what, command) 
+
+    # Todo: We need to remove do_force(), it was only present to test the original c-code
+    # once we have moved to all ruby it should go
+    def do_force_fix_this_soon(game, player, what, command)
       if (!is_wizard(player))
         Interface.do_notify(player, "Only Wizards may use this command.")
         return
@@ -83,8 +85,15 @@ module TinyMud
       end
   
       # force victim to do command
-      # NOTE: This needs to/will change, it should go to Game.process_command()
-      Interface.do_process_command(victim, command)
+      if game
+        game.process_command(victim, command)
+      else
+        Interface.do_process_command(victim, command)
+      end
+    end
+
+    def do_force(player, what, command) 
+      do_force_fix_this_soon(nil, player, what, command)
     end
 
     def do_stats(player, name) 
