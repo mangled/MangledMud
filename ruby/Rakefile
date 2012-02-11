@@ -1,83 +1,15 @@
 require 'rubygems'
-require 'rake/extensiontask'
 
-task :default => [:test_original]
-
-# TODO: Common pull ext.config_options into arrays here and join them below?
-
-# This builds the tinymud which wraps the original extensions - The #define BUILD_ORIGINAL is set, which when defined
-# will switch in all the C extensions in tinymud.c, if it isn't defined then it indicates the conversion path
-# which will slowly define less and less extension classes in the .so defined after this.
-Rake::ExtensionTask.new do |ext|
-  ext.name = 'tinymud'
-  ext.ext_dir = './ext/'
-  ext.lib_dir = './lib/original'
-  ext.tmp_dir = './tmp/original'
-  ext.source_pattern = "*.{c}"
-  ext.config_options << '--with-cflags="-DBUILD_ORIGINAL -m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'
-end
-
-# This builds the (when we have figured it all out) tinymud being converted (i.e. it slowly holds less extensions)
-# until it can be removed. This is WIP, the name is clearly rubbish
-Rake::ExtensionTask.new do |ext|
-  ext.name = 'tinymud'
-  ext.ext_dir = './ext/'
-  ext.lib_dir = './lib/converted'
-  ext.tmp_dir = './tmp/converted'
-  ext.source_pattern = "*.{c}"
-  ext.config_options << '--with-cflags="-m64 -fPIC -O -g -pipe -Wall -Wextra -Wwrite-strings -fprofile-arcs -ftest-coverage" --with-ldflags="-lgcov"'
-end
-
-desc "Run all tests on the original tinymud code"
-task :test_original => [:compile] do |t|
-  ENV['TEST_TYPE']='ORIGINAL'
-  system "ruby ./test/test.rb"
-end
-
-desc "Run just the regression tests on the original tinymud code"
-task :test_regression => [:compile] do |t|
-  ENV['TEST_TYPE']='ORIGINAL'
-  system "ruby ./test/regression.rb"
-end
-
-desc "Run a specific regression file on the original tinymud code (rake :test_script name=foo])"
-task :test_script => [:compile] do |t|
-  ENV['TEST_TYPE']='ORIGINAL'
-  system "ruby ./test/run_command.rb #{ENV['name']}"
-end
+task :default => [:test]
 
 desc "Run a specific regression file on the converted tinymud code (rake :test_script_converted name=foo])"
-task :test_script_converted => [:compile] do |t|
+task :test_script => [] do |t|
   ENV['TEST_TYPE']='CONVERTED'
   system "ruby ./test/run_command.rb #{ENV['name']}"
 end
 
 desc "Run all tests on the current conversion code"
-task :test_converted => [:compile] do |t|
+task :test => [] do |t|
   ENV['TEST_TYPE']='CONVERTED'
   system "ruby ./test/test.rb"
-end
-
-desc "Generate line coverage information for regression tests"
-task :regression_coverage => [:test_regression] do |t|
-  do_coverage()
-end
-
-# TODO: This is a bit pants - all the relative folder stuff, tidy/fix
-desc "Generate line coverage information for all the tests"
-task :coverage => [:test_original] do |t|
-  do_coverage()
-end
-
-def do_coverage()
-  remove_dir('./coverage') if File.directory? './coverage'
-  mkdir('./coverage')
-  object_path = File.dirname(Dir['./tmp/**/tinymud.so'][0]) # yuk
-  cwd = Dir.pwd
-  Dir.chdir(object_path) # yuk
-  system "lcov --base-directory . --directory . -c -o coverage.info"
-  system 'lcov --base-directory . --directory . -r coverage.info "*wrap*" -o coverage.info'
-  system 'lcov --base-directory . --directory . -r coverage.info tinymud.c -o coverage.info'
-  system "genhtml coverage.info -o #{File.join(cwd, 'coverage')}"
-  Dir.chdir(cwd) # yuk
 end

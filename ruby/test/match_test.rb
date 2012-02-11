@@ -190,12 +190,6 @@ module TinyMud
 		# Specific test that invokes a random decision for choosing a match - match possesion
 		# isn't the only possible function which will invoke this, but we just want to hit
 		# the random call, so it will do (for coverage)
-		#
-		# Only running it for converted (ported) code as it triggers a change in the
-		# random number generator which can cause failure in the regression checks
-		# - For the original code! Bonkers.
-if ENV['TEST_TYPE'] == 'CONVERTED'
-		# When we enable the regression tests for ported code this might stop head scratching
 		puts "Fyi - If you get changes in the regression output then try disabling this!!!"
 		def test_match_list_for_random_decision
 			Db.Minimal()
@@ -216,10 +210,6 @@ if ENV['TEST_TYPE'] == 'CONVERTED'
 			random = match.last_match_result()
 			assert(random == thing1 || random == thing3, "expected a choice between #{thing1} and #{thing3}")
 		end
-end
-
-		# The match results are tested indirectly, again once I have a ruby version, testing of them
-		# will be easier.
 		
 		# Helpers
 		#########
