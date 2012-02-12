@@ -14,10 +14,10 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <time.h>
-#include <stdio.h>
 
-#include "config.h"
+#include "db.h"
 #include "interface.h"
+#include "config.h"
 
 extern int	errno;
 int	shutdown_flag = 0;
@@ -107,22 +107,6 @@ int main(int argc, char **argv)
     close_sockets ();
     dump_database ();
     exit (0);
-}
-
-/* todo lookup the dbref's */
-dbref create_player(const char *name, const char *password) {
-	printf("create_player %s %s\n", name, password);
-	return 0;
-}
-
-/* todo lookup the dbref's */
-dbref connect_player(const char *name, const char *password) {
-	printf("connect_player %s %s\n", name, password);
-	return 0;
-}
-
-void do_look_around(dbref player) {
-	printf("do_look_around %d\n", player);
 }
 
 void set_signals()
@@ -335,8 +319,8 @@ void clearstrings(struct descriptor_data *d)
 void shutdownsock(struct descriptor_data *d)
 {
     if (d->connected) {
-	fprintf (stderr, "DISCONNECT descriptor %d player (%d)\n",
-		d->descriptor, d->player);
+	fprintf (stderr, "DISCONNECT descriptor %d player %s(%d)\n",
+		d->descriptor, db[d->player].name, d->player);
     } else {
 	fprintf (stderr, "DISCONNECT descriptor %d never connected\n",
 		d->descriptor);
@@ -686,12 +670,14 @@ void check_connect (struct descriptor_data *d, const char *msg)
 	player = connect_player (user, password);
 	if (player == NOTHING) {
 	    queue_string (d, connect_fail);
-	    fprintf (stderr, "FAILED CONNECT %s on descriptor %d\n", user, d->descriptor);
+	    fprintf (stderr, "FAILED CONNECT %s on descriptor %d\n",
+		     user, d->descriptor);
 	} else {
-	    fprintf (stderr, "CONNECTED (%d) on descriptor %d\n", player, d->descriptor);
+	    fprintf (stderr, "CONNECTED %s(%d) on descriptor %d\n",
+		     db[player].name, player, d->descriptor);
 	    d->connected = 1;
 	    d->player = player;
-	    do_look_around (player);
+		notify(player, "do_look_around()");
 	}
     } else if (!strncmp (command, "cr", 2)) {
 	player = create_player (user, password);
@@ -700,10 +686,11 @@ void check_connect (struct descriptor_data *d, const char *msg)
 	    fprintf (stderr, "FAILED CREATE %s on descriptor %d\n",
 		     user, d->descriptor);
 	} else {
-	    fprintf (stderr, "CREATED (%d) on descriptor %d\n", player, d->descriptor);
+	    fprintf (stderr, "CREATED %s(%d) on descriptor %d\n",
+		     db[player].name, player, d->descriptor);
 	    d->connected = 1;
 	    d->player = player;
-	    do_look_around (player);
+	    notify(player, "do_look_around()");
 	}
     } else {
 	welcome_user (d);
@@ -774,7 +761,8 @@ void dump_status(int sig)
     fprintf (stderr, "STATUS REPORT:\n");
     for (d = descriptor_list; d; d = d->next) {
 	if (d->connected) {
-	    fprintf (stderr, "PLAYING descriptor %d player (%d)", d->descriptor, d->player);
+	    fprintf (stderr, "PLAYING descriptor %d player %s(%d)",
+		     d->descriptor, db[d->player].name, d->player);
 
 	    if (d->last_time)
 		fprintf (stderr, " idle %d seconds\n",
@@ -804,9 +792,12 @@ void dump_users(struct descriptor_data *e)
     for (d = descriptor_list; d; d = d->next) {
 	if (d->connected) {
 	    if (d->last_time)
-			sprintf (buf, "%d idle %d seconds\n", d->player, (int)(now - d->last_time));
+		sprintf (buf, "%s idle %d seconds\n",
+			 db[d->player].name,
+			 (int)(now - d->last_time));
 	    else
-		sprintf (buf, "%d idle forever\n", d->player);
+		sprintf (buf, "%s idle forever\n",
+			 db[d->player].name);
 	    queue_string (e, buf);
 	}
     }

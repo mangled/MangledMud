@@ -1,23 +1,3 @@
-typedef int dbref;
-
-#define TYPE_ROOM 	0x0
-#define TYPE_THING 	0x1
-#define TYPE_EXIT 	0x2
-#define TYPE_PLAYER 	0x3
-#define NOTYPE		0x7	/* no particular type */
-#define TYPE_MASK 	0x7	/* room for expansion */
-#define ANTILOCK	0x8	/* if present, makes key cause failure */
-#define WIZARD		0x10	/* gets automatic control */
-#define LINK_OK		0x20	/* anybody can link to this room */
-#define DARK		0x40	/* contents of room are not printed */
-#define TEMPLE		0x80	/* objects dropped in this room go home */
-#define STICKY		0x100	/* this object goes home when dropped */
-
-/* special dbref's */
-#define NOTHING (-1)		/* null dbref */
-#define AMBIGUOUS (-2)		/* multiple possibilities, for matchers */
-#define HOME (-3)		/* virtual room, represents mover's home */
-
 /* room number of player start location */
 #define PLAYER_START 0
 

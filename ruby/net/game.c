@@ -5,8 +5,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <stdio.h>
 
+#include "db.h"
 #include "config.h"
 #include "interface.h"
 
@@ -19,47 +19,45 @@ static int alarm_block = 0;
 static void fork_and_dump(void);
 void dump_database(void);
 
-const char *alloc_string(const char *string)
+const char *getname(dbref loc)
 {
-    char *s;
-
-    /* NULL, "" -> NULL */
-    if(string == 0 || *string == '\0') return 0;
-
-    if((s = (char *) malloc(strlen(string)+1)) == 0) {
-	abort();
+    switch(loc) {
+      case NOTHING:
+	return "***NOTHING***";
+      case HOME:
+	return "***HOME***";
+      default:
+	return db[loc].name;
     }
-    strcpy(s, string);
-    return s;
 }
 
 void do_dump(dbref player)
 {
-    //if (Wizard(player)) {
-		alarm_triggered = 1;
-		notify(player, "Dumping...");
-    //} else {
-	//	notify(player, "Sorry, you are in a no dumping zone.");
-    //}
+    if(Wizard(player)) {
+	alarm_triggered = 1;
+	notify(player, "Dumping...");
+    } else {
+	notify(player, "Sorry, you are in a no dumping zone.");
+    }
 }
 
 void do_shutdown(dbref player)
 {
-    //if (Wizard(player)) {
-		fprintf(stderr, "SHUTDOWN: by (%d)\n", player);
-		fflush(stderr);
-		shutdown_flag = 1;
-		notify(player, "Shutdown...");
-    //} else {
-	//	notify(player, "Your delusions of grandeur have been duly noted.");
-    //}
+    if(Wizard(player)) {
+	fprintf(stderr, "SHUTDOWN: by %s(%d)\n",
+		getname(player), player);
+	fflush(stderr);
+	shutdown_flag = 1;
+    } else {
+	notify(player, "Your delusions of grandeur have been duly noted.");
+    }
 }
 
 static void alarm_handler(int sig)
 {
     (void) sig;
     alarm_triggered = 1;
-    if (!alarm_block) {
+    if(!alarm_block) {
         fork_and_dump();
     }
     return;
@@ -67,7 +65,21 @@ static void alarm_handler(int sig)
 
 static void dump_database_internal()
 {
-	printf("dump_database_internal\n");
+    char tmpfile[2048];
+    FILE *f;
+
+    sprintf(tmpfile, "%s.#%d#", dumpfile, epoch - 1);
+    unlink(tmpfile);		/* nuke our predecessor */
+
+    sprintf(tmpfile, "%s.#%d#", dumpfile, epoch);
+
+    if((f = fopen(tmpfile, "w")) != NULL) {
+	db_write(f);
+	fclose(f);
+	if(rename(tmpfile, dumpfile) < 0) perror(dumpfile);
+    } else {
+	perror(tmpfile);
+    }
 }
 
 void panic(const char *message)
@@ -80,7 +92,7 @@ void panic(const char *message)
 
     /* turn off signals */
     for(i = 0; i < NSIG; i++) {
-		signal(i, SIG_IGN);
+	signal(i, SIG_IGN);
     }
 
     /* shut down interface */
@@ -89,13 +101,14 @@ void panic(const char *message)
     /* dump panic file */
     sprintf(panicfile, "%s.PANIC", dumpfile);
     if((f = fopen(panicfile, "w")) == NULL) {
-		perror("CANNOT OPEN PANIC FILE, YOU LOSE:");
-		_exit(135);
+	perror("CANNOT OPEN PANIC FILE, YOU LOSE:");
+	_exit(135);
     } else {
-		fprintf(stderr, "DUMPING: %s\n", panicfile);
-		fclose(f);
-		fprintf(stderr, "DUMPING: %s (done)\n", panicfile);
-		_exit(136);
+	fprintf(stderr, "DUMPING: %s\n", panicfile);
+	db_write(f);
+	fclose(f);
+	fprintf(stderr, "DUMPING: %s (done)\n", panicfile);
+	_exit(136);
     }
 }
 
@@ -117,12 +130,12 @@ static void fork_and_dump()
     fprintf(stderr, "CHECKPOINTING: %s.#%d#\n", dumpfile, epoch);
     child = fork();
     if(child == 0) {
-		/* in the child */
-		close(0);		/* get that file descriptor back */
-		dump_database_internal();
-		_exit(0);		/* !!! */
+	/* in the child */
+	close(0);		/* get that file descriptor back */
+	dump_database_internal();
+	_exit(0);		/* !!! */
     } else if(child < 0) {
-		perror("fork_and_dump: fork()");
+	perror("fork_and_dump: fork()");
     }
 	
     /* in the parent */
@@ -148,6 +161,7 @@ int init_game(const char *infile, const char *outfile)
    
    /* ok, read it in */
    fprintf(stderr, "LOADING: %s\n", infile);
+   if(db_read(f) < 0) return -1;
    fprintf(stderr, "LOADING: %s (done)\n", infile);
 
    /* everything ok */
@@ -168,13 +182,9 @@ int init_game(const char *infile, const char *outfile)
    return 0;
 }
 
-/* use this only in process_command */
-#define Matched(string) { if(!string_prefix((string), command)) goto bad; }
-
 void process_command(dbref player, char *command)
 {
-	printf("process_command %d %s\n", player, command);
-
+	char buf[BUFFER_LEN];
     char *arg1;
     char *arg2;
     char *q;			/* utility */
@@ -183,10 +193,13 @@ void process_command(dbref player, char *command)
     if(command == 0) abort();
 
     /* robustify player */
-    if(player < 0) {
+    if(player < 0 || player >= db_top || Typeof(player) != TYPE_PLAYER) {
 		fprintf(stderr, "process_command: bad player %d\n", player);
 		return;
     }
+
+	sprintf(buf, "process_command %d: %s", player, command);
+	notify(player, buf);
 
     /* eat leading whitespace */
     while(*command && isspace(*command)) command++;
@@ -194,11 +207,11 @@ void process_command(dbref player, char *command)
     /* eat extra white space */
     q = p = command;
     while(*p) {
-		/* scan over word */
-		while(*p && !isspace(*p)) *q++ = *p++;
-		/* smash spaces */
-		while(*p && isspace(*++p));
-		if(*p) *q++ = ' '; /* add a space to separate next word */
+	/* scan over word */
+	while(*p && !isspace(*p)) *q++ = *p++;
+	/* smash spaces */
+	while(*p && isspace(*++p));
+	if(*p) *q++ = ' '; /* add a space to separate next word */
     }
     /* terminate */
     *q = '\0';
@@ -228,11 +241,9 @@ void process_command(dbref player, char *command)
 	while(*arg2 && isspace(*arg2)) arg2++;
 
 	switch(command[0]) {
-	  case '@':
-	    switch(command[1]) {
+		case '@':
 			case 'd':
 			case 'D':
-				/* describe, dig, or dump */
 				switch(command[2]) {
 				  case 'u':
 				  case 'U':
@@ -242,39 +253,22 @@ void process_command(dbref player, char *command)
 					break;
 				}
 				break;
-			case 'f':
-				/* fail, find, or force */
-				switch(command[2]) {
-		#ifdef DO_FLUSH
-				  case 'l':
-				  case 'L':
-					if (strcmp(command, "@flush") == 0) {
-						do_flush(player);
-					}
-					break;
-		#endif				/* DO_FLUSH */
-				}
-				break;
-			case 's':
-			case 'S':
-				/* set, shutdown, success */
-				switch(command[2]) {
-				  case 'h':
+	      case 's':
+	      case 'S':
+			switch(command[2]) {
+				case 'h':
 					if (strcmp(command, "@shutdown") == 0) {
 						do_shutdown(player);
 					}
-					break;
-				}
 				break;
-			default:
-				break;
-		}
-    }
+			}
+			break;
+		break;
+	}
     /* unblock alarms */
     alarm_block = 0;
-    if(alarm_triggered) {
+    if (alarm_triggered) {
 		fork_and_dump();
     }
 }
 
-#undef Matched

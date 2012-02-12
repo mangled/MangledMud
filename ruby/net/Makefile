@@ -13,15 +13,10 @@ DEFS= -DLOG_FAILED_COMMANDS
 CFLAGS= $(OPTIM) $(DEFS)
 
 # Everything except interface.c --- allows for multiple interfaces
-CFILES= game.c
+CFILES= game.c db.c player.c
 
 # .o versions of above
-OFILES= game.o
-
-# Files in the standard distribution
-DISTFILES= $(CFILES) config.h interface.h \
-	interface.c \
-	Makefile
+OFILES= game.o db.o player.o
 
 OUTFILES= netmud
 
@@ -33,7 +28,7 @@ netmud: interface.o $(OFILES)
 clean:
 	-rm -f *.o a.out $(OUTFILES)
 
-# DO NOT REMOVE THIS LINE OR CHANGE ANYTHING AFTER IT #
+db.o: db.c db.h
 game.o: game.c interface.h
 interface.o: interface.c interface.h config.h
-
+player.o: player.c db.h config.h interface.h
