@@ -38,7 +38,7 @@ module TinyMud
           elsif (@db.get(thing).pennies < 1)
               Interface.do_notify(player, "#{@db.get(thing).name} is penniless.")
               Interface.do_notify(thing, "#{@db.get(player).name} tried to rob you, but you have no pennies to take.")
-          elsif(r_truthify(@predicates.can_doit(player, thing, "Your conscience tells you not to.")))
+          elsif(@predicates.can_doit(player, thing, "Your conscience tells you not to."))
               # steal a penny
               @db.get(player).pennies = @db.get(player).pennies + 1
               @db.get(thing).pennies = @db.get(thing).pennies - 1
@@ -73,7 +73,7 @@ module TinyMud
             cost = KILL_MIN_COST if (cost < KILL_MIN_COST)
     
             # see if it works 
-            if (!r_truthify(@predicates.payfor(player, cost)))
+            if (!@predicates.payfor(player, cost))
               Interface.do_notify(player, "You don't have enough pennies.")
             elsif ((Game.do_rand() % KILL_BASE_COST) < cost)
               # you killed him
@@ -140,7 +140,7 @@ module TinyMud
       end
 
       # try to do the give 
-      if (!r_truthify(@predicates.payfor(player, amount)))
+      if (!@predicates.payfor(player, amount))
         Interface.do_notify(player, "You don't have that many pennies to give!")
       else
         # he can do it 

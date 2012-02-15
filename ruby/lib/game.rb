@@ -123,7 +123,7 @@ module TinyMud
         @speech.do_say(player, command[1..-1], nil)
       elsif(command[0] == POSE_TOKEN)
         @speech.do_pose(player, command[1..-1], nil)
-      elsif (r_truthify(@move.can_move(player, command)))
+      elsif (@move.can_move(player, command))
         # command is an exact match for an exit 
         @move.do_move(player, command)
       else

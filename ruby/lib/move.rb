@@ -76,7 +76,7 @@ module TinyMud
       # Added to allow mocking/control over when someone gets a penny
       give_penny = (Game.do_rand() % PENNY_RATE) == 0
 
-      if (!r_truthify(@predicates.controls(player, loc)) && (@db.get(player).pennies <= MAX_PENNIES) && give_penny)
+      if (!@predicates.controls(player, loc) && (@db.get(player).pennies <= MAX_PENNIES) && give_penny)
           Interface.do_notify(player, "You found a penny!")
           @db.get(player).pennies = @db.get(player).pennies + 1
       end
@@ -97,13 +97,13 @@ module TinyMud
     end
     
     def can_move(player, direction)
-      return 1 if (direction.casecmp("home") == 0)
+      return true if (direction.casecmp("home") == 0)
   
       # otherwise match on exits
       @match.init_match(player, direction, TYPE_EXIT)
       @match.match_exit()
 
-      return c_truthify(@match.last_match_result() != NOTHING)
+      return @match.last_match_result() != NOTHING
     end
 
     def do_move(player, direction)
@@ -134,7 +134,7 @@ module TinyMud
           else
             # we got one
             # check to see if we got through
-            if (r_truthify(@predicates.can_doit(player, exit, "You can't go that way.")))
+            if (@predicates.can_doit(player, exit, "You can't go that way."))
               enter_room(player, @db.get(exit).location)
             end
         end
@@ -155,12 +155,12 @@ module TinyMud
         end
         case typeof(thing)
           when TYPE_THING
-            if (r_truthify(@predicates.can_doit(player, thing, "You can't pick that up.")))
+            if (@predicates.can_doit(player, thing, "You can't pick that up."))
                 moveto(thing, player)
                 Interface.do_notify(player, "Taken.")
             end
           when TYPE_EXIT
-            if (!r_truthify(@predicates.controls(player, thing)))
+            if (!@predicates.controls(player, thing))
                 Interface.do_notify(player, "You can't pick that up.")
             elsif (@db.get(thing).location != NOTHING)
                 Interface.do_notify(player, "You can't pick up a linked exit.")
@@ -168,7 +168,7 @@ module TinyMud
                 # take it out of location
                 loc = getloc(player)
                 return if (loc == NOTHING)
-                if (!r_truthify(@utils.member(thing, @db.get(loc).exits)))
+                if (!@utils.member(thing, @db.get(loc).exits))
                     Interface.do_notify(player, "You can't pick up an exit from another room.")
                     return
                 end
@@ -203,7 +203,7 @@ module TinyMud
               Interface.do_notify(player, "You can't drop that.")
           elsif (typeof(thing) == TYPE_EXIT)
               # special behavior for exits 
-              if (!r_truthify(@predicates.controls(player, loc)))
+              if (!@predicates.controls(player, loc))
                 Interface.do_notify(player, "You can't put an exit down here.")
                 return
               end
@@ -221,7 +221,7 @@ module TinyMud
               @speech.notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} sacrifices #{@db.get(thing).name}.")
       
               # check for reward 
-              if (!r_truthify(@predicates.controls(player, thing)))
+              if (!@predicates.controls(player, thing))
                   reward = @db.get(thing).pennies
                   if (reward < 1 || @db.get(player).pennies > MAX_PENNIES)
                       reward = 1

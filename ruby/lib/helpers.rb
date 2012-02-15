@@ -69,18 +69,6 @@ module Helpers
   KILL_MIN_COST = 10
   KILL_BONUS = 50	# paid to victim
 
-  # We will need to use this quite a bit!
-  # Convert true/false back to 1/0 for c-truth tests
-  def c_truthify(value)
-    value ? 1 : 0
-  end
-
-  # We will need to use this quite a bit!
-  # Given a c truth value return a ruby truth value
-  def r_truthify(value)
-    value == 0 ? false : true
-  end
-
   # We should make these methods on the db's item...
   ##################################################
 
@@ -115,6 +103,10 @@ module Helpers
 
   def is_link_ok(item)
     ((@db.get(item).flags & LINK_OK) != 0)
+  end
+
+  def is_antilock(item)
+    ((@db.get(item).flags & ANTILOCK) != 0)
   end
 
   # Was defined in db.h

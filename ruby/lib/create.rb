@@ -31,7 +31,7 @@ module TinyMud
 			if((room < 0) || (room >= @db.length) || (typeof(room) != TYPE_ROOM))
 				Interface.do_notify(player, "That's not a room!")
 				return NOTHING
-			elsif(!r_truthify(@pred.can_link_to(player, room)))
+			elsif(!@pred.can_link_to(player, room))
 				Interface.do_notify(player, "You can't link to that.")
 				return NOTHING
 			else
@@ -53,14 +53,14 @@ module TinyMud
 			if(direction == nil)
 				Interface.do_notify(player, "Open where?")
 				return
-			elsif(!r_truthify(@pred.ok_name(direction)))
+			elsif(!@pred.ok_name(direction))
 				Interface.do_notify(player, "That's a strange name for an exit!")
 				return
 			end
 			
-			if(!r_truthify(@pred.controls(player,loc)))
+			if(!@pred.controls(player,loc))
 				Interface.do_notify(player, "Permission denied.")
-			elsif(!r_truthify(@pred.payfor(player, EXIT_COST)))
+			elsif(!@pred.payfor(player, EXIT_COST))
 				Interface.do_notify(player, "Sorry, you don't have enough pennies to open an exit.")
 			else
 				exit = @db.add_new_record()
@@ -80,7 +80,7 @@ module TinyMud
 					Interface.do_notify(player, "Trying to link...")
 					loc = parse_linkable_room(player, linkto)
 					if(loc != NOTHING)
-						if(!r_truthify(@pred.payfor(player, LINK_COST)))
+						if(!@pred.payfor(player, LINK_COST))
 							Interface.do_notify(player, "You don't have enough pennies to link.")
 						else
 							#At this point all tests passed - Link the room.
@@ -123,7 +123,7 @@ module TinyMud
 					when TYPE_EXIT
 						#we're ok, check the usual stuff
 						if(@db.get(thing).location != NOTHING)
-							if(r_truthify(@pred.controls(player, thing)))
+							if(@pred.controls(player, thing))
 								if(typeof(@db.get(thing).location) == TYPE_PLAYER)
 									Interface.do_notify(player, "That exit is being carried.")
 								else
@@ -134,12 +134,12 @@ module TinyMud
 							end
 						else
 							if(@db.get(thing).owner == player)
-								if(!r_truthify(@pred.payfor(player, LINK_COST)))
+								if(!@pred.payfor(player, LINK_COST))
 									Interface.do_notify(player, "It costs a penny to link this exit.")
 									return
 								end
 							else
-								if(!r_truthify(@pred.payfor(player, LINK_COST + EXIT_COST)))
+								if(!@pred.payfor(player, LINK_COST + EXIT_COST))
 									Interface.do_notify(player, "It costs two pennies to link this exit.")
 									return
 								else
@@ -156,7 +156,7 @@ module TinyMud
 							Interface.do_notify(player, "Linked.")
 						end
 					when TYPE_THING
-						if(!r_truthify(@pred.controls(player,thing)))
+						if(!@pred.controls(player,thing))
 							Interface.do_notify(player, "Permission denied.")
 						elsif(room == HOME)
 							Interface.do_notify(player, "Can't set home to home.")
@@ -166,7 +166,7 @@ module TinyMud
 							Interface.do_notify(player, "Home set.")
 						end
 					when TYPE_PLAYER # todo: no drop-through in ruby, this is a copy of the above
-						if(!r_truthify(@pred.controls(player,thing)))
+						if(!@pred.controls(player,thing))
 							Interface.do_notify(player, "Permission denied.")
 						elsif(room == HOME)
 							Interface.do_notify(player, "Can't set home to home.")
@@ -176,7 +176,7 @@ module TinyMud
 							Interface.do_notify(player, "Home set.")
 						end
 					when TYPE_ROOM
-						if(!r_truthify(@pred.controls(player,thing)))
+						if(!@pred.controls(player,thing))
 							Interface.do_notify(player, "Permission denied.")
 						else
 							@db.get(thing).location = room
@@ -195,7 +195,7 @@ module TinyMud
 			if(name == nil)
 				Interface.do_notify(player, "Create what?")
 				return
-			elsif(!(r_truthify(@pred.ok_name(name))))
+			elsif(!@pred.ok_name(name))
 				Interface.do_notify(player, "That's a silly name for a thing!")
 				return
 			elsif(cost < 0)
@@ -207,7 +207,7 @@ module TinyMud
 			
 			
 			
-			if(!r_truthify(@pred.payfor(player, cost)))
+			if (!@pred.payfor(player, cost))
 				Interface.do_notify(player, "Sorry, you don't have enough pennies.")
 			else
 				#Okay, create the object and initialize it.
@@ -227,7 +227,7 @@ module TinyMud
 				
 				
 				player_record = @db.get(player)
-				if(player_record.location != NOTHING && r_truthify(@pred.can_link_to(player, player_record.location)))
+				if (player_record.location != NOTHING && @pred.can_link_to(player, player_record.location))
 					thing_record.exits = player_record.location
 				else
 					thing_record.exits = player_record.exits
@@ -254,9 +254,9 @@ module TinyMud
 		def do_dig(player,name)
 			if(name == nil)
 				Interface.do_notify(player, "Dig what?")
-			elsif(!r_truthify(@pred.ok_name(name)))
+			elsif(!@pred.ok_name(name))
 				Interface.do_notify(player, "That's a silly name for a room!")
-			elsif(!r_truthify(@pred.payfor(player, ROOM_COST)))
+			elsif(!@pred.payfor(player, ROOM_COST))
 				Interface.do_notify(player, "Sorry, you don't have enough pennies to dig a room.")
 			else
 				#Everything is okay, create and initialize room

@@ -53,7 +53,7 @@ module TinyMud
     
     def do_page(player, arg1)
       target = Player.new(@db).lookup_player(arg1)
-      if (!r_truthify(Predicates.new(@db).payfor(player, LOOKUP_COST)))
+      if (!Predicates.new(@db).payfor(player, LOOKUP_COST))
         Interface.do_notify(player, "You don't have enough pennies.")
       elsif (target == NOTHING)
         Interface.do_notify(player, "I don't recognize that name.")

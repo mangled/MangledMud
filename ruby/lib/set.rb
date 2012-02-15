@@ -37,12 +37,12 @@ module TinyMud
             elsif (player_password != @db.get(thing).password)
               Interface.do_notify(player, "Incorrect password.")
               return
-            elsif (!r_truthify(@predicates.payfor(player, LOOKUP_COST)) || !r_truthify(@predicates.ok_player_name(newname)))
+            elsif (!@predicates.payfor(player, LOOKUP_COST) || !@predicates.ok_player_name(newname))
                   Interface.do_notify(player, "You can't give a player that name.")
               return
             end
         else # A thing
-            if (!r_truthify(@predicates.ok_name(newname)))
+            if (!@predicates.ok_name(newname))
               Interface.do_notify(player, "That is not a reasonable name.")
               return
             end
@@ -107,7 +107,7 @@ module TinyMud
           Interface.do_notify(player, "I don't know which one you want to lock!")
           return
         else
-          if (!r_truthify(@predicates.controls(player, thing)))
+          if (!@predicates.controls(player, thing))
               Interface.do_notify(player, "You can't lock that!")
               return
           end
@@ -178,7 +178,7 @@ module TinyMud
         when AMBIGUOUS
           Interface.do_notify(player, "I don't know which one you mean!")
         else
-          if (!r_truthify(@predicates.controls(player, exit)))
+          if (!@predicates.controls(player, exit))
               Interface.do_notify(player, "Permission denied.")
           else
             case typeof(exit)
@@ -279,7 +279,7 @@ module TinyMud
       @match.match_everything()
 
       match = @match.noisy_match_result()
-      if (match != NOTHING && !r_truthify(@predicates.controls(player, match)))
+      if (match != NOTHING && !@predicates.controls(player, match))
         Interface.do_notify(player, "Permission denied.")
         NOTHING
       else

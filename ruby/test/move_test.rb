@@ -227,7 +227,7 @@ module TinyMud
 		def test_can_move
 			# Going home should always work (no db etc. needed to test)
 			move = TinyMud::Move.new(@db)
-			assert_equal(1, move.can_move(0, "home"))
+			assert_equal(true, move.can_move(0, "home"))
 			
 			# Check players directions
 			bob = Player.new(@db).create_player("bob", "pwd")
@@ -237,25 +237,25 @@ module TinyMud
 		
 			# First no exits
 			record(bob) {|r| r[:exits] = NOTHING}
-			assert_equal(0, move.can_move(bob, "east"))
+			assert_equal(false, move.can_move(bob, "east"))
 			
 			# General test (note it really pulls on match so limited testing is needed here)
 			record(place) {|r| r.merge!({:name => "some place", :description => "yellow", :flags => TYPE_ROOM, :exits => exit, :next => NOTHING }) }
 			record(exit) {|r| r.merge!( :name => "an exit;thing", :location => place, :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			record(bob) {|r| r[:exits] = exit }
-			assert_equal(1, move.can_move(bob, "an exit"))
-			assert_equal(0, move.can_move(bob, "an"))
-			assert_equal(1, move.can_move(bob, "thing"))
+			assert_equal(true, move.can_move(bob, "an exit"))
+			assert_equal(false, move.can_move(bob, "an"))
+			assert_equal(true, move.can_move(bob, "thing"))
 			
 			# Test absolute
-			assert_equal(0, move.can_move(bob, "##{exit}"))
+			assert_equal(false, move.can_move(bob, "##{exit}"))
 			record(exit) {|r| r[:owner] = bob }
-			assert_equal(1, move.can_move(bob, "##{exit}"))
+			assert_equal(true, move.can_move(bob, "##{exit}"))
 			
 			# Non-owning exit
 			record(exit) {|r| r[:name] = "an exit" }
 			record(exit) {|r| r.merge!( :owner => anne ) }
-			assert_equal(1, move.can_move(bob, "an exit"))
+			assert_equal(true, move.can_move(bob, "an exit"))
 		end
 		
 		def test_do_move

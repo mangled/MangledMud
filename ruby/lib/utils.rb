@@ -21,7 +21,7 @@ module TinyMud
     end
 
     def member(thing, list)
-      enum(list).find{|item| item == thing } ? 1 : 0
+      enum(list).find{|item| item == thing } ? true : false
     end
 
     def reverse(list)

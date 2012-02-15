@@ -43,10 +43,7 @@ module TinyMud
 		#Name must be valid and not in use.
 		#Adds player to start room.
 		def create_player(player_name, password)
-			name_checker = Predicates.new(@db)
-			
-			#if(!name_checker.okay_player_name(player_name))
-			if(name_checker.ok_player_name(player_name)==0)
+			if (!Predicates.new(@db).ok_player_name(player_name))
 				return NOTHING
 			else
 				player_index = @db.add_new_record()

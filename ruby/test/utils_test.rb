@@ -44,11 +44,11 @@ module TinyMud
 			record(thing2) {|r| r.merge!({ :next => thing3 }) }
 
 			utils = Utils.new(@db)
-			assert_equal(0, utils.member(thing3 + 1, thing1))
-			assert_equal(1, utils.member(thing1, thing1))
-			assert_equal(1, utils.member(thing2, thing1))
-			assert_equal(1, utils.member(thing3, thing1))
-			assert_equal(1, utils.member(thing3, thing2))
+			assert_equal(false, utils.member(thing3 + 1, thing1))
+			assert_equal(true, utils.member(thing1, thing1))
+			assert_equal(true, utils.member(thing2, thing1))
+			assert_equal(true, utils.member(thing3, thing1))
+			assert_equal(true, utils.member(thing3, thing2))
 		end
 		
 		def test_reverse

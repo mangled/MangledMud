@@ -14,7 +14,7 @@ module TinyMud
 
     def look_room(player, loc)   
         # tell him the name, and the number if he can link to it 
-        if (r_truthify(@predicates.can_link_to(player, loc)))
+        if (@predicates.can_link_to(player, loc))
             Interface.do_notify(player, "#{@utils.getname(loc)} (##{loc})")
         else
             Interface.do_notify(player, @utils.getname(loc))
@@ -87,7 +87,7 @@ module TinyMud
       end
       return if (thing == NOTHING)
 
-      if (!r_truthify(@predicates.can_link(player, thing)))
+      if (!@predicates.can_link(player, thing))
         Interface.do_notify(player, "You can only examine what you own.  Try using \"look.\"")
         return
       end
@@ -144,8 +144,8 @@ module TinyMud
             
             # print location if player can link to it 
             if (r.location != NOTHING &&
-               (r_truthify(@predicates.controls(player, r.location)) ||
-                r_truthify(@predicates.can_link_to(player, r.location)))
+               (@predicates.controls(player, r.location) ||
+                @predicates.can_link_to(player, r.location))
             )
                 Interface.do_notify(player, "Location: #{@utils.getname(r.location)}(##{r.location})")
             end
@@ -155,8 +155,8 @@ module TinyMud
 
             # print location if player can link to it 
             if (r.location != NOTHING &&
-               (r_truthify(@predicates.controls(player, r.location)) ||
-                r_truthify(@predicates.can_link_to(player, r.location)))
+               (@predicates.controls(player, r.location) ||
+                @predicates.can_link_to(player, r.location))
             )
                 Interface.do_notify(player, "Location: #{@utils.getname(r.location)}(##{r.location})")
             end
@@ -190,12 +190,12 @@ module TinyMud
     end
     
     def do_find(player, name)
-      if (!r_truthify(@predicates.payfor(player, LOOKUP_COST)))
+      if (!@predicates.payfor(player, LOOKUP_COST))
         Interface.do_notify(player, "You don't have enough pennies.")
       else
         0.upto(@db.length - 1) do |i|
             # Note: this isn't the same code as the original stringutil, fix
-            if (typeof(i) != TYPE_EXIT && r_truthify(@predicates.controls(player, i)) && (@db.get(i).name.include?(name)))
+            if (typeof(i) != TYPE_EXIT && @predicates.controls(player, i) && (@db.get(i).name.include?(name)))
               Interface.do_notify(player, "#{@db.get(i).name}(##{i})")
             end
         end
@@ -207,15 +207,15 @@ module TinyMud
 
     def look_contents(player, loc, contents_name)
         # check to see if he can see the location 
-        can_see_loc = (!is_dark(loc) || r_truthify(@predicates.controls(player, loc)))
+        can_see_loc = (!is_dark(loc) || @predicates.controls(player, loc))
     
         # check to see if there is anything there
-        can_see_something = enum(@db.get(loc).contents).any? {|thing| r_truthify(@predicates.can_see(player, thing, can_see_loc)) }
+        can_see_something = enum(@db.get(loc).contents).any? {|thing| @predicates.can_see(player, thing, can_see_loc) }
         if (can_see_something)
             # something exists!  show him everything 
             Interface.do_notify(player, contents_name)
             enum(@db.get(loc).contents).each do |thing|
-              if (r_truthify(@predicates.can_see(player, thing, can_see_loc)))
+              if (@predicates.can_see(player, thing, can_see_loc))
                   notify_name(player, thing)
               end
             end
@@ -223,7 +223,7 @@ module TinyMud
     end
 
     def notify_name(player, thing)
-        if (r_truthify(@predicates.controls(player, thing)))
+        if (@predicates.controls(player, thing))
           # tell him the number
           Interface.do_notify(player, "#{@utils.getname(thing)}(##{thing})")
         else

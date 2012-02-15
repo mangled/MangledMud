@@ -25,7 +25,7 @@ module TinyMud
     end
 
     def match_player()
-      if (@match_name and @match_name[0] == LOOKUP_TOKEN && r_truthify(Predicates.new(@db).payfor(@match_who, LOOKUP_COST)))
+      if (@match_name and @match_name[0] == LOOKUP_TOKEN && Predicates.new(@db).payfor(@match_who, LOOKUP_COST))
           player_id = @match_name[1..-1].lstrip()
           match = Player.new(@db).lookup_player(player_id)
           @exact_match = match if (match != NOTHING)
@@ -64,7 +64,7 @@ module TinyMud
       loc = @db.get(@match_who).location
       if (loc != NOTHING)
         absolute = absolute_name()
-        absolute = NOTHING if (!r_truthify(Predicates.new(@db).controls(@match_who, absolute)))
+        absolute = NOTHING if (!Predicates.new(@db).controls(@match_who, absolute))
 
         enum(@db.get(loc).exits).each do |exit|
           if (exit == absolute)
@@ -75,8 +75,8 @@ module TinyMud
               if (name.downcase.strip.start_with?(@match_name.downcase))
                   # ! Matthew - Modified original code -> Bug fix?
                   if (@check_keys)
-                      exit_status = Predicates.new(@db).could_doit(@match_who, exit)
-                      @match_count += exit_status		     
+                      could_doit = Predicates.new(@db).could_doit(@match_who, exit)
+                      @match_count += 1 if could_doit		     
                   else
                       @match_count += 1
                   end
@@ -151,7 +151,7 @@ module TinyMud
 
     def match_list(first)
         absolute = absolute_name();
-        absolute = NOTHING if (!r_truthify(Predicates.new(@db).controls(@match_who, absolute)))
+        absolute = NOTHING if (!Predicates.new(@db).controls(@match_who, absolute))
 
         enum(first).each do |i|
           if (i == absolute)
@@ -194,8 +194,8 @@ module TinyMud
         end
     
         if (@check_keys)
-            has1 = r_truthify(Predicates.new(@db).could_doit(@match_who, thing1))
-            has2 = r_truthify(Predicates.new(@db).could_doit(@match_who, thing2))
+            has1 = Predicates.new(@db).could_doit(@match_who, thing1)
+            has2 = Predicates.new(@db).could_doit(@match_who, thing2)
             if (has1 && !has2)
                 return thing1
             elsif (has2 && !has1)
