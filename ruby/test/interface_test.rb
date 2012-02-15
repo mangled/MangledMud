@@ -89,6 +89,7 @@ module TinyMud
         end
         players.all_waits
         1.upto(5) do |i|
+          # The number can change based on thread order, hence we ignore the object id's in the inventory
           player_connections[i].cmd("inventory", true, true)
           player_connections[i].cmd("say #{i}")
           player_connections[i].quit()
