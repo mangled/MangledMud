@@ -1,8 +1,9 @@
 require 'rubygems'
 require 'test/unit'
+require 'bundler/setup'
+require 'mocha'
 require_relative 'defines'
 require_relative 'include'
-require 'pp'
 
 def print(record) # to_s?
 	puts "Name: #{record.name}"

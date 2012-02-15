@@ -1,6 +1,9 @@
 # Helpers for running "commands" regressions, used by run_command.rb
 # and regression.rb
 require 'rubygems'
+require 'test/unit'
+require 'bundler/setup'
+require 'mocha'
 require_relative 'defines'
 require_relative 'include'
 

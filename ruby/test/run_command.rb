@@ -3,6 +3,7 @@
 # against expected. This is "ok" once you are happy with a test script.
 # During development its easier to see the output, hence this tiny script
 require 'rubygems'
+require 'bundler/setup'
 require 'mocha'
 require_relative 'defines'
 require_relative 'include'

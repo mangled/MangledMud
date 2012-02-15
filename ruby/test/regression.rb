@@ -1,11 +1,11 @@
 # Todo: This will handle producing regression code
 require 'rubygems'
 require 'test/unit'
+require 'bundler/setup'
 require 'mocha'
 require_relative 'defines'
 require_relative 'include'
 require_relative 'commands'
-require 'pp'
 
 module TinyMud
     

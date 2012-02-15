@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'test/unit'
+require 'bundler/setup'
 require 'mocha'
 require_relative 'defines'
 require_relative 'include'
 require_relative 'helpers'
-require 'pp'
 
 module TinyMud
     class TestRob < Test::Unit::TestCase

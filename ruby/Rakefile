@@ -1,6 +1,14 @@
 require 'rubygems'
+require 'bundler/setup'
+require 'rdoc/task'
 
 task :default => [:test]
+
+RDoc::Task.new do |rdoc|
+  #rdoc.main = "README.md"
+  #rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
+  rdoc.rdoc_files.include("lib/**/*.rb")
+end
 
 desc "Run a specific regression file on the converted tinymud code (rake :test_script_converted name=foo])"
 task :test_script => [] do |t|
@@ -13,3 +21,4 @@ task :test => [] do |t|
   ENV['TEST_TYPE']='CONVERTED'
   system "ruby ./test/test.rb"
 end
+

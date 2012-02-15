@@ -181,7 +181,7 @@ module TinyMud
                     #            break
                     ##endif
                   when 'o'
-                     @wiz.do_force_fix_this_soon(self, player, arg1, arg2) if Matched("@force", command, player)
+                     @wiz.do_force(self, player, arg1, arg2) if Matched("@force", command, player)
                   else
                     Huh(player)
                 end

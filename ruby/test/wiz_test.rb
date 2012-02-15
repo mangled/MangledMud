@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'test/unit'
+require 'bundler/setup'
 require 'mocha'
 require_relative 'defines'
 require_relative 'include'
 require_relative 'helpers'
-require 'pp'
 
 module TinyMud
     class TestWiz < Test::Unit::TestCase
@@ -151,15 +151,15 @@ module TinyMud
 			# Only a wizard can use this
 			Interface.expects(:do_process_command).never.in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Only Wizards may use this command.").in_sequence(notify)
-			wiz.do_force(bob, nil, nil)
+			wiz.do_force(nil, bob, nil, nil)
 			
 			# Victim must exist
 			Interface.expects(:do_notify).with(wizard, "That player does not exist.").in_sequence(notify)
-			wiz.do_force(wizard, "spider", nil)
+			wiz.do_force(nil, wizard, "spider", nil)
 			
 			# Pass the call on to process_command
 			Interface.expects(:do_process_command).with(bob, "twig").returns(0).in_sequence(notify)
-			wiz.do_force(wizard, "bob", "twig")
+			wiz.do_force(nil, wizard, "bob", "twig")
 		end
 
 		def test_do_stats
