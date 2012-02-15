@@ -36,11 +36,11 @@ module TinyMud
 			match.init_match(player_ref, "*  bob", -1) # Type doesn't matter for this
 			match.match_player
 			check_match_states(match, player_ref)
-			assert_equal(10 - LOOKUP_COST, @db.get(player_ref).pennies)
+			assert_equal(10 - LOOKUP_COST, @db[player_ref].pennies)
 			# Garbage player name!
 			match.init_match(player_ref, "*anne", -1)
 			match.match_player
-			assert_equal(10 - (2 * LOOKUP_COST), @db.get(player_ref).pennies)
+			assert_equal(10 - (2 * LOOKUP_COST), @db[player_ref].pennies)
 			check_match_states(match, NOTHING, player_ref)
 		end
 		

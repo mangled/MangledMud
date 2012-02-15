@@ -14,34 +14,34 @@ module TinyMud
     end
 
     def moveto(what, where)
-      loc = @db.get(what).location
+      loc = @db[what].location
   
       # remove what from old loc
       if (loc != NOTHING)
-        @db.get(loc).contents = @utils.remove_first(@db.get(loc).contents, what)
+        @db[loc].contents = @utils.remove_first(@db[loc].contents, what)
       end
   
       # test for special cases
       case where
         when NOTHING
-          @db.get(what).location = NOTHING
+          @db[what].location = NOTHING
           return # NOTHING doesn't have contents
         when HOME
-          where = @db.get(what).exits # home
+          where = @db[what].exits # home
       end
   
       # now put what in where
-      @db.get(what).next = @db.get(where).contents
-      @db.get(where).contents = what
-      @db.get(what).location = where
+      @db[what].next = @db[where].contents
+      @db[where].contents = what
+      @db[what].location = where
     end
     
     def enter_room(player, loc)
       # check for room == HOME
-      loc = @db.get(player).exits if (loc == HOME) # home
+      loc = @db[player].exits if (loc == HOME) # home
   
       # get old location
-      old = @db.get(player).location
+      old = @db[player].location
   
       # check for self-loop
       # self-loops don't do move or other player notification
@@ -50,7 +50,7 @@ module TinyMud
           if (old != NOTHING)
               # notify others unless DARK
               if (!is_dark(old) && !is_dark(player))
-                  @speech.notify_except(@db.get(old).contents, player, "#{@db.get(player).name} has left.")
+                  @speech.notify_except(@db[old].contents, player, "#{@db[player].name} has left.")
               end
           end
 
@@ -58,13 +58,13 @@ module TinyMud
           moveto(player, loc)
       
           # if old location has STICKY dropto, send stuff through it
-          if (old != NOTHING && (dropto = @db.get(old).location) != NOTHING && (is_sticky(old)))
+          if (old != NOTHING && (dropto = @db[old].location) != NOTHING && (is_sticky(old)))
               maybe_dropto(old, dropto)
           end
       
           # tell other folks in new location if not DARK
           if (!is_dark(loc) && !is_dark(player))
-              @speech.notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} has arrived.")
+              @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} has arrived.")
           end
       end
   
@@ -76,9 +76,9 @@ module TinyMud
       # Added to allow mocking/control over when someone gets a penny
       give_penny = (Game.do_rand() % PENNY_RATE) == 0
 
-      if (!@predicates.controls(player, loc) && (@db.get(player).pennies <= MAX_PENNIES) && give_penny)
+      if (!@predicates.controls(player, loc) && (@db[player].pennies <= MAX_PENNIES) && give_penny)
           Interface.do_notify(player, "You found a penny!")
-          @db.get(player).pennies = @db.get(player).pennies + 1
+          @db[player].pennies = @db[player].pennies + 1
       end
     end
     
@@ -88,9 +88,9 @@ module TinyMud
           # send his possessions home first!
           # that way he sees them when he arrives
           send_contents(thing, HOME)
-          enter_room(thing, @db.get(thing).exits) # home
+          enter_room(thing, @db[thing].exits) # home
         when TYPE_THING
-          moveto(thing, @db.get(thing).exits)	# home
+          moveto(thing, @db[thing].exits)	# home
         else
           # no effect
       end
@@ -110,10 +110,10 @@ module TinyMud
       if (direction.casecmp("home") == 0)
         # send him home
         # but steal all his possessions
-        loc = @db.get(player).location
+        loc = @db[player].location
         if (loc != NOTHING)
             # tell everybody else
-            @speech.notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} goes home.")
+            @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} goes home.")
         end
         # give the player the messages
         Interface.do_notify(player, "There's no place like home...")
@@ -135,7 +135,7 @@ module TinyMud
             # we got one
             # check to see if we got through
             if (@predicates.can_doit(player, exit, "You can't go that way."))
-              enter_room(player, @db.get(exit).location)
+              enter_room(player, @db[exit].location)
             end
         end
       end
@@ -149,7 +149,7 @@ module TinyMud
   
       thing = @match.noisy_match_result()
       if (thing != NOTHING)
-        if (@db.get(thing).location == player)
+        if (@db[thing].location == player)
             Interface.do_notify(player, "You already have that!")
             return
         end
@@ -162,20 +162,20 @@ module TinyMud
           when TYPE_EXIT
             if (!@predicates.controls(player, thing))
                 Interface.do_notify(player, "You can't pick that up.")
-            elsif (@db.get(thing).location != NOTHING)
+            elsif (@db[thing].location != NOTHING)
                 Interface.do_notify(player, "You can't pick up a linked exit.")
             else
                 # take it out of location
                 loc = getloc(player)
                 return if (loc == NOTHING)
-                if (!@utils.member(thing, @db.get(loc).exits))
+                if (!@utils.member(thing, @db[loc].exits))
                     Interface.do_notify(player, "You can't pick up an exit from another room.")
                     return
                 end
-                @db.get(loc).exits = @utils.remove_first(@db.get(loc).exits, thing)
-                @db.get(thing).next = @db.get(player).contents
-                @db.get(player).contents = thing
-                @db.get(thing).location = player
+                @db[loc].exits = @utils.remove_first(@db[loc].exits, thing)
+                @db[thing].next = @db[player].contents
+                @db[player].contents = thing
+                @db[thing].location = player
                 Interface.do_notify(player, "Exit taken.")
             end
           else
@@ -198,7 +198,7 @@ module TinyMud
         when AMBIGUOUS
           Interface.do_notify(player, "I don't know which you mean!")
         else
-          if (@db.get(thing).location != player)
+          if (@db[thing].location != player)
               # Shouldn't ever happen. 
               Interface.do_notify(player, "You can't drop that.")
           elsif (typeof(thing) == TYPE_EXIT)
@@ -210,39 +210,39 @@ module TinyMud
               # else we can put it down 
               moveto(thing, NOTHING) # take it out of the pack 
 
-              @db.get(thing).next = @db.get(loc).exits
-              @db.get(loc).exits = thing
+              @db[thing].next = @db[loc].exits
+              @db[loc].exits = thing
               Interface.do_notify(player, "Exit dropped.")
           elsif (is_temple(loc))
               # sacrifice time 
               send_home(thing)
 
-              Interface.do_notify(player, "#{@db.get(thing).name} is consumed in a burst of flame!")
-              @speech.notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} sacrifices #{@db.get(thing).name}.")
+              Interface.do_notify(player, "#{@db[thing].name} is consumed in a burst of flame!")
+              @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} sacrifices #{@db[thing].name}.")
       
               # check for reward 
               if (!@predicates.controls(player, thing))
-                  reward = @db.get(thing).pennies
-                  if (reward < 1 || @db.get(player).pennies > MAX_PENNIES)
+                  reward = @db[thing].pennies
+                  if (reward < 1 || @db[player].pennies > MAX_PENNIES)
                       reward = 1
                   elsif (reward > MAX_OBJECT_ENDOWMENT)
                       reward = MAX_OBJECT_ENDOWMENT
                   end
           
-                  @db.get(player).pennies = @db.get(player).pennies + reward
+                  @db[player].pennies = @db[player].pennies + reward
                   Interface.do_notify(player, "You have received #{reward} #{reward == 1 ? "penny" : "pennies"} for your sacrifice.")
               end
           elsif (is_sticky(thing))
               send_home(thing)
               Interface.do_notify(player, "Dropped.")
-          elsif (@db.get(loc).location != NOTHING && !is_sticky(loc))
+          elsif (@db[loc].location != NOTHING && !is_sticky(loc))
               # location has immediate dropto 
-              moveto(thing, @db.get(loc).location)
+              moveto(thing, @db[loc].location)
               Interface.do_notify(player, "Dropped.")
           else
               moveto(thing, loc)
               Interface.do_notify(player, "Dropped.")
-              @speech.notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} dropped #{@db.get(thing).name}.")
+              @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} dropped #{@db[thing].name}.")
           end
       end
     end
@@ -250,14 +250,14 @@ module TinyMud
     private
 
     def send_contents(loc, dest)
-        first = @db.get(loc).contents
-        @db.get(loc).contents = NOTHING
+        first = @db[loc].contents
+        @db[loc].contents = NOTHING
     
         # blast locations of everything in list
-        enum(first).each {|item| @db.get(item).location = NOTHING }
+        enum(first).each {|item| @db[item].location = NOTHING }
     
         while (first != NOTHING)
-          rest = @db.get(first).next
+          rest = @db[first].next
           if (typeof(first) != TYPE_THING)
               moveto(first, loc)
           else
@@ -265,14 +265,14 @@ module TinyMud
           end
           first = rest
         end
-        @db.get(loc).contents = @utils.reverse(@db.get(loc).contents)
+        @db[loc].contents = @utils.reverse(@db[loc].contents)
     end
 
     def maybe_dropto(loc, dropto)
         return if (loc == dropto) # bizarre special case
     
         # check for players
-        enum(@db.get(loc).contents).each do |i|
+        enum(@db[loc].contents).each do |i|
           return if is_player(i)
         end
         

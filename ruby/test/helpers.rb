@@ -5,7 +5,7 @@ module TestHelpers
     # Used all over the place: Simplify setting a records content - Note, assumes
     # @db instance variable
     def record(i)
-        record = @db.get(i)
+        record = @db[i]
 
         args = {}
         args[:name] = record.name
@@ -62,6 +62,6 @@ module TestHelpers
                 raise("Record - unknown key #{key} with #{value}")
             end
         end
-        @db.put(i, record)
+        @db[i] = record
     end
 end

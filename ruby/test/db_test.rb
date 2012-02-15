@@ -36,11 +36,11 @@ module TinyMud
 
 		def test_db_starts_empty
 			assert_equal(0, @db.length)
-			assert_raise(RuntimeError) { @db.get(0) } # Should really check error message
-			assert_raise(RuntimeError) { @db.put(0, nil) } # Should really check error message
+			assert_raise(RuntimeError) { @db[0] } # Should really check error message
+			assert_raise(RuntimeError) { @db[0] = nil } # Should really check error message
 			@db.add_new_record
-			assert_raise(RuntimeError) { @db.get(1) } # Should really check error message
-			assert_raise(RuntimeError) { @db.put(1, nil) } # Should really check error message
+			assert_raise(RuntimeError) { @db[1] } # Should really check error message
+			assert_raise(RuntimeError) { @db[1] = nil } # Should really check error message
 		end
 		
 		def test_new_record
@@ -50,7 +50,7 @@ module TinyMud
 		
 		def test_new_record_content
 			@db.add_new_record
-			record = @db.get(0)
+			record = @db[0]
 			assert_equal(nil, record.name)
 			assert_equal(nil, record.description)
 			assert_equal(NOTHING, record.location)
@@ -70,41 +70,41 @@ module TinyMud
 
 		def test_type_flags
 			@db.add_new_record
-			record = @db.get(0)
-			record.flags = TYPE_ROOM;
-			assert_equal("TYPE_ROOM", record.type);
-			record.flags = TYPE_THING;
-			assert_equal("TYPE_THING", record.type);
-			record.flags = TYPE_EXIT;
-			assert_equal("TYPE_EXIT", record.type);
-			record.flags = TYPE_PLAYER;
-			assert_equal("TYPE_PLAYER", record.type);
-			record.flags = NOTYPE;
-			assert_equal("NOTYPE", record.type);
-			record.flags = 0x4;
-			assert_equal("UNKNOWN", record.type);
+			record = @db[0]
+			record.flags = TYPE_ROOM
+			assert_equal("TYPE_ROOM", record.type)
+			record.flags = TYPE_THING
+			assert_equal("TYPE_THING", record.type)
+			record.flags = TYPE_EXIT
+			assert_equal("TYPE_EXIT", record.type)
+			record.flags = TYPE_PLAYER
+			assert_equal("TYPE_PLAYER", record.type)
+			record.flags = NOTYPE
+			assert_equal("NOTYPE", record.type)
+			record.flags = 0x4
+			assert_equal("UNKNOWN", record.type)
 		end
 
 		def test_meta_flags
 			@db.add_new_record
-			record = @db.get(0)
-			record.flags = ANTILOCK;
-			assert_equal("ANTILOCK", record.desc);
-			record.flags = WIZARD;
-			assert_equal("WIZARD", record.desc);
-			record.flags = LINK_OK;
-			assert_equal("LINK_OK", record.desc);
-			record.flags = DARK;
-			assert_equal("DARK", record.desc);
-			record.flags = TEMPLE;
-			assert_equal("TEMPLE", record.desc);
-			record.flags = STICKY;
-			assert_equal("STICKY", record.desc);
+			record = @db[0]
+			record.flags = ANTILOCK
+			assert_equal("ANTILOCK", record.desc)
+			record.flags = WIZARD
+			assert_equal("WIZARD", record.desc)
+			record.flags = LINK_OK
+			assert_equal("LINK_OK", record.desc)
+			record.flags = DARK
+			assert_equal("DARK", record.desc)
+			record.flags = TEMPLE
+			assert_equal("TEMPLE", record.desc)
+			record.flags = STICKY
+			assert_equal("STICKY", record.desc)
 		end
 		
 		def test_set_record_content
 			@db.add_new_record
-			record = @db.get(0)
+			record = @db[0]
 			record.name = "name"
 			assert_equal("name", record.name)
 			record.description = "description"
@@ -143,7 +143,7 @@ module TinyMud
 
 			assert_equal(2, @db.length)
 
-			record = @db.get(0)
+			record = @db[0]
 			assert_equal("Limbo", record.name)
 			assert_equal("You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.", record.description)
 			assert_equal(NOTHING, record.location)
@@ -160,7 +160,7 @@ module TinyMud
 			assert_equal(TYPE_ROOM, record.flags)
 			assert_equal(nil, record.password)
 
-			record = @db.get(1)
+			record = @db[1]
 			assert_equal("Wizard", record.name)
 			assert_equal("You see The Wizard.", record.description)
 			assert_equal(0, record.location)

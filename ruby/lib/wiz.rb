@@ -103,7 +103,7 @@ module TinyMud
         owner = @player.lookup_player(name)
         total = rooms = exits = things = players = unknowns = 0
         0.upto(@db.length - 1) do |i|
-          if (owner == NOTHING || owner == @db.get(i).owner)
+          if (owner == NOTHING || owner == @db[i].owner)
             total = total + 1
             case typeof(i)
               when TYPE_ROOM
@@ -141,24 +141,24 @@ module TinyMud
         Interface.do_notify(player, "You can only turn players into toads!")
       elsif (is_wizard(victim))
         Interface.do_notify(player, "You can't turn a Wizard into a toad.")
-      elsif (@db.get(victim).contents != NOTHING)
+      elsif (@db[victim].contents != NOTHING)
         Interface.do_notify(player, "What about what they are carrying?")
       else
         # we're ok 
         # do it 
-        if (@db.get(victim).password)
-            @db.get(victim).password = nil
+        if (@db[victim].password)
+            @db[victim].password = nil
         end
-        @db.get(victim).flags = TYPE_THING
-        @db.get(victim).owner = player # you get it 
-        @db.get(victim).pennies = 1	# don't let him keep his immense wealth 
+        @db[victim].flags = TYPE_THING
+        @db[victim].owner = player # you get it 
+        @db[victim].pennies = 1	# don't let him keep his immense wealth 
 
         # notify people 
         Interface.do_notify(victim, "You have been turned into a toad.")
-        Interface.do_notify(player, "You turned #{@db.get(victim).name} into a toad!")
+        Interface.do_notify(player, "You turned #{@db[victim].name} into a toad!")
     
         # reset name 
-        @db.get(victim).name = "a slimy toad named #{@db.get(victim).name}"
+        @db[victim].name = "a slimy toad named #{@db[victim].name}"
       end
     end
   end

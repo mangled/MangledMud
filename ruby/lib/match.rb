@@ -20,8 +20,8 @@ module TinyMud
     end
 
     def init_match_check_keys(player, name, type)
-      init_match(player, name, type);
-      @check_keys = true;
+      init_match(player, name, type)
+      @check_keys = true
     end
 
     def match_player()
@@ -44,33 +44,33 @@ module TinyMud
     end
 
     def match_here()
-      if (@match_name and @match_name.casecmp("here") == 0 && @db.get(@match_who).location != NOTHING)
-          @exact_match = @db.get(@match_who).location
+      if (@match_name and @match_name.casecmp("here") == 0 && @db[@match_who].location != NOTHING)
+          @exact_match = @db[@match_who].location
       end
     end
 
     def match_possession()
-      match_list(@db.get(@match_who).contents)
+      match_list(@db[@match_who].contents)
     end
 
     def match_neighbor()
-      loc = @db.get(@match_who).location
+      loc = @db[@match_who].location
       if (loc != NOTHING)
-          match_list(@db.get(loc).contents)
+          match_list(@db[loc].contents)
       end
     end
 
     def match_exit()
-      loc = @db.get(@match_who).location
+      loc = @db[@match_who].location
       if (loc != NOTHING)
         absolute = absolute_name()
         absolute = NOTHING if (!Predicates.new(@db).controls(@match_who, absolute))
 
-        enum(@db.get(loc).exits).each do |exit|
+        enum(@db[loc].exits).each do |exit|
           if (exit == absolute)
             @exact_match = exit
           elsif @match_name
-            @db.get(exit).name.split(EXIT_DELIMITER).each do |name|
+            @db[exit].name.split(EXIT_DELIMITER).each do |name|
               # Allow a partial match - for ambiguous matching
               if (name.downcase.strip.start_with?(@match_name.downcase))
                   # ! Matthew - Modified original code -> Bug fix?
@@ -150,7 +150,7 @@ module TinyMud
     end
 
     def match_list(first)
-        absolute = absolute_name();
+        absolute = absolute_name()
         absolute = NOTHING if (!Predicates.new(@db).controls(@match_who, absolute))
 
         enum(first).each do |i|
@@ -158,12 +158,12 @@ module TinyMud
               @exact_match = i
               return
           elsif @match_name
-            if (@db.get(i).name.casecmp(@match_name) == 0)
+            if (@db[i].name.casecmp(@match_name) == 0)
                 # if there are multiple exact matches, randomly choose one
                 @exact_match = choose_thing(@exact_match, i)
             else
                 # Match at the start of words - There must be a neater way
-                name_words = @db.get(i).name.split(/\s+/)
+                name_words = @db[i].name.split(/\s+/)
                 name_words.each do |word|
                   if word.downcase.start_with?(@match_name.downcase)
                     @last_match = i

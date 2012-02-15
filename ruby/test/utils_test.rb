@@ -33,7 +33,7 @@ module TinyMud
 			assert_equal(thing2, utils.remove_first(thing1, thing1))
 			# Not first so it's removed from the chain
 			assert_equal(thing1, utils.remove_first(thing1, thing2))
-			assert_equal(thing3, @db.get(thing1).next)
+			assert_equal(thing3, @db[thing1].next)
 		end
 		
 		def test_member
@@ -58,18 +58,18 @@ module TinyMud
 			record(thing1) {|r| r.merge!({ :name => "thing1", :next => thing2 }) }
 			record(thing2) {|r| r.merge!({ :name => "thing2", :next => thing3 }) }
 			record(thing3) {|r| r.merge!({ :name => "thing3", :next => NOTHING }) }
-			assert_equal("thing1", @db.get(0).name)
-			assert_equal(thing2, @db.get(0).next)
-			assert_equal(thing3, @db.get(0).next.next)
+			assert_equal("thing1", @db[0].name)
+			assert_equal(thing2, @db[0].next)
+			assert_equal(thing3, @db[0].next.next)
 
 			utils = Utils.new(@db)
 			reversed = utils.reverse(thing1)
-			assert_equal(NOTHING, @db.get(thing1).next)
-			assert_equal(thing1, @db.get(thing2).next)
-			assert_equal(thing2, @db.get(thing3).next)
-			assert_equal("thing3", @db.get(reversed).name)
-			assert_equal(thing2, @db.get(reversed).next)
-			assert_equal(thing1, @db.get(@db.get(reversed).next).next)
+			assert_equal(NOTHING, @db[thing1].next)
+			assert_equal(thing1, @db[thing2].next)
+			assert_equal(thing2, @db[thing3].next)
+			assert_equal("thing3", @db[reversed].name)
+			assert_equal(thing2, @db[reversed].next)
+			assert_equal(thing1, @db[@db[reversed].next].next)
 		end
 		
 		def test_getname

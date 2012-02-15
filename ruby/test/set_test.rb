@@ -62,12 +62,12 @@ module TinyMud
 			record(bob) {|r| r[:pennies] = LOOKUP_COST}
 			Interface.expects(:do_notify).with(bob, "You can't give a player that name.").in_sequence(notify) # Same as above!
 			set.do_name(bob, "bob", "here sprout")
-			assert_equal(0, @db.get(bob).pennies) # But it has taken your money - Bug!
+			assert_equal(0, @db[bob].pennies) # But it has taken your money - Bug!
 			# All ok
 			record(bob) {|r| r[:pennies] = LOOKUP_COST}
 			Interface.expects(:do_notify).with(bob, "Name set.").in_sequence(notify)
 			set.do_name(bob, "bob", "mary sprout")
-			assert_equal("mary", @db.get(bob).name)
+			assert_equal("mary", @db[bob].name)
 			
 			# Rename a non-player (thing) you own (note code checks all the same so won't repeat)
 			# Poor name
@@ -76,7 +76,7 @@ module TinyMud
 			# Ok
 			Interface.expects(:do_notify).with(bob, "Name set.").in_sequence(notify)
 			set.do_name(bob, "cheese", "pie")
-			assert_equal("pie", @db.get(cheese).name)
+			assert_equal("pie", @db[cheese].name)
 		end
 		
 		# The next few tests could/should be common'd up (they only differ by field tested)
@@ -103,7 +103,7 @@ module TinyMud
 			# Something we own
 			Interface.expects(:do_notify).with(bob, "Description set.").in_sequence(notify)
 			set.do_describe(bob, "cheese", "best eaten early in the day")
-			assert_equal("best eaten early in the day", @db.get(cheese).description)
+			assert_equal("best eaten early in the day", @db[cheese].description)
 		end
 		
 		def test_do_fail
@@ -129,7 +129,7 @@ module TinyMud
 			# Something we own
 			Interface.expects(:do_notify).with(bob, "Message set.").in_sequence(notify)
 			set.do_fail(bob, "cheese", "you failed to eat the cheese")
-			assert_equal("you failed to eat the cheese", @db.get(cheese).fail)
+			assert_equal("you failed to eat the cheese", @db[cheese].fail)
 		end
 		
 		def test_do_success
@@ -155,7 +155,7 @@ module TinyMud
 			# Something we own
 			Interface.expects(:do_notify).with(bob, "Message set.").in_sequence(notify)
 			set.do_success(bob, "cheese", "you eat the cheese")
-			assert_equal("you eat the cheese", @db.get(cheese).succ)
+			assert_equal("you eat the cheese", @db[cheese].succ)
 		end
 		
 		def test_do_osuccess
@@ -181,7 +181,7 @@ module TinyMud
 			# Something we own
 			Interface.expects(:do_notify).with(bob, "Message set.").in_sequence(notify)
 			set.do_osuccess(bob, "cheese", "bob eat the cheese")
-			assert_equal("bob eat the cheese", @db.get(cheese).osucc)
+			assert_equal("bob eat the cheese", @db[cheese].osucc)
 		end
 		
 		def test_do_ofail
@@ -207,7 +207,7 @@ module TinyMud
 			# Something we own
 			Interface.expects(:do_notify).with(bob, "Message set.").in_sequence(notify)
 			set.do_ofail(bob, "cheese", "bob failed to eat the cheese")
-			assert_equal("bob failed to eat the cheese", @db.get(cheese).ofail)			
+			assert_equal("bob failed to eat the cheese", @db[cheese].ofail)			
 		end
 
 		def test_do_lock
@@ -253,15 +253,15 @@ module TinyMud
 			# Ok - Do it!
 			Interface.expects(:do_notify).with(bob, "Locked.").in_sequence(notify)
 			set.do_lock(bob, "cheese", "anne")
-			assert_equal(anne, @db.get(cheese).key)
-			assert_equal(TYPE_THING, @db.get(cheese).flags)
+			assert_equal(anne, @db[cheese].key)
+			assert_equal(TYPE_THING, @db[cheese].flags)
 			
 			# Now with antilock
 			record(cheese) {|r| r[:key] = NOTHING }
 			Interface.expects(:do_notify).with(bob, "Anti-Locked.").in_sequence(notify)
 			set.do_lock(bob, "cheese", "!anne")
-			assert_equal(anne, @db.get(cheese).key)
-			assert_equal(TYPE_THING | ANTILOCK, @db.get(cheese).flags)
+			assert_equal(anne, @db[cheese].key)
+			assert_equal(TYPE_THING | ANTILOCK, @db[cheese].flags)
 		end
 
 		def test_do_unlock
@@ -289,16 +289,16 @@ module TinyMud
 			set.do_lock(bob, "cheese", "anne")
 			Interface.expects(:do_notify).with(bob, "Unlocked.").in_sequence(notify)
 			set.do_unlock(bob, "cheese")
-			assert_equal(NOTHING, @db.get(cheese).key)
-			assert_equal(TYPE_THING, @db.get(cheese).flags)
+			assert_equal(NOTHING, @db[cheese].key)
+			assert_equal(TYPE_THING, @db[cheese].flags)
 			
 			# Do it from antilock
 			Interface.expects(:do_notify).with(bob, "Anti-Locked.").in_sequence(notify)
 			set.do_lock(bob, "cheese", "!anne")
 			Interface.expects(:do_notify).with(bob, "Unlocked.").in_sequence(notify)
 			set.do_unlock(bob, "cheese")
-			assert_equal(NOTHING, @db.get(cheese).key)
-			assert_equal(TYPE_THING, @db.get(cheese).flags)
+			assert_equal(NOTHING, @db[cheese].key)
+			assert_equal(TYPE_THING, @db[cheese].flags)
 		end
 
 		def test_do_unlink
@@ -343,13 +343,13 @@ module TinyMud
 			record(exit) {|r| r[:owner] = bob }
 			Interface.expects(:do_notify).with(bob, "Unlinked.").in_sequence(notify)
 			set.do_unlink(bob, "exit")
-			assert_equal(NOTHING, @db.get(exit).location)
+			assert_equal(NOTHING, @db[exit].location)
 			
 			# Do it on a room
 			record(place) {|r| r[:owner] = bob }
 			Interface.expects(:do_notify).with(bob, "Dropto removed.").in_sequence(notify)
 			set.do_unlink(bob, "here")
-			assert_equal(NOTHING, @db.get(place).location)
+			assert_equal(NOTHING, @db[place].location)
 			
 			# Remember wizard absolute - Try it on a thing
 			record(bob) {|r| r[:flags] = TYPE_PLAYER | WIZARD }
@@ -361,7 +361,7 @@ module TinyMud
 			record(exit) {|r| r[:location] = anne }
 			Interface.expects(:do_notify).with(bob, "Unlinked.").in_sequence(notify)
 			set.do_unlink(bob, "exit")
-			assert_equal(NOTHING, @db.get(exit).location)
+			assert_equal(NOTHING, @db[exit].location)
 		end
 		
 		def test_do_chown
@@ -397,10 +397,10 @@ module TinyMud
 			# Ok!
 			Interface.expects(:do_notify).with(bob, "Owner changed.").in_sequence(notify)
 			set.do_chown(bob, "cheese", "anne")
-			assert_equal(anne, @db.get(cheese).owner)
+			assert_equal(anne, @db[cheese].owner)
 			Interface.expects(:do_notify).with(bob, "Owner changed.").in_sequence(notify)
 			set.do_chown(bob, "here", "anne")
-			assert_equal(anne, @db.get(place).owner)
+			assert_equal(anne, @db[place].owner)
 		end
 		
 		def test_do_set
@@ -444,39 +444,39 @@ module TinyMud
 			# Can set rooms as dark (as a non wizard) (if own)
 			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
 			set.do_set(bob, "here", "DARK")
-			assert_equal(TYPE_ROOM | DARK, @db.get(place).flags)
+			assert_equal(TYPE_ROOM | DARK, @db[place].flags)
 			# And even the reverse
 			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
 			set.do_set(bob, "here", "!DARK")
-			assert_equal(TYPE_ROOM, @db.get(place).flags)
+			assert_equal(TYPE_ROOM, @db[place].flags)
 			
 			# Wizards can do the above (but there are no checks on dest. e.g. a wizard cheese!)
 			record(bob) {|r| r[:flags] = TYPE_PLAYER | WIZARD }
 			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
 			set.do_set(bob, "cheese", "WIZARD")
-			assert_equal(TYPE_THING | WIZARD, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | WIZARD, @db[cheese].flags)
 			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
 			set.do_set(bob, "cheese", "TEMPLE")
-			assert_equal(TYPE_THING | TEMPLE | WIZARD, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | TEMPLE | WIZARD, @db[cheese].flags)
 			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
 			set.do_set(bob, "cheese", "DARK")
-			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK, @db[cheese].flags)
 			Interface.expects(:do_notify).with(bob, "Flag set.").in_sequence(notify)
 			set.do_set(bob, "cheese", "STICKY")
-			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK | STICKY, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK | STICKY, @db[cheese].flags)
 			# Reverse also true
 			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
 			set.do_set(bob, "cheese", "!STICKY")
-			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | TEMPLE | WIZARD | DARK, @db[cheese].flags)
 			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
 			set.do_set(bob, "cheese", "!DARK")
-			assert_equal(TYPE_THING | TEMPLE | WIZARD, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | TEMPLE | WIZARD, @db[cheese].flags)
 			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
 			set.do_set(bob, "cheese", "!TEMPLE")
-			assert_equal(TYPE_THING | WIZARD, @db.get(cheese).flags)
+			assert_equal(TYPE_THING | WIZARD, @db[cheese].flags)
 			Interface.expects(:do_notify).with(bob, "Flag reset.").in_sequence(notify)
 			set.do_set(bob, "cheese", "!WIZARD")
-			assert_equal(TYPE_THING, @db.get(cheese).flags)
+			assert_equal(TYPE_THING, @db[cheese].flags)
 			
 			# Can't lower yourself
 			Interface.expects(:do_notify).with(bob, "You cannot make yourself mortal.").in_sequence(notify)

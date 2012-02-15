@@ -77,7 +77,7 @@ module Helpers
     Enumerator.new do |yielder|
       while (dbref != NOTHING)
         yielder.yield dbref
-        dbref = @db.get(dbref).next
+        dbref = @db[dbref].next
       end
     end
   end
@@ -86,51 +86,51 @@ module Helpers
 
   # Was defined in db.h
   def is_player(item)
-    ((@db.get(item).flags & TYPE_MASK) == TYPE_PLAYER)
+    ((@db[item].flags & TYPE_MASK) == TYPE_PLAYER)
   end
 
   def is_thing(item)
-    ((@db.get(item).flags & TYPE_MASK) == TYPE_THING)
+    ((@db[item].flags & TYPE_MASK) == TYPE_THING)
   end
 
   def is_temple(item)
-    ((@db.get(item).flags & TEMPLE) != 0)
+    ((@db[item].flags & TEMPLE) != 0)
   end
 
   def is_sticky(item)
-    ((@db.get(item).flags & STICKY) != 0)
+    ((@db[item].flags & STICKY) != 0)
   end
 
   def is_link_ok(item)
-    ((@db.get(item).flags & LINK_OK) != 0)
+    ((@db[item].flags & LINK_OK) != 0)
   end
 
   def is_antilock(item)
-    ((@db.get(item).flags & ANTILOCK) != 0)
+    ((@db[item].flags & ANTILOCK) != 0)
   end
 
   # Was defined in db.h
   def typeof(item)
-    (@db.get(item).flags & TYPE_MASK)
+    (@db[item].flags & TYPE_MASK)
   end
 
   # Was defined in db.h
   def is_wizard(item)
-    ((@db.get(item).flags & WIZARD) != 0)
+    ((@db[item].flags & WIZARD) != 0)
   end
   
     # Was defined in db.h
   def is_builder(item)
-    ((@db.get(item).flags & (WIZARD|BUILDER)) != 0)
+    ((@db[item].flags & (WIZARD|BUILDER)) != 0)
   end
 
   # Was defined in db.h
   def is_dark(item)
-    ((@db.get(item).flags & DARK) != 0)
+    ((@db[item].flags & DARK) != 0)
   end
 
   # Was defined in db.h
   def getloc(thing)
-    @db.get(thing).location
+    @db[thing].location
   end
 end

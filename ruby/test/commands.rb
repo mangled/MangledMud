@@ -35,7 +35,7 @@ module TinyMud
         # Given db, find thing by name
         def CommandHelpers.find(db, name)
             for i in 0..(db.length - 1)
-                return i if db.get(i).name == name
+                return i if db[i].name == name
             end
             raise "Find #{name} failed!"
         end

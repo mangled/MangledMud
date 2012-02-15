@@ -18,9 +18,9 @@ module TinyMud
     end
 
     def could_doit(player, thing)
-      return false if (typeof(thing) != TYPE_ROOM && @db.get(thing).location == NOTHING)
-      return true if ((key = @db.get(thing).key) == NOTHING)
-      status = (player == key || Utils.new(@db).member(key, @db.get(player).contents))
+      return false if (typeof(thing) != TYPE_ROOM && @db[thing].location == NOTHING)
+      return true if ((key = @db[thing].key) == NOTHING)
+      status = (player == key || Utils.new(@db).member(key, @db[player].contents))
       return is_antilock(thing) ? !status : status
     end
   
@@ -31,24 +31,24 @@ module TinyMud
 
       if (!could_doit(player, thing))
         # can't do it
-        if (@db.get(thing).fail)
-          Interface.do_notify(player, @db.get(thing).fail)
+        if (@db[thing].fail)
+          Interface.do_notify(player, @db[thing].fail)
         elsif (default_fail_msg)
           Interface.do_notify(player, default_fail_msg)
         end
   
-        if (@db.get(thing).ofail)
-          Speech.new(@db).notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} #{@db.get(thing).ofail}".to_s)
+        if (@db[thing].ofail)
+          Speech.new(@db).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].ofail}".to_s)
         end
         false
       else
         # can do it
-        if (@db.get(thing).succ)
-          Interface.do_notify(player, @db.get(thing).succ)
+        if (@db[thing].succ)
+          Interface.do_notify(player, @db[thing].succ)
         end
     
-        if (@db.get(thing).osucc)
-          Speech.new(@db).notify_except(@db.get(loc).contents, player, "#{@db.get(player).name} #{@db.get(thing).osucc}")
+        if (@db[thing].osucc)
+          Speech.new(@db).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].osucc}")
         end
         true
       end
@@ -70,18 +70,18 @@ module TinyMud
       # owners control their stuff
       what >= 0 &&
       what < @db.length &&
-      (is_wizard(who) || who == @db.get(what).owner)
+      (is_wizard(who) || who == @db[what].owner)
     end
     
     def can_link(who, what)
-      (typeof(what) == TYPE_EXIT && @db.get(what).location == NOTHING) || controls(who, what)
+      (typeof(what) == TYPE_EXIT && @db[what].location == NOTHING) || controls(who, what)
     end
     
     def payfor(who, cost)
       if (is_wizard(who))
         return true
-      elsif (@db.get(who).pennies >= cost)
-        @db.get(who).pennies -= cost
+      elsif (@db[who].pennies >= cost)
+        @db[who].pennies -= cost
         return true
       else
         return false

@@ -22,10 +22,10 @@ module TinyMud
 			@db.add_new_record
 			@db.add_new_record
 			@db.add_new_record
-			record = @db.get(2)
+			record = @db[2]
 			record.flags = TYPE_PLAYER
 			record.name = "sir green nose"
-			@db.put(2, record)
+			@db[2] = record
 			
 			assert_equal(2, player.lookup_player("sir green nose"))
 			assert_equal(2, player.lookup_player("sir green noSe"))
@@ -37,11 +37,11 @@ module TinyMud
 			
 			@db.add_new_record
 			@db.add_new_record
-			record = @db.get(1)
+			record = @db[1]
 			record.flags = TYPE_PLAYER
 			record.name = "sir green nose"
 			record.password = "fish"
-			@db.put(1, record)
+			@db[1] = record
 			
 			assert_equal(1, player.connect_player("sir green nose", "fish"))
 			assert_equal(NOTHING, player.connect_player("sir green noses", "fish"))
@@ -61,16 +61,16 @@ module TinyMud
 			assert_equal(NOTHING, player.create_player("here", "pwd"))
 			
 			Db.Minimal()
-			record = @db.get(0)
+			record = @db[0]
 			assert_equal(1, record.contents)
 			assert_equal(NOTHING, record.next)
 			
-			record = @db.get(1)
+			record = @db[1]
 			assert_equal(NOTHING, record.contents)
 			assert_equal(NOTHING, record.next)
 
 			assert_equal(2, player.create_player("bob", "pwd"))
-			record = @db.get(2)
+			record = @db[2]
 			assert_equal("bob", record.name)
 			assert_equal(PLAYER_START, record.location)
 			assert_equal(PLAYER_START, record.exits)
@@ -79,16 +79,16 @@ module TinyMud
 			assert_equal("pwd", record.password)
 			assert_equal(1, record.next)
 			
-			record = @db.get(0)
+			record = @db[0]
 			assert_equal(2, record.contents)
 			assert_equal(NOTHING, record.next)
 			
-			record = @db.get(1)
+			record = @db[1]
 			assert_equal(NOTHING, record.contents)
 			assert_equal(NOTHING, record.next)
 			
 			assert_equal(3, player.create_player("jane", "pwdd"))
-			record = @db.get(3)
+			record = @db[3]
 			assert_equal("jane", record.name)
 			assert_equal(PLAYER_START, record.location)
 			assert_equal(PLAYER_START, record.exits)
@@ -97,11 +97,11 @@ module TinyMud
 			assert_equal("pwdd", record.password)
 			assert_equal(2, record.next)
 			
-			record = @db.get(0)
+			record = @db[0]
 			assert_equal(3, record.contents)
 			assert_equal(NOTHING, record.next)
 			
-			record = @db.get(1)
+			record = @db[1]
 			assert_equal(NOTHING, record.contents)
 			assert_equal(NOTHING, record.next)
 		end

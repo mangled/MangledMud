@@ -3,7 +3,7 @@
 #Email:	 amo3@umbc.edu
 
 require_relative '../test/include'
-require 'pp'
+
 module TinyMud
 
 	#Db class is used to handle administrative database changes.  Holds records.
@@ -24,18 +24,18 @@ module TinyMud
 		#Helper function, parses a database from a file.
 		def self.parse_database(location)
 			@@record_array = Array.new()
-			if(File.exist?(location))
+			if (File.exist?(location))
 				file = File.new(location, "r")
 				string_array = file.readlines()
 				
 				#Each record should have 16 entries.  Total number of lines should
 				#be (16 * n)+1 for end of file.
-				if((string_array.length() - 1)%16 != 0)
+				if ((string_array.length() - 1)%16 != 0)
 					raise "Corrupted database."
 				else			
-					counter = 0;
+					counter = 0
 					for i in (1..((string_array.length()-1)/16))
-						#Record type and desc (not description) not in file.
+						# Record type and desc (not description) not in file.
 						currentRecord = Record.new()
 						offset = counter * 16
 						currentRecord.name = string_array[offset+1].strip()
@@ -55,31 +55,14 @@ module TinyMud
 						currentRecord.password = string_array[offset+15].strip()
 						counter += 1
 						
-						
-						#Chek to see if any of the messages are empty.
-
-						if currentRecord.name == ""
-							currentRecord.name = nil
-						end
-						if currentRecord.description == ""
-							currentRecord.description = nil
-						end
-						if currentRecord.fail == ""
-							currentRecord.fail = nil
-						end
-						if currentRecord.succ == ""
-							currentRecord.succ = nil
-						end
-						if currentRecord.ofail == ""
-							currentRecord.ofail = nil
-						end
-						if currentRecord.osucc == ""
-							currentRecord.osucc = nil
-						end
-						if currentRecord.password == ""
-							currentRecord.password = nil
-						end
-				
+						# Check to see if any of the messages are empty.
+						currentRecord.name = nil if currentRecord.name == ""
+						currentRecord.description = nil if currentRecord.description == ""
+						currentRecord.fail = nil if currentRecord.fail == ""
+						currentRecord.succ = nil if currentRecord.succ == ""
+						currentRecord.ofail = nil if currentRecord.ofail == ""
+						currentRecord.osucc = nil if currentRecord.osucc == ""
+						currentRecord.password = nil if currentRecord.password == ""
 
 						@@record_array << currentRecord
 					end
@@ -107,40 +90,14 @@ module TinyMud
 			return index
 		end
 		
-		#Adds a record to the database at the specified index.
-		#	Putting in  an empty database					->		Error.
-		#	Putting at a location that doesn't exist		->		Error.
-		#	Putting an object that is not a record			->		Error.
-		def put(index,record)
-			if(record.class() != Record)
-				#raise RuntimeError
-				raise "argument is not a record"
-			elsif(@@record_array.length() == 0)
-				#raise RuntimeError
-				raise "record array empty"
-			elsif(@@record_array.length() < index || index < 0)
-				#raise RuntimeError
-				raise "record array length is less than index or index is less than 0"
-			else
-				@@record_array[index] = record
-			end
+		def []=(index, record)
+			put(index, record)
 		end
-		
-		#Returns a handle to Record object at specified index.	
-		#	Getting from an empty database					->		Error.
-		#	Getting from a location that doesn't exist		->		Error.
-		def get(index)
-			if(@@record_array.length() == 0)
-				#raise RuntimeError
-				raise "record array length is 0"
-			elsif(@@record_array.length() <= index || index < 0)
-				#raise RuntimeError
-				raise "trying to get #{index}, but array length is #{@@record_array.length()}"
-			else
-				return @@record_array[index]
-			end
+
+		def [](index)
+			return get(index)
 		end
-		
+
 		#length returns the number of elements in the database.
 		def length()
 			return @@record_array.length()
@@ -158,7 +115,7 @@ module TinyMud
 			elsif (x == 0)
 				#Getting lstrip on null sometimes..
 				#Fixed while checking a function, but may want to add here.
-				#if(s == nil)
+				#if (s == nil)
 					#return 0
 				#else
 					s = s.lstrip()
@@ -166,7 +123,7 @@ module TinyMud
 				return 0 if (s and s.start_with?('0'))
 			end
 			# else x < 0 or s != 0
-			return NOTHING;
+			return NOTHING
 		end
 
 		#Writes current database to location
@@ -198,9 +155,42 @@ module TinyMud
 		#free clears the database and does administrative work
 		def free()
 			@@record_array = Array.new()
-			
 		end
 		
+	private
+		#Returns a handle to Record object at specified index.	
+		#	Getting from an empty database					->		Error.
+		#	Getting from a location that doesn't exist		->		Error.
+		def get(index)
+			if (@@record_array.length() == 0)
+				#raise RuntimeError
+				raise "record array length is 0"
+			elsif (@@record_array.length() <= index || index < 0)
+				#raise RuntimeError
+				raise "trying to get #{index}, but array length is #{@@record_array.length()}"
+			else
+				return @@record_array[index]
+			end
+		end
+
+		#Adds a record to the database at the specified index.
+		#	Putting in  an empty database					->		Error.
+		#	Putting at a location that doesn't exist		->		Error.
+		#	Putting an object that is not a record			->		Error.
+		def put(index,record)
+			if (record.class() != Record)
+				#raise RuntimeError
+				raise "argument is not a record"
+			elsif (@@record_array.length() == 0)
+				#raise RuntimeError
+				raise "record array empty"
+			elsif (@@record_array.length() < index || index < 0)
+				#raise RuntimeError
+				raise "record array length is less than index or index is less than 0"
+			else
+				@@record_array[index] = record
+			end
+		end
 	end
 	
 	#Record class is used to store individual information about rooms, things, exits, playes, notypes, and unknowns.
@@ -229,15 +219,12 @@ module TinyMud
 			@desc			=		NOTHING
 			@flags			=		NOTHING
 			@password		=		nil
-		
 		end
 		
 		#Type is defined by the flags, and uses defines.rb
 		def type()
-			type_after_mask = flags & TYPE_MASK
-			
 			#Switch
-			case type_after_mask
+			case flags & TYPE_MASK
 				when TYPE_ROOM
 					return "TYPE_ROOM"
 				when TYPE_THING
@@ -269,8 +256,6 @@ module TinyMud
 			else
 				return nil
 			end
-		
 		end
-		
 	end
 end

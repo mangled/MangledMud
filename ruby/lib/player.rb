@@ -14,7 +14,7 @@ module TinyMud
 			return NOTHING if (@db.length() == 0 or player_name.nil?)
 
 			for i in (0..@db.length()-1)
-				current_record = @db.get(i)
+				current_record = @db[i]
 				#puts "Comparing name: #{current_record.name()} to #{player_name}"
 				#puts "flags == TYPE_PLAYER? : #{(current_record.flags & TYPE_MASK) != 0}"
 				if (((current_record.flags() & TYPE_MASK) == TYPE_PLAYER) && current_record.name && current_record.name().upcase() == player_name.upcase())
@@ -32,7 +32,7 @@ module TinyMud
 			
 			if(player == NOTHING)
 				return NOTHING
-			elsif(@db.get(player).password == password)
+			elsif(@db[player].password == password)
 				return player
 			else
 				return NOTHING
@@ -47,7 +47,7 @@ module TinyMud
 				return NOTHING
 			else
 				player_index = @db.add_new_record()
-				player = @db.get(player_index)
+				player = @db[player_index]
 				
 				player.name = player_name
 				player.location = PLAYER_START
@@ -57,11 +57,9 @@ module TinyMud
 				player.password = password
 				
 				#in DB.h #define PUSH(thing, locative) ((db[(thing)].next = (locative)), (locative) = (thing))
-				#/* link him to PLAYER_START */
-				#PUSH(player, db[PLAYER_START].contents);
-				#Not sure if this line needs to be here...
-				player.next = @db.get(PLAYER_START).contents
-				@db.get(PLAYER_START).contents = player_index
+				# link him to PLAYER_START 
+				player.next = @db[PLAYER_START].contents
+				@db[PLAYER_START].contents = player_index
 				
 				return player_index
 			end
@@ -69,7 +67,7 @@ module TinyMud
 		
 		#Changes a player's password. Notifies an interface if the password changes or the passwords are not the same.
 		def change_password(player_index, old_password, new_password)
-			player = @db.get(player_index)
+			player = @db[player_index]
 			if(old_password != player.password)
 				#puts "Printing sorry because old pass(#{old_password}) != current pass(#{player.password})" 
 				Interface.do_notify(player_index, "Sorry")

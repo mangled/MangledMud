@@ -70,8 +70,8 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, "jam(#6)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "jamm(#7)").in_sequence(notify)
 			wiz.do_teleport(wizard, "##{place}", nil)
-			assert_equal(place, @db.get(wizard).location)
-			assert_equal(wizard, @db.get(place).contents)
+			assert_equal(place, @db[wizard].location)
+			assert_equal(wizard, @db[place].contents)
 			
 			# Can't see rooms by name?
 			Interface.expects(:do_notify).with(wizard, "I don't see that here.").in_sequence(notify)
@@ -90,18 +90,18 @@ module TinyMud
 			wiz.do_teleport(wizard, "##{place}", "##{limbo}")
 			
 			# Can send things
-			assert_equal(place, @db.get(jam).location)
+			assert_equal(place, @db[jam].location)
 			wiz.do_teleport(wizard, "jam", "##{limbo}")
-			assert_equal(limbo, @db.get(jam).location)
-			assert_equal(jam, @db.get(limbo).contents)
+			assert_equal(limbo, @db[jam].location)
+			assert_equal(jam, @db[limbo].contents)
 			
 			# Can send here
 			wiz.do_teleport(wizard, "##{jam}", "here")
-			assert_equal(place, @db.get(jam).location)
+			assert_equal(place, @db[jam].location)
 			
 			# Ambiguous
 			wiz.do_teleport(wizard, "##{another_jam}", "here")
-			assert_equal(place, @db.get(another_jam).location)
+			assert_equal(place, @db[another_jam].location)
 			Interface.expects(:do_notify).with(wizard, 'I don\'t know which one you mean!')
 			wiz.do_teleport(wizard, "ja", "##{limbo}")
 
@@ -113,21 +113,21 @@ module TinyMud
 			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'bob has arrived.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Limbo").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "#{@db.get(limbo).description}").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, "#{@db[limbo].description}").in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'bob is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'bobby').in_sequence(notify)
 			wiz.do_teleport(wizard, "##{bob}", "##{limbo}")
-			assert_equal(limbo, @db.get(bob).location)
-			assert_equal(limbo, @db.get(another_bob).location)
-			assert_equal(place, @db.get(wizard).location)
+			assert_equal(limbo, @db[bob].location)
+			assert_equal(limbo, @db[another_bob].location)
+			assert_equal(place, @db[wizard].location)
 
 			Interface.expects(:do_notify).with(wizard, "You feel a wrenching sensation...").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, 'Wizard has left.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'Wizard has arrived.').in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'Wizard has arrived.').in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Limbo (#0)").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "#{@db.get(limbo).description}").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "#{@db[limbo].description}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'Wizard is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'Wizard is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
@@ -248,11 +248,11 @@ module TinyMud
 			Interface.expects(:do_notify).with(anne, "You have been turned into a toad.").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "You turned anne into a toad!").in_sequence(notify)
 			wiz.do_toad(wizard, "##{anne}")
-			assert_equal(wizard, @db.get(anne).owner)
-			assert_equal(1, @db.get(anne).pennies)
-			assert_equal(nil, @db.get(anne).password)
-			assert_equal(TYPE_THING, @db.get(anne).flags)
-			assert_equal("a slimy toad named anne", @db.get(anne).name)
+			assert_equal(wizard, @db[anne].owner)
+			assert_equal(1, @db[anne].pennies)
+			assert_equal(nil, @db[anne].password)
+			assert_equal(TYPE_THING, @db[anne].flags)
+			assert_equal("a slimy toad named anne", @db[anne].name)
 		end
     end
 end

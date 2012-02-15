@@ -33,32 +33,32 @@ module TinyMud
 			record(bob) {|r| r[:location] = NOTHING }
 			record(0) {|r| r[:contents] = NOTHING }
 			move.moveto(bob, 0)
-			assert_equal(bob, @db.get(0).contents)
-			assert_equal(0, @db.get(bob).location)
+			assert_equal(bob, @db[0].contents)
+			assert_equal(0, @db[bob].location)
 			
 			# bob is already somewhere!
 			record(0) {|r| r[:contents] = NOTHING }
 			record(bob) {|r| r[:location] = somewhere }
 			record(somewhere) {|r| r[:contents] = bob }
 			move.moveto(bob, 0)
-			assert_equal(bob, @db.get(0).contents)
-			assert_equal(0, @db.get(bob).location)
-			assert_equal(NOTHING, @db.get(somewhere).contents)
+			assert_equal(bob, @db[0].contents)
+			assert_equal(0, @db[bob].location)
+			assert_equal(NOTHING, @db[somewhere].contents)
 		
 			# move to nothing
 			record(bob) {|r| r[:location] = somewhere }
 			record(somewhere) {|r| r[:contents] = bob }
 			move.moveto(bob, NOTHING)
-			assert_equal(NOTHING, @db.get(bob).location)
-			assert_equal(NOTHING, @db.get(somewhere).contents)
+			assert_equal(NOTHING, @db[bob].location)
+			assert_equal(NOTHING, @db[somewhere].contents)
 			
 			# move home (for things and players exits point home)
 			record(bob) {|r| r[:location] = somewhere }
 			record(bob) {|r| r[:exits] = 0 }
 			record(somewhere) {|r| r[:contents] = bob }
 			move.moveto(bob, HOME)
-			assert_equal(0, @db.get(bob).location)
-			assert_equal(NOTHING, @db.get(somewhere).contents)
+			assert_equal(0, @db[bob].location)
+			assert_equal(NOTHING, @db[somewhere].contents)
 		
 			# Check that code moves an item out of a contents list
 			thing = @db.add_new_record
@@ -67,9 +67,9 @@ module TinyMud
 			record(bob) {|r| r.merge!({ :location => somewhere, :next => NOTHING }) }
 			record(0) {|r| r[:contents] = NOTHING }
 			move.moveto(bob, 0)
-			assert_equal(0, @db.get(bob).location)
-			assert_equal(thing, @db.get(somewhere).contents)
-			assert_equal(NOTHING, @db.get(thing).next)
+			assert_equal(0, @db[bob].location)
+			assert_equal(thing, @db[somewhere].contents)
+			assert_equal(NOTHING, @db[thing].next)
 		end
 		
 		def test_enter_room
@@ -99,8 +99,8 @@ module TinyMud
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "bob has arrived.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(limbo).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(limbo).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, 'bob is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
@@ -112,8 +112,8 @@ module TinyMud
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
@@ -123,8 +123,8 @@ module TinyMud
 			set_up_objects(start_loc, bob, anne, jim, place)
 			record(bob) {|r| r[:flags] = r[:flags] | DARK }
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
@@ -134,8 +134,8 @@ module TinyMud
 			set_up_objects(start_loc, bob, anne, jim, place)
 			record(start_loc) {|r| r[:flags] = r[:flags] | DARK }
 			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
@@ -148,24 +148,24 @@ module TinyMud
 			record(bob) {|r| r[:next] = cheese } # Remove anne from contents, only bob and an object
 			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => start_loc, :next => NOTHING }) }
 			record(start_loc) {|r| r.merge!({ :flags => r[:flags] | STICKY, :location => place }) } # STICKY set to place
-			assert_equal(start_loc, @db.get(cheese).location)
+			assert_equal(start_loc, @db[cheese].location)
 			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "cheese").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
 			move.enter_room(bob, place)
-			assert_equal(place, @db.get(cheese).location)
+			assert_equal(place, @db[cheese].location)
 			
 			# Now trigger a penny event by mocking the default behaviour
 			set_up_objects(start_loc, bob, anne, jim, place)
 			Game.stubs(:do_rand).returns(10000) # todo 10 = PENNY_RATE - this is fragile
 			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
@@ -199,25 +199,25 @@ module TinyMud
 			# Send bob home (note it hangs!!! if only the wizard is in limbo - possibly limbo can't be home)
 			notify = sequence('notify')
 			Interface.expects(:do_notify).with(anne, 'bob has arrived.').in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(limbo).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(limbo).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, 'bob is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "tomato(#6)").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
 			move.send_home(bob)
-			assert_equal(limbo, @db.get(bob).location)
-			assert_equal(bob, @db.get(cheese).location)
-			assert_equal(place, @db.get(egg).location)
-			assert_equal(bob, @db.get(exit).location)
-			assert_equal(bob, @db.get(cheese).owner)
-			assert_equal(cheese, @db.get(bob).contents)
+			assert_equal(limbo, @db[bob].location)
+			assert_equal(bob, @db[cheese].location)
+			assert_equal(place, @db[egg].location)
+			assert_equal(bob, @db[exit].location)
+			assert_equal(bob, @db[cheese].owner)
+			assert_equal(cheese, @db[bob].contents)
 		
 			# Send a thing home - Funny how the people don't see the cheese arriving!
 			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => place, :owner => bob, :next => NOTHING, :exits => limbo }) }
-			assert_equal(place, @db.get(cheese).location)
+			assert_equal(place, @db[cheese].location)
 			move.send_home(cheese)
-			assert_equal(limbo, @db.get(cheese).location)
+			assert_equal(limbo, @db[cheese].location)
 		
 			# Send a room! Nothing should happen
 			Interface.expects(:do_notify).never
@@ -285,15 +285,15 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "You wake up back home, without your possessions.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, 'bob has arrived.').in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(limbo).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(limbo).description).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, 'bob is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
 			move.do_move(bob, "home")
-			assert_equal(place, @db.get(cheese).location)
-			assert_equal(bob, @db.get(cheese).owner)
-			assert_equal(NOTHING, @db.get(bob).contents)
+			assert_equal(place, @db[cheese].location)
+			assert_equal(bob, @db[cheese].owner)
+			assert_equal(NOTHING, @db[bob].contents)
 			
 			# Normal move checks
 			set_up_objects(start_loc, bob, anne, jim, place)
@@ -320,15 +320,15 @@ module TinyMud
 			
 			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob has arrived.').in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).name).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, @db.get(place).description).in_sequence(notify)
-			Interface.expects(:do_notify).with(jim, "bob " + @db.get(place).osucc).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, "bob " + @db[place].osucc).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "slim jim").in_sequence(notify)
 			move.do_move(bob, "jam")
-			assert_equal(place, @db.get(bob).location)
-			assert_equal(cheese, @db.get(bob).contents)
-			assert_equal(place, @db.get(cheese).location)
+			assert_equal(place, @db[bob].location)
+			assert_equal(cheese, @db[bob].contents)
+			assert_equal(place, @db[cheese].location)
 		end
 		
 		def test_do_get
@@ -386,13 +386,13 @@ module TinyMud
 			# Unlink the exit i.e. still in room but not end location specified
 			record(exit) {|r| r[:location] = NOTHING }
 			Interface.expects(:do_notify).with(bob, "Exit taken.").in_sequence(notify)
-			assert_equal(cheese, @db.get(bob).contents)
-			assert_equal(exit, @db.get(place).exits)
+			assert_equal(cheese, @db[bob].contents)
+			assert_equal(exit, @db[place].exits)
 			move.do_get(bob, "exit")
-			assert_equal(NOTHING, @db.get(place).exits)
-			assert_equal(exit, @db.get(bob).contents)
-			assert_equal(bob, @db.get(exit).location)
-			assert_equal(cheese, @db.get(exit).next)
+			assert_equal(NOTHING, @db[place].exits)
+			assert_equal(exit, @db[bob].contents)
+			assert_equal(bob, @db[exit].location)
+			assert_equal(cheese, @db[exit].next)
 			
 			# Absolute should work on an exit
 			record(bob) {|r| r.merge!( { :contents => cheese } ) }
@@ -400,10 +400,10 @@ module TinyMud
 			record(place) {|r| r[:exits] = exit }
 			Interface.expects(:do_notify).with(bob, "Exit taken.").in_sequence(notify)
 			move.do_get(bob, "##{exit}")
-			assert_equal(NOTHING, @db.get(place).exits)
-			assert_equal(exit, @db.get(bob).contents)
-			assert_equal(bob, @db.get(exit).location)
-			assert_equal(cheese, @db.get(exit).next)
+			assert_equal(NOTHING, @db[place].exits)
+			assert_equal(exit, @db[bob].contents)
+			assert_equal(bob, @db[exit].location)
+			assert_equal(cheese, @db[exit].next)
 			
 			# Drop the cheese and try to take it
 			record(exit) {|r| r[:next] = NOTHING }
@@ -411,9 +411,9 @@ module TinyMud
 			record(bob) {|r| r[:next] = cheese } # Room content list
 			Interface.expects(:do_notify).with(bob, "Taken.").in_sequence(notify)
 			move.do_get(bob, "cheese")
-			assert_equal(NOTHING, @db.get(bob).next)
-			assert_equal(cheese, @db.get(bob).contents)
-			assert_equal(exit, @db.get(cheese).next)
+			assert_equal(NOTHING, @db[bob].next)
+			assert_equal(cheese, @db[bob].contents)
+			assert_equal(exit, @db[cheese].next)
 			
 			# Again with absolute
 			record(exit) {|r| r[:next] = NOTHING }
@@ -421,9 +421,9 @@ module TinyMud
 			record(bob) {|r| r.merge!({ :next => cheese, :contents => exit }) } # Room content list
 			Interface.expects(:do_notify).with(bob, "Taken.").in_sequence(notify)
 			move.do_get(bob, "##{cheese}")
-			assert_equal(NOTHING, @db.get(bob).next)
-			assert_equal(cheese, @db.get(bob).contents)
-			assert_equal(exit, @db.get(cheese).next)
+			assert_equal(NOTHING, @db[bob].next)
+			assert_equal(cheese, @db[bob].contents)
+			assert_equal(exit, @db[cheese].next)
 			
 			# The wizard can reach about the place!
 			# Put the cheese down again and pick-up from limbo
@@ -438,8 +438,8 @@ module TinyMud
 			move.do_get(wizard, "cheese")
 			Interface.expects(:do_notify).with(wizard, "Taken.").in_sequence(notify)
 			move.do_get(wizard, "##{cheese}")
-			assert_equal(cheese, @db.get(wizard).contents)
-			assert_equal(wizard, @db.get(cheese).location)
+			assert_equal(cheese, @db[wizard].contents)
+			assert_equal(wizard, @db[cheese].location)
 		end
 		
 		def test_do_drop
@@ -469,7 +469,7 @@ module TinyMud
 			# Drop cheese whilst nowhere!
 			record(bob) {|r| r[:location] = NOTHING }
 			move.do_drop(bob, "cheese")
-			assert_equal(cheese, @db.get(bob).contents)
+			assert_equal(cheese, @db[bob].contents)
 			
 			# Drop something you don't have (put bob back first)
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => anne ) }
@@ -488,17 +488,17 @@ module TinyMud
 			record(place) {|r| r[:owner] = bob }
 			Interface.expects(:do_notify).with(bob, "Exit dropped.").in_sequence(notify)
 			move.do_drop(bob, "exit")
-			assert_equal(exit, @db.get(place).exits)
-			assert_equal(NOTHING, @db.get(exit).location)
-			assert_equal(NOTHING, @db.get(cheese2).next)
+			assert_equal(exit, @db[place].exits)
+			assert_equal(NOTHING, @db[exit].location)
+			assert_equal(NOTHING, @db[cheese2].next)
 			
 			# Drop something you own onto a temple
 			record(place) {|r| r[:flags] = r[:flags] | TEMPLE }
 			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
 			move.do_drop(bob, "cheese")
-			assert_equal(cheese2, @db.get(bob).contents)
-			assert_equal(limbo, @db.get(cheese).location)
+			assert_equal(cheese2, @db[bob].contents)
+			assert_equal(limbo, @db[cheese].location)
 
 			# Drop again, don't own, but make the reward < 1
 			record(cheese2) {|r| r[:next] = cheese }
@@ -533,8 +533,8 @@ module TinyMud
 			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "You have received 5 pennies for your sacrifice.").in_sequence(notify)
 			move.do_drop(bob, "cheese")
-			assert_equal(cheese2, @db.get(bob).contents)
-			assert_equal(limbo, @db.get(cheese).location)
+			assert_equal(cheese2, @db[bob].contents)
+			assert_equal(limbo, @db[cheese].location)
 			
 			# Drop a sticky thing (goes home)
 			record(place) {|r| r[:flags] = TYPE_ROOM } # Undo temple
@@ -543,8 +543,8 @@ module TinyMud
 			record(cheese) {|r| r[:flags] = r[:flags] | STICKY }
 			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
 			move.do_drop(bob, "cheese")
-			assert_equal(cheese2, @db.get(bob).contents)
-			assert_equal(limbo, @db.get(cheese).location)
+			assert_equal(cheese2, @db[bob].contents)
+			assert_equal(limbo, @db[cheese].location)
 			
 			# Drop in a non sticky place that has a location!
 			record(place) {|r| r[:location] = place2 }
@@ -552,7 +552,7 @@ module TinyMud
 			record(cheese) {|r| r.merge!( :flags => TYPE_THING, :location => bob, :next => NOTHING, :owner => bob )}
 			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
 			move.do_drop(bob, "cheese")
-			assert_equal(place2, @db.get(cheese).location)
+			assert_equal(place2, @db[cheese].location)
 			
 			# Drop in a sticky place that has a location (location ignored!
 			record(place) {|r| r[:flags] = r[:flags] | STICKY }
@@ -561,8 +561,8 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob dropped cheese.").in_sequence(notify)
 			move.do_drop(bob, "cheese")
-			assert_equal(place, @db.get(cheese).location)
-			assert_equal(cheese, @db.get(place).contents)
+			assert_equal(place, @db[cheese].location)
+			assert_equal(cheese, @db[place].contents)
 			
 			# Finally thing drops as expected!
 			record(place) {|r| r.merge!( { :flags => TYPE_ROOM, :location => NOTHING, :contents => bob } ) } # Undo above
@@ -571,7 +571,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Dropped.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob dropped cheese.").in_sequence(notify)
 			move.do_drop(bob, "cheese")
-			assert_equal(place, @db.get(cheese).location)
+			assert_equal(place, @db[cheese].location)
 		end
 
 		def set_up_objects(start_loc, bob, anne, jim, place)

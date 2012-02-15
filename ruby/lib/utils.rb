@@ -14,9 +14,9 @@ module TinyMud
     end
 
     def remove_first(first, what)
-      return @db.get(first).next if (first == what)
-      before_what = enum(first).find{|item| @db.get(item).next == what }
-      @db.get(before_what).next = @db.get(what).next if before_what
+      return @db[first].next if (first == what)
+      before_what = enum(first).find{|item| @db[item].next == what }
+      @db[before_what].next = @db[what].next if before_what
       first
     end
 
@@ -27,8 +27,8 @@ module TinyMud
     def reverse(list)
       newlist = NOTHING
       while(list != NOTHING)
-        rest = @db.get(list).next
-        @db.get(list).next = newlist
+        rest = @db[list].next
+        @db[list].next = newlist
         newlist = list
         list = rest
       end
@@ -39,7 +39,7 @@ module TinyMud
       case loc
         when NOTHING then "***NOTHING***"
         when HOME then "***HOME***"
-        else @db.get(loc).name
+        else @db[loc].name
       end
     end
   end

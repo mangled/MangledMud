@@ -34,7 +34,7 @@ module TinyMud
               Interface.do_notify(player, "You must specify a password to change a player name.")
               Interface.do_notify(player, "E.g.: name player = newname password")
               return
-            elsif (player_password != @db.get(thing).password)
+            elsif (player_password != @db[thing].password)
               Interface.do_notify(player, "Incorrect password.")
               return
             elsif (!@predicates.payfor(player, LOOKUP_COST) || !@predicates.ok_player_name(newname))
@@ -49,7 +49,7 @@ module TinyMud
         end
     
         # everything ok, change the name
-        @db.get(thing).name = newname
+        @db[thing].name = newname
         Interface.do_notify(player, "Name set.")
       end
     end
@@ -57,7 +57,7 @@ module TinyMud
     def do_describe(player, name, description)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
-        @db.get(thing).description = description
+        @db[thing].description = description
         Interface.do_notify(player, "Description set.")
       end
     end
@@ -65,7 +65,7 @@ module TinyMud
     def do_fail(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
-        @db.get(thing).fail = message
+        @db[thing].fail = message
         Interface.do_notify(player, "Message set.")
       end
     end
@@ -73,7 +73,7 @@ module TinyMud
     def do_success(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
-        @db.get(thing).succ = message
+        @db[thing].succ = message
         Interface.do_notify(player, "Message set.")
       end
     end
@@ -81,7 +81,7 @@ module TinyMud
     def do_osuccess(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
-        @db.get(thing).osucc = message
+        @db[thing].osucc = message
         Interface.do_notify(player, "Message set.")
       end
     end
@@ -89,7 +89,7 @@ module TinyMud
     def do_ofail(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
-        @db.get(thing).ofail = message
+        @db[thing].ofail = message
         Interface.do_notify(player, "Message set.")
       end
     end
@@ -146,12 +146,12 @@ module TinyMud
       end
       
       # everything ok, do it
-      @db.get(thing).key = key
+      @db[thing].key = key
       if (antilock)
-        @db.get(thing).flags |= ANTILOCK
+        @db[thing].flags |= ANTILOCK
         Interface.do_notify(player, "Anti-Locked.")
       else
-        @db.get(thing).flags &= ~ANTILOCK
+        @db[thing].flags &= ~ANTILOCK
         Interface.do_notify(player, "Locked.")
       end
     end
@@ -159,8 +159,8 @@ module TinyMud
     def do_unlock(player, name)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
-        @db.get(thing).key = NOTHING
-        @db.get(thing).flags &= ~ANTILOCK
+        @db[thing].key = NOTHING
+        @db[thing].flags &= ~ANTILOCK
         Interface.do_notify(player, "Unlocked.")
       end
     end
@@ -183,10 +183,10 @@ module TinyMud
           else
             case typeof(exit)
               when TYPE_EXIT
-                @db.get(exit).location = NOTHING
+                @db[exit].location = NOTHING
                 Interface.do_notify(player, "Unlinked.")
               when TYPE_ROOM
-                @db.get(exit).location = NOTHING
+                @db[exit].location = NOTHING
                 Interface.do_notify(player, "Dropto removed.")
               else
                 Interface.do_notify(player, "You can't unlink that!")
@@ -210,7 +210,7 @@ module TinyMud
         elsif (typeof(thing) == TYPE_PLAYER)
             Interface.do_notify(player, "Players always own themselves.")
         else
-            @db.get(thing).owner = owner
+            @db[thing].owner = owner
             Interface.do_notify(player, "Owner changed.")
         end
       end
@@ -263,11 +263,11 @@ module TinyMud
       # else everything is ok, do the set
       if (flag[0] == NOT_TOKEN)
         # reset the flag
-        @db.get(thing).flags &= ~f
+        @db[thing].flags &= ~f
         Interface.do_notify(player, "Flag reset.")
       else
         # set the flag
-        @db.get(thing).flags |= f
+        @db[thing].flags |= f
         Interface.do_notify(player, "Flag set.")
       end
     end

@@ -20,7 +20,7 @@ module TinyMud
 		#player is asking to link to, and return the index for the room it is associated with (or tell the player they can't).
 		def parse_linkable_room(player, room_name)
 			if(room_name.downcase == "here")
-				room = @db.get(player).location
+				room = @db[player].location
 			elsif(room_name.downcase == "home")
 				return HOME
 			else
@@ -64,15 +64,15 @@ module TinyMud
 				Interface.do_notify(player, "Sorry, you don't have enough pennies to open an exit.")
 			else
 				exit = @db.add_new_record()
-				room = @db.get(exit)
+				room = @db[exit]
 				room.name = direction
 				room.owner = player
 				room.flags = TYPE_EXIT
 				
 				#PUSH(exit, db[loc].exits)
 				##define PUSH(thing, locative) \ ((db[(thing)].next = (locative)), (locative) = (thing))
-				@db.get(exit).next = @db.get(loc).exits
-				@db.get(loc).exits = exit
+				@db[exit].next = @db[loc].exits
+				@db[loc].exits = exit
 				
 				Interface.do_notify(player, "Opened.")
 				
@@ -84,7 +84,7 @@ module TinyMud
 							Interface.do_notify(player, "You don't have enough pennies to link.")
 						else
 							#At this point all tests passed - Link the room.
-							@db.get(exit).location = loc
+							@db[exit].location = loc
 							Interface.do_notify(player, "Linked.")
 						end
 					end
@@ -122,9 +122,9 @@ module TinyMud
 				case typeof(thing)
 					when TYPE_EXIT
 						#we're ok, check the usual stuff
-						if(@db.get(thing).location != NOTHING)
+						if(@db[thing].location != NOTHING)
 							if(@pred.controls(player, thing))
-								if(typeof(@db.get(thing).location) == TYPE_PLAYER)
+								if(typeof(@db[thing].location) == TYPE_PLAYER)
 									Interface.do_notify(player, "That exit is being carried.")
 								else
 									Interface.do_notify(player, "That exit is already linked.")
@@ -133,7 +133,7 @@ module TinyMud
 								Interface.do_notify(player, "Permission denied.")
 							end
 						else
-							if(@db.get(thing).owner == player)
+							if(@db[thing].owner == player)
 								if(!@pred.payfor(player, LINK_COST))
 									Interface.do_notify(player, "It costs a penny to link this exit.")
 									return
@@ -144,13 +144,13 @@ module TinyMud
 									return
 								else
 									#pay the owner for his loss
-									@db.get(@db.get(thing).owner).pennies += EXIT_COST
+									@db[@db[thing].owner].pennies += EXIT_COST
 								end
 							end
 						
 							#link has been validated and paid for do it
-							@db.get(thing).owner = player
-							@db.get(thing).location = room
+							@db[thing].owner = player
+							@db[thing].location = room
 							
 							#notify the player 
 							Interface.do_notify(player, "Linked.")
@@ -162,7 +162,7 @@ module TinyMud
 							Interface.do_notify(player, "Can't set home to home.")
 						else
 							#Activate link
-							@db.get(thing).exits = room 
+							@db[thing].exits = room 
 							Interface.do_notify(player, "Home set.")
 						end
 					when TYPE_PLAYER # todo: no drop-through in ruby, this is a copy of the above
@@ -172,14 +172,14 @@ module TinyMud
 							Interface.do_notify(player, "Can't set home to home.")
 						else
 							#Activate link
-							@db.get(thing).exits = room 
+							@db[thing].exits = room 
 							Interface.do_notify(player, "Home set.")
 						end
 					when TYPE_ROOM
 						if(!@pred.controls(player,thing))
 							Interface.do_notify(player, "Permission denied.")
 						else
-							@db.get(thing).location = room
+							@db[thing].location = room
 							Interface.do_notify(player, "Dropto set.")
 						end
 					else #None of the types.	
@@ -212,7 +212,7 @@ module TinyMud
 			else
 				#Okay, create the object and initialize it.
 				thing = @db.add_new_record()
-				thing_record = @db.get(thing)
+				thing_record = @db[thing]
 				
 				thing_record.name = name
 				thing_record.location = player
@@ -226,7 +226,7 @@ module TinyMud
 				end
 				
 				
-				player_record = @db.get(player)
+				player_record = @db[player]
 				if (player_record.location != NOTHING && @pred.can_link_to(player, player_record.location))
 					thing_record.exits = player_record.location
 				else
@@ -261,7 +261,7 @@ module TinyMud
 			else
 				#Everything is okay, create and initialize room
 				room = @db.add_new_record()
-				room_record = @db.get(room)
+				room_record = @db[room]
 				
 				
 				room_record.name = name

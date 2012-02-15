@@ -57,13 +57,13 @@ module TinyMud
 			# Now have enough pennies
 			record(bob) {|r| r.merge!( :pennies => EXIT_COST ) }
 			Interface.expects(:do_notify).with(bob, "Opened.").in_sequence(notify)
-			assert_equal(NOTHING, @db.get(limbo).exits)
+			assert_equal(NOTHING, @db[limbo].exits)
 			exit = @db.length
 			create.do_open(bob, "exit", nil)
-			assert_equal(exit, @db.get(limbo).exits)
-			assert_equal(TYPE_EXIT, @db.get(exit).flags)
-			assert_equal(bob, @db.get(exit).owner)
-			assert_equal(NOTHING, @db.get(exit).location)
+			assert_equal(exit, @db[limbo].exits)
+			assert_equal(TYPE_EXIT, @db[exit].flags)
+			assert_equal(bob, @db[exit].owner)
+			assert_equal(NOTHING, @db[exit].location)
 			
 			# Now create an exit and link it to go somewhere (give invalid room address)
 			place = @db.add_new_record
@@ -96,7 +96,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
 			west = @db.length
 			create.do_open(bob, "west", "#{place}")
-			assert_equal(place, @db.get(west).location)
+			assert_equal(place, @db[west].location)
 			
 			# Now try "here" (we contol limbo at present)
 			record(bob) {|r| r.merge!( :pennies => EXIT_COST + LINK_COST ) }
@@ -105,7 +105,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
 			south = @db.length
 			create.do_open(bob, "south", "here")
-			assert_equal(limbo, @db.get(south).location)
+			assert_equal(limbo, @db[south].location)
 
 			# Now try "HOME"
 			record(bob) {|r| r.merge!( :pennies => EXIT_COST + LINK_COST ) }
@@ -114,7 +114,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
 			north = @db.length
 			create.do_open(bob, "north", "home")
-			assert_equal(HOME, @db.get(north).location)
+			assert_equal(HOME, @db[north].location)
 			
 			# Now try another exit with the same name as before!
 			record(bob) {|r| r.merge!( :pennies => EXIT_COST + LINK_COST ) }
@@ -123,7 +123,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
 			south = @db.length
 			create.do_open(bob, "south", "here")
-			assert_equal(limbo, @db.get(south).location)
+			assert_equal(limbo, @db[south].location)
 		end
 		
 		def test_do_link # link player via an exit to a room that they own
@@ -184,9 +184,9 @@ module TinyMud
 			record(bob) {|r| r.merge!({ :pennies => LINK_COST }) }
 			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
 			create.do_link(bob, "exit", "#{place}")
-			assert_equal(bob, @db.get(exit).owner)
-			assert_equal(place, @db.get(exit).location)
-			assert_equal(0, @db.get(bob).pennies)
+			assert_equal(bob, @db[exit].owner)
+			assert_equal(place, @db[exit].location)
+			assert_equal(0, @db[bob].pennies)
 
 			# Exit not in a location: Ok, but poor, link to it, *don't* own it and its "free" (location is where it goes to)
 			record(exit) {|r| r.merge!({ :owner => wizard, :location => NOTHING }) }
@@ -195,13 +195,13 @@ module TinyMud
 			
 			# Rich enough now!
 			record(bob) {|r| r.merge!({ :pennies => LINK_COST + EXIT_COST }) }
-			assert_equal(0, @db.get(wizard).pennies)
+			assert_equal(0, @db[wizard].pennies)
 			Interface.expects(:do_notify).with(bob, "Linked.").in_sequence(notify)
 			create.do_link(bob, "exit", "#{place}")
-			assert_equal(EXIT_COST, @db.get(wizard).pennies)
-			assert_equal(0, @db.get(bob).pennies)
-			assert_equal(bob, @db.get(exit).owner)
-			assert_equal(place, @db.get(exit).location)
+			assert_equal(EXIT_COST, @db[wizard].pennies)
+			assert_equal(0, @db[bob].pennies)
+			assert_equal(bob, @db[exit].owner)
+			assert_equal(place, @db[exit].location)
 
 			# Now we try to link a player - Sets their home (must control them)
 			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
@@ -213,9 +213,9 @@ module TinyMud
 			
 			# Set home
 			Interface.expects(:do_notify).with(bob, "Home set.").in_sequence(notify)
-			assert_equal(limbo, @db.get(bob).exits)
+			assert_equal(limbo, @db[bob].exits)
 			create.do_link(bob, "bob", "#{place}")
-			assert_equal(place, @db.get(bob).exits)
+			assert_equal(place, @db[bob].exits)
 
 			# Now set a room's drop-to location (we must control the room)
 			Interface.expects(:do_notify).with(bob, "Permission denied.").in_sequence(notify)
@@ -224,9 +224,9 @@ module TinyMud
 			# We own it now :-)
 			record(limbo) {|r| r.merge!({ :owner => bob }) }
 			Interface.expects(:do_notify).with(bob, "Dropto set.").in_sequence(notify)
-			assert_equal(NOTHING, @db.get(limbo).location)
+			assert_equal(NOTHING, @db[limbo].location)
 			create.do_link(bob, "here", "#{place}")
-			assert_equal(place, @db.get(limbo).location)
+			assert_equal(place, @db[limbo].location)
 
 			# Cause default to be hit!
 			record(limbo) {|r| r.merge!({ :flags => 0xffff }) }
@@ -276,10 +276,10 @@ module TinyMud
 			record(bob) {|r| r[:pennies] = ROOM_COST }
 			Interface.expects(:do_notify).with(bob, "treehouse created with room number 3.").in_sequence(notify)
 			create.do_dig(bob, "treehouse")
-			assert_equal(0, @db.get(bob).pennies)
-			assert_equal("treehouse", @db.get(3).name)
-			assert_equal(bob, @db.get(3).owner)
-			assert_equal(TYPE_ROOM, @db.get(3).flags)
+			assert_equal(0, @db[bob].pennies)
+			assert_equal("treehouse", @db[3].name)
+			assert_equal(bob, @db[3].owner)
+			assert_equal(TYPE_ROOM, @db[3].flags)
 		end
 		
 		def test_do_create # creates an object
@@ -318,14 +318,14 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Created.").in_sequence(notify)
 			tree = @db.length
 			create.do_create(bob, "tree", OBJECT_COST - 1)
-			assert_equal("tree", @db.get(tree).name)
-			assert_equal(bob, @db.get(tree).location)
-			assert_equal(bob, @db.get(tree).owner)
-			assert_equal((OBJECT_COST - 5) / 5, @db.get(tree).pennies)
-			assert_equal(TYPE_THING, @db.get(tree).flags)
+			assert_equal("tree", @db[tree].name)
+			assert_equal(bob, @db[tree].location)
+			assert_equal(bob, @db[tree].owner)
+			assert_equal((OBJECT_COST - 5) / 5, @db[tree].pennies)
+			assert_equal(TYPE_THING, @db[tree].flags)
 			# Objects home is here (limbo, can't link to, so home will be bob's home)
-			assert_equal(exit, @db.get(tree).exits)
-			assert_equal(tree, @db.get(bob).contents)
+			assert_equal(exit, @db[tree].exits)
+			assert_equal(tree, @db[bob].contents)
 			
 			# Enough money (can link here, cost is greater than MAX_OBJECT_ENDOWMENT)
 			cost = ((MAX_OBJECT_ENDOWMENT + 1) * 5) + 5
@@ -334,13 +334,13 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Created.").in_sequence(notify)
 			fish = @db.length
 			create.do_create(bob, "fish", cost)
-			assert_equal("fish", @db.get(fish).name)
-			assert_equal(bob, @db.get(fish).location)
-			assert_equal(bob, @db.get(fish).owner)
-			assert_equal(MAX_OBJECT_ENDOWMENT, @db.get(fish).pennies)
-			assert_equal(TYPE_THING, @db.get(fish).flags)
-			assert_equal(limbo, @db.get(fish).exits)
-			assert_equal(fish, @db.get(bob).contents)
+			assert_equal("fish", @db[fish].name)
+			assert_equal(bob, @db[fish].location)
+			assert_equal(bob, @db[fish].owner)
+			assert_equal(MAX_OBJECT_ENDOWMENT, @db[fish].pennies)
+			assert_equal(TYPE_THING, @db[fish].flags)
+			assert_equal(limbo, @db[fish].exits)
+			assert_equal(fish, @db[bob].contents)
 		end
     end
 end

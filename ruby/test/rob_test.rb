@@ -53,7 +53,7 @@ module TinyMud
 			
 			# Rob someone not in the same location
 			Interface.expects(:do_notify).with(bob, "Rob whom?").in_sequence(notify)
-			assert_equal("Wizard", @db.get(wizard).name)
+			assert_equal("Wizard", @db[wizard].name)
 			rob.do_rob(bob, "Wizard")
 			
 			# Rob a non player item on me
@@ -70,8 +70,8 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "You stole a penny.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob stole one of your pennies!").in_sequence(notify)
 			rob.do_rob(bob, "anne")
-			assert_equal(0, @db.get(anne).pennies)
-			assert_equal(1, @db.get(bob).pennies)
+			assert_equal(0, @db[anne].pennies)
+			assert_equal(1, @db[bob].pennies)
 			
 			# Weird logic related to anti lock and keys, this will be tested elsewhere through a mock, so trigger it for now
 			record(anne) {|r| r.merge!({ :pennies => 1, :key => bob, :flags => TYPE_PLAYER | ANTILOCK }) }
@@ -81,9 +81,9 @@ module TinyMud
 			# Rob self!
 			Interface.expects(:do_notify).with(bob, "You stole a penny.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "bob stole one of your pennies!").in_sequence(notify)
-			assert_equal(1, @db.get(bob).pennies)
+			assert_equal(1, @db[bob].pennies)
 			rob.do_rob(bob, "bob")
-			assert_equal(1, @db.get(bob).pennies)
+			assert_equal(1, @db[bob].pennies)
 
 			# Rob a wizard!
 			record(anne) {|r| r.merge!({ :pennies => 1, :flags => TYPE_PLAYER | WIZARD }) }
@@ -170,8 +170,8 @@ module TinyMud
 			Interface.expects(:do_notify).with(sue, "anne has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "anne has arrived.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Limbo").in_sequence(notify) # her exit = home
-			Interface.expects(:do_notify).with(anne, @db.get(limbo).description).in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "anne " + @db.get(limbo).osucc).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, @db[limbo].description).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "anne " + @db[limbo].osucc).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Contents:").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Wizard").in_sequence(notify)
 			# This is random and may or may not trigger, need to resolve as tests become unreliable
@@ -179,19 +179,19 @@ module TinyMud
 			#Interface.expects(:do_notify).with(anne, "You found a penny!").in_sequence(notify)
 			Interface.expects(:do_notify).with(sue, "bob killed anne!").in_sequence(notify)
 			rob.do_kill(bob, "anne", KILL_BASE_COST)
-			assert_equal(KILL_BONUS + 0, @db.get(anne).pennies) # The +1 is a result of the random, see comment above
-			assert_equal(limbo, @db.get(anne).location)
-			assert_equal(jam, @db.get(bob).next)
-			assert_equal(1000, @db.get(bob).pennies)
+			assert_equal(KILL_BONUS + 0, @db[anne].pennies) # The +1 is a result of the random, see comment above
+			assert_equal(limbo, @db[anne].location)
+			assert_equal(jam, @db[bob].next)
+			assert_equal(1000, @db[bob].pennies)
 
 			# Kill but almost poor, being a wizard so I don't need to move stuff about, also tests wizard powers
 			record(bob) {|r| r.merge!({ :flags => TYPE_PLAYER | WIZARD, :pennies => KILL_MIN_COST }) }
 			Interface.expects(:do_notify).with(bob, "Your murder attempt failed.").in_sequence(notify)
 			Interface.expects(:do_notify).with(sam, "bob tried to kill you!").in_sequence(notify)
 			rob.do_kill(bob, "##{sam}", 1)
-			assert_equal(place, @db.get(sue).location)
-			assert_equal(sue, @db.get(jam).next)
-			assert_equal(KILL_MIN_COST, @db.get(bob).pennies)
+			assert_equal(place, @db[sue].location)
+			assert_equal(sue, @db[jam].next)
+			assert_equal(KILL_MIN_COST, @db[bob].pennies)
 
 			# Ambiguous
 			another_sue = Player.new(@db).create_player("susan", "treacle")
@@ -258,32 +258,32 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "You give 1 penny to anne.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob gives you 1 penny.").in_sequence(notify)
 			rob.do_give(bob, "anne", 1)
-			assert_equal(3, @db.get(bob).pennies)
-			assert_equal(1, @db.get(anne).pennies)
+			assert_equal(3, @db[bob].pennies)
+			assert_equal(1, @db[anne].pennies)
 			
 			# Ok, but plural
 			Interface.expects(:do_notify).with(bob, "You give 2 pennies to anne.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob gives you 2 pennies.").in_sequence(notify)
 			rob.do_give(bob, "anne", 2)
-			assert_equal(1, @db.get(bob).pennies)
-			assert_equal(3, @db.get(anne).pennies)
+			assert_equal(1, @db[bob].pennies)
+			assert_equal(3, @db[anne].pennies)
 			
 			# Wizard can use absolute and rob!
 			Interface.expects(:do_notify).with(wizard, "You give -1 pennies to anne.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Wizard gives you -1 pennies.").in_sequence(notify)
 			rob.do_give(wizard, "##{anne}", -1)
-			assert_equal(2, @db.get(anne).pennies)
+			assert_equal(2, @db[anne].pennies)
 			
 			# Wizard can use name (not in room)
 			Interface.expects(:do_notify).with(wizard, "You give -1 pennies to anne.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Wizard gives you -1 pennies.").in_sequence(notify)
 			rob.do_give(wizard, "anne", -1)
-			assert_equal(1, @db.get(anne).pennies)
+			assert_equal(1, @db[anne].pennies)
 			
 			# Wizard can give to non player objects!!!!
 			Interface.expects(:do_notify).with(wizard, "You give 1 penny to jam.").in_sequence(notify)
 			rob.do_give(wizard, "jam", 1)
-			assert_equal(1, @db.get(jam).pennies)
+			assert_equal(1, @db[jam].pennies)
 
 			# Need to be in a location?
 			Interface.expects(:do_notify).with(wizard, "Give to whom?").in_sequence(notify)
@@ -294,7 +294,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, "You give 2 pennies to anne.").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Wizard gives you 2 pennies.").in_sequence(notify)
 			rob.do_give(wizard, "anne", 2)
-			assert_equal(MAX_PENNIES + 1, @db.get(anne).pennies)
+			assert_equal(MAX_PENNIES + 1, @db[anne].pennies)
 
 			# Ambiguous
 			another_anne = Player.new(@db).create_player("annie", "treacle")

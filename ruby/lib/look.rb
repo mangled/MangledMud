@@ -21,7 +21,7 @@ module TinyMud
         end
 
         # tell him the description 
-        Interface.do_notify(player, @db.get(loc).description) if (@db.get(loc).description)
+        Interface.do_notify(player, @db[loc].description) if (@db[loc].description)
     
         # tell him the appropriate messages if he has the key 
         @predicates.can_doit(player, loc, 0)
@@ -92,7 +92,7 @@ module TinyMud
         return
       end
   
-      r = @db.get(thing)
+      r = @db[thing]
       Interface.do_notify(
         player,
         "#{@utils.getname(thing)}(##{thing}) [#{@utils.getname(r.owner)}] " +
@@ -173,11 +173,11 @@ module TinyMud
     end
 
     def do_score(player)
-      Interface.do_notify(player, "You have #{@db.get(player).pennies} #{@db.get(player).pennies == 1 ? "penny" : "pennies"}.")
+      Interface.do_notify(player, "You have #{@db[player].pennies} #{@db[player].pennies == 1 ? "penny" : "pennies"}.")
     end
     
     def do_inventory(player)
-      thing = @db.get(player).contents
+      thing = @db[player].contents
       if (thing == NOTHING)
         Interface.do_notify(player, "You aren't carrying anything.")
       else
@@ -195,8 +195,8 @@ module TinyMud
       else
         0.upto(@db.length - 1) do |i|
             # Note: this isn't the same code as the original stringutil, fix
-            if (typeof(i) != TYPE_EXIT && @predicates.controls(player, i) && (@db.get(i).name.include?(name)))
-              Interface.do_notify(player, "#{@db.get(i).name}(##{i})")
+            if (typeof(i) != TYPE_EXIT && @predicates.controls(player, i) && (@db[i].name.include?(name)))
+              Interface.do_notify(player, "#{@db[i].name}(##{i})")
             end
         end
         Interface.do_notify(player, "***End of List***")
@@ -210,11 +210,11 @@ module TinyMud
         can_see_loc = (!is_dark(loc) || @predicates.controls(player, loc))
     
         # check to see if there is anything there
-        can_see_something = enum(@db.get(loc).contents).any? {|thing| @predicates.can_see(player, thing, can_see_loc) }
+        can_see_something = enum(@db[loc].contents).any? {|thing| @predicates.can_see(player, thing, can_see_loc) }
         if (can_see_something)
             # something exists!  show him everything 
             Interface.do_notify(player, contents_name)
-            enum(@db.get(loc).contents).each do |thing|
+            enum(@db[loc].contents).each do |thing|
               if (@predicates.can_see(player, thing, can_see_loc))
                   notify_name(player, thing)
               end
@@ -233,8 +233,8 @@ module TinyMud
     end
 
     def look_simple(player, thing)
-        if (@db.get(thing).description)
-          Interface.do_notify(player, @db.get(thing).description)
+        if (@db[thing].description)
+          Interface.do_notify(player, @db[thing].description)
         else
           Interface.do_notify(player, "You see nothing special.")
         end
@@ -250,7 +250,7 @@ module TinyMud
           else description << "***UNKNOWN TYPE***"
       end
 
-      if ((@db.get(thing).flags & ~TYPE_MASK) != 0)
+      if ((@db[thing].flags & ~TYPE_MASK) != 0)
         # print flags 
         description << " Flags:"
         description << " WIZARD" if (is_wizard(thing))

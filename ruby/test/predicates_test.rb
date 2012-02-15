@@ -191,13 +191,13 @@ module TinyMud
 			wizard = 1
 			pred = Predicates.new(@db)
 			# Wizard is automatic
-			assert_equal(0, @db.get(wizard).pennies)
+			assert_equal(0, @db[wizard].pennies)
 			assert_equal(true, pred.payfor(wizard, 123))
-			assert_equal(0, @db.get(wizard).pennies)
+			assert_equal(0, @db[wizard].pennies)
 			# If player has the money then ok and do
 			record(player_ref) {|r| r[:pennies] = 123 }
 			assert_equal(true, pred.payfor(player_ref, 23))
-			assert_equal(100, @db.get(player_ref).pennies)
+			assert_equal(100, @db[player_ref].pennies)
 			# Else no
 			assert_equal(false, pred.payfor(player_ref, 101))
 		end
