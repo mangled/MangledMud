@@ -1,261 +1,198 @@
-#Port of Tinymud's db.c to Ruby.  See http://mangled.me/blog/coding/ruby-port-of-tinymud-wip/
-#Author: Alexander Morrow
-#Email:	 amo3@umbc.edu
-
 require_relative '../test/include'
 
 module TinyMud
 
-	#Db class is used to handle administrative database changes.  Holds records.
-	class Db
-		#Not happy with making record_array static, but was the only way I knew of
-		#to have Minimal work correctly as a static function.
-		#
-		#Perhaps after converting this over, Minimal would be better as a
-		#standard object function.
-		
-		
-		#Static class function. Sets up a Minimal database by parsing
-		#text from minimal.db to create rooms, etc. .
-		def self.Minimal()
-			parse_database("minimal.db")
-		end
-		
-		#Helper function, parses a database from a file.
-		def self.parse_database(location)
-			@@record_array = Array.new()
-			if (File.exist?(location))
-				file = File.new(location, "r")
-				string_array = file.readlines()
-				
-				#Each record should have 16 entries.  Total number of lines should
-				#be (16 * n)+1 for end of file.
-				if ((string_array.length() - 1)%16 != 0)
-					raise "Corrupted database."
-				else			
-					counter = 0
-					for i in (1..((string_array.length()-1)/16))
-						# Record type and desc (not description) not in file.
-						currentRecord = Record.new()
-						offset = counter * 16
-						currentRecord.name = string_array[offset+1].strip()
-						currentRecord.description = string_array[offset+2].strip()
-						currentRecord.location = Integer(string_array[offset+3].strip())
-						currentRecord.contents = Integer(string_array[offset+4].strip())
-						currentRecord.exits = Integer(string_array[offset+5].strip())
-						currentRecord.next = Integer(string_array[offset+6].strip())
-						currentRecord.key = Integer(string_array[offset+7].strip())
-						currentRecord.fail = string_array[offset+8].strip()
-						currentRecord.succ = string_array[offset+9].strip()
-						currentRecord.ofail = string_array[offset+10].strip()
-						currentRecord.osucc = string_array[offset+11].strip()
-						currentRecord.owner = Integer(string_array[offset+12].strip())
-						currentRecord.pennies = Integer(string_array[offset+13].strip())
-						currentRecord.flags = Integer(string_array[offset+14].strip())
-						currentRecord.password = string_array[offset+15].strip()
-						counter += 1
-						
-						# Check to see if any of the messages are empty.
-						currentRecord.name = nil if currentRecord.name == ""
-						currentRecord.description = nil if currentRecord.description == ""
-						currentRecord.fail = nil if currentRecord.fail == ""
-						currentRecord.succ = nil if currentRecord.succ == ""
-						currentRecord.ofail = nil if currentRecord.ofail == ""
-						currentRecord.osucc = nil if currentRecord.osucc == ""
-						currentRecord.password = nil if currentRecord.password == ""
+    class Db
+        # Static class function. Sets up a Minimal database by parsing
+        # text from minimal.db to create rooms, etc. .
+        def self.Minimal()
+          parse_database("minimal.db")
+        end
+        
+        # Helper function, parses a database from a file.
+        def self.parse_database(location)
+          @@record_array = Array.new()
+          raise "File not found at #{location}" unless File.exist?(location)
 
-						@@record_array << currentRecord
-					end
-				end
-				file.close
-			else
-				raise "File not found."
-			end
-		end
-		
-		#Creates a new, empty database. Starts empty.
-		def initialize()
-			@@record_array = Array.new()
-		end
-		
-		
-		#Adds a new blank record to the end of the database.
-		def add_new_record()
-			@@record_array << Record.new()
-			
-			#pp @@record_array
-			#Some sort of issue here... returning -1 all the time?
-			#Or issue may be in put function recieving a fixnum.
-			index = @@record_array.length() -1
-			return index
-		end
-		
-		def []=(index, record)
-			put(index, record)
-		end
+          record_size = 16
+          end_of_records = Regexp.escape("***END OF DUMP***")
+          File.open(location) do |file|
+            while true
+              record_start = file.readline.strip()
+              break if record_start.match(end_of_records)
+              raise "expected a dbref found this \"#{record_start}\" instead" unless record_start =~ /#\d+/
 
-		def [](index)
-			return get(index)
-		end
+              lines = 1.upto(record_size - 1).collect {|i| file.readline().strip() }
+              r = Record.new()
+              r.name = self.nullify(lines.shift)
+              r.description = self.nullify(lines.shift)
+              r.location = lines.shift.to_i
+              r.contents = lines.shift.to_i
+              r.exits = lines.shift.to_i
+              r.next = lines.shift.to_i
+              r.key = lines.shift.to_i
+              r.fail = self.nullify(lines.shift)
+              r.succ = self.nullify(lines.shift)
+              r.ofail =self.nullify(lines.shift)
+              r.osucc = self.nullify(lines.shift)
+              r.owner = lines.shift.to_i
+              r.pennies = lines.shift.to_i
+              r.flags = lines.shift.to_i
+              r.password = self.nullify(lines.shift)
 
-		#length returns the number of elements in the database.
-		def length()
-			return @@record_array.length()
-		end
-		
-		#Helper function, parses a database from a file.
-		def read(location)
-			Db.parse_database(location)
-		end
+              @@record_array << r
+            end
+          end
+        end
 
-		def self.parse_dbref(s)
-			x = s.to_i
-			if (x > 0)
-				return x
-			elsif (x == 0)
-				#Getting lstrip on null sometimes..
-				#Fixed while checking a function, but may want to add here.
-				#if (s == nil)
-					#return 0
-				#else
-					s = s.lstrip()
-				#end
-				return 0 if (s and s.start_with?('0'))
-			end
-			# else x < 0 or s != 0
-			return NOTHING
-		end
+        #Creates a new, empty database. Starts empty.
+        def initialize()
+          @@record_array = Array.new()
+        end
 
-		#Writes current database to location
-		def self.write(location)
-			file = File.new(location, "w")
-			for i in (0..@@record_array.length()-1)
-				current_record = @@record_array[i]
-				file.puts("##{i}\n")
-				file.puts(current_record.name.to_s + "\n")
-				file.puts(current_record.description.to_s + "\n")
-				file.puts(current_record.location.to_s + "\n")
-				file.puts(current_record.contents.to_s + "\n")
-				file.puts(current_record.exits.to_s + "\n")
-				file.puts(current_record.next.to_s + "\n")
-				file.puts(current_record.key.to_s + "\n")
-				file.puts(current_record.fail.to_s + "\n")
-				file.puts(current_record.succ.to_s + "\n")
-				file.puts(current_record.ofail.to_s + "\n")
-				file.puts(current_record.osucc.to_s + "\n")
-				file.puts(current_record.owner.to_s + "\n")
-				file.puts(current_record.pennies.to_s + "\n")
-				file.puts(current_record.flags.to_s + "\n")
-				file.puts(current_record.password.to_s + "\n")
-			end
-			file.puts("***END OF DUMP***")
-			file.close()
-		end
-		
-		#free clears the database and does administrative work
-		def free()
-			@@record_array = Array.new()
-		end
-		
-	private
-		#Returns a handle to Record object at specified index.	
-		#	Getting from an empty database					->		Error.
-		#	Getting from a location that doesn't exist		->		Error.
-		def get(index)
-			if (@@record_array.length() == 0)
-				#raise RuntimeError
-				raise "record array length is 0"
-			elsif (@@record_array.length() <= index || index < 0)
-				#raise RuntimeError
-				raise "trying to get #{index}, but array length is #{@@record_array.length()}"
-			else
-				return @@record_array[index]
-			end
-		end
+        #Adds a new blank record to the end of the database.
+        def add_new_record()
+          @@record_array << Record.new()
+          index = @@record_array.length() -1
+          return index
+        end
 
-		#Adds a record to the database at the specified index.
-		#	Putting in  an empty database					->		Error.
-		#	Putting at a location that doesn't exist		->		Error.
-		#	Putting an object that is not a record			->		Error.
-		def put(index,record)
-			if (record.class() != Record)
-				#raise RuntimeError
-				raise "argument is not a record"
-			elsif (@@record_array.length() == 0)
-				#raise RuntimeError
-				raise "record array empty"
-			elsif (@@record_array.length() < index || index < 0)
-				#raise RuntimeError
-				raise "record array length is less than index or index is less than 0"
-			else
-				@@record_array[index] = record
-			end
-		end
-	end
-	
-	#Record class is used to store individual information about rooms, things, exits, playes, notypes, and unknowns.
-	class Record
-		
-		#Getter and Setter methods for the following variables.
-		attr_accessor :name, :description, :location, :contents, :exits, :next, :key, :fail, :succ, :ofail, :osucc, :owner, :pennies, :flags, :password 
-		#:type, :desc, :flags default values?
-		#initialize record object to new values.
-		def initialize()
-			@name			=		nil
-			@description	=		nil
-			@location		=		NOTHING
-			@contents		=		NOTHING
-			@exits			=		NOTHING
-			@next			=		NOTHING
-			@key			=		NOTHING
-			@fail			=		nil
-			@succ			=		nil
-			@ofail			=		nil
-			@osucc			=		nil
-			@owner			=		NOTHING
-			@pennies		=		0
-			#What should type, desc, and flags initialize to?
-			@type			=		0
-			@desc			=		NOTHING
-			@flags			=		NOTHING
-			@password		=		nil
-		end
-		
-		#Type is defined by the flags, and uses defines.rb
-		def type()
-			#Switch
-			case flags & TYPE_MASK
-				when TYPE_ROOM
-					return "TYPE_ROOM"
-				when TYPE_THING
-					return "TYPE_THING"
-				when TYPE_EXIT
-					return "TYPE_EXIT"
-				when TYPE_PLAYER
-					return "TYPE_PLAYER"
-				when NOTYPE
-					return "NOTYPE"
-				else
-					return "UNKNOWN"
-			end
-		end
-		
-		def desc()
-			if (flags & ANTILOCK)!= 0
-				return "ANTILOCK"
-			elsif (flags & WIZARD) != 0
-				return "WIZARD"
-			elsif (flags & LINK_OK) != 0
-				return "LINK_OK"
-			elsif (flags & DARK) != 0
-				return "DARK"
-			elsif (flags & TEMPLE) != 0
-				return "TEMPLE"
-			elsif (flags & STICKY) != 0
-				return "STICKY"
-			else
-				return nil
-			end
-		end
-	end
+        def []=(index, record)
+          put(index, record)
+        end
+
+        def [](index)
+          return get(index)
+        end
+
+        #length returns the number of elements in the database.
+        def length()
+          return @@record_array.length()
+        end
+        
+        #Helper function, parses a database from a file.
+        def read(location)
+          Db.parse_database(location)
+        end
+
+        def self.parse_dbref(s)
+            x = s.to_i
+            if (x > 0)
+                return x
+            elsif (x == 0)
+                s = s.lstrip() unless s.nil?
+                return 0 if (s and s.start_with?('0'))
+            end
+            # else x < 0 or s != 0
+            return NOTHING
+        end
+
+        #Writes current database to location
+        def self.write(location)
+            File.open(location, "w") do |file|
+              @@record_array.each_with_index do |r, i|
+                  file.puts("##{i}\n")
+                  file.puts(r.name)
+                  file.puts(r.description)
+                  file.puts(r.location)
+                  file.puts(r.contents)
+                  file.puts(r.exits)
+                  file.puts(r.next)
+                  file.puts(r.key)
+                  file.puts(r.fail)
+                  file.puts(r.succ)
+                  file.puts(r.ofail)
+                  file.puts(r.osucc)
+                  file.puts(r.owner)
+                  file.puts(r.pennies)
+                  file.puts(r.flags)
+                  file.puts(r.password)
+              end
+              file.puts("***END OF DUMP***")
+            end
+        end
+
+        #free clears the database
+        def free()
+            @@record_array.clear() if @@record_array
+        end
+
+    private
+
+        def self.nullify(s)
+          return s == "" ? nil : s
+        end
+
+        def get(index)
+            r = @@record_array[index]
+            raise "invalid index #{index}" if r.nil?
+            return r
+        end
+
+        def put(index, record)
+            raise "invalid index #{index}" unless (0...@@record_array.length()).include?(index)
+            @@record_array[index] = record
+        end
+    end
+
+    #Record class is used to store individual information about rooms, things, exits, playes, notypes, and unknowns.
+    class Record
+      attr_accessor :name, :description, :location, :contents, :exits, :next, :key, :fail, :succ, :ofail, :osucc, :owner, :pennies, :flags, :password 
+
+      def initialize()
+          @name           =       nil
+          @description    =       nil
+          @location       =       NOTHING
+          @contents       =       NOTHING
+          @exits          =       NOTHING
+          @next           =       NOTHING
+          @key            =       NOTHING
+          @fail           =       nil
+          @succ           =       nil
+          @ofail          =       nil
+          @osucc          =       nil
+          @owner          =       NOTHING
+          @pennies        =       0
+          @type           =       0
+          @desc           =       nil
+          @flags          =       0
+          @password       =       nil
+      end
+
+      #Type is defined by the flags, and uses defines.rb
+      def type()
+        case flags & TYPE_MASK
+          when TYPE_ROOM
+            return "TYPE_ROOM"
+          when TYPE_THING
+            return "TYPE_THING"
+          when TYPE_EXIT
+            return "TYPE_EXIT"
+          when TYPE_PLAYER
+            return "TYPE_PLAYER"
+          when NOTYPE
+            return "NOTYPE"
+          else
+            return "UNKNOWN"
+        end
+      end
+
+      def desc()
+        if (flags & ANTILOCK) != 0
+          return "ANTILOCK"
+        elsif (flags & WIZARD) != 0
+          return "WIZARD"
+        elsif (flags & LINK_OK) != 0
+          return "LINK_OK"
+        elsif (flags & DARK) != 0
+          return "DARK"
+        elsif (flags & TEMPLE) != 0
+          return "TEMPLE"
+        elsif (flags & STICKY) != 0
+          return "STICKY"
+        else
+          return nil
+        end
+      end
+    end
 end
