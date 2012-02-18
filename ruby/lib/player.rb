@@ -1,8 +1,5 @@
-#Port of Tinymud's player.c to Ruby.  See http://mangled.me/blog/coding/ruby-port-of-tinymud-wip/
-#Author: Alexander Morrow
-#Email:	 amo3@umbc.edu
+require_relative 'constants'
 
-require_relative '../test/include'
 module TinyMud
 	
 	#Player class takes care of player's creation, access, and connection.

@@ -4,7 +4,6 @@ require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
 require 'mocha'
-require_relative 'defines'
 require_relative 'include'
 
 module TinyMud

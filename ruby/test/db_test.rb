@@ -2,7 +2,6 @@ require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
 require 'mocha'
-require_relative 'defines'
 require_relative 'include'
 
 def print(record) # to_s?
@@ -54,55 +53,21 @@ module TinyMud
 			record = @db[0]
 			assert_equal(nil, record.name)
 			assert_equal(nil, record.description)
+			assert_equal(nil, record.fail)
+			assert_equal(nil, record.succ)
+			assert_equal(nil, record.ofail)
+			assert_equal(nil, record.osucc)
+			assert_equal(nil, record.password)
 			assert_equal(NOTHING, record.location)
 			assert_equal(NOTHING, record.contents)
 			assert_equal(NOTHING, record.exits)
 			assert_equal(NOTHING, record.next)
 			assert_equal(NOTHING, record.key)
-			assert_equal(nil, record.fail)
-			assert_equal(nil, record.succ)
-			assert_equal(nil, record.ofail)
-			assert_equal(nil, record.osucc)
 			assert_equal(NOTHING, record.owner)
 			assert_equal(0, record.pennies)
-			# Flags is unitialized so methods which depend on it are unreliable
-			assert_equal(nil, record.password)
+			assert_equal(0, record.flags)
 		end
 
-		def test_type_flags
-			@db.add_new_record
-			record = @db[0]
-			record.flags = TYPE_ROOM
-			assert_equal("TYPE_ROOM", record.type)
-			record.flags = TYPE_THING
-			assert_equal("TYPE_THING", record.type)
-			record.flags = TYPE_EXIT
-			assert_equal("TYPE_EXIT", record.type)
-			record.flags = TYPE_PLAYER
-			assert_equal("TYPE_PLAYER", record.type)
-			record.flags = NOTYPE
-			assert_equal("NOTYPE", record.type)
-			record.flags = 0x4
-			assert_equal("UNKNOWN", record.type)
-		end
-
-		def test_meta_flags
-			@db.add_new_record
-			record = @db[0]
-			record.flags = ANTILOCK
-			assert_equal("ANTILOCK", record.desc)
-			record.flags = WIZARD
-			assert_equal("WIZARD", record.desc)
-			record.flags = LINK_OK
-			assert_equal("LINK_OK", record.desc)
-			record.flags = DARK
-			assert_equal("DARK", record.desc)
-			record.flags = TEMPLE
-			assert_equal("TEMPLE", record.desc)
-			record.flags = STICKY
-			assert_equal("STICKY", record.desc)
-		end
-		
 		def test_set_record_content
 			@db.add_new_record
 			record = @db[0]

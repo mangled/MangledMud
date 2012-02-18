@@ -1,73 +1,7 @@
+require_relative 'constants'
+
+# !!! This module should go away as we refactor !!!
 module Helpers
-
-  # FOR NOW - I have pasted in defines.rb to this, its a kludge, ideally
-  # and with hindsight I should have put these into a Defines module
-  # I will look at fixing this, once I have predicates and speech.c ported.
-  # - Matthew
-
-  PENNY_RATE  = 10	# 1/chance of getting a penny per room
-
-  # Flags
-  TYPE_ROOM =	0x0
-  TYPE_THING = 0x1
-  TYPE_EXIT =	0x2
-  TYPE_PLAYER = 0x3
-  NOTYPE	= 0x7
-  TYPE_MASK = 0x7
-  ANTILOCK =	0x8
-  WIZARD = 0x10
-  LINK_OK	= 0x20
-  DARK = 0x40
-  TEMPLE = 0x80
-  STICKY = 0x100
-  BUILDER = 0x200
-
-  # Dbref values
-  NOTHING = -1
-  AMBIGUOUS = -2
-  HOME = -3
-  
-  # Special dbref positions
-  PLAYER_START = 0
-
-  # Minimum cost to create various things */
-  OBJECT_COST = 10
-  EXIT_COST = 1
-  LINK_COST = 1
-  ROOM_COST = 10
-  
-  # amount at which temple stops being so profitable
-  MAX_PENNIES = 10000
-  
-  # cost to do a scan
-  LOOKUP_COST = 1
-
-  # magic cookies
-  NOT_TOKEN = '!'
-  LOOKUP_TOKEN = '*'
-  NUMBER_TOKEN = '#'
-
-  # magic command cookies
-  SAY_TOKEN  = '"'
-  POSE_TOKEN = ':'
-
-  # Maximum amount an object can be worth
-  MAX_OBJECT_ENDOWMENT = 100
-  
-  #Used to calculate the cost of endowment.  Decreasing this makes it larger.
-  ENDOWMENT_CALCULATOR = 5
-
-  # Match messages	
-  NOMATCH_MESSAGE = "I don't see that here."
-  AMBIGUOUS_MESSAGE = "I don't know which one you mean!"
-  
-  # Delimeter for lists of exit aliases
-  EXIT_DELIMITER = ';'
-  
-  # Costs of kill command
-  KILL_BASE_COST = 100 # prob = expenditure/KILL_BASE_COST
-  KILL_MIN_COST = 10
-  KILL_BONUS = 50	# paid to victim
 
   # We should make these methods on the db's item...
   ##################################################
@@ -75,7 +9,7 @@ module Helpers
   # Build an enumerator which loops from dbref, through its .next links
   def enum(dbref)
     Enumerator.new do |yielder|
-      while (dbref != NOTHING)
+      while (dbref != TinyMud::NOTHING)
         yielder.yield dbref
         dbref = @db[dbref].next
       end
@@ -86,47 +20,47 @@ module Helpers
 
   # Was defined in db.h
   def is_player(item)
-    ((@db[item].flags & TYPE_MASK) == TYPE_PLAYER)
+    ((@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_PLAYER)
   end
 
   def is_thing(item)
-    ((@db[item].flags & TYPE_MASK) == TYPE_THING)
+    ((@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_THING)
   end
 
   def is_temple(item)
-    ((@db[item].flags & TEMPLE) != 0)
+    ((@db[item].flags & TinyMud::TEMPLE) != 0)
   end
 
   def is_sticky(item)
-    ((@db[item].flags & STICKY) != 0)
+    ((@db[item].flags & TinyMud::STICKY) != 0)
   end
 
   def is_link_ok(item)
-    ((@db[item].flags & LINK_OK) != 0)
+    ((@db[item].flags & TinyMud::LINK_OK) != 0)
   end
 
   def is_antilock(item)
-    ((@db[item].flags & ANTILOCK) != 0)
+    ((@db[item].flags & TinyMud::ANTILOCK) != 0)
   end
 
   # Was defined in db.h
   def typeof(item)
-    (@db[item].flags & TYPE_MASK)
+    (@db[item].flags & TinyMud::TYPE_MASK)
   end
 
   # Was defined in db.h
   def is_wizard(item)
-    ((@db[item].flags & WIZARD) != 0)
+    ((@db[item].flags & TinyMud::WIZARD) != 0)
   end
   
     # Was defined in db.h
   def is_builder(item)
-    ((@db[item].flags & (WIZARD|BUILDER)) != 0)
+    ((@db[item].flags & (TinyMud::WIZARD | TinyMud::BUILDER)) != 0)
   end
 
   # Was defined in db.h
   def is_dark(item)
-    ((@db[item].flags & DARK) != 0)
+    ((@db[item].flags & TinyMud::DARK) != 0)
   end
 
   # Was defined in db.h

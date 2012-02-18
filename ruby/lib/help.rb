@@ -1,5 +1,4 @@
-require_relative '../test/include'
-require_relative '../test/defines.rb'
+require_relative 'constants'
 
 module TinyMud
   class Help
