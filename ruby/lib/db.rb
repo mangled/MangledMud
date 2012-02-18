@@ -3,7 +3,6 @@ require_relative '../test/include'
 module TinyMud
 
     class Db
-		include Helpers
         # Static class function. Sets up a Minimal database by parsing
         # text from minimal.db to create rooms, etc. .
         def self.Minimal()
@@ -138,7 +137,6 @@ module TinyMud
 
     #Record class is used to store individual information about rooms, things, exits, playes, notypes, and unknowns.
     class Record
-	include Helpers
       attr_accessor :name, :description, :location, :contents, :exits, :next, :key, :fail, :succ, :ofail, :osucc, :owner, :pennies, :flags, :password 
 
       def initialize()
