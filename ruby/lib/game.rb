@@ -67,6 +67,53 @@ module TinyMud
       @speech = Speech.new(db)
       @utils = Utils.new(db)
       @wiz = Wiz.new(db)
+
+      # Set up command handlers
+      @commands = {
+        "@chown"    => ->(p, a, b) { @set.do_chown(p, a, b) },
+        "@create"   => ->(p, a, b) { @create.do_create(p, a, b.to_i) },
+        "@describe" => ->(p, a, b) { @set.do_describe(p, a, b) },
+        "@dig"      => ->(p, a, b) { @create.do_dig(p, a) },
+        "drop"      => ->(p, a, b) { @move.do_drop(p, a) },
+        "@dump"     => ->(p, a, b) { do_dump(p) },
+        "examine"   => ->(p, a, b) { @look.do_examine(p, a) },
+        "@fail"     => ->(p, a, b) { @set.do_fail(p, a, b) },
+        "@find"     => ->(p, a, b) { @look.do_find(p, a) },
+        "@force"    => ->(p, a, b) { @wiz.do_force(self, p, a, b) },
+        "get"       => ->(p, a, b) { @move.do_get(p, a) },
+        "give"      => ->(p, a, b) { @rob.do_give(p, a, b.to_i) },
+        "goto"      => ->(p, a, b) { @move.do_move(p, a) },
+        "gripe"     => ->(p, a, b) { @speech.do_gripe(p, a, b) },
+        "help"      => ->(p, a, b) { @help.do_help(p) },
+        "inventory" => ->(p, a, b) { @look.do_inventory(p) },
+        "kill"      => ->(p, a, b) { @rob.do_kill(p, a, b.to_i) },
+        "@link"     => ->(p, a, b) { @create.do_link(p, a, b) },
+        "@lock"     => ->(p, a, b) { @set.do_lock(p, a, b) },
+        "look"      => ->(p, a, b) { @look.do_look_at(p, a) },
+        "move"      => ->(p, a, b) { @move.do_move(p, a) },
+        "@name"     => ->(p, a, b) { @set.do_name(p, a, b) },
+        "news"      => ->(p, a, b) { @help.do_news(p) },
+        "@ofail"    => ->(p, a, b) { @set.do_ofail(p, a, b) },
+        "@open"     => ->(p, a, b) { @create.do_open(p, a, b) },
+        "@osuccess" => ->(p, a, b) { @set.do_osuccess(p, a, b) },
+        "page"      => ->(p, a, b) { @speech.do_page(p, a) },
+        "@password" => ->(p, a, b) { @player.change_password(p, a, b) },
+        "read"      => ->(p, a, b) { @look.do_look_at(p, a) },
+        "rob"       => ->(p, a, b) { @rob.do_rob(p, a) },
+        "say"       => ->(p, a, b) { @speech.do_say(p, a, b) },
+        "score"     => ->(p, a, b) { @look.do_score(p) },
+        "@set"      => ->(p, a, b) { @set.do_set(p, a, b) },
+        "@shutdown" => ->(p, a, b) { do_shutdown(p) },
+        "@stats"    => ->(p, a, b) { @wiz.do_stats(p, a) },
+        "@success"  => ->(p, a, b) { @set.do_success(p, a, b) },
+        "take"      => ->(p, a, b) { @move.do_get(p, a) },
+        "@teleport" => ->(p, a, b) { @wiz.do_teleport(p, a, b) },
+        "throw"     => ->(p, a, b) { @move.do_drop(p, a) },
+        "@toad"     => ->(p, a, b) { @wiz.do_toad(p, a) },
+        "@unlink"   => ->(p, a, b) { @set.do_unlink(p, a) },
+        "@unlock"   => ->(p, a, b) { @set.do_unlock(p, a) },
+        "@wall"     => ->(p, a, b) { @speech.do_wall(p, a, b) }
+      }
     end
 
     def do_dump(player)
@@ -79,7 +126,6 @@ module TinyMud
       end
     end
 
-    # Todo- WE REALLY NEED TO break apart this gigantic switch statement
     def process_command(player, command)
       # We need to define a more ruby like way for killing the connection
       # if (command == 0) abort()
@@ -89,15 +135,6 @@ module TinyMud
         $stderr.puts("process_command: bad player #{player}")
         return
       end
-
-      # Consider a replacement to this
-      ##ifdef LOG_COMMANDS
-      #    fprintf(stderr, "COMMAND from %s(%d) in %s(%d): %s\n",
-      #        getname(player), player,
-      #        getname(db[player].location),
-      #        db[player].location,
-      #        command)
-      ##endif # LOG_COMMANDS
 
       # Check for a nil command
       if (command.nil?)
@@ -120,13 +157,12 @@ module TinyMud
       # check for single-character commands 
       if (command[0] == SAY_TOKEN)
         @speech.do_say(player, command[1..-1], nil)
-      elsif(command[0] == POSE_TOKEN)
+      elsif (command[0] == POSE_TOKEN)
         @speech.do_pose(player, command[1..-1], nil)
       elsif (@move.can_move(player, command))
         # command is an exact match for an exit 
         @move.do_move(player, command)
       else
-        # Todo: This parsing code is rubbish, fix :-)
         command =~ /^(\S+)(.*)/
         command = $1
         arg1 = $2
@@ -139,199 +175,13 @@ module TinyMud
           arg2 = args[1]
         end
 
-        case command[0].downcase
-          when '@'
-            case command[1].downcase
-              when 'c'
-                # chown, create
-                case command[2].downcase
-                    when 'h'
-                      @set.do_chown(player, arg1, arg2) if Matched("@chown", command, player)
-                    when 'r'
-                      @create.do_create(player, arg1, arg2.to_i) if Matched("@create", command, player)
-                    else
-                      Huh(player)
-                end
-              when 'd'
-                # describe, dig, or dump 
-                case command[2].downcase
-                  when 'e'
-                    @set.do_describe(player, arg1, arg2) if Matched("@describe", command, player)
-                  when 'i'
-                    @create.do_dig(player, arg1) if Matched("@dig", command, player)
-                  when 'u'
-                    do_dump(player) if Matched("@dump", command, player)
-                  else
-                    Huh(player)
-                end
-              when 'f'
-                # fail, find, or force 
-                case command[2].downcase
-                  when 'a'
-                    @set.do_fail(player, arg1, arg2) if Matched("@fail", command, player)
-                  when 'i'
-                    @look.do_find(player, arg1) if Matched("@find", command, player)
-                    # Todo - Enable?
-                    ##ifdef DO_FLUSH
-                    #          when 'l'
-                    #          when 'L'
-                    #            if(string_compare(command, "@flush")) goto bad
-                    #            do_flush(player)
-                    #            break
-                    ##endif
-                  when 'o'
-                     @wiz.do_force(self, player, arg1, arg2) if Matched("@force", command, player)
-                  else
-                    Huh(player)
-                end
-              when 'l'
-                # lock or link 
-                case command[2].downcase
-                  when 'i'
-                    @create.do_link(player, arg1, arg2) if Matched("@link", command, player)
-                  when 'o'
-                    @set.do_lock(player, arg1, arg2) if Matched("@lock", command, player)
-                  else
-                    Huh(player)
-                end
-              when 'n'
-                @set.do_name(player, arg1, arg2) if Matched("@name", command, player)
-              when 'o'
-                case command[2].downcase
-                  when 'f'
-                    @set.do_ofail(player, arg1, arg2) if Matched("@ofail", command, player)
-                  when 'p'
-                    @create.do_open(player, arg1, arg2) if Matched("@open", command, player)
-                  when 's'
-                    @set.do_osuccess(player, arg1, arg2) if Matched("@osuccess", command, player)
-                  else
-                    Huh(player)
-                end
-              when 'p'
-                @player.change_password(player, arg1, arg2) if Matched("@password", command, player)
-              when 's'
-                # set, shutdown, success 
-                case command[2].downcase
-                  when 'e'
-                    @set.do_set(player, arg1, arg2) if Matched("@set", command, player)
-                  when 'h'
-                    do_shutdown(player) if Matched("@shutdown", command, player)
-                  when 't'
-                    @wiz.do_stats(player, arg1) if Matched("@stats", command, player)
-                  when 'u'
-                    @set.do_success(player, arg1, arg2) if Matched("@success", command, player)
-                  else
-                    Huh(player)
-                end
-              when 't'
-                case command[2].downcase
-                  when 'e'
-                    @wiz.do_teleport(player, arg1, arg2) if Matched("@teleport", command, player)
-                  when 'o'
-                    @wiz.do_toad(player, arg1) if Matched("@toad", command, player)
-                  else
-                    Huh(player)
-                end
-              when 'u'
-                if command.start_with?("@unli")
-                  @set.do_unlink(player, arg1) if Matched("@unlink", command, player)
-                elsif command.start_with?("@unlo")
-                  @set.do_unlock(player, arg1) if Matched("@unlock", command, player)
-                else
-                  Huh(player)
-                end
-              when 'w'
-                @speech.do_wall(player, arg1, arg2) if Matched("@wall", command, player)
-              else
-                Huh(player)
-            end
-          when 'd'
-            @move.do_drop(player, arg1) if Matched("drop", command, player)
-          when 'e'
-            @look.do_examine(player, arg1) if Matched("examine", command, player)
-          when 'g'
-            # get, give, go, or gripe 
-            case command[1].downcase
-                when 'e'
-                  @move.do_get(player, arg1) if Matched("get", command, player)
-                when 'i'
-                  @rob.do_give(player, arg1, arg2.to_i) if Matched("give", command, player)
-                when 'o'
-                  @move.do_move(player, arg1) if Matched("goto", command, player)
-                when 'r'
-                  @speech.do_gripe(player, arg1, arg2) if Matched("gripe", command, player)
-                else
-                  Huh(player)
-            end
-          when 'h'
-            @help.do_help(player) if Matched("help", command, player)
-          when 'i'
-            @look.do_inventory(player) if Matched("inventory", command, player)
-          when 'k'
-            @rob.do_kill(player, arg1, arg2.to_i) if Matched("kill", command, player)
-          when 'l'
-            @look.do_look_at(player, arg1) if Matched("look", command, player)
-          when 'm'
-            @move.do_move(player, arg1) if Matched("move", command, player)
-          when 'n'
-            # news 
-            @help.do_news(player) if Matched("news", command, player)
-          when 'p'
-            @speech.do_page(player, arg1) if Matched("page", command, player)
-          when 'r'
-            case command[1].downcase
-              when 'e'
-                @look.do_look_at(player, arg1) if Matched("read", command, player) # undocumented alias for look at 
-              when 'o'
-                @rob.do_rob(player, arg1) if Matched("rob", command, player)
-              else
-                Huh(player)
-            end
-          when 's'
-            # say, "score" 
-            case command[1].downcase
-              when 'a'
-                @speech.do_say(player, arg1, arg2) if Matched("say", command, player)
-              when 'c'
-                @look.do_score(player) if Matched("score", command, player)
-              else
-                Huh(player)
-            end
-          when 't'
-            case command[1].downcase
-              when 'a'
-                @move.do_get(player, arg1) if Matched("take", command, player)
-              when 'h'
-                @move.do_drop(player, arg1) if Matched("throw", command, player)
-              else
-                Huh(player)
-            end
+        matched_command = @commands.keys.find {|c| c.start_with?(command.downcase()) }
+        if matched_command
+          @commands[matched_command].call(player, arg1, arg2)
         else
-          Huh(player)
+          Interface.do_notify(player, "Huh?  (Type \"help\" for help.)")
         end
       end
     end
-
-    def Matched(s, cmd, player)
-        Huh(player, s.downcase().start_with?(cmd.downcase()))
-    end
-
-    def Huh(player, no_huh = false)
-      Interface.do_notify(player, "Huh?  (Type \"help\" for help.)") unless no_huh
-      # Todo - Consider a replacement
-      ##ifdef LOG_FAILED_COMMANDS
-      #if(!controls(player, db[player].location)) {
-      #  fprintf(stderr, "HUH from %s(%d) in %s(%d)[%s]: %s %s\n",
-      #      getname(player), player,
-      #      getname(db[player].location),
-      #      db[player].location,
-      #      getname(db[db[player].location].owner),
-      #      command,
-      #      reconstruct_message(arg1, arg2))
-      #}
-      #ifdef LOG_FAILED_COMMANDS
-      no_huh
-    end
-
   end
 end
