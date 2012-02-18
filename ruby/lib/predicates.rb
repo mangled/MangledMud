@@ -1,6 +1,4 @@
-require_relative '../test/include'
-require_relative '../test/defines.rb'
-require_relative './helpers.rb'
+require_relative 'helpers.rb'
 
 module TinyMud
   class Predicates

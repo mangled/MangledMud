@@ -1,9 +1,4 @@
-#Port of Tinymud's create.c to Ruby.  See http://mangled.me/blog/coding/ruby-port-of-tinymud-wip/
-#Author: Alexander Morrow
-#Email:	 amo3@umbc.edu
-
-require_relative '../test/include'
-require_relative './helpers.rb'
+require_relative 'helpers.rb'
 
 module TinyMud
 	class Create

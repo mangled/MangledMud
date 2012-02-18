@@ -1,4 +1,4 @@
-require_relative '../test/include'
+require_relative 'constants.rb'
 
 module TinyMud
 
@@ -159,7 +159,7 @@ module TinyMud
           @password       =       nil
       end
 
-      #Type is defined by the flags, and uses defines.rb
+      #Type is defined by the flags, and uses constants.rb
       def type()
         case flags & TYPE_MASK
           when TYPE_ROOM

@@ -5,7 +5,6 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'mocha'
-require_relative 'defines'
 require_relative 'include'
 require_relative 'commands'
 

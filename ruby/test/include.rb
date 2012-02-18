@@ -1,3 +1,5 @@
+# Includes for tests
+require_relative '../lib/constants.rb'
 require_relative '../lib/interface.rb'
 require_relative '../lib/create.rb'
 require_relative '../lib/db.rb'
