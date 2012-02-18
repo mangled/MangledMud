@@ -1,4 +1,4 @@
-require_relative 'constants.rb'
+require_relative 'constants'
 
 # !!! This module should go away as we refactor !!!
 module Helpers

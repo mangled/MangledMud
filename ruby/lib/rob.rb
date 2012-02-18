@@ -1,4 +1,4 @@
-require_relative 'helpers.rb'
+require_relative 'helpers'
 
 module TinyMud
   class Rob

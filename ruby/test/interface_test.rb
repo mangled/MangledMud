@@ -9,7 +9,7 @@ require 'bundler/setup'
 require 'mocha'
 require 'net/telnet'
 require 'thwait'
-require_relative 'player.rb'
+require_relative 'player'
 
 module TinyMud
 

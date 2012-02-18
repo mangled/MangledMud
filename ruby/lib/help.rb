@@ -1,4 +1,4 @@
-require_relative 'constants.rb'
+require_relative 'constants'
 
 module TinyMud
   class Help
