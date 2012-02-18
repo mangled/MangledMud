@@ -71,7 +71,7 @@ module TinyMud
 
     def do_dump(player)
       # This is non-functional, we need the networking code in place...
-      if (@db[player].wizard?)
+      if (is_wizard(player))
         # Todo!!!
         Interface.do_notify(player, "Dumping...")
       else

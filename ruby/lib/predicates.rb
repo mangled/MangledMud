@@ -12,16 +12,16 @@ module TinyMud
         where >= 0 &&
         where < @db.length &&
         typeof(where) == TYPE_ROOM &&
-        (controls(who, where) || @db[where].link_ok?)
+        (controls(who, where) || is_link_ok(where))
     end
 
     def could_doit(player, thing)
       return false if (typeof(thing) != TYPE_ROOM && @db[thing].location == NOTHING)
       return true if ((key = @db[thing].key) == NOTHING)
       status = (player == key || Utils.new(@db).member(key, @db[player].contents))
-      return @db[thing].antilock? ? !status : status
+      return is_antilock(thing) ? !status : status
     end
-
+  
     def can_doit(player, thing, default_fail_msg)
       loc = getloc(player)
 
@@ -56,7 +56,7 @@ module TinyMud
       if (player == thing || typeof(thing) == TYPE_EXIT)
         return false
       elsif can_see_loc
-        return !@db[thing].dark? || controls(player, thing)
+        return !is_dark(thing) || controls(player, thing)
       else
         # can't see loc
         controls(player, thing)
@@ -68,15 +68,15 @@ module TinyMud
       # owners control their stuff
       what >= 0 &&
       what < @db.length &&
-      (@db[who].wizard? || who == @db[what].owner)
+      (is_wizard(who) || who == @db[what].owner)
     end
-
+    
     def can_link(who, what)
       (typeof(what) == TYPE_EXIT && @db[what].location == NOTHING) || controls(who, what)
     end
     
     def payfor(who, cost)
-      if (@db[who].wizard?)
+      if (is_wizard(who))
         return true
       elsif (@db[who].pennies >= cost)
         @db[who].pennies -= cost

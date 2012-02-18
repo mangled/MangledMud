@@ -19,7 +19,7 @@ module TinyMud
       @match.init_match(player, what, TYPE_PLAYER)
       @match.match_neighbor()
       @match.match_me()
-      if (@db[player].wizard?)
+      if (is_wizard(player))
         @match.match_absolute()
         @match.match_player()
       end
@@ -50,7 +50,7 @@ module TinyMud
       @match.init_match(player, what, TYPE_PLAYER)
       @match.match_neighbor()
       @match.match_me()
-      if (@db[player].wizard?)
+      if (is_wizard(player))
         @match.match_player()
         @match.match_absolute()
       end
@@ -64,7 +64,7 @@ module TinyMud
         else
           if (typeof(victim) != TYPE_PLAYER)
               Interface.do_notify(player, "Sorry, you can only kill other players.")
-          elsif (@db[victim].wizard?)
+          elsif (is_wizard(victim))
               Interface.do_notify(player, "Sorry, Wizards are immortal.")
           else
             # go for it set cost 
@@ -100,7 +100,7 @@ module TinyMud
 
     def do_give(player, recipient, amount)
       # do amount consistency check 
-      if (amount < 0 && !@db[player].wizard?)
+      if (amount < 0 && !is_wizard(player))
         Interface.do_notify(player, "Try using the \"rob\" command.")
         return
       elsif (amount == 0)
@@ -112,7 +112,7 @@ module TinyMud
       @match.init_match(player, recipient, TYPE_PLAYER)
       @match.match_neighbor()
       @match.match_me()
-      if (@db[player].wizard?)
+      if (is_wizard(player))
         @match.match_player()
         @match.match_absolute()
       end
@@ -126,7 +126,7 @@ module TinyMud
           Interface.do_notify(player, "I don't know who you mean!")
           return
         else
-          if (!@db[player].wizard?)
+          if (!is_wizard(player))
               if (typeof(who) != TYPE_PLAYER)
                 Interface.do_notify(player, "You can only give to other players.")
                 return

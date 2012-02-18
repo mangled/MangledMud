@@ -47,7 +47,7 @@ module TinyMud
         @match.match_exit()
         @match.match_neighbor()
         @match.match_possession()
-        if (@db[player].wizard?)
+        if (is_wizard(player))
             @match.match_absolute()
             @match.match_player()
         end
@@ -79,7 +79,7 @@ module TinyMud
           @match.match_possession()
           @match.match_absolute()
           # only Wizards can examine other players 
-          @match.match_player() if (@db[player].wizard?)
+          @match.match_player() if (is_wizard(player))
           @match.match_here()
           @match.match_me()
           thing = @match.noisy_match_result()
@@ -206,8 +206,8 @@ module TinyMud
 
     def look_contents(player, loc, contents_name)
         # check to see if he can see the location 
-        can_see_loc = (!@db[loc].dark? || @predicates.controls(player, loc))
-
+        can_see_loc = (!is_dark(loc) || @predicates.controls(player, loc))
+    
         # check to see if there is anything there
         can_see_something = enum(@db[loc].contents).any? {|thing| @predicates.can_see(player, thing, can_see_loc) }
         if (can_see_something)
@@ -250,14 +250,13 @@ module TinyMud
       end
 
       if ((@db[thing].flags & ~TYPE_MASK) != 0)
-        # print flags
-        record = @db[thing]
+        # print flags 
         description << " Flags:"
-        description << " WIZARD" if (record.wizard?)
-        description << " STICKY" if (record.sticky?)
-        description << " DARK" if (record.dark?)
-        description << " LINK_OK" if (record.link_ok?)
-        description << " TEMPLE" if (record.temple?)
+        description << " WIZARD" if (is_wizard(thing))
+        description << " STICKY" if (is_sticky(thing))
+        description << " DARK" if (is_dark(thing))
+        description << " LINK_OK" if (is_link_ok(thing))
+        description << " TEMPLE" if (is_temple(thing))
       end
 
       description

@@ -32,7 +32,7 @@ module TinyMud
     end
     
     def do_wall(player, arg1, arg2)      
-      if (@db[player].wizard?)
+      if (is_wizard(player))
         message = reconstruct_message(arg1, arg2)
         $stderr.puts("WALL from #{@db[player].name}(#{player}): #{message}")
         message = "#{@db[player].name} shouts \"#{message}\""
@@ -64,7 +64,7 @@ module TinyMud
 
     def notify_except(first, exception, msg)
       enum(first).each do |i|
-        if (@db[i].player? && (i != exception))
+        if (is_player(i) && (i != exception))
             Interface.do_notify(i, msg)
         end
       end
