@@ -12,7 +12,7 @@ module TinyMud
     end
 
     def do_teleport(player, arg1, arg2) 
-      if (!is_wizard(player))
+      if (!@db[player].wizard?)
         Interface.do_notify(player, "Only a Wizard may teleport at will.")
         return
       end
@@ -68,7 +68,7 @@ module TinyMud
     end
 
     def do_force(game, player, what, command)
-      if (!is_wizard(player))
+      if (!@db[player].wizard?)
         Interface.do_notify(player, "Only Wizards may use this command.")
         return
       end
@@ -89,7 +89,7 @@ module TinyMud
     end
 
     def do_stats(player, name) 
-      if (!is_wizard(player))
+      if (!@db[player].wizard?)
         Interface.do_notify(player, "The universe contains #{@db.length} objects.")
       else
         owner = @player.lookup_player(name)
@@ -116,7 +116,7 @@ module TinyMud
     end
 
     def do_toad(player, name) 
-      if (!is_wizard(player))
+      if (!@db[player].wizard?)
         Interface.do_notify(player, "Only a Wizard can turn a person into a toad.")
         return
       end
@@ -131,7 +131,7 @@ module TinyMud
 
       if (typeof(victim) != TYPE_PLAYER)
         Interface.do_notify(player, "You can only turn players into toads!")
-      elsif (is_wizard(victim))
+      elsif (@db[victim].wizard?)
         Interface.do_notify(player, "You can't turn a Wizard into a toad.")
       elsif (@db[victim].contents != NOTHING)
         Interface.do_notify(player, "What about what they are carrying?")

@@ -48,7 +48,7 @@ module TinyMud
       if (loc != old)
           if (old != NOTHING)
               # notify others unless DARK
-              if (!is_dark(old) && !is_dark(player))
+              if (!@db[old].dark? && !@db[player].dark?)
                   @speech.notify_except(@db[old].contents, player, "#{@db[player].name} has left.")
               end
           end
@@ -57,12 +57,12 @@ module TinyMud
           moveto(player, loc)
       
           # if old location has STICKY dropto, send stuff through it
-          if (old != NOTHING && (dropto = @db[old].location) != NOTHING && (is_sticky(old)))
+          if (old != NOTHING && (dropto = @db[old].location) != NOTHING && (@db[old].sticky?))
               maybe_dropto(old, dropto)
           end
       
           # tell other folks in new location if not DARK
-          if (!is_dark(loc) && !is_dark(player))
+          if (!@db[loc].dark? && !@db[player].dark?)
               @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} has arrived.")
           end
       end
@@ -144,7 +144,7 @@ module TinyMud
       @match.init_match_check_keys(player, what, TYPE_THING)
       @match.match_neighbor()
       @match.match_exit()
-      @match.match_absolute() if (is_wizard(player)) # the wizard has long fingers
+      @match.match_absolute() if (@db[player].wizard?) # the wizard has long fingers
   
       thing = @match.noisy_match_result()
       if (thing != NOTHING)
@@ -212,7 +212,7 @@ module TinyMud
               @db[thing].next = @db[loc].exits
               @db[loc].exits = thing
               Interface.do_notify(player, "Exit dropped.")
-          elsif (is_temple(loc))
+          elsif (@db[loc].temple?)
               # sacrifice time 
               send_home(thing)
 
@@ -231,10 +231,10 @@ module TinyMud
                   @db[player].pennies = @db[player].pennies + reward
                   Interface.do_notify(player, "You have received #{reward} #{reward == 1 ? "penny" : "pennies"} for your sacrifice.")
               end
-          elsif (is_sticky(thing))
+          elsif (@db[thing].sticky?)
               send_home(thing)
               Interface.do_notify(player, "Dropped.")
-          elsif (@db[loc].location != NOTHING && !is_sticky(loc))
+          elsif (@db[loc].location != NOTHING && !@db[loc].sticky?)
               # location has immediate dropto 
               moveto(thing, @db[loc].location)
               Interface.do_notify(player, "Dropped.")
@@ -260,7 +260,7 @@ module TinyMud
           if (typeof(first) != TYPE_THING)
               moveto(first, loc)
           else
-              moveto(first, is_sticky(first) ? HOME : dest)
+              moveto(first, @db[first].sticky? ? HOME : dest)
           end
           first = rest
         end
@@ -272,9 +272,9 @@ module TinyMud
     
         # check for players
         enum(@db[loc].contents).each do |i|
-          return if is_player(i)
+          return if @db[i].player?
         end
-        
+
         # no players, send everything to the dropto
         send_contents(loc, dropto)
     end

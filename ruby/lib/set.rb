@@ -22,7 +22,7 @@ module TinyMud
         end
 
         # check for renaming a player
-        if (is_player(thing))
+        if (@db[thing].player?)
             m = newname.match(/([[:graph:]]+)\s+([[:graph:]]+)/)
             newname = (m and m[1]) ? m[1] : nil
             player_password = (m and m[2]) ? m[2] : nil
@@ -126,7 +126,7 @@ module TinyMud
       @match.match_possession()
       @match.match_me()
       @match.match_player()
-      @match.match_absolute if (is_wizard(player))
+      @match.match_absolute if (@db[player].wizard?)
   
       key = @match.match_result()
       case key
@@ -137,7 +137,7 @@ module TinyMud
         Interface.do_notify(player, "I don't know which key you want!")
         return
         else
-          if (!is_player(key) && !is_thing(key))
+          if (!@db[key].player? && !@db[key].thing?)
               Interface.do_notify(player, "Keys can only be players or things.")
               return
           end
@@ -167,7 +167,7 @@ module TinyMud
       @match.init_match(player, name, TYPE_EXIT)
       @match.match_exit()
       @match.match_here()
-      @match.match_absolute() if(is_wizard(player))
+      @match.match_absolute() if(@db[player].wizard?)
   
       exit = @match.match_result()
       case exit
@@ -194,7 +194,7 @@ module TinyMud
     end
 
     def do_chown(player, name, newobj)
-      if (!is_wizard(player))
+      if (!@db[player].wizard?)
         Interface.do_notify(player, "Permission denied.")
       else
         @match.init_match(player, name, NOTYPE)
@@ -247,7 +247,7 @@ module TinyMud
       end
 
       # check for restricted flag
-      if (!is_wizard(player) && (f == WIZARD || f == TEMPLE || (f == DARK && typeof(thing) != TYPE_ROOM)))
+      if (!@db[player].wizard? && (f == WIZARD || f == TEMPLE || (f == DARK && typeof(thing) != TYPE_ROOM)))
         Interface.do_notify(player, "Permission denied.")
         return
       end

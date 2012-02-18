@@ -107,7 +107,7 @@ module TinyMud
 			@match.match_me()
 			@match.match_here()
 			
-			if (is_wizard(player)) 
+			if (@db[player].wizard?) 
 				@match.match_absolute()
 				@match.match_player()
 			end

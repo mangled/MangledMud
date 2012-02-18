@@ -25,6 +25,44 @@ module TinyMud
         @password       =       nil
     end
 
+    # todo: we should kill all access to flags *outside* of this class...
+
+    def player?
+      ((@flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_PLAYER)
+    end
+  
+    def thing?
+      ((@flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_THING)
+    end
+  
+    def temple?
+      ((@flags & TinyMud::TEMPLE) != 0)
+    end
+  
+    def sticky?
+      ((@flags & TinyMud::STICKY) != 0)
+    end
+  
+    def link_ok?
+      ((@flags & TinyMud::LINK_OK) != 0)
+    end
+  
+    def antilock?
+      ((@flags & TinyMud::ANTILOCK) != 0)
+    end
+  
+    def wizard?
+      ((@flags & TinyMud::WIZARD) != 0)
+    end
+    
+    def builder?
+      ((@flags & (TinyMud::WIZARD | TinyMud::BUILDER)) != 0)
+    end
+  
+    def dark?
+      ((@flags & TinyMud::DARK) != 0)
+    end
+
     #Type is defined by the flags, and uses constants.rb
     def type()
       case flags & TYPE_MASK

@@ -96,7 +96,7 @@ module TinyMud
       match_possession()
       match_me()
       match_here()
-      if (is_wizard(@match_who))
+      if (@db[@match_who].wizard?)
         match_absolute()
         match_player()
       end
