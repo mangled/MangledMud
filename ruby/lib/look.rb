@@ -166,7 +166,7 @@ module TinyMud
               when HOME
                 Interface.do_notify(player, "Destination: ***HOME***")
               else
-                Interface.do_notify(player, "#{typeof(r.location) == TYPE_ROOM ? "Destination" : "Carried by"}: #{@utils.getname(r.location)}(##{r.location})")
+                Interface.do_notify(player, "#{room?(r.location) ? "Destination" : "Carried by"}: #{@utils.getname(r.location)}(##{r.location})")
             end
       end
     end
@@ -194,7 +194,7 @@ module TinyMud
       else
         0.upto(@db.length - 1) do |i|
             # Note: this isn't the same code as the original stringutil, fix
-            if (typeof(i) != TYPE_EXIT && @predicates.controls(player, i) && (@db[i].name.include?(name)))
+            if (!exit?(i) && @predicates.controls(player, i) && (@db[i].name.include?(name)))
               Interface.do_notify(player, "#{@db[i].name}(##{i})")
             end
         end

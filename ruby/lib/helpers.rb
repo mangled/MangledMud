@@ -48,6 +48,22 @@ module Helpers
     (@db[item].flags & TinyMud::TYPE_MASK)
   end
 
+  def room?(item)
+    (@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_ROOM
+  end
+
+  def player?(item)
+    (@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_PLAYER
+  end
+
+  def thing?(item)
+    (@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_THING
+  end
+
+  def exit?(item)
+    (@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_EXIT
+  end
+
   # Was defined in db.h
   def is_wizard(item)
     ((@db[item].flags & TinyMud::WIZARD) != 0)

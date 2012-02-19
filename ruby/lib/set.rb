@@ -205,7 +205,7 @@ module TinyMud
             return
         elsif (owner == NOTHING)
             Interface.do_notify(player, "I couldn't find that player.")
-        elsif (typeof(thing) == TYPE_PLAYER)
+        elsif (player?(thing))
             Interface.do_notify(player, "Players always own themselves.")
         else
             @db[thing].owner = owner
@@ -247,7 +247,7 @@ module TinyMud
       end
 
       # check for restricted flag
-      if (!is_wizard(player) && (f == WIZARD || f == TEMPLE || (f == DARK && typeof(thing) != TYPE_ROOM)))
+      if (!is_wizard(player) && (f == WIZARD || f == TEMPLE || (f == DARK && !room?(thing))))
         Interface.do_notify(player, "Permission denied.")
         return
       end

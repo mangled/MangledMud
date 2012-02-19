@@ -131,7 +131,7 @@ module TinyMud
       # if (command == 0) abort()
   
       # robustify player 
-      if (player < 0 || player >= @db.length || typeof(player) != TYPE_PLAYER)
+      if (player < 0 || player >= @db.length || !player?(player))
         $stderr.puts("process_command: bad player #{player}")
         return
       end

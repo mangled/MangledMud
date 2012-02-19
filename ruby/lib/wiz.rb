@@ -52,13 +52,13 @@ module TinyMud
           Interface.do_notify(player, "I don't know which destination you mean!")
         else
           # check victim, destination types, teleport if ok 
-          if (typeof(destination) == TYPE_EXIT ||
-              typeof(destination) == TYPE_THING ||
-              typeof(victim) == TYPE_EXIT ||
-              typeof(victim) == TYPE_ROOM ||
-              (typeof(victim) == TYPE_PLAYER && typeof(destination) != TYPE_ROOM))
+          if (exit?(destination) ||
+              thing?(destination) ||
+              exit?(victim) ||
+              room?(victim) ||
+              (player?(victim) && !room?(destination)))
               Interface.do_notify(player, "Bad destination.")
-          elsif(typeof(victim) == TYPE_PLAYER)
+          elsif(player?(victim))
               Interface.do_notify(victim, "You feel a wrenching sensation...")
               @move.enter_room(victim, destination)
           else
@@ -129,7 +129,7 @@ module TinyMud
 
       return if (victim == NOTHING)
 
-      if (typeof(victim) != TYPE_PLAYER)
+      if (!player?(victim))
         Interface.do_notify(player, "You can only turn players into toads!")
       elsif (is_wizard(victim))
         Interface.do_notify(player, "You can't turn a Wizard into a toad.")

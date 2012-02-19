@@ -23,7 +23,7 @@ module TinyMud
 			end
 			
 			#Check room
-			if((room < 0) || (room >= @db.length) || (typeof(room) != TYPE_ROOM))
+			if((room < 0) || (room >= @db.length) || (!room?(room)))
 				Interface.do_notify(player, "That's not a room!")
 				return NOTHING
 			elsif(!@pred.can_link_to(player, room))
@@ -119,7 +119,7 @@ module TinyMud
 						#we're ok, check the usual stuff
 						if(@db[thing].location != NOTHING)
 							if(@pred.controls(player, thing))
-								if(typeof(@db[thing].location) == TYPE_PLAYER)
+								if(player?(@db[thing].location))
 									Interface.do_notify(player, "That exit is being carried.")
 								else
 									Interface.do_notify(player, "That exit is already linked.")

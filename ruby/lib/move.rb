@@ -200,7 +200,7 @@ module TinyMud
           if (@db[thing].location != player)
               # Shouldn't ever happen. 
               Interface.do_notify(player, "You can't drop that.")
-          elsif (typeof(thing) == TYPE_EXIT)
+          elsif (exit?(thing))
               # special behavior for exits 
               if (!@predicates.controls(player, loc))
                 Interface.do_notify(player, "You can't put an exit down here.")
@@ -257,7 +257,7 @@ module TinyMud
     
         while (first != NOTHING)
           rest = @db[first].next
-          if (typeof(first) != TYPE_THING)
+          if (!thing?(first))
               moveto(first, loc)
           else
               moveto(first, is_sticky(first) ? HOME : dest)

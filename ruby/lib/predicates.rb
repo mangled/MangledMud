@@ -11,12 +11,12 @@ module TinyMud
     def can_link_to(who, where)
         where >= 0 &&
         where < @db.length &&
-        typeof(where) == TYPE_ROOM &&
+        room?(where) &&
         (controls(who, where) || is_link_ok(where))
     end
 
     def could_doit(player, thing)
-      return false if (typeof(thing) != TYPE_ROOM && @db[thing].location == NOTHING)
+      return false if (!room?(thing) && @db[thing].location == NOTHING)
       return true if ((key = @db[thing].key) == NOTHING)
       status = (player == key || Utils.new(@db).member(key, @db[player].contents))
       return is_antilock(thing) ? !status : status
@@ -53,7 +53,7 @@ module TinyMud
     end
   
     def can_see(player, thing, can_see_loc)
-      if (player == thing || typeof(thing) == TYPE_EXIT)
+      if (player == thing || exit?(thing))
         return false
       elsif can_see_loc
         return !is_dark(thing) || controls(player, thing)
@@ -72,7 +72,7 @@ module TinyMud
     end
     
     def can_link(who, what)
-      (typeof(what) == TYPE_EXIT && @db[what].location == NOTHING) || controls(who, what)
+      (exit?(what) && @db[what].location == NOTHING) || controls(who, what)
     end
     
     def payfor(who, cost)

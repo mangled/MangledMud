@@ -31,7 +31,7 @@ module TinyMud
         when AMBIGUOUS
           Interface.do_notify(player, "I don't know who you mean!")
         else
-          if (typeof(thing) != TYPE_PLAYER)
+          if (!player?(thing))
               Interface.do_notify(player, "Sorry, you can only rob other players.")
           elsif (@db[thing].pennies < 1)
               Interface.do_notify(player, "#{@db[thing].name} is penniless.")
@@ -62,7 +62,7 @@ module TinyMud
         when AMBIGUOUS
           Interface.do_notify(player, "I don't know who you mean!")
         else
-          if (typeof(victim) != TYPE_PLAYER)
+          if (!player?(victim))
               Interface.do_notify(player, "Sorry, you can only kill other players.")
           elsif (is_wizard(victim))
               Interface.do_notify(player, "Sorry, Wizards are immortal.")
@@ -127,7 +127,7 @@ module TinyMud
           return
         else
           if (!is_wizard(player))
-              if (typeof(who) != TYPE_PLAYER)
+              if (!player?(who))
                 Interface.do_notify(player, "You can only give to other players.")
                 return
               elsif (@db[who].pennies + amount > MAX_PENNIES)
@@ -143,7 +143,7 @@ module TinyMud
       else
         # he can do it 
         Interface.do_notify(player, "You give #{amount} #{amount == 1 ? "penny" : "pennies"} to #{@db[who].name}.")
-        if (typeof(who) == TYPE_PLAYER)
+        if (player?(who))
             Interface.do_notify(who, "#{@db[player].name} gives you #{amount} #{amount == 1 ? "penny" : "pennies"}.")
         end
         @db[who].pennies = @db[who].pennies + amount
