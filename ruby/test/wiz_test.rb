@@ -11,7 +11,7 @@ module TinyMud
         include TestHelpers
         
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 
 			# Ensure we never give pennies
 			Game.stubs(:do_rand).returns(1)
@@ -22,7 +22,6 @@ module TinyMud
 		end
 		
 		def test_do_teleport
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -139,7 +138,6 @@ module TinyMud
 		end
 
 		def test_do_force
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "sprout")
@@ -162,7 +160,6 @@ module TinyMud
 		end
 
 		def test_do_stats
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -196,7 +193,6 @@ module TinyMud
 		end
 		
 		def test_do_toad
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record

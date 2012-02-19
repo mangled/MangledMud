@@ -11,7 +11,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 		end
 
 		def teardown
@@ -20,8 +20,6 @@ module TinyMud
 
 		# where must be valid, the where must be a room, who must either control (own) where or where is LINK_OK
 		def test_can_link_to
-			Db.Minimal()
-
 			# Make a minimal new player - This should be a helper at some point?
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
@@ -48,7 +46,6 @@ module TinyMud
 		end
 		
 		def test_could_doit
-			Db.Minimal()
 			wizard = 1
 			uninitialized_thing_ref = @db.add_new_record
 			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
@@ -83,7 +80,6 @@ module TinyMud
 		end
 		
 		def test_can_doit
-			Db.Minimal()
 			uninitialized_thing_ref = @db.add_new_record
 			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
 
@@ -123,7 +119,6 @@ module TinyMud
 		end
 
 		def test_can_see
-			Db.Minimal()
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
@@ -151,7 +146,6 @@ module TinyMud
 		end
 
 		def test_controls
-			Db.Minimal()
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
@@ -167,7 +161,6 @@ module TinyMud
 		end
 		
 		def test_can_link
-			Db.Minimal()
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
@@ -185,7 +178,6 @@ module TinyMud
 		end
 
 		def test_payfor
-			Db.Minimal()
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			pred = Predicates.new(@db)
@@ -214,7 +206,6 @@ module TinyMud
 		end
 		
 		def test_ok_player_name
-			Db.Minimal()
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			pred = Predicates.new(@db)
 			# Must be an ok name

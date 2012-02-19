@@ -11,7 +11,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 		end
 
 		def teardown
@@ -25,7 +25,6 @@ module TinyMud
 		end
 		
 		def test_do_say
-			Db.Minimal()
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			joe = Player.new(@db).create_player("joe", "pod")
@@ -46,7 +45,6 @@ module TinyMud
 		end
 		
 		def test_do_pose
-			Db.Minimal()
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			joe = Player.new(@db).create_player("joe", "pod")
@@ -67,7 +65,6 @@ module TinyMud
 		end
 		
 		def test_do_wall
-			Db.Minimal()
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			joe = Player.new(@db).create_player("joe", "pod")
@@ -87,7 +84,6 @@ module TinyMud
 		end
 
 		def test_do_gripe
-			Db.Minimal()
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			record(bob) {|r| r[:location] = 0 }
@@ -97,7 +93,6 @@ module TinyMud
 		end
 
 		def test_do_page
-			Db.Minimal()
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			joe = Player.new(@db).create_player("joe", "pod")
@@ -118,7 +113,6 @@ module TinyMud
 		end
 
 		def test_notify_except
-			Db.Minimal()
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			joe = Player.new(@db).create_player("joe", "pod")

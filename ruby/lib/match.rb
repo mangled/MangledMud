@@ -137,7 +137,7 @@ module TinyMud
     # returns nnn if name = #nnn, else NOTHING
     def absolute_name()
       if (@match_name and @match_name[0] == NUMBER_TOKEN)
-          match = Db.parse_dbref(@match_name[1..-1])
+          match = @db.parse_dbref(@match_name[1..-1])
           if (match < 0 || match >= @db.length)
               return NOTHING
           else

@@ -71,7 +71,7 @@ module TinyMud
                             Game::dump_database_to_file('cheese.dump')
                         elsif cmds[0] == "load"
                             result << "Reading database from: " << cmds[1] << "\n"
-                            db.read(cmds[1])
+                            db.load(cmds[1])
                         end
                     elsif line =~ /^(\w+)>(.*)/
                         player = $1

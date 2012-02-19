@@ -11,7 +11,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 		end
 
 		def teardown
@@ -20,7 +20,6 @@ module TinyMud
 		
 		def test_do_open # Create an exit
 			# Note: RESTRICTED_BUILDING is not defined and will not be tested
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
@@ -249,7 +248,6 @@ module TinyMud
 
 		def test_do_dig # Creates a room
 			# Note: RESTRICTED_BUILDING is not defined and will not be tested
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
@@ -283,7 +281,6 @@ module TinyMud
 		
 		def test_do_create # creates an object
 			# Note: RESTRICTED_BUILDING is not defined and will not be tested
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")

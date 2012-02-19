@@ -19,7 +19,7 @@ module TinyMud
 			elsif(room_name.downcase == "home")
 				return HOME
 			else
-				room = Db.parse_dbref(room_name)
+				room = @db.parse_dbref(room_name)
 			end
 			
 			#Check room

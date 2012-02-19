@@ -301,7 +301,7 @@ module TinyMud
 		end
 
 		def test_do_unlink
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			place = @db.add_new_record
 			bob = Player.new(@db).create_player("bob", "sprout")

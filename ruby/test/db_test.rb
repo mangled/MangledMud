@@ -105,7 +105,7 @@ module TinyMud
 		end
 		
 		def test_minimal
-			Db.Minimal()
+			@db = Db.Minimal()
 
 			assert_equal(2, @db.length)
 
