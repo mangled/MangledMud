@@ -22,7 +22,7 @@ module TinyMud
 		end
 		
 		def test_moveto
-			Db.Minimal()
+			@db = Db.Minimal()
 			wizard = 1
 			somewhere = @db.add_new_record
 			record(somewhere) {|r| r[:contents] = NOTHING }
@@ -73,7 +73,7 @@ module TinyMud
 		end
 		
 		def test_enter_room
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
@@ -175,7 +175,7 @@ module TinyMud
 		end
 		
 		def test_send_home
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
@@ -259,7 +259,7 @@ module TinyMud
 		end
 		
 		def test_do_move
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
@@ -332,7 +332,7 @@ module TinyMud
 		end
 		
 		def test_do_get
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -443,7 +443,7 @@ module TinyMud
 		end
 		
 		def test_do_drop
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record

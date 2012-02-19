@@ -11,7 +11,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 		end
 
 		def teardown
@@ -19,7 +19,6 @@ module TinyMud
 		end
 		
 		def test_match_player
-			Db.Minimal()
 			player_ref = Player.new(@db).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
 			wizard = 1
@@ -44,7 +43,6 @@ module TinyMud
 		end
 		
 		def test_match_absolute
-			Db.Minimal()
 			wizard = 1 # Any player will do
 			match = Match.new(@db)
 
@@ -67,7 +65,6 @@ module TinyMud
 		end
 		
 		def test_match_me
-			Db.Minimal()
 			wizard = 1 # Any player will do
 			match = Match.new(@db)
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
@@ -79,7 +76,6 @@ module TinyMud
 		end
 		
 		def test_match_here
-			Db.Minimal()
 			wizard = 1 # Any player will do
 
 			match = Match.new(@db)
@@ -101,7 +97,6 @@ module TinyMud
 		# This is mostly covered, it's quite complicated and has a number of
 		# branch points.
 		def test_match_possession
-			Db.Minimal()
 			bob = Player.new(@db).create_player("bob", "pwd")
 			f = lambda {|match| match.match_possession }
 			check_match_list(bob, bob, f)
@@ -109,7 +104,6 @@ module TinyMud
 		
 		# Similar comments to the above!
 		def test_match_neighbor
-			Db.Minimal()
 			bob = Player.new(@db).create_player("bob", "pwd")
 			record(bob) {|r| r[:location] = 0}
 			f = lambda {|match| match.match_neighbor }
@@ -117,7 +111,6 @@ module TinyMud
 		end
 		
 		def test_match_exit
-			Db.Minimal()
 			bob = Player.new(@db).create_player("bob", "pwd")
 			wizard = 1
 			match = Match.new(@db)
@@ -178,7 +171,6 @@ module TinyMud
 			# It has a switch on the wizard. Once I have a ruby version it will be easy to mock
 			# to verify - I have tests for the underlying methods.
 			# Check calling it works though!
-			Db.Minimal()
 			wizard = 1
 			match = Match.new(@db)
 			match.init_match(wizard, "foo", -1)
@@ -191,7 +183,6 @@ module TinyMud
 		# the random call, so it will do (for coverage)
 		puts "Fyi - If you get changes in the regression output then try disabling this!!!"
 		def test_match_list_for_random_decision
-			Db.Minimal()
 			wizard = 1
 			match = Match.new(@db)
 			# Some fake things for the owner

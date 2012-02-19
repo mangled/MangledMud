@@ -40,7 +40,7 @@ module TinyMud
   
       # Dump current
       tmpfile = "#{@dump_file_name}.##{@epoch}#"
-      Db.write(tmpfile)
+      @db_to_dump.write(tmpfile)
 
       # Finalize name
       File.rename(tmpfile, @dump_file_name)

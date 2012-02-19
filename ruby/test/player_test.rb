@@ -59,7 +59,9 @@ module TinyMud
 			assert_equal(NOTHING, player.create_player("home", "pwd"))
 			assert_equal(NOTHING, player.create_player("here", "pwd"))
 			
-			Db.Minimal()
+			@db = Db.Minimal()
+			player = Player.new(@db)
+
 			record = @db[0]
 			assert_equal(1, record.contents)
 			assert_equal(NOTHING, record.next)

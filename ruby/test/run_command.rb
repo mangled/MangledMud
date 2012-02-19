@@ -24,8 +24,7 @@ if __FILE__ == $0
     TinyMud::CommandHelpers.AliasInterface()
     
     # Go!
-    db = TinyMud::Db.new
-    TinyMud::Db.Minimal()
+    db = Db.Minimal()
     open(cmd_file) {|content| TinyMud::CommandHelpers.collect_responses(db, content) }.each{|line| puts line }
 
     # Tidy up for the sake of it

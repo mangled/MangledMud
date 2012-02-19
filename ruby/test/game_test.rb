@@ -7,12 +7,11 @@ require_relative 'include'
 module TinyMud
     class TestGame < Test::Unit::TestCase
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 			@notify = sequence('notify')
 		end
 
 		def test_process_command
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			# We need some players - Creation elsewhere (interface.c - tested elsewhere)

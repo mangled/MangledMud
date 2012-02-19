@@ -24,8 +24,7 @@ module TinyMud
             CommandHelpers.AliasInterface()
 
             cmd_files().each do |cmd_file|
-                db = TinyMud::Db.new
-                Db.Minimal()
+                db = Db.Minimal()
                 current_result = open(cmd_file) {|content| CommandHelpers.collect_responses(db, content) }
                 tmp_file = cmd_file.gsub(".cmd", ".tmp")
                 open(tmp_file, "w") {|file| file.write(current_result.join)}

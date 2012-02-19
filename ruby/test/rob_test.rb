@@ -11,7 +11,7 @@ module TinyMud
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = Db.Minimal()
 			# Ensure we only kill or get pennies when we want to
 			Game.stubs(:do_rand).returns(17)
 		end
@@ -21,7 +21,6 @@ module TinyMud
 		end
 		
 		def test_do_rob
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -116,7 +115,6 @@ module TinyMud
 		end
 
 		def test_do_kill
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -201,7 +199,6 @@ module TinyMud
 		end
 		
 		def test_do_give
-			Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record

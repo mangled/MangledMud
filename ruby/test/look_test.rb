@@ -20,7 +20,7 @@ module TinyMud
 		end
 		
 		def test_look_room
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -114,7 +114,7 @@ module TinyMud
 		end
 
 		def test_do_look_at
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -192,7 +192,7 @@ module TinyMud
 		end
 
 		def test_do_examine
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
@@ -325,7 +325,7 @@ module TinyMud
 		end
 		
 		def test_do_find
-			Db.Minimal()
+			@db = Db.Minimal()
 			limbo = 0
 			wizard = 1
 			place = @db.add_new_record
