@@ -36,7 +36,7 @@ module TinyMud
         message = reconstruct_message(arg1, arg2)
         $stderr.puts("WALL from #{@db[player].name}(#{player}): #{message}")
         message = "#{@db[player].name} shouts \"#{message}\""
-        0.upto(@db.length() - 1) {|i| Interface.do_notify(i, message) if (typeof(i) == TYPE_PLAYER) }
+        0.upto(@db.length() - 1) {|i| Interface.do_notify(i, message) if (player?(i)) }
       else
         Interface.do_notify(player, "But what do you want to do with the wall?")
       end
