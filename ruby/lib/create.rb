@@ -38,13 +38,11 @@ module TinyMud
 		#Player must be a builder or higher, must supply a valid exit, and must have enough pennies.
 		def do_open(player,direction,linkto)
 			loc = getloc(player)
-			
-			#Check to see if player is a builder.  Not in use, as restricted building is not currently being ported.
-			#if(!is_builder(player))
-			#	Interface.do_notify(player,"That command is restricted to authorized builders.")
+
 			if(getloc(player) == NOTHING)
 				return
 			end
+
 			if(direction == nil)
 				Interface.do_notify(player, "Open where?")
 				return
