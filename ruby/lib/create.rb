@@ -62,8 +62,6 @@ module TinyMud
 				room.owner = player
 				room.flags = TYPE_EXIT
 				
-				#PUSH(exit, db[loc].exits)
-				##define PUSH(thing, locative) \ ((db[(thing)].next = (locative)), (locative) = (thing))
 				@db[exit].next = @db[loc].exits
 				@db[loc].exits = exit
 				
@@ -76,7 +74,7 @@ module TinyMud
 						if(!@pred.payfor(player, LINK_COST))
 							Interface.do_notify(player, "You don't have enough pennies to link.")
 						else
-							#At this point all tests passed - Link the room.
+							#  Link the room.
 							@db[exit].location = loc
 							Interface.do_notify(player, "Linked.")
 						end
