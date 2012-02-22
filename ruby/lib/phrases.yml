@@ -154,3 +154,7 @@
 'stole-penny'               : "You stole a penny."
 'you-toaded'                : "You turned %s into a toad!"
 'wake-up-home'              : "You wake up back home, without your possessions."
+'bye-bye-wizard'            : "Wizard has left."
+'hello-wizard'              : "Wizard has arrived."
+'seen-in-mist'              : "%s is briefly visible through the mist."
+
