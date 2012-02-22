@@ -245,7 +245,7 @@ module TinyMud
 			Interface.expects(:do_notify).never
 			assert_equal(AMBIGUOUS, match.match_result())
 			assert_equal(thing4, match.last_match_result())
-			Interface.expects(:do_notify).with(person, AMBIGUOUS_MESSAGE)
+			Interface.expects(:do_notify).with(person, Phrasebook.lookup('which-one'))
 			assert_equal(NOTHING, match.noisy_match_result())
 			# If he had multiple items of the same name then a random ref would be returned
 			# This isn't a perfect test but will do for now - Really need to mock inner methods
@@ -277,7 +277,7 @@ module TinyMud
 			assert_equal(match_who, match.match_result())
 			assert_equal(match_who, match.last_match_result())
 			if (match_who == NOTHING)
-				Interface.expects(:do_notify).with(notify_who, NOMATCH_MESSAGE)
+				Interface.expects(:do_notify).with(notify_who, Phrasebook.lookup('dont-see-that'))
 				assert_equal(match_who, match.noisy_match_result())
 			else
 				Interface.expects(:do_notify).never

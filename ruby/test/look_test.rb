@@ -87,7 +87,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "#{@db[place].name}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "#{@db[place].succ}").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "cheese(##{cheese})").in_sequence(notify)
 			look.look_room(bob, place)
@@ -141,7 +141,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob #{@db[place].osucc}").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "bob #{@db[place].osucc}").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "fish").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
@@ -154,15 +154,15 @@ module TinyMud
 			look.do_look_at(bob, "cheese")
 			Interface.expects(:do_notify).with(bob, "long").in_sequence(notify)
 			look.do_look_at(bob, "exit")
-			Interface.expects(:do_notify).with(bob, "You see nothing special.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('see-nothing')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Carrying:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "jam").in_sequence(notify)
 			look.do_look_at(bob, "anne")
 			Interface.expects(:do_notify).with(bob, "A wizard!").in_sequence(notify)
 			look.do_look_at(bob, "wizard")
-			Interface.expects(:do_notify).with(bob, "I don't see that here.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('dont-see-that')).in_sequence(notify)
 			look.do_look_at(bob, "tree")
-			Interface.expects(:do_notify).with(bob, "You see nothing special.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('see-nothing')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Carrying:").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "cheese(#5)").in_sequence(notify)
 			look.do_look_at(bob, "me")
@@ -170,7 +170,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "bob #{@db[place].osucc}").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "bob #{@db[place].osucc}").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "fish").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
@@ -180,12 +180,12 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard #{@db[place].osucc}").in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Wizard #{@db[place].osucc}").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "bob(##{bob})").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "anne(##{anne})").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "fish(##{fish})").in_sequence(notify)
 			look.do_look_at(wizard, "here")
-			Interface.expects(:do_notify).with(wizard, "You see nothing special.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('see-nothing')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Carrying:").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "cheese(#5)").in_sequence(notify)
 			look.do_look_at(wizard, "bob")
@@ -215,7 +215,7 @@ module TinyMud
 			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			# Look at place (non-owned)
-			Interface.expects(:do_notify).with(bob, "You can only examine what you own.  Try using \"look.\"").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('can-only-examine-owned')).in_sequence(notify)
 			look.do_examine(bob, nil)
 			# Now own
 			record(place) {|r| r.merge!({ :owner => bob }) }
@@ -225,12 +225,12 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Success: #{@db[place].succ}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Ofail: #{@db[place].ofail}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Osuccess: #{@db[place].osucc}").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "bob(##{bob})").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "fish").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Exits:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('exits')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "exit(##{exit})").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Dropped objects go to: Limbo(#0)").in_sequence(notify)
 			look.do_examine(bob, nil)
@@ -246,7 +246,7 @@ module TinyMud
 			record(exit) {|r| r.merge!( :location => HOME ) }
 			Interface.expects(:do_notify).with(bob, "exit(#8) [bob] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Exit").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[exit].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Destination: ***HOME***").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('dest-home')).in_sequence(notify)
 			look.do_examine(bob, "exit")
 			record(place) {|r| r.merge!({ :exits => NOTHING }) }
 			record(cheese) {|r| r.merge!({ :next => exit }) }
@@ -261,19 +261,19 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "Success: #{@db[place].succ}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Ofail: #{@db[place].ofail}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Osuccess: #{@db[place].osucc}").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "bob(##{bob})").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "fish").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "No exits.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('no-exits')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Dropped objects go to: Limbo(#0)").in_sequence(notify)
 			look.do_examine(bob, nil)
-			Interface.expects(:do_notify).with(bob, "You can only examine what you own.  Try using \"look.\"").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('can-only-examine-owned')).in_sequence(notify)
 			look.do_examine(bob, "anne")
 			# Wizards match players
 			Interface.expects(:do_notify).with(wizard, "anne(#4) [anne] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Player").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "jam(#7)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Home: Limbo(#0)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Location: place(#2)").in_sequence(notify)
@@ -281,7 +281,7 @@ module TinyMud
 			# Check flags - just manipulate them to check this code, bit hacky bit covers a case
 			record(anne) {|r| r.merge!( :flags => TYPE_PLAYER | WIZARD | STICKY | DARK | LINK_OK | TEMPLE) }
 			Interface.expects(:do_notify).with(wizard, "anne(#4) [anne] Key:  ***NOTHING***(#-1) Pennies: 0 Type: Player Flags: WIZARD STICKY DARK LINK_OK TEMPLE").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "jam(#7)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Home: Limbo(#0)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Location: place(#2)").in_sequence(notify)
@@ -295,7 +295,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, "You have 0 pennies.").in_sequence(notify)
 			look.do_score(bob)
 			record(bob) {|r| r.merge!({ :pennies => 1 }) }
-			Interface.expects(:do_notify).with(bob, "You have 1 penny.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-have-a-penny')).in_sequence(notify)
 			look.do_score(bob)
 		end
 
@@ -309,7 +309,7 @@ module TinyMud
 			# With nothing
 			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(bob, "You aren't carrying anything.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('carrying-nothing')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "You have 0 pennies.").in_sequence(notify)
 			look.do_inventory(bob)
 			
@@ -317,7 +317,7 @@ module TinyMud
 			record(fish) {|r| r.merge!({ :name => "fish", :location => bob, :description => "slimy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => fish, :exits => limbo }) }
 			record(bob) {|r| r.merge!( :contents => cheese, :pennies => 100 ) }
-			Interface.expects(:do_notify).with(bob, "You are carrying:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('carrying')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "cheese(#1)").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "fish(#2)").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "You have 100 pennies.").in_sequence(notify)
@@ -346,20 +346,20 @@ module TinyMud
 			look = TinyMud::Look.new(@db)
 			notify = sequence('notify')
 			# Find without enough money!
-			Interface.expects(:do_notify).with(bob, "You don't have enough pennies.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('too-poor')).in_sequence(notify)
 			look.do_find(bob, "place")
 			# Find on an exit (shouldn't)
 			record(bob) {|r| r.merge!( :pennies => LOOKUP_COST ) }
-			Interface.expects(:do_notify).with(bob, "***End of List***").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('end-of-list')).in_sequence(notify)
 			look.do_find(bob, "exit")
 			# Find on someone (do not control)
 			record(bob) {|r| r.merge!( :pennies => LOOKUP_COST ) }
-			Interface.expects(:do_notify).with(bob, "***End of List***").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('end-of-list')).in_sequence(notify)
 			look.do_find(bob, "anne")
 			# Find on something we control
 			record(bob) {|r| r.merge!( :pennies => LOOKUP_COST ) }
 			Interface.expects(:do_notify).with(bob, "cheese(##{cheese})").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "***End of List***").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('end-of-list')).in_sequence(notify)
 			look.do_find(bob, "cheese")
 		end
     end

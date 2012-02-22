@@ -87,7 +87,7 @@ module TinyMud
       return if (thing == NOTHING)
 
       if (!@predicates.can_link(player, thing))
-        Interface.do_notify(player, "You can only examine what you own.  Try using \"look.\"")
+        Interface.do_notify(player, Phrasebook.lookup('can-only-examine-owned'))
         return
       end
   
@@ -103,21 +103,21 @@ module TinyMud
       Interface.do_notify(player, r.description) if (r.description)
 
       if (r.fail)
-        Interface.do_notify(player, "Fail: #{r.fail}")
+        Interface.do_notify(player, Phrasebook.lookup('fail', r.fail))
       end
       if (r.succ)
-        Interface.do_notify(player, "Success: #{r.succ}")
+        Interface.do_notify(player, Phrasebook.lookup('success', r.succ))
       end
       if (r.ofail)
-        Interface.do_notify(player, "Ofail: #{r.ofail}")
+        Interface.do_notify(player, Phrasebook.lookup('ofail', r.ofail))
       end
       if (r.osucc)
-        Interface.do_notify(player, "Osuccess: #{r.osucc}")
+        Interface.do_notify(player, Phrasebook.lookup('osucc', r.osucc))
       end
   
       # show him the contents 
       if (r.contents != NOTHING)
-        Interface.do_notify(player, "Contents:")
+        Interface.do_notify(player, Phrasebook.lookup('contents'))
         enum(r.contents).each do |item|
           notify_name(player, item)
         end
@@ -127,60 +127,68 @@ module TinyMud
           when TYPE_ROOM
             # tell him about exits 
             if (r.exits != NOTHING)
-                Interface.do_notify(player, "Exits:")
+                Interface.do_notify(player, Phrasebook.lookup('exits'))
                 enum(r.exits).each {|exit| notify_name(player, exit) }
             else
-                Interface.do_notify(player, "No exits.")
+                Interface.do_notify(player, Phrasebook.lookup('no-exits'))
             end
         
             # print dropto if present 
             if (r.location != NOTHING)
-                Interface.do_notify(player, "Dropped objects go to: #{@utils.getname(r.location)}(##{r.location})")
+                Interface.do_notify(player, Phrasebook.lookup('dropped-go-to', @utils.getname(r.location), r.location))
             end
           when TYPE_THING # Fixme - This is a repeat of the TYPE_PLAYER check, no ruby case drop-through!!!!
             # print home 
-            Interface.do_notify(player, "Home: #{@utils.getname(r.exits)}(##{r.exits})")
+            Interface.do_notify(player, Phrasebook.lookup('home', @utils.getname(r.exits), r.exits))
             
             # print location if player can link to it 
             if (r.location != NOTHING &&
                (@predicates.controls(player, r.location) ||
                 @predicates.can_link_to(player, r.location))
             )
-                Interface.do_notify(player, "Location: #{@utils.getname(r.location)}(##{r.location})")
+                Interface.do_notify(player, Phrasebook.lookup('location', @utils.getname(r.location), r.location))
             end
           when TYPE_PLAYER
             # print home 
-            Interface.do_notify(player, "Home: #{@utils.getname(r.exits)}(##{r.exits})")
+            Interface.do_notify(player, Phrasebook.lookup('home', @utils.getname(r.exits), r.exits))
 
             # print location if player can link to it 
             if (r.location != NOTHING &&
                (@predicates.controls(player, r.location) ||
                 @predicates.can_link_to(player, r.location))
             )
-                Interface.do_notify(player, "Location: #{@utils.getname(r.location)}(##{r.location})")
+                Interface.do_notify(player, Phrasebook.lookup('location', @utils.getname(r.location), r.location))
             end
           when TYPE_EXIT
             # print destination 
             case r.location
               when NOTHING
               when HOME
-                Interface.do_notify(player, "Destination: ***HOME***")
+                Interface.do_notify(player, Phrasebook.lookup('dest-home'))
               else
-                Interface.do_notify(player, "#{room?(r.location) ? "Destination" : "Carried by"}: #{@utils.getname(r.location)}(##{r.location})")
+                if room?(r.location)
+                  Interface.do_notify(player, Phrasebook.lookup('dest', @utils.getname(r.location), r.location))
+                else
+                  Interface.do_notify(player, Phrasebook.lookup('carried-by', @utils.getname(r.location), r.location))
+                end
             end
       end
     end
 
     def do_score(player)
-      Interface.do_notify(player, "You have #{@db[player].pennies} #{@db[player].pennies == 1 ? "penny" : "pennies"}.")
+      if @db[player].pennies == 1
+        Interface.do_notify(player, Phrasebook.lookup('you-have-a-penny'))
+      else
+        Interface.do_notify(player, Phrasebook.lookup('you-have-pennies', @db[player].pennies))
+      end
     end
     
     def do_inventory(player)
       thing = @db[player].contents
       if (thing == NOTHING)
-        Interface.do_notify(player, "You aren't carrying anything.")
+        Interface.do_notify(player, Phrasebook.lookup('carrying-nothing'))
       else
-        Interface.do_notify(player, "You are carrying:")
+        Interface.do_notify(player, Phrasebook.lookup('carrying'))
         enum(thing).each do |item|
            notify_name(player, item)
         end
@@ -190,7 +198,7 @@ module TinyMud
     
     def do_find(player, name)
       if (!@predicates.payfor(player, LOOKUP_COST))
-        Interface.do_notify(player, "You don't have enough pennies.")
+        Interface.do_notify(player, Phrasebook.lookup('too-poor'))
       else
         0.upto(@db.length - 1) do |i|
             # Note: this isn't the same code as the original stringutil, fix
@@ -198,7 +206,7 @@ module TinyMud
               Interface.do_notify(player, "#{@db[i].name}(##{i})")
             end
         end
-        Interface.do_notify(player, "***End of List***")
+        Interface.do_notify(player, Phrasebook.lookup('end-of-list'))
       end
     end
 
@@ -235,7 +243,7 @@ module TinyMud
         if (@db[thing].description)
           Interface.do_notify(player, @db[thing].description)
         else
-          Interface.do_notify(player, "You see nothing special.")
+          Interface.do_notify(player, Phrasebook.lookup('see-nothing'))
         end
     end
 

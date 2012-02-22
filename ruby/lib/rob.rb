@@ -27,21 +27,21 @@ module TinyMud
     
       case thing
         when NOTHING
-          Interface.do_notify(player, "Rob whom?")
+          Interface.do_notify(player, Phrasebook.lookup('rob-whom'))
         when AMBIGUOUS
-          Interface.do_notify(player, "I don't know who you mean!")
+          Interface.do_notify(player, Phrasebook.lookup('who'))
         else
           if (!player?(thing))
-              Interface.do_notify(player, "Sorry, you can only rob other players.")
+              Interface.do_notify(player, Phrasebook.lookup('sorry-only-rob-players'))
           elsif (@db[thing].pennies < 1)
-              Interface.do_notify(player, "#{@db[thing].name} is penniless.")
-              Interface.do_notify(thing, "#{@db[player].name} tried to rob you, but you have no pennies to take.")
-          elsif(@predicates.can_doit(player, thing, "Your conscience tells you not to."))
+              Interface.do_notify(player, Phrasebook.lookup('penniless', @db[thing].name))
+              Interface.do_notify(thing, Phrasebook.lookup('tried-to-rob-you', @db[player].name))
+          elsif(@predicates.can_doit(player, thing, Phrasebook.lookup('you-have-a-conscience')))
               # steal a penny
               @db[player].pennies = @db[player].pennies + 1
               @db[thing].pennies = @db[thing].pennies - 1
-              Interface.do_notify(player, "You stole a penny.")
-              Interface.do_notify(thing, "#{@db[player].name} stole one of your pennies!")
+              Interface.do_notify(player, Phrasebook.lookup('stole-penny'))
+              Interface.do_notify(thing, Phrasebook.lookup('stole-from-you', @db[player].name))
           end
       end
     end
@@ -58,28 +58,28 @@ module TinyMud
 
       case victim
         when NOTHING
-          Interface.do_notify(player, "I don't see that player here.")
+          Interface.do_notify(player, Phrasebook.lookup('dont-see-player'))
         when AMBIGUOUS
-          Interface.do_notify(player, "I don't know who you mean!")
+          Interface.do_notify(player, Phrasebook.lookup('who'))
         else
           if (!player?(victim))
-              Interface.do_notify(player, "Sorry, you can only kill other players.")
+              Interface.do_notify(player, Phrasebook.lookup('sorry-only-kill-players'))
           elsif (is_wizard(victim))
-              Interface.do_notify(player, "Sorry, Wizards are immortal.")
+              Interface.do_notify(player, Phrasebook.lookup('sorry-wizard-immortal'))
           else
             # go for it set cost 
             cost = KILL_MIN_COST if (cost < KILL_MIN_COST)
     
             # see if it works 
             if (!@predicates.payfor(player, cost))
-              Interface.do_notify(player, "You don't have enough pennies.")
+              Interface.do_notify(player, Phrasebook.lookup('too-poor'))
             elsif ((Game.do_rand() % KILL_BASE_COST) < cost)
               # you killed him
               Interface.do_notify(player, "You killed #{@db[victim].name}!")
 
               # notify victim 
-              Interface.do_notify(victim, "#{@db[player].name} killed you!")
-              Interface.do_notify(victim, "Your insurance policy pays #{KILL_BONUS} pennies.")
+              Interface.do_notify(victim, Phrasebook.lookup('killed-you', @db[player].name))
+              Interface.do_notify(victim, Phrasebook.lookup('insurance-pays-out', KILL_BONUS))
 
               # pay off the bonus 
               @db[victim].pennies = @db[victim].pennies + KILL_BONUS
@@ -88,11 +88,11 @@ module TinyMud
               @move.send_home(victim)
 
               # now notify everybody else 
-              @speech.notify_except(@db[@db[player].location].contents, player, "#{@db[player].name} killed #{@db[victim].name}!")
+              @speech.notify_except(@db[@db[player].location].contents, player, Phrasebook.lookup('killed', @db[player].name, @db[victim].name))
             else
               # notify player and victim only 
-              Interface.do_notify(player, "Your murder attempt failed.")
-              Interface.do_notify(victim, "#{@db[player].name} tried to kill you!")
+              Interface.do_notify(player, Phrasebook.lookup('murder-failed'))
+              Interface.do_notify(victim, Phrasebook.lookup('tried-to-kill-you', @db[player].name))
             end
           end
       end
@@ -101,10 +101,10 @@ module TinyMud
     def do_give(player, recipient, amount)
       # do amount consistency check 
       if (amount < 0 && !is_wizard(player))
-        Interface.do_notify(player, "Try using the \"rob\" command.")
+        Interface.do_notify(player, Phrasebook.lookup('try-rob-command'))
         return
       elsif (amount == 0)
-        Interface.do_notify(player, "You must specify a positive number of pennies.")
+        Interface.do_notify(player, Phrasebook.lookup('specify-positive-pennies'))
         return
       end
 
@@ -120,18 +120,18 @@ module TinyMud
 
       case who
         when NOTHING
-          Interface.do_notify(player, "Give to whom?")
+          Interface.do_notify(player, Phrasebook.lookup('give-to-whom'))
           return
         when AMBIGUOUS
-          Interface.do_notify(player, "I don't know who you mean!")
+          Interface.do_notify(player, Phrasebook.lookup('who'))
           return
         else
           if (!is_wizard(player))
               if (!player?(who))
-                Interface.do_notify(player, "You can only give to other players.")
+                Interface.do_notify(player, Phrasebook.lookup('can-only-give-to-others'))
                 return
               elsif (@db[who].pennies + amount > MAX_PENNIES)
-                Interface.do_notify(player, "That player doesn't need that many pennies!")
+                Interface.do_notify(player, Phrasebook.lookup('player-too-rich'))
                 return
               end
           end
@@ -139,12 +139,19 @@ module TinyMud
 
       # try to do the give 
       if (!@predicates.payfor(player, amount))
-        Interface.do_notify(player, "You don't have that many pennies to give!")
+        Interface.do_notify(player, Phrasebook.lookup('not-rich-enough'))
       else
-        # he can do it 
-        Interface.do_notify(player, "You give #{amount} #{amount == 1 ? "penny" : "pennies"} to #{@db[who].name}.")
-        if (player?(who))
-            Interface.do_notify(who, "#{@db[player].name} gives you #{amount} #{amount == 1 ? "penny" : "pennies"}.")
+        # he can do it
+        if amount == 1
+          Interface.do_notify(player, Phrasebook.lookup('you-give-a-penny', @db[who].name))
+          if (player?(who))
+              Interface.do_notify(who, Phrasebook.lookup('gives-you-a-penny', @db[player].name))
+          end
+        else
+          Interface.do_notify(player, Phrasebook.lookup('you-give-pennies', amount, @db[who].name))
+          if (player?(who))
+              Interface.do_notify(who, Phrasebook.lookup('gives-you-pennies', @db[player].name, amount))
+          end
         end
         @db[who].pennies = @db[who].pennies + amount
       end

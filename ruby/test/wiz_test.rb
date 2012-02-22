@@ -46,23 +46,23 @@ module TinyMud
 			notify = sequence('notify')
 			
 			# Only a wizard can do this
-			Interface.expects(:do_notify).with(bob, "Only a Wizard may teleport at will.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('bad-teleport')).in_sequence(notify)
 			wiz.do_teleport(bob, nil, nil)
 			
 			# Wizard can teleport self - first to non-existant location
-			Interface.expects(:do_notify).with(wizard, "Send it where?").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('send-where')).in_sequence(notify)
 			wiz.do_teleport(wizard, "outer space", nil)
 			
 			# A location not "here"
-			Interface.expects(:do_notify).with(wizard, "Send it where?").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('send-where')).in_sequence(notify)
 			wiz.do_teleport(wizard, "place", nil)
 			
 			# Use absolute
-			Interface.expects(:do_notify).with(wizard, "You feel a wrenching sensation...").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Wizard has arrived.").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "Wizard has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('feel-weird')).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('hello-wizard')).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('hello-wizard')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "place (#2)").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "bob(#3)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "anne(#4)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "jam(#6)").in_sequence(notify)
@@ -72,19 +72,19 @@ module TinyMud
 			assert_equal(wizard, @db[place].contents)
 			
 			# Can't see rooms by name?
-			Interface.expects(:do_notify).with(wizard, "I don't see that here.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('dont-see-that')).in_sequence(notify)
 			wiz.do_teleport(wizard, "place", "##{limbo}")
 
 			# Can't send "to" exit or things
-			Interface.expects(:do_notify).with(wizard, "Bad destination.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('bad-destination')).in_sequence(notify)
 			wiz.do_teleport(wizard, "anne", "jam")
-			Interface.expects(:do_notify).with(wizard, "Bad destination.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('bad-destination')).in_sequence(notify)
 			wiz.do_teleport(wizard, "anne", "exit")
 			
 			# Can't send exit or room
-			Interface.expects(:do_notify).with(wizard, "Bad destination.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('bad-destination')).in_sequence(notify)
 			wiz.do_teleport(wizard, "exit", "##{limbo}")
-			Interface.expects(:do_notify).with(wizard, "Bad destination.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('bad-destination')).in_sequence(notify)
 			wiz.do_teleport(wizard, "##{place}", "##{limbo}")
 			
 			# Can send things
@@ -106,29 +106,29 @@ module TinyMud
 			another_bob = Player.new(@db).create_player("bobby", "sprout")
 			record(another_bob) {|r| r.merge!( :contents => NOTHING, :location => limbo, :next => NOTHING ) }
 			record(limbo) {|r| r.merge!({ :contents => another_bob }) }
-			Interface.expects(:do_notify).with(bob, "You feel a wrenching sensation...").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('feel-weird')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, 'bob has left.').in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'bob has arrived.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Limbo").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "#{@db[limbo].description}").in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'bob is briefly visible through the mist.').in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'bobby').in_sequence(notify)
 			wiz.do_teleport(wizard, "##{bob}", "##{limbo}")
 			assert_equal(limbo, @db[bob].location)
 			assert_equal(limbo, @db[another_bob].location)
 			assert_equal(place, @db[wizard].location)
 
-			Interface.expects(:do_notify).with(wizard, "You feel a wrenching sensation...").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, 'Wizard has left.').in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, 'Wizard has arrived.').in_sequence(notify)
-			Interface.expects(:do_notify).with(another_bob, 'Wizard has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('feel-weird')).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('bye-bye-wizard')).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('hello-wizard')).in_sequence(notify)
+			Interface.expects(:do_notify).with(another_bob, Phrasebook.lookup('hello-wizard')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "Limbo (#0)").in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "#{@db[limbo].description}").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, 'Wizard is briefly visible through the mist.').in_sequence(notify)
 			Interface.expects(:do_notify).with(another_bob, 'Wizard is briefly visible through the mist.').in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "Contents:").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, 'bob(#3)').in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, 'bobby(#10)').in_sequence(notify)
 			wiz.do_teleport(wizard, "##{limbo}", nil)
@@ -147,11 +147,11 @@ module TinyMud
 			
 			# Only a wizard can use this
 			Interface.expects(:do_process_command).never.in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Only Wizards may use this command.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('only-wizard')).in_sequence(notify)
 			wiz.do_force(nil, bob, nil, nil)
 			
 			# Victim must exist
-			Interface.expects(:do_notify).with(wizard, "That player does not exist.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('player-does-not-exist')).in_sequence(notify)
 			wiz.do_force(nil, wizard, "spider", nil)
 			
 			# Pass the call on to process_command
@@ -213,34 +213,34 @@ module TinyMud
 			notify = sequence('notify')
 			
 			# Only wizards can do this
-			Interface.expects(:do_notify).with(bob, "Only a Wizard can turn a person into a toad.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('bad-toad')).in_sequence(notify)
 			wiz.do_toad(bob, "anne")
 			
 			# Must exist
-			Interface.expects(:do_notify).with(wizard, "I don't see that here.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('dont-see-that')).in_sequence(notify)
 			wiz.do_toad(wizard, "twig")
-			Interface.expects(:do_notify).with(wizard, "I don't see that here.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('dont-see-that')).in_sequence(notify)
 			wiz.do_toad(wizard, "##{@db.length}")
 			
 			# Must be a player
-			Interface.expects(:do_notify).with(wizard, "You can only turn players into toads!").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('can-only-toad-players')).in_sequence(notify)
 			wiz.do_toad(wizard, "##{jam}")
 			
 			# Can't be another wizard
 			record(bob) {|r| r[:flags] = r[:flags] | WIZARD }
-			Interface.expects(:do_notify).with(wizard, "You can't turn a Wizard into a toad.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('cant-toad-wizard')).in_sequence(notify)
 			wiz.do_toad(wizard, "##{bob}")
 			
 			# They can't be carrying anything
 			record(bob) {|r| r[:flags] = r[:flags] = TYPE_PLAYER }
-			Interface.expects(:do_notify).with(wizard, "What about what they are carrying?").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('what-about-them')).in_sequence(notify)
 			wiz.do_toad(wizard, "##{bob}")
 			
 			# Do-it :-)
 			record(anne) {|r| r[:flags] = r[:flags] | DARK } # To check flags reset
 			record(anne) {|r| r[:pennies] = 100 }
 			record(anne) {|r| r[:owner] = NOTHING }
-			Interface.expects(:do_notify).with(anne, "You have been turned into a toad.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('you-become-a-toad')).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "You turned anne into a toad!").in_sequence(notify)
 			wiz.do_toad(wizard, "##{anne}")
 			assert_equal(wizard, @db[anne].owner)

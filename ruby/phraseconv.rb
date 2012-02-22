@@ -10,7 +10,11 @@ phrases = YAML.load_file('./lib/phrases.yml')
 
 # first get all ruby files under here
 files = []
-Find.find('.') do |file|
+Find.find('./lib') do |file|
+  next if File.extname(file) != ".rb"
+  files << file
+end
+Find.find('./test') do |file|
   next if File.extname(file) != ".rb"
   files << file
 end
@@ -24,10 +28,10 @@ files.each do |filename|
   match_notify = /(\s*Interface\.do_notify\(\w+,)\s*(["']{1}.*?)\)(.*)/
   match_expects = /(\s*Interface\.expects\(:do_notify\)\.with\([\w'"]+,)\s*(["']{1}.*?)\)(.*)/
   tmp_name = filename.gsub(".rb", ".tmp")
-  #FileUtils.cp(filename, new_name)
-  puts "#{filename} to #{tmp_name}"
-  open(tmp_name, "w+") do |out|
-    IO.foreach(filename) do |line|
+  FileUtils.cp(filename, tmp_name)
+  puts "#{filename} --> #{tmp_name}"
+  open(filename, "w+") do |out|
+    IO.foreach(tmp_name) do |line|
       m1 = line.match(match_notify)
       m2 = line.match(match_expects)
       if m1
@@ -55,4 +59,5 @@ files.each do |filename|
       end
     end
   end
+  File.delete(tmp_name)
 end

@@ -67,11 +67,11 @@ module TinyMud
 			player = @db[player_index]
 			if(old_password != player.password)
 				#puts "Printing sorry because old pass(#{old_password}) != current pass(#{player.password})" 
-				Interface.do_notify(player_index, "Sorry")
+				Interface.do_notify(player_index, Phrasebook.lookup('sorry'))
 			elsif(old_password == player.password)
 				player.password = new_password
 				#puts "Printing changed because old pass(#{old_password}) == current pass(#{player.password})" 
-				Interface.do_notify(player_index, "Password changed.")
+				Interface.do_notify(player_index, Phrasebook.lookup('password-changed'))
 			else
 				#puts "not printing anything, neither are true."
 			end

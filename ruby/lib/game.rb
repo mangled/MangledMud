@@ -120,9 +120,9 @@ module TinyMud
       # This is non-functional, we need the networking code in place...
       if (is_wizard(player))
         # Todo!!!
-        Interface.do_notify(player, "Dumping...")
+        Interface.do_notify(player, Phrasebook.lookup('dumping'))
       else
-        Interface.do_notify(player, "Sorry, you are in a no dumping zone.")
+        Interface.do_notify(player, Phrasebook.lookup('sorry-no-dump'))
       end
     end
 
@@ -179,7 +179,7 @@ module TinyMud
         if matched_command
           @commands[matched_command].call(player, arg1, arg2)
         else
-          Interface.do_notify(player, "Huh?  (Type \"help\" for help.)")
+          Interface.do_notify(player, Phrasebook.lookup('huh'))
         end
       end
     end

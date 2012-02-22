@@ -21,7 +21,7 @@ module TinyMud
         begin
           IO.foreach(filename) {|line| Interface.do_notify(player, line.chomp()) }
         rescue Errno::ENOENT => e
-          Interface.do_notify(player, "Sorry, #{filename} is broken.  Management has been notified.")
+          Interface.do_notify(player, Phrasebook.lookup('sorry-bad-file', filename))
           $stderr.puts("spit_file: #{e}")
         end
     end

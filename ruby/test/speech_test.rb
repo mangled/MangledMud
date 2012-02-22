@@ -71,7 +71,7 @@ module TinyMud
 			speech = Speech.new(@db)
 			
 			# Normal player
-			Interface.expects(:do_notify).with(joe, 'But what do you want to do with the wall?')
+			Interface.expects(:do_notify).with(joe, Phrasebook.lookup('what-wall'))
 			speech.do_wall(joe, "hello", "world")
 			
 			# Wizard
@@ -87,7 +87,7 @@ module TinyMud
 			wizard = 1
 			bob = Player.new(@db).create_player("bob", "pwd")
 			record(bob) {|r| r[:location] = 0 }
-			Interface.expects(:do_notify).with(bob, 'Your complaint has been duly noted.')
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('complaint-noted'))
 			Speech.new(@db).do_gripe(bob, "darn trolls", "eat cheese")
 			# Fixme: write stderr to somewhere else
 		end
@@ -99,16 +99,16 @@ module TinyMud
 
 			speech = Speech.new(@db)
 			record(bob) {|r| r[:pennies] = 0 }
-			Interface.expects(:do_notify).with(bob, "You don't have enough pennies.")
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('too-poor'))
 			speech.do_page(bob, "joe")
 			
 			record(bob) {|r| r[:pennies] = LOOKUP_COST }
-			Interface.expects(:do_notify).with(bob, "I don't recognize that name.")
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('unknown-name'))
 			speech.do_page(bob, "jed")
 			
 			record(bob) {|r| r[:pennies] = LOOKUP_COST }
 			Interface.expects(:do_notify).with(joe, "You sense that bob is looking for you in Limbo.")
-			Interface.expects(:do_notify).with(bob, "Your message has been sent.")
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('message-sent'))
 			speech.do_page(bob, "joe")
 		end
 

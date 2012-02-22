@@ -13,7 +13,7 @@ module TinyMud
 
     def do_teleport(player, arg1, arg2) 
       if (!is_wizard(player))
-        Interface.do_notify(player, "Only a Wizard may teleport at will.")
+        Interface.do_notify(player, Phrasebook.lookup('bad-teleport'))
         return
       end
   
@@ -47,9 +47,9 @@ module TinyMud
       destination = @match.match_result()
       case destination
         when NOTHING
-          Interface.do_notify(player, "Send it where?")
+          Interface.do_notify(player, Phrasebook.lookup('send-where'))
         when AMBIGUOUS
-          Interface.do_notify(player, "I don't know which destination you mean!")
+          Interface.do_notify(player, Phrasebook.lookup('which-dest'))
         else
           # check victim, destination types, teleport if ok 
           if (exit?(destination) ||
@@ -57,9 +57,9 @@ module TinyMud
               exit?(victim) ||
               room?(victim) ||
               (player?(victim) && !room?(destination)))
-              Interface.do_notify(player, "Bad destination.")
+              Interface.do_notify(player, Phrasebook.lookup('bad-destination'))
           elsif(player?(victim))
-              Interface.do_notify(victim, "You feel a wrenching sensation...")
+              Interface.do_notify(victim, Phrasebook.lookup('feel-weird'))
               @move.enter_room(victim, destination)
           else
               @move.moveto(victim, destination)
@@ -69,14 +69,14 @@ module TinyMud
 
     def do_force(game, player, what, command)
       if (!is_wizard(player))
-        Interface.do_notify(player, "Only Wizards may use this command.")
+        Interface.do_notify(player, Phrasebook.lookup('only-wizard'))
         return
       end
   
       # get victim
       victim = @player.lookup_player(what)
       if (victim == NOTHING)
-        Interface.do_notify(player, "That player does not exist.")
+        Interface.do_notify(player, Phrasebook.lookup('player-does-not-exist'))
         return
       end
   
@@ -90,7 +90,7 @@ module TinyMud
 
     def do_stats(player, name) 
       if (!is_wizard(player))
-        Interface.do_notify(player, "The universe contains #{@db.length} objects.")
+        Interface.do_notify(player, Phrasebook.lookup('universe-contains', @db.length))
       else
         owner = @player.lookup_player(name)
         total = rooms = exits = things = players = unknowns = 0
@@ -111,13 +111,13 @@ module TinyMud
             end
           end
         end
-        Interface.do_notify(player, "#{total} objects = #{rooms} rooms, #{exits} exits, #{things} things, #{players} players, #{unknowns} unknowns.")
+        Interface.do_notify(player, Phrasebook.lookup('universe-details', total, rooms, exits, things, players, unknowns))
       end
     end
 
     def do_toad(player, name) 
       if (!is_wizard(player))
-        Interface.do_notify(player, "Only a Wizard can turn a person into a toad.")
+        Interface.do_notify(player, Phrasebook.lookup('bad-toad'))
         return
       end
   
@@ -130,11 +130,11 @@ module TinyMud
       return if (victim == NOTHING)
 
       if (!player?(victim))
-        Interface.do_notify(player, "You can only turn players into toads!")
+        Interface.do_notify(player, Phrasebook.lookup('can-only-toad-players'))
       elsif (is_wizard(victim))
-        Interface.do_notify(player, "You can't turn a Wizard into a toad.")
+        Interface.do_notify(player, Phrasebook.lookup('cant-toad-wizard'))
       elsif (@db[victim].contents != NOTHING)
-        Interface.do_notify(player, "What about what they are carrying?")
+        Interface.do_notify(player, Phrasebook.lookup('what-about-them'))
       else
         # we're ok 
         # do it 
@@ -146,11 +146,11 @@ module TinyMud
         @db[victim].pennies = 1	# don't let him keep his immense wealth 
 
         # notify people 
-        Interface.do_notify(victim, "You have been turned into a toad.")
-        Interface.do_notify(player, "You turned #{@db[victim].name} into a toad!")
+        Interface.do_notify(victim, Phrasebook.lookup('you-become-a-toad'))
+        Interface.do_notify(player, Phrasebook.lookup('you-toaded', @db[victim].name))
     
         # reset name 
-        @db[victim].name = "a slimy toad named #{@db[victim].name}"
+        @db[victim].name = Phrasebook.lookup('toad-name', @db[victim].name)
       end
     end
   end

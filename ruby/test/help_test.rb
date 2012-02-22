@@ -26,7 +26,7 @@ module TinyMud
 		def test_do_news
 			help = TinyMud::Help.new(@db)
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(0, "Sorry, news.txt is broken.  Management has been notified.").in_sequence(notify)
+			Interface.expects(:do_notify).with(0, Phrasebook.lookup('sorry-bad-file', "news.txt")).in_sequence(notify)
 			help.do_news(0)
 		end
     end

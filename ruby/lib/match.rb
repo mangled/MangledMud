@@ -122,10 +122,10 @@ module TinyMud
       match = match_result()
       case match
         when NOTHING
-          Interface.do_notify(@match_who, NOMATCH_MESSAGE)
+          Interface.do_notify(@match_who, Phrasebook.lookup('dont-see-that'))
           NOTHING
         when AMBIGUOUS
-          Interface.do_notify(@match_who, AMBIGUOUS_MESSAGE)
+          Interface.do_notify(@match_who, Phrasebook.lookup('which-one'))
           NOTHING
         else
           match

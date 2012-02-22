@@ -1,4 +1,5 @@
 # Includes for tests
+require_relative '../lib/phrasebook'
 require_relative '../lib/constants'
 require_relative '../lib/interface'
 require_relative '../lib/create'
