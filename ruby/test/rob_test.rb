@@ -59,14 +59,14 @@ module TinyMud
 			rob.do_rob(bob, "jam")
 			
 			# Rob a poor player
-			Interface.expects(:do_notify).with(bob, "anne is penniless.").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob tried to rob you, but you have no pennies to take.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('penniless', "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('tried-to-rob-you', "bob")).in_sequence(notify)
 			rob.do_rob(bob, "anne")
 			
 			# Rob player
 			record(anne) {|r| r[:pennies] = 1 }
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('stole-penny')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob stole one of your pennies!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('stole-from-you', "bob")).in_sequence(notify)
 			rob.do_rob(bob, "anne")
 			assert_equal(0, @db[anne].pennies)
 			assert_equal(1, @db[bob].pennies)
@@ -78,7 +78,7 @@ module TinyMud
 
 			# Rob self!
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('stole-penny')).in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "bob stole one of your pennies!").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('stole-from-you', "bob")).in_sequence(notify)
 			assert_equal(1, @db[bob].pennies)
 			rob.do_rob(bob, "bob")
 			assert_equal(1, @db[bob].pennies)
@@ -86,18 +86,18 @@ module TinyMud
 			# Rob a wizard!
 			record(anne) {|r| r.merge!({ :pennies => 1, :flags => TYPE_PLAYER | WIZARD }) }
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('stole-penny')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob stole one of your pennies!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('stole-from-you', "bob")).in_sequence(notify)
 			rob.do_rob(bob, "anne")
 
 			# Wizards can use absolutes and reach anywhere!
 			record(anne) {|r| r.merge!({ :pennies => 1, :key => NOTHING, :flags => TYPE_PLAYER }) }
 			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('stole-penny')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "Wizard stole one of your pennies!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('stole-from-you', "Wizard")).in_sequence(notify)
 			rob.do_rob(wizard, "anne")
 			
 			record(anne) {|r| r.merge!({ :pennies => 1, :key => NOTHING, :flags => TYPE_PLAYER }) }
 			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('stole-penny')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "Wizard stole one of your pennies!").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('stole-from-you', "Wizard")).in_sequence(notify)
 			rob.do_rob(wizard, "##{anne}")
 			
 			# Key seems to impact a wizard too
@@ -160,8 +160,8 @@ module TinyMud
 			
 			# Kill but rich, setting cost to greater than KILL_BASE_COST to ensure success (uses random in code)
 			record(bob) {|r| r.merge!({ :pennies => KILL_BASE_COST + 1000 }) }
-			Interface.expects(:do_notify).with(bob, "You killed anne!").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob killed you!").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('killed', "You", "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('killed-you', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Your insurance policy pays 50 pennies.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne has left.").in_sequence(notify)
 			Interface.expects(:do_notify).with(sue, "anne has left.").in_sequence(notify)
@@ -174,7 +174,7 @@ module TinyMud
 			# This is random and may or may not trigger, need to resolve as tests become unreliable
 			# Comment out this line and remove +1 below if this test "randomly" fails!
 			# Interface.expects(:do_notify).with(anne, Phrasebook.lookup('found-a-penny')).in_sequence(notify)
-			Interface.expects(:do_notify).with(sue, "bob killed anne!").in_sequence(notify)
+			Interface.expects(:do_notify).with(sue, Phrasebook.lookup('killed', "bob", "anne")).in_sequence(notify)
 			rob.do_kill(bob, "anne", KILL_BASE_COST)
 			assert_equal(KILL_BONUS + 0, @db[anne].pennies) # The +1 is a result of the random, see comment above
 			assert_equal(limbo, @db[anne].location)
@@ -184,7 +184,7 @@ module TinyMud
 			# Kill but almost poor, being a wizard so I don't need to move stuff about, also tests wizard powers
 			record(bob) {|r| r.merge!({ :flags => TYPE_PLAYER | WIZARD, :pennies => KILL_MIN_COST }) }
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('murder-failed')).in_sequence(notify)
-			Interface.expects(:do_notify).with(sam, "bob tried to kill you!").in_sequence(notify)
+			Interface.expects(:do_notify).with(sam, Phrasebook.lookup('tried-to-kill-you', "bob")).in_sequence(notify)
 			rob.do_kill(bob, "##{sam}", 1)
 			assert_equal(place, @db[sue].location)
 			assert_equal(sue, @db[jam].next)
@@ -218,7 +218,7 @@ module TinyMud
 			notify = sequence('notify')
 			
 			# Wizards can "rob" this way, but bob isn't!
-			Interface.expects(:do_notify).with(bob, "Try using the \"rob\" command.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('try-rob-command')).in_sequence(notify)
 			rob.do_give(bob, "anne", -1)
 			
 			# Zero give
@@ -251,15 +251,15 @@ module TinyMud
 			
 			# Ok
 			record(bob) {|r| r[:pennies] = 4 }
-			Interface.expects(:do_notify).with(bob, "You give 1 penny to anne.").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob gives you 1 penny.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-give-a-penny', "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('gives-you-a-penny', "bob")).in_sequence(notify)
 			rob.do_give(bob, "anne", 1)
 			assert_equal(3, @db[bob].pennies)
 			assert_equal(1, @db[anne].pennies)
 			
 			# Ok, but plural
-			Interface.expects(:do_notify).with(bob, "You give 2 pennies to anne.").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob gives you 2 pennies.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-give-pennies', "2", "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('gives-you-pennies', "bob", "2")).in_sequence(notify)
 			rob.do_give(bob, "anne", 2)
 			assert_equal(1, @db[bob].pennies)
 			assert_equal(3, @db[anne].pennies)
@@ -277,7 +277,7 @@ module TinyMud
 			assert_equal(1, @db[anne].pennies)
 			
 			# Wizard can give to non player objects!!!!
-			Interface.expects(:do_notify).with(wizard, "You give 1 penny to jam.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('you-give-a-penny', "jam")).in_sequence(notify)
 			rob.do_give(wizard, "jam", 1)
 			assert_equal(1, @db[jam].pennies)
 
@@ -287,8 +287,8 @@ module TinyMud
 			
 			# Wizard can give more than max
 			record(anne) {|r| r[:pennies] = MAX_PENNIES - 1 }
-			Interface.expects(:do_notify).with(wizard, "You give 2 pennies to anne.").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "Wizard gives you 2 pennies.").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('you-give-pennies', "2", "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('gives-you-pennies', "Wizard", "2")).in_sequence(notify)
 			rob.do_give(wizard, "anne", 2)
 			assert_equal(MAX_PENNIES + 1, @db[anne].pennies)
 

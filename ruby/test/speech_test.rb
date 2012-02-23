@@ -37,9 +37,9 @@ module TinyMud
 			
 			# If the player is somewhere
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(bob, "You say \"hello = world\"").in_sequence(notify)
-			Interface.expects(:do_notify).with(joe, "bob says \"hello = world\"").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "bob says \"hello = world\"").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-say', "hello = world")).in_sequence(notify)
+			Interface.expects(:do_notify).with(joe, Phrasebook.lookup('someone-says', "bob", "hello = world")).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('someone-says', "bob", "hello = world")).in_sequence(notify)
 			record(bob) {|r| r[:location] = 0 }
 			speech.do_say(bob, "hello", "world")
 		end
@@ -76,9 +76,9 @@ module TinyMud
 			
 			# Wizard
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(wizard, "Wizard shouts \"hello = world\"").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "Wizard shouts \"hello = world\"").in_sequence(notify)
-			Interface.expects(:do_notify).with(joe, "Wizard shouts \"hello = world\"").in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('someone-shouts', "Wizard", "hello = world")).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('someone-shouts', "Wizard", "hello = world")).in_sequence(notify)
+			Interface.expects(:do_notify).with(joe, Phrasebook.lookup('someone-shouts', "Wizard", "hello = world")).in_sequence(notify)
 			speech.do_wall(wizard, "hello", "world")
 			# Fixme: write stderr to somewhere else
 		end
@@ -107,7 +107,7 @@ module TinyMud
 			speech.do_page(bob, "jed")
 			
 			record(bob) {|r| r[:pennies] = LOOKUP_COST }
-			Interface.expects(:do_notify).with(joe, "You sense that bob is looking for you in Limbo.")
+			Interface.expects(:do_notify).with(joe, Phrasebook.lookup('someone-looking-for-you', "bob", "Limbo"))
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('message-sent'))
 			speech.do_page(bob, "joe")
 		end

@@ -27,9 +27,9 @@ module TinyMud
 			# Simple (one character) commands
 			#
 			# Say
-			Interface.expects(:do_notify).with(bob, 'You say "treacle"').in_sequence(@notify)
-			Interface.expects(:do_notify).with(sam, 'bob says "treacle"').in_sequence(@notify)
-			Interface.expects(:do_notify).with(wizard, 'bob says "treacle"').in_sequence(@notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-say', "treacle")).in_sequence(@notify)
+			Interface.expects(:do_notify).with(sam, Phrasebook.lookup('someone-says', "bob", "treacle")).in_sequence(@notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('someone-says', "bob", "treacle")).in_sequence(@notify)
 			game.process_command(bob, '"treacle')
 			
 			# Pose
@@ -41,7 +41,7 @@ module TinyMud
 			# !! Command is an exact match for an exit - Check later - We don't have an exit!!!
 			
 			# Bad command (doesn't start with @)
-			Interface.expects(:do_notify).with(bob, 'Huh?  (Type "help" for help.)').in_sequence(@notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('huh')).in_sequence(@notify)
 			game.process_command(bob, "!treacle")
 			
 			# The rest of the testing of "game" is handled through regression.rb

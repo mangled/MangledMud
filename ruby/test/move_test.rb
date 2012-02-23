@@ -101,7 +101,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, "bob has arrived.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, 'bob is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('seen-in-mist', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
 		
@@ -201,7 +201,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(anne, 'bob has arrived.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, 'bob is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('seen-in-mist', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "tomato(#6)").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
@@ -287,7 +287,7 @@ module TinyMud
 			Interface.expects(:do_notify).with(wizard, 'bob has arrived.').in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, 'bob is briefly visible through the mist.').in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('seen-in-mist', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
 			move.do_move(bob, "home")
@@ -494,8 +494,8 @@ module TinyMud
 			
 			# Drop something you own onto a temple
 			record(place) {|r| r[:flags] = r[:flags] | TEMPLE }
-			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('consumed-in-flame', "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('sacrifices', "bob", "cheese")).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 			assert_equal(cheese2, @db[bob].contents)
 			assert_equal(limbo, @db[cheese].location)
@@ -503,8 +503,8 @@ module TinyMud
 			# Drop again, don't own, but make the reward < 1
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 0 )}
-			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('consumed-in-flame', "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('sacrifices', "bob", "cheese")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-have-received-penny')).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 
@@ -512,8 +512,8 @@ module TinyMud
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 10 )}
 			record(bob) {|r| r.merge!( :pennies => MAX_PENNIES + 1 ) }
-			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('consumed-in-flame', "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('sacrifices', "bob", "cheese")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-have-received-penny')).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 			record(bob) {|r| r.merge!( :pennies => 5 ) }
@@ -521,17 +521,17 @@ module TinyMud
 			# Drop again, don't own, but make the reward > MAX_OBJECT_ENDOWMENT
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => MAX_OBJECT_ENDOWMENT + 1 )}
-			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "You have received #{MAX_OBJECT_ENDOWMENT} pennies for your sacrifice.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('consumed-in-flame', "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('sacrifices', "bob", "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-have-received-pennies', MAX_OBJECT_ENDOWMENT)).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 			
 			# The same but you don't own it
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :location => bob, :next => NOTHING, :owner => anne, :pennies => 5 )}
-			Interface.expects(:do_notify).with(bob, "cheese is consumed in a burst of flame!").in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob sacrifices cheese.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "You have received 5 pennies for your sacrifice.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('consumed-in-flame', "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('sacrifices', "bob", "cheese")).in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('you-have-received-pennies', 5)).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 			assert_equal(cheese2, @db[bob].contents)
 			assert_equal(limbo, @db[cheese].location)
@@ -559,7 +559,7 @@ module TinyMud
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :flags => TYPE_THING, :location => bob, :next => NOTHING, :owner => bob )}
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('dropped')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob dropped cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('dropped-thing', "bob", "cheese")).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 			assert_equal(place, @db[cheese].location)
 			assert_equal(cheese, @db[place].contents)
@@ -569,7 +569,7 @@ module TinyMud
 			record(cheese2) {|r| r[:next] = cheese }
 			record(cheese) {|r| r.merge!( :flags => TYPE_THING, :location => bob, :next => NOTHING, :owner => bob )}
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('dropped')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, "bob dropped cheese.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('dropped-thing', "bob", "cheese")).in_sequence(notify)
 			move.do_drop(bob, "cheese")
 			assert_equal(place, @db[cheese].location)
 		end

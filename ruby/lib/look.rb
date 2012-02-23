@@ -61,7 +61,7 @@ module TinyMud
               look_room(player, thing)
             when TYPE_PLAYER
               look_simple(player, thing)
-              look_contents(player, thing, "Carrying:")
+              look_contents(player, thing, Phrasebook.lookup('carrying-list'))
             else
               look_simple(player, thing)
           end
@@ -95,8 +95,8 @@ module TinyMud
       Interface.do_notify(
         player,
         "#{@utils.getname(thing)}(##{thing}) [#{@utils.getname(r.owner)}] " +
-        "Key: #{(r.flags & ANTILOCK) != 0 ? NOT_TOKEN : ' '}" +
-        "#{@utils.getname(r.key)}(##{r.key}) Pennies: " +
+        "#{Phrasebook.lookup('key')} #{(r.flags & ANTILOCK) != 0 ? NOT_TOKEN : ' '}" +
+        "#{@utils.getname(r.key)}(##{r.key}) #{Phrasebook.lookup('pennies')} " +
         "#{r.pennies} #{flag_description(thing)}"
       )
 
@@ -248,23 +248,23 @@ module TinyMud
     end
 
     def flag_description(thing)
-      description = "Type: "
+      description = Phrasebook.lookup('type') + " "
       case typeof(thing)
-          when TYPE_ROOM then description << "Room"
-          when TYPE_EXIT then description << "Exit"
-          when TYPE_THING then description << "Thing"
-          when TYPE_PLAYER then description << "Player"
-          else description << "***UNKNOWN TYPE***"
+          when TYPE_ROOM then description << Phrasebook.lookup('type-room')
+          when TYPE_EXIT then description << Phrasebook.lookup('type-exit')
+          when TYPE_THING then description << Phrasebook.lookup('type-thing')
+          when TYPE_PLAYER then description << Phrasebook.lookup('type-player')
+          else description << Phrasebook.lookup('type-unknown')
       end
 
       if ((@db[thing].flags & ~TYPE_MASK) != 0)
         # print flags 
-        description << " Flags:"
-        description << " WIZARD" if (is_wizard(thing))
-        description << " STICKY" if (is_sticky(thing))
-        description << " DARK" if (is_dark(thing))
-        description << " LINK_OK" if (is_link_ok(thing))
-        description << " TEMPLE" if (is_temple(thing))
+        description << (" " + Phrasebook.lookup('flags'))
+        description << (" " + Phrasebook.lookup('flag-wizard')) if (is_wizard(thing))
+        description << (" " + Phrasebook.lookup('flag-sticky')) if (is_sticky(thing))
+        description << (" " + Phrasebook.lookup('flag-dark')) if (is_dark(thing))
+        description << (" " + Phrasebook.lookup('flag-link-ok')) if (is_link_ok(thing))
+        description << (" " + Phrasebook.lookup('flag-temple')) if (is_temple(thing))
       end
 
       description

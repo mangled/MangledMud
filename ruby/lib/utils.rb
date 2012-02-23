@@ -35,8 +35,8 @@ module TinyMud
 
     def getname(loc)
       case loc
-        when NOTHING then "***NOTHING***"
-        when HOME then "***HOME***"
+        when NOTHING then Phrasebook.lookup('loc-nothing')
+        when HOME then Phrasebook.lookup('loc-home')
         else @db[loc].name
       end
     end

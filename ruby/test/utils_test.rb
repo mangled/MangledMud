@@ -75,8 +75,8 @@ module TinyMud
 			thing1 = @db.add_new_record
 			record(thing1) {|r| r.merge!({ :name => "cheese", :location => NOTHING }) }
 			utils = Utils.new(@db)
-			assert_equal("***NOTHING***", utils.getname(NOTHING))
-			assert_equal("***HOME***", utils.getname(HOME))
+			assert_equal(Phrasebook.lookup('loc-nothing'), utils.getname(NOTHING))
+			assert_equal(Phrasebook.lookup('loc-home'), utils.getname(HOME))
 			assert_equal("cheese", utils.getname(thing1))
 		end
     end

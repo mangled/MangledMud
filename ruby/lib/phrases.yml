@@ -1,5 +1,11 @@
 # YAML Phrasebook for TinyMUD
 #############################
+# Note: We have ported 99.9% of the strings, there might be the odd few lurking away!
+# Some formatted output strings, e.g. name(#number) are not here - As they don't contain
+# any static text, but they do influence presentation. It would be possible to add these
+# also. Lastly the majority of the tests use the phrasebook. But again there is a chance
+# we have missed the odd phrase.
+#
 
 'anti-locked'               : "Anti-Locked."
 'bad-destination'           : "Bad destination."
@@ -114,6 +120,7 @@
 'unlocked'                  : "Unlocked."
 'what-about-them'           : "What about what they are carrying?"
 'already-have-it'           : "You already have that!"
+'carrying-list'             : "Carrying:"
 'carrying'                  : "You are carrying:"
 'carrying-nothing'          : "You aren't carrying anything."
 'cant-be-mortal'            : "You cannot make yourself mortal."
@@ -166,4 +173,19 @@
 'bye-bye-wizard'            : "Wizard has left."
 'hello-wizard'              : "Wizard has arrived."
 'seen-in-mist'              : "%s is briefly visible through the mist."
-
+'loc-nothing'               : "***NOTHING***"
+'loc-home'                  : "***HOME***"
+'type'                      : "Type:"
+'type-room'                 : "Room"
+'type-exit'                 : "Exit"
+'type-thing'                : "Thing"
+'type-player'               : "Player"
+'type-unknown'              : "***UNKNOWN TYPE***"
+'flags'                     : "Flags:"
+'flag-wizard'               : "WIZARD"
+'flag-sticky'               : "STICKY"
+'flag-dark'                 : "DARK"
+'flag-link-ok'              : "LINK_OK"
+'flag-temple'               : "TEMPLE"
+'key'                       : "Key:"
+'pennies'                   : "Pennies:"
