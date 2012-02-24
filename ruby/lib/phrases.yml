@@ -1,10 +1,11 @@
 # YAML Phrasebook for TinyMUD
 #############################
 # Note: We have ported 99.9% of the strings, there might be the odd few lurking away!
-# Some formatted output strings, e.g. name(#number) are not here - As they don't contain
-# any static text, but they do influence presentation. It would be possible to add these
+# Some formatted output strings, e.g. name(#number) are not here - As they do not contain
+# static text, but they do influence presentation. It would be possible to add these
 # also. Lastly the majority of the tests use the phrasebook. But again there is a chance
-# we have missed the odd phrase.
+# we have missed the odd phrase, especially flags. Any missed conversions will show up
+# quickly as the tests are comprehensive.
 #
 
 'anti-locked'               : "Anti-Locked."
@@ -170,9 +171,8 @@
 'you-toaded'                : "You turned %s into a toad!"
 'toad-name'                 : "a slimy toad named %s"
 'wake-up-home'              : "You wake up back home, without your possessions."
-'bye-bye-wizard'            : "Wizard has left."
-'hello-wizard'              : "Wizard has arrived."
-'seen-in-mist'              : "%s is briefly visible through the mist."
+'player-left'               : "%s has left."
+'player-arrived'            : "%s has arrived."
 'loc-nothing'               : "***NOTHING***"
 'loc-home'                  : "***HOME***"
 'type'                      : "Type:"

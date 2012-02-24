@@ -97,11 +97,11 @@ module TinyMud
 			# Move "HOME"
 			set_up_objects(start_loc, bob, anne, jim, place)
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "bob has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('player-left', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('seen-in-mist', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "bob is briefly visible through the mist.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
 		
@@ -110,8 +110,8 @@ module TinyMud
 			# Move somewhere - not home
 			set_up_objects(start_loc, bob, anne, jim, place)
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
-			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('player-left', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
@@ -133,7 +133,7 @@ module TinyMud
 			# Dark exit
 			set_up_objects(start_loc, bob, anne, jim, place)
 			record(start_loc) {|r| r[:flags] = r[:flags] | DARK }
-			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
@@ -149,7 +149,7 @@ module TinyMud
 			record(cheese) {|r| r.merge!({ :name => "cheese", :description => "wiffy", :flags => TYPE_THING, :location => start_loc, :next => NOTHING }) }
 			record(start_loc) {|r| r.merge!({ :flags => r[:flags] | STICKY, :location => place }) } # STICKY set to place
 			assert_equal(start_loc, @db[cheese].location)
-			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
@@ -162,8 +162,8 @@ module TinyMud
 			# Now trigger a penny event by mocking the default behaviour
 			set_up_objects(start_loc, bob, anne, jim, place)
 			Game.stubs(:do_rand).returns(10000) # todo 10 = PENNY_RATE - this is fragile
-			Interface.expects(:do_notify).with(anne, "bob has left.").in_sequence(notify)
-			Interface.expects(:do_notify).with(jim, "bob has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('player-left', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, 'bob ping').in_sequence(notify)
@@ -198,10 +198,10 @@ module TinyMud
 		
 			# Send bob home (note it hangs!!! if only the wizard is in limbo - possibly limbo can't be home)
 			notify = sequence('notify')
-			Interface.expects(:do_notify).with(anne, 'bob has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('seen-in-mist', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, "bob is briefly visible through the mist.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "tomato(#6)").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "anne").in_sequence(notify)
@@ -283,11 +283,11 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('no-place-like-home')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('no-place-like-home')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('wake-up-home')).in_sequence(notify)
-			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, 'bob has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('player-left', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[limbo].description).in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('seen-in-mist', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, "bob is briefly visible through the mist.").in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('contents')).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, "Wizard").in_sequence(notify)
 			move.do_move(bob, "home")
@@ -318,8 +318,8 @@ module TinyMud
 			record(exitw) {|r| r.merge!( :location => place, :name => "exitw", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			record(start_loc) {|r| r[:exits] = exits }
 			
-			Interface.expects(:do_notify).with(anne, 'bob has left.').in_sequence(notify)
-			Interface.expects(:do_notify).with(jim, 'bob has arrived.').in_sequence(notify)
+			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('player-left', "bob")).in_sequence(notify)
+			Interface.expects(:do_notify).with(jim, Phrasebook.lookup('player-arrived', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
 			Interface.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(jim, "bob " + @db[place].osucc).in_sequence(notify)

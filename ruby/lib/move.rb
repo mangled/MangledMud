@@ -49,7 +49,7 @@ module TinyMud
           if (old != NOTHING)
               # notify others unless DARK
               if (!is_dark(old) && !is_dark(player))
-                  @speech.notify_except(@db[old].contents, player, "#{@db[player].name} has left.")
+                  @speech.notify_except(@db[old].contents, player, Phrasebook.lookup('player-left', @db[player].name))
               end
           end
 
@@ -63,7 +63,7 @@ module TinyMud
       
           # tell other folks in new location if not DARK
           if (!is_dark(loc) && !is_dark(player))
-              @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} has arrived.")
+              @speech.notify_except(@db[loc].contents, player, Phrasebook.lookup('player-arrived', @db[player].name))
           end
       end
   

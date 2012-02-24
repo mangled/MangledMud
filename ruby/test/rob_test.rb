@@ -163,9 +163,9 @@ module TinyMud
 			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('killed', "You", "anne")).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, Phrasebook.lookup('killed-you', "bob")).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Your insurance policy pays 50 pennies.").in_sequence(notify)
-			Interface.expects(:do_notify).with(bob, "anne has left.").in_sequence(notify)
-			Interface.expects(:do_notify).with(sue, "anne has left.").in_sequence(notify)
-			Interface.expects(:do_notify).with(wizard, "anne has arrived.").in_sequence(notify)
+			Interface.expects(:do_notify).with(bob, Phrasebook.lookup('player-left', "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(sue, Phrasebook.lookup('player-left', "anne")).in_sequence(notify)
+			Interface.expects(:do_notify).with(wizard, Phrasebook.lookup('player-arrived', "anne")).in_sequence(notify)
 			Interface.expects(:do_notify).with(anne, "Limbo").in_sequence(notify) # her exit = home
 			Interface.expects(:do_notify).with(anne, @db[limbo].description).in_sequence(notify)
 			Interface.expects(:do_notify).with(wizard, "anne " + @db[limbo].osucc).in_sequence(notify)
