@@ -12,6 +12,7 @@ module TinyMud
 		
 		def setup
 			@db = Db.Minimal()
+			@notifier = mock()
 		end
 
 		def teardown
@@ -21,10 +22,10 @@ module TinyMud
 		# where must be valid, the where must be a room, who must either control (own) where or where is LINK_OK
 		def test_can_link_to
 			# Make a minimal new player - This should be a helper at some point?
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
 
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 			assert_equal(false, pred.can_link_to(0, -1)) # Where < 0
 			assert_equal(false, pred.can_link_to(0, @db.length)) # where > db_top
 			assert_equal(false, pred.can_link_to(0, 1)) # where points to non-room (wizard)
@@ -50,7 +51,7 @@ module TinyMud
 			uninitialized_thing_ref = @db.add_new_record
 			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
 			
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 
 			# if thing isn't a room then its location can't be nothing
 			assert_equal(false, pred.could_doit(-1, uninitialized_thing_ref));
@@ -84,44 +85,44 @@ module TinyMud
 			record(uninitialized_thing_ref) {|r| r.merge!({:flags => TYPE_PLAYER, :location => NOTHING }) }
 
 			wizard = 1
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 
 			# If player location nothing
 			record(wizard) {|r| r.merge!({ :location => NOTHING }) }
 			assert_equal(false, pred.can_doit(wizard, -1, ""))
 			
 			# If can't do-it with thing, use either things fail message or the default
-			Interface.expects(:do_notify).with(wizard, "Sandwich")
+			@notifier.expects(:do_notify).with(wizard, "Sandwich")
 			record(wizard) {|r| r.merge!({ :location => 0 }) }
 			record(uninitialized_thing_ref) {|r| r[:fail] = "Sandwich" }
 			assert_equal(false, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
-			Interface.expects(:do_notify).with(wizard, "Ooops")
+			@notifier.expects(:do_notify).with(wizard, "Ooops")
 			record(uninitialized_thing_ref) {|r| r[:fail] = nil }
 			assert_equal(false, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 			
 			# Lastly, if ofail is set on the thing then all "contents" in the things location should be notified, except player
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			record(uninitialized_thing_ref) {|r| r[:ofail] = "Fails Eating Sandwich" }
 			record(0) {|r| r[:contents] = player_ref }
-			Interface.expects(:do_notify).with(wizard, "Ooops")
-			Interface.expects(:do_notify).with(player_ref, "Wizard Fails Eating Sandwich");
+			@notifier.expects(:do_notify).with(wizard, "Ooops")
+			@notifier.expects(:do_notify).with(player_ref, "Wizard Fails Eating Sandwich");
 			assert_equal(false, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 			
 			# If can do it (set player to key) then use success message if present
 			record(uninitialized_thing_ref) {|r| r.merge!({ :key => wizard, :flags => TYPE_ROOM }) }
 			record(uninitialized_thing_ref) {|r| r[:succ] = "Eat Sandwich" }
-			Interface.expects(:do_notify).with(wizard, "Eat Sandwich")
+			@notifier.expects(:do_notify).with(wizard, "Eat Sandwich")
 			assert_equal(true, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 			record(uninitialized_thing_ref) {|r| r[:osucc] = "He Eat Sandwich" }
-			Interface.expects(:do_notify).with(wizard, "Eat Sandwich")
-			Interface.expects(:do_notify).with(player_ref, "Wizard He Eat Sandwich")
+			@notifier.expects(:do_notify).with(wizard, "Eat Sandwich")
+			@notifier.expects(:do_notify).with(player_ref, "Wizard He Eat Sandwich")
 			assert_equal(true, pred.can_doit(wizard, uninitialized_thing_ref, "Ooops"))
 		end
 
 		def test_can_see
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 			# player is thing
 			assert_equal(false, pred.can_see(wizard, wizard, -1))
 			# thing is an exit
@@ -146,9 +147,9 @@ module TinyMud
 		end
 
 		def test_controls
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 			assert_equal(false, pred.controls(0, -1)) # Where < 0
 			assert_equal(false, pred.controls(0, @db.length)) # where > db_top
 			# Wizard controls everything
@@ -161,9 +162,9 @@ module TinyMud
 		end
 		
 		def test_can_link
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 			# Can link to something only if its an exit going to nothing
 			record(0) {|r| r.merge!({:flags => TYPE_EXIT, :location => 22}) }
 			assert_equal(false, pred.can_link(player_ref, 0))
@@ -178,9 +179,9 @@ module TinyMud
 		end
 
 		def test_payfor
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			wizard = 1
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 			# Wizard is automatic
 			assert_equal(0, @db[wizard].pennies)
 			assert_equal(true, pred.payfor(wizard, 123))
@@ -194,7 +195,7 @@ module TinyMud
 		end
 		
 		def test_ok_name
-			pred = Predicates.new(@db)
+			pred = Predicates.new(@db, @notifier)
 			assert_equal(false, pred.ok_name(nil))
 			assert_equal(false, pred.ok_name(0.chr))
 			assert_equal(false, pred.ok_name(LOOKUP_TOKEN))
@@ -206,8 +207,8 @@ module TinyMud
 		end
 		
 		def test_ok_player_name
-			player_ref = Player.new(@db).create_player("bob", "pwd")
-			pred = Predicates.new(@db)
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
+			pred = Predicates.new(@db, @notifier)
 			# Must be an ok name
 			assert_equal(false, pred.ok_player_name(nil))
 			assert_equal(false, pred.ok_player_name(0.chr))

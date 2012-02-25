@@ -12,6 +12,7 @@ module TinyMud
 		
 		def setup
 			@db = Db.Minimal()
+			@notifier = mock()
 		end
 
 		def teardown
@@ -19,11 +20,11 @@ module TinyMud
 		end
 		
 		def test_match_player
-			player_ref = Player.new(@db).create_player("bob", "pwd")
+			player_ref = Player.new(@db, @notifier).create_player("bob", "pwd")
 			assert_equal(2, player_ref)
 			wizard = 1
 
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 			match.init_match(player_ref, "bob", -1) # Type doesn't matter for this
 			check_match_states(match, NOTHING, player_ref)
 			# Must have a * and the player must have at least LOOKUP_COST pennies
@@ -44,7 +45,7 @@ module TinyMud
 		
 		def test_match_absolute
 			wizard = 1 # Any player will do
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 
 			# No token => No match
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
@@ -66,7 +67,7 @@ module TinyMud
 		
 		def test_match_me
 			wizard = 1 # Any player will do
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
 			match.match_me
 			check_match_states(match, NOTHING, wizard)
@@ -78,7 +79,7 @@ module TinyMud
 		def test_match_here
 			wizard = 1 # Any player will do
 
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 			# match name must be here and who mustn't be nowhere
 			match.init_match(wizard, "wizard", -1) # Type doesn't matter for this
 			record(wizard) {|r| r[:location] = NOTHING }
@@ -97,23 +98,23 @@ module TinyMud
 		# This is mostly covered, it's quite complicated and has a number of
 		# branch points.
 		def test_match_possession
-			bob = Player.new(@db).create_player("bob", "pwd")
+			bob = Player.new(@db, @notifier).create_player("bob", "pwd")
 			f = lambda {|match| match.match_possession }
 			check_match_list(bob, bob, f)
 		end
 		
 		# Similar comments to the above!
 		def test_match_neighbor
-			bob = Player.new(@db).create_player("bob", "pwd")
+			bob = Player.new(@db, @notifier).create_player("bob", "pwd")
 			record(bob) {|r| r[:location] = 0}
 			f = lambda {|match| match.match_neighbor }
 			check_match_list(bob, 0, f)
 		end
 		
 		def test_match_exit
-			bob = Player.new(@db).create_player("bob", "pwd")
+			bob = Player.new(@db, @notifier).create_player("bob", "pwd")
 			wizard = 1
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 
 			# Person can't be at NOTHING
 			record(bob) {|r| r[:location] = NOTHING }
@@ -172,7 +173,7 @@ module TinyMud
 			# to verify - I have tests for the underlying methods.
 			# Check calling it works though!
 			wizard = 1
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 			match.init_match(wizard, "foo", -1)
 			match.match_everything
 			check_match_states(match, NOTHING, wizard)
@@ -184,7 +185,7 @@ module TinyMud
 		puts "Fyi - If you get changes in the regression output then try disabling this!!!"
 		def test_match_list_for_random_decision
 			wizard = 1
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 			# Some fake things for the owner
 			thing1 = @db.add_new_record
 			thing2 = @db.add_new_record
@@ -214,7 +215,7 @@ module TinyMud
 			record(thing2) {|r| r.merge!({ :flags => TYPE_THING, :name => "socks", :owner => owner, :next => thing3 }) }
 			record(thing3) {|r| r.merge!({ :flags => TYPE_THING, :name => "pants", :owner => owner }) }
 			
-			match = Match.new(@db)
+			match = Match.new(@db, @notifier)
 			# owner has nothing
 			match.init_match(person, "fig", -1)
 			f.call(match)
@@ -242,10 +243,10 @@ module TinyMud
 			record(thing4) {|r| r.merge!({ :flags => TYPE_THING, :name => "pan", :owner => owner }) }
 			match.init_match(person, "pa", -1)
 			f.call(match)
-			Interface.expects(:do_notify).never
+			@notifier.expects(:do_notify).never
 			assert_equal(AMBIGUOUS, match.match_result())
 			assert_equal(thing4, match.last_match_result())
-			Interface.expects(:do_notify).with(person, Phrasebook.lookup('which-one'))
+			@notifier.expects(:do_notify).with(person, Phrasebook.lookup('which-one'))
 			assert_equal(NOTHING, match.noisy_match_result())
 			# If he had multiple items of the same name then a random ref would be returned
 			# This isn't a perfect test but will do for now - Really need to mock inner methods
@@ -273,14 +274,14 @@ module TinyMud
 		end
 		
 		def check_match_states(match, match_who = NOTHING, notify_who = NOTHING)
-			Interface.expects(:do_notify).never
+			@notifier.expects(:do_notify).never
 			assert_equal(match_who, match.match_result())
 			assert_equal(match_who, match.last_match_result())
 			if (match_who == NOTHING)
-				Interface.expects(:do_notify).with(notify_who, Phrasebook.lookup('dont-see-that'))
+				@notifier.expects(:do_notify).with(notify_who, Phrasebook.lookup('dont-see-that'))
 				assert_equal(match_who, match.noisy_match_result())
 			else
-				Interface.expects(:do_notify).never
+				@notifier.expects(:do_notify).never
 				assert_equal(match_who, match.noisy_match_result())
 			end
 		end

@@ -19,14 +19,8 @@ if __FILE__ == $0
         puts "Cannot find #{cmd_file}"
         exit(-1)
     end
-
-    # Override the current notify to put to stdout    
-    TinyMud::CommandHelpers.AliasInterface()
     
     # Go!
-    db = Db.Minimal()
+    db = TinyMud::Db.Minimal()
     open(cmd_file) {|content| TinyMud::CommandHelpers.collect_responses(db, content) }.each{|line| puts line }
-
-    # Tidy up for the sake of it
-    TinyMud::CommandHelpers.DeAliasInterface()
 end

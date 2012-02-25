@@ -4,12 +4,13 @@ module TinyMud
   class Move
     include Helpers
 
-    def initialize(db)
+    def initialize(db, notifier)
       @db = db
+      @notifier = notifier
       @utils = Utils.new(@db)
-      @speech = Speech.new(@db)
-      @predicates = Predicates.new(@db)
-      @match = Match.new(@db)
+      @speech = Speech.new(@db, notifier)
+      @predicates = Predicates.new(@db, notifier)
+      @match = Match.new(@db, notifier)
     end
 
     def moveto(what, where)
@@ -68,7 +69,7 @@ module TinyMud
       end
   
       # autolook
-      Look.new(@db).look_room(player, loc)
+      Look.new(@db, @notifier).look_room(player, loc)
   
       # check for pennies
   
@@ -76,7 +77,7 @@ module TinyMud
       give_penny = (Game.do_rand() % PENNY_RATE) == 0
 
       if (!@predicates.controls(player, loc) && (@db[player].pennies <= MAX_PENNIES) && give_penny)
-          Interface.do_notify(player, Phrasebook.lookup('found-a-penny'))
+          @notifier.do_notify(player, Phrasebook.lookup('found-a-penny'))
           @db[player].pennies = @db[player].pennies + 1
       end
     end
@@ -115,10 +116,10 @@ module TinyMud
             @speech.notify_except(@db[loc].contents, player, "#{@db[player].name} goes home.")
         end
         # give the player the messages
-        Interface.do_notify(player, Phrasebook.lookup('no-place-like-home'))
-        Interface.do_notify(player, Phrasebook.lookup('no-place-like-home'))
-        Interface.do_notify(player, Phrasebook.lookup('no-place-like-home'))
-        Interface.do_notify(player, Phrasebook.lookup('wake-up-home'))
+        @notifier.do_notify(player, Phrasebook.lookup('no-place-like-home'))
+        @notifier.do_notify(player, Phrasebook.lookup('no-place-like-home'))
+        @notifier.do_notify(player, Phrasebook.lookup('no-place-like-home'))
+        @notifier.do_notify(player, Phrasebook.lookup('wake-up-home'))
         send_home(player)
       else
         # find the exit
@@ -127,9 +128,9 @@ module TinyMud
         exit = @match.match_result()
         case exit
           when NOTHING
-            Interface.do_notify(player, Phrasebook.lookup('bad-direction'))
+            @notifier.do_notify(player, Phrasebook.lookup('bad-direction'))
           when AMBIGUOUS
-            Interface.do_notify(player, Phrasebook.lookup('which-way'))
+            @notifier.do_notify(player, Phrasebook.lookup('which-way'))
           else
             # we got one
             # check to see if we got through
@@ -149,36 +150,36 @@ module TinyMud
       thing = @match.noisy_match_result()
       if (thing != NOTHING)
         if (@db[thing].location == player)
-            Interface.do_notify(player, Phrasebook.lookup('already-have-it'))
+            @notifier.do_notify(player, Phrasebook.lookup('already-have-it'))
             return
         end
         case typeof(thing)
           when TYPE_THING
             if (@predicates.can_doit(player, thing, "You can't pick that up."))
                 moveto(thing, player)
-                Interface.do_notify(player, Phrasebook.lookup('taken'))
+                @notifier.do_notify(player, Phrasebook.lookup('taken'))
             end
           when TYPE_EXIT
             if (!@predicates.controls(player, thing))
-                Interface.do_notify(player, Phrasebook.lookup('bad-pickup'))
+                @notifier.do_notify(player, Phrasebook.lookup('bad-pickup'))
             elsif (@db[thing].location != NOTHING)
-                Interface.do_notify(player, Phrasebook.lookup('no-get-linked-exit'))
+                @notifier.do_notify(player, Phrasebook.lookup('no-get-linked-exit'))
             else
                 # take it out of location
                 loc = getloc(player)
                 return if (loc == NOTHING)
                 if (!@utils.member(thing, @db[loc].exits))
-                    Interface.do_notify(player, Phrasebook.lookup('no-get-exit-elsewhere'))
+                    @notifier.do_notify(player, Phrasebook.lookup('no-get-exit-elsewhere'))
                     return
                 end
                 @db[loc].exits = @utils.remove_first(@db[loc].exits, thing)
                 @db[thing].next = @db[player].contents
                 @db[player].contents = thing
                 @db[thing].location = player
-                Interface.do_notify(player, Phrasebook.lookup('exit-taken'))
+                @notifier.do_notify(player, Phrasebook.lookup('exit-taken'))
             end
           else
-            Interface.do_notify(player, Phrasebook.lookup('cant-take'))
+            @notifier.do_notify(player, Phrasebook.lookup('cant-take'))
         end
       end
     end
@@ -193,17 +194,17 @@ module TinyMud
 
       case thing
         when NOTHING
-          Interface.do_notify(player, Phrasebook.lookup('dont-have-it'))
+          @notifier.do_notify(player, Phrasebook.lookup('dont-have-it'))
         when AMBIGUOUS
-          Interface.do_notify(player, Phrasebook.lookup('which'))
+          @notifier.do_notify(player, Phrasebook.lookup('which'))
         else
           if (@db[thing].location != player)
               # Shouldn't ever happen. 
-              Interface.do_notify(player, Phrasebook.lookup('cant-drop-that'))
+              @notifier.do_notify(player, Phrasebook.lookup('cant-drop-that'))
           elsif (exit?(thing))
               # special behavior for exits 
               if (!@predicates.controls(player, loc))
-                Interface.do_notify(player, Phrasebook.lookup('no-drop-exit-here'))
+                @notifier.do_notify(player, Phrasebook.lookup('no-drop-exit-here'))
                 return
               end
               # else we can put it down 
@@ -211,12 +212,12 @@ module TinyMud
 
               @db[thing].next = @db[loc].exits
               @db[loc].exits = thing
-              Interface.do_notify(player, Phrasebook.lookup('exit-dropped'))
+              @notifier.do_notify(player, Phrasebook.lookup('exit-dropped'))
           elsif (is_temple(loc))
               # sacrifice time 
               send_home(thing)
 
-              Interface.do_notify(player, Phrasebook.lookup('consumed-in-flame', @db[thing].name))
+              @notifier.do_notify(player, Phrasebook.lookup('consumed-in-flame', @db[thing].name))
               @speech.notify_except(@db[loc].contents, player, Phrasebook.lookup('sacrifices', @db[player].name, @db[thing].name))
       
               # check for reward 
@@ -230,21 +231,21 @@ module TinyMud
           
                   @db[player].pennies = @db[player].pennies + reward
                   if reward == 1
-                    Interface.do_notify(player, Phrasebook.lookup('you-have-received-penny'))
+                    @notifier.do_notify(player, Phrasebook.lookup('you-have-received-penny'))
                   else
-                    Interface.do_notify(player, Phrasebook.lookup('you-have-received-pennies', reward))
+                    @notifier.do_notify(player, Phrasebook.lookup('you-have-received-pennies', reward))
                   end
               end
           elsif (is_sticky(thing))
               send_home(thing)
-              Interface.do_notify(player, Phrasebook.lookup('dropped'))
+              @notifier.do_notify(player, Phrasebook.lookup('dropped'))
           elsif (@db[loc].location != NOTHING && !is_sticky(loc))
               # location has immediate dropto 
               moveto(thing, @db[loc].location)
-              Interface.do_notify(player, Phrasebook.lookup('dropped'))
+              @notifier.do_notify(player, Phrasebook.lookup('dropped'))
           else
               moveto(thing, loc)
-              Interface.do_notify(player, Phrasebook.lookup('dropped'))
+              @notifier.do_notify(player, Phrasebook.lookup('dropped'))
               @speech.notify_except(@db[loc].contents, player, Phrasebook.lookup('dropped-thing', @db[player].name, @db[thing].name))
           end
       end

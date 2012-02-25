@@ -3,8 +3,9 @@ require_relative 'constants'
 module TinyMud
   class Help
 
-    def initialize(db)
+    def initialize(db, notifier)
       @db = db
+      @notifier = notifier
     end
 
     def do_help(player)
@@ -19,9 +20,9 @@ module TinyMud
 
     def spit_file(player, filename)
         begin
-          IO.foreach(filename) {|line| Interface.do_notify(player, line.chomp()) }
+          IO.foreach(filename) {|line| @notifier.do_notify(player, line.chomp()) }
         rescue Errno::ENOENT => e
-          Interface.do_notify(player, Phrasebook.lookup('sorry-bad-file', filename))
+          @notifier.do_notify(player, Phrasebook.lookup('sorry-bad-file', filename))
           $stderr.puts("spit_file: #{e}")
         end
     end

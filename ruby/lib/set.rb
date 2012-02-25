@@ -4,11 +4,12 @@ module TinyMud
   class Set
     include Helpers
 
-    def initialize(db)
+    def initialize(db, notifier)
       @db = db
-      @match = Match.new(@db)
-      @predicates = Predicates.new(@db)
-      @player = Player.new(@db)
+      @notifier = notifier
+      @match = Match.new(@db, notifier)
+      @predicates = Predicates.new(@db, notifier)
+      @player = Player.new(@db, notifier)
     end
 
     def do_name(player, name, newname)
@@ -17,7 +18,7 @@ module TinyMud
 
       if (thing != NOTHING)
         if (newname.nil? or newname.empty?) # check for bad name
-          Interface.do_notify(player, Phrasebook.lookup('what-name'))
+          @notifier.do_notify(player, Phrasebook.lookup('what-name'))
           return
         end
 
@@ -29,26 +30,26 @@ module TinyMud
 
             # check for null password
             if (player_password.nil?)
-              Interface.do_notify(player, Phrasebook.lookup('specify-a-password'))
-              Interface.do_notify(player, Phrasebook.lookup('help-player-password'))
+              @notifier.do_notify(player, Phrasebook.lookup('specify-a-password'))
+              @notifier.do_notify(player, Phrasebook.lookup('help-player-password'))
               return
             elsif (player_password != @db[thing].password)
-              Interface.do_notify(player, Phrasebook.lookup('bad-password'))
+              @notifier.do_notify(player, Phrasebook.lookup('bad-password'))
               return
             elsif (!@predicates.payfor(player, LOOKUP_COST) || !@predicates.ok_player_name(newname))
-                  Interface.do_notify(player, Phrasebook.lookup('bad-player-name'))
+                  @notifier.do_notify(player, Phrasebook.lookup('bad-player-name'))
               return
             end
         else # A thing
             if (!@predicates.ok_name(newname))
-              Interface.do_notify(player, Phrasebook.lookup('not-a-reasonable-name'))
+              @notifier.do_notify(player, Phrasebook.lookup('not-a-reasonable-name'))
               return
             end
         end
     
         # everything ok, change the name
         @db[thing].name = newname
-        Interface.do_notify(player, Phrasebook.lookup('name-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('name-set'))
       end
     end
 
@@ -56,7 +57,7 @@ module TinyMud
       thing = match_controlled(player, name)
       if (thing != NOTHING)
         @db[thing].description = description
-        Interface.do_notify(player, Phrasebook.lookup('desc-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('desc-set'))
       end
     end
 
@@ -64,7 +65,7 @@ module TinyMud
       thing = match_controlled(player, name)
       if (thing != NOTHING)
         @db[thing].fail = message
-        Interface.do_notify(player, Phrasebook.lookup('message-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('message-set'))
       end
     end
     
@@ -72,7 +73,7 @@ module TinyMud
       thing = match_controlled(player, name)
       if (thing != NOTHING)
         @db[thing].succ = message
-        Interface.do_notify(player, Phrasebook.lookup('message-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('message-set'))
       end
     end
     
@@ -80,7 +81,7 @@ module TinyMud
       thing = match_controlled(player, name)
       if (thing != NOTHING)
         @db[thing].osucc = message
-        Interface.do_notify(player, Phrasebook.lookup('message-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('message-set'))
       end
     end
     
@@ -88,7 +89,7 @@ module TinyMud
       thing = match_controlled(player, name)
       if (thing != NOTHING)
         @db[thing].ofail = message
-        Interface.do_notify(player, Phrasebook.lookup('message-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('message-set'))
       end
     end
     
@@ -99,14 +100,14 @@ module TinyMud
       thing = @match.match_result()
       case thing
         when NOTHING
-          Interface.do_notify(player, Phrasebook.lookup('dont-see-lock'))
+          @notifier.do_notify(player, Phrasebook.lookup('dont-see-lock'))
           return
         when AMBIGUOUS
-          Interface.do_notify(player, Phrasebook.lookup('which-one-lock'))
+          @notifier.do_notify(player, Phrasebook.lookup('which-one-lock'))
           return
         else
           if (!@predicates.controls(player, thing))
-              Interface.do_notify(player, Phrasebook.lookup('bad-lock'))
+              @notifier.do_notify(player, Phrasebook.lookup('bad-lock'))
               return
           end
       end
@@ -131,14 +132,14 @@ module TinyMud
       key = @match.match_result()
       case key
         when NOTHING
-          Interface.do_notify(player, Phrasebook.lookup('no-key'))
+          @notifier.do_notify(player, Phrasebook.lookup('no-key'))
           return
         when AMBIGUOUS
-        Interface.do_notify(player, Phrasebook.lookup('which-key'))
+        @notifier.do_notify(player, Phrasebook.lookup('which-key'))
         return
         else
           if (!is_player(key) && !is_thing(key))
-              Interface.do_notify(player, Phrasebook.lookup('bad-key-link'))
+              @notifier.do_notify(player, Phrasebook.lookup('bad-key-link'))
               return
           end
       end
@@ -147,10 +148,10 @@ module TinyMud
       @db[thing].key = key
       if (antilock)
         @db[thing].flags |= ANTILOCK
-        Interface.do_notify(player, Phrasebook.lookup('anti-locked'))
+        @notifier.do_notify(player, Phrasebook.lookup('anti-locked'))
       else
         @db[thing].flags &= ~ANTILOCK
-        Interface.do_notify(player, Phrasebook.lookup('locked'))
+        @notifier.do_notify(player, Phrasebook.lookup('locked'))
       end
     end
   
@@ -159,7 +160,7 @@ module TinyMud
       if (thing != NOTHING)
         @db[thing].key = NOTHING
         @db[thing].flags &= ~ANTILOCK
-        Interface.do_notify(player, Phrasebook.lookup('unlocked'))
+        @notifier.do_notify(player, Phrasebook.lookup('unlocked'))
       end
     end
     
@@ -172,22 +173,22 @@ module TinyMud
       exit = @match.match_result()
       case exit
         when NOTHING
-          Interface.do_notify(player, Phrasebook.lookup('unlink-what'))
+          @notifier.do_notify(player, Phrasebook.lookup('unlink-what'))
         when AMBIGUOUS
-          Interface.do_notify(player, Phrasebook.lookup('which-one'))
+          @notifier.do_notify(player, Phrasebook.lookup('which-one'))
         else
           if (!@predicates.controls(player, exit))
-              Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+              @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
           else
             case typeof(exit)
               when TYPE_EXIT
                 @db[exit].location = NOTHING
-                Interface.do_notify(player, Phrasebook.lookup('unlinked'))
+                @notifier.do_notify(player, Phrasebook.lookup('unlinked'))
               when TYPE_ROOM
                 @db[exit].location = NOTHING
-                Interface.do_notify(player, Phrasebook.lookup('drop-to-removed'))
+                @notifier.do_notify(player, Phrasebook.lookup('drop-to-removed'))
               else
-                Interface.do_notify(player, Phrasebook.lookup('cant-unlink-that'))
+                @notifier.do_notify(player, Phrasebook.lookup('cant-unlink-that'))
             end
           end
       end
@@ -195,7 +196,7 @@ module TinyMud
 
     def do_chown(player, name, newobj)
       if (!is_wizard(player))
-        Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+        @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
       else
         @match.init_match(player, name, NOTYPE)
         @match.match_everything()
@@ -204,12 +205,12 @@ module TinyMud
         if (thing == NOTHING)
             return
         elsif (owner == NOTHING)
-            Interface.do_notify(player, Phrasebook.lookup('no-player'))
+            @notifier.do_notify(player, Phrasebook.lookup('no-player'))
         elsif (player?(thing))
-            Interface.do_notify(player, Phrasebook.lookup('own-self'))
+            @notifier.do_notify(player, Phrasebook.lookup('own-self'))
         else
             @db[thing].owner = owner
-            Interface.do_notify(player, Phrasebook.lookup('owner-changed'))
+            @notifier.do_notify(player, Phrasebook.lookup('owner-changed'))
         end
       end
     end
@@ -229,7 +230,7 @@ module TinyMud
       # identify flag
       f = nil
       if (p.nil? or p.empty?)
-        Interface.do_notify(player, Phrasebook.lookup('specify-a-flag'))
+        @notifier.do_notify(player, Phrasebook.lookup('specify-a-flag'))
         return
       elsif (p.casecmp("LINK_OK") == 0)
         f = LINK_OK
@@ -242,19 +243,19 @@ module TinyMud
       elsif (p.casecmp("TEMPLE") == 0)
         f = TEMPLE
       else
-        Interface.do_notify(player, Phrasebook.lookup('unknown-flag'))
+        @notifier.do_notify(player, Phrasebook.lookup('unknown-flag'))
         return
       end
 
       # check for restricted flag
       if (!is_wizard(player) && (f == WIZARD || f == TEMPLE || (f == DARK && !room?(thing))))
-        Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+        @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
         return
       end
   
       # check for stupid wizard
       if (f == WIZARD && flag[0] == NOT_TOKEN && thing == player)
-        Interface.do_notify(player, Phrasebook.lookup('cant-be-mortal'))
+        @notifier.do_notify(player, Phrasebook.lookup('cant-be-mortal'))
         return
       end
   
@@ -262,11 +263,11 @@ module TinyMud
       if (flag[0] == NOT_TOKEN)
         # reset the flag
         @db[thing].flags &= ~f
-        Interface.do_notify(player, Phrasebook.lookup('flag-reset'))
+        @notifier.do_notify(player, Phrasebook.lookup('flag-reset'))
       else
         # set the flag
         @db[thing].flags |= f
-        Interface.do_notify(player, Phrasebook.lookup('flag-set'))
+        @notifier.do_notify(player, Phrasebook.lookup('flag-set'))
       end
     end
 
@@ -278,7 +279,7 @@ module TinyMud
 
       match = @match.noisy_match_result()
       if (match != NOTHING && !@predicates.controls(player, match))
-        Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+        @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
         NOTHING
       else
         match

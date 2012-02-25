@@ -1,10 +1,6 @@
 require_relative 'constants'
 
-# !!! This module should go away as we refactor !!!
 module Helpers
-
-  # We should make these methods on the db's item...
-  ##################################################
 
   # Build an enumerator which loops from dbref, through its .next links
   def enum(dbref)
@@ -16,9 +12,6 @@ module Helpers
     end
   end
 
-  # Warning: These return ruby true/false, or the mask value
-
-  # Was defined in db.h
   def is_player(item)
     ((@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_PLAYER)
   end
@@ -43,7 +36,6 @@ module Helpers
     ((@db[item].flags & TinyMud::ANTILOCK) != 0)
   end
 
-  # Was defined in db.h
   def typeof(item)
     (@db[item].flags & TinyMud::TYPE_MASK)
   end
@@ -64,22 +56,18 @@ module Helpers
     (@db[item].flags & TinyMud::TYPE_MASK) == TinyMud::TYPE_EXIT
   end
 
-  # Was defined in db.h
   def is_wizard(item)
     ((@db[item].flags & TinyMud::WIZARD) != 0)
   end
   
-    # Was defined in db.h
   def is_builder(item)
     ((@db[item].flags & (TinyMud::WIZARD | TinyMud::BUILDER)) != 0)
   end
 
-  # Was defined in db.h
   def is_dark(item)
     ((@db[item].flags & TinyMud::DARK) != 0)
   end
 
-  # Was defined in db.h
   def getloc(thing)
     @db[thing].location
   end

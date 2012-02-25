@@ -48,25 +48,26 @@ module TinyMud
       $stderr.puts("DUMPING: #{@dump_file_name}.##{@epoch}# (done)")
     end
 
-    def initialize(db)
+    def initialize(db, notifier)
       @db = db
+      @notifier = notifier
 
       # Set-up the hacky access to the db for the tests/regression scripts
       Game.set_db = db
 
       # We may not use all of these here...
-      @create = Create.new(db)
-      @help = Help.new(db)
-      @look = Look.new(db)
-      @match = Match.new(db)
-      @move = Move.new(@db)
-      @player = Player.new(db)
-      @predicates = Predicates.new(db)
-      @rob = Rob.new(db)
-      @set = Set.new(db)
-      @speech = Speech.new(db)
+      @create = Create.new(db, notifier)
+      @help = Help.new(db, notifier)
+      @look = Look.new(db, notifier)
+      @match = Match.new(db, notifier)
+      @move = Move.new(@db, notifier)
+      @player = Player.new(db, notifier)
+      @predicates = Predicates.new(db, notifier)
+      @rob = Rob.new(db, notifier)
+      @set = Set.new(db, notifier)
+      @speech = Speech.new(db, notifier)
       @utils = Utils.new(db)
-      @wiz = Wiz.new(db)
+      @wiz = Wiz.new(db, notifier)
 
       # Set up command handlers
       @commands = {
@@ -120,9 +121,9 @@ module TinyMud
       # This is non-functional, we need the networking code in place...
       if (is_wizard(player))
         # Todo!!!
-        Interface.do_notify(player, Phrasebook.lookup('dumping'))
+        @notifier.do_notify(player, Phrasebook.lookup('dumping'))
       else
-        Interface.do_notify(player, Phrasebook.lookup('sorry-no-dump'))
+        @notifier.do_notify(player, Phrasebook.lookup('sorry-no-dump'))
       end
     end
 
@@ -179,7 +180,7 @@ module TinyMud
         if matched_command
           @commands[matched_command].call(player, arg1, arg2)
         else
-          Interface.do_notify(player, Phrasebook.lookup('huh'))
+          @notifier.do_notify(player, Phrasebook.lookup('huh'))
         end
       end
     end

@@ -4,11 +4,11 @@ module TinyMud
     class Create
         include Helpers
         
-        def initialize(db)
+        def initialize(db, notifier)
             @db = db
-            @pred = Predicates.new(db)
-            @match = Match.new(db)
-            
+            @notifier = notifier
+            @pred = Predicates.new(db, notifier)
+            @match = Match.new(db, notifier)
         end
         
         #Given a room name or special keyowrds "here" or "home", parse_linkable_room attempts to find the room
@@ -24,10 +24,10 @@ module TinyMud
             
             #Check room
             if((room < 0) || (room >= @db.length) || (!room?(room)))
-                Interface.do_notify(player, Phrasebook.lookup('not-a-room'))
+                @notifier.do_notify(player, Phrasebook.lookup('not-a-room'))
                 return NOTHING
             elsif(!@pred.can_link_to(player, room))
-                Interface.do_notify(player, Phrasebook.lookup('bad-link'))
+                @notifier.do_notify(player, Phrasebook.lookup('bad-link'))
                 return NOTHING
             else
                 return room
@@ -44,17 +44,17 @@ module TinyMud
             end
 
             if(direction == nil)
-                Interface.do_notify(player, Phrasebook.lookup('open-where'))
+                @notifier.do_notify(player, Phrasebook.lookup('open-where'))
                 return
             elsif(!@pred.ok_name(direction))
-                Interface.do_notify(player, Phrasebook.lookup('strange-exit-name'))
+                @notifier.do_notify(player, Phrasebook.lookup('strange-exit-name'))
                 return
             end
             
             if(!@pred.controls(player,loc))
-                Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+                @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
             elsif(!@pred.payfor(player, EXIT_COST))
-                Interface.do_notify(player, Phrasebook.lookup('sorry-poor-open'))
+                @notifier.do_notify(player, Phrasebook.lookup('sorry-poor-open'))
             else
                 exit = @db.add_new_record()
                 room = @db[exit]
@@ -65,18 +65,18 @@ module TinyMud
                 @db[exit].next = @db[loc].exits
                 @db[loc].exits = exit
                 
-                Interface.do_notify(player, Phrasebook.lookup('opened'))
+                @notifier.do_notify(player, Phrasebook.lookup('opened'))
                 
                 if(linkto != nil)
-                    Interface.do_notify(player, Phrasebook.lookup('trying-to-link'))
+                    @notifier.do_notify(player, Phrasebook.lookup('trying-to-link'))
                     loc = parse_linkable_room(player, linkto)
                     if(loc != NOTHING)
                         if(!@pred.payfor(player, LINK_COST))
-                            Interface.do_notify(player, Phrasebook.lookup('too-poor-to-link'))
+                            @notifier.do_notify(player, Phrasebook.lookup('too-poor-to-link'))
                         else
                             #  Link the room.
                             @db[exit].location = loc
-                            Interface.do_notify(player, Phrasebook.lookup('linked'))
+                            @notifier.do_notify(player, Phrasebook.lookup('linked'))
                         end
                     end
                 end
@@ -116,22 +116,22 @@ module TinyMud
                         if(@db[thing].location != NOTHING)
                             if(@pred.controls(player, thing))
                                 if(player?(@db[thing].location))
-                                    Interface.do_notify(player, Phrasebook.lookup('exit-being-carried'))
+                                    @notifier.do_notify(player, Phrasebook.lookup('exit-being-carried'))
                                 else
-                                    Interface.do_notify(player, Phrasebook.lookup('exit-already-linked'))
+                                    @notifier.do_notify(player, Phrasebook.lookup('exit-already-linked'))
                                 end
                             else
-                                Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+                                @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
                             end
                         else
                             if(@db[thing].owner == player)
                                 if(!@pred.payfor(player, LINK_COST))
-                                    Interface.do_notify(player, Phrasebook.lookup('cost-penny-exit'))
+                                    @notifier.do_notify(player, Phrasebook.lookup('cost-penny-exit'))
                                     return
                                 end
                             else
                                 if(!@pred.payfor(player, LINK_COST + EXIT_COST))
-                                    Interface.do_notify(player, Phrasebook.lookup('cost-two-exit'))
+                                    @notifier.do_notify(player, Phrasebook.lookup('cost-two-exit'))
                                     return
                                 else
                                     #pay the owner for his loss
@@ -144,37 +144,37 @@ module TinyMud
                             @db[thing].location = room
                             
                             #notify the player 
-                            Interface.do_notify(player, Phrasebook.lookup('linked'))
+                            @notifier.do_notify(player, Phrasebook.lookup('linked'))
                         end
                     when TYPE_THING
                         if(!@pred.controls(player,thing))
-                            Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+                            @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
                         elsif(room == HOME)
-                            Interface.do_notify(player, Phrasebook.lookup('no-set-home'))
+                            @notifier.do_notify(player, Phrasebook.lookup('no-set-home'))
                         else
                             #Activate link
                             @db[thing].exits = room 
-                            Interface.do_notify(player, Phrasebook.lookup('home-set'))
+                            @notifier.do_notify(player, Phrasebook.lookup('home-set'))
                         end
                     when TYPE_PLAYER # todo: no drop-through in ruby, this is a copy of the above
                         if(!@pred.controls(player,thing))
-                            Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+                            @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
                         elsif(room == HOME)
-                            Interface.do_notify(player, Phrasebook.lookup('no-set-home'))
+                            @notifier.do_notify(player, Phrasebook.lookup('no-set-home'))
                         else
                             #Activate link
                             @db[thing].exits = room 
-                            Interface.do_notify(player, Phrasebook.lookup('home-set'))
+                            @notifier.do_notify(player, Phrasebook.lookup('home-set'))
                         end
                     when TYPE_ROOM
                         if(!@pred.controls(player,thing))
-                            Interface.do_notify(player, Phrasebook.lookup('no-permission'))
+                            @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
                         else
                             @db[thing].location = room
-                            Interface.do_notify(player, Phrasebook.lookup('drop-to-set'))
+                            @notifier.do_notify(player, Phrasebook.lookup('drop-to-set'))
                         end
                     else #None of the types.    
-                        Interface.do_notify(player, Phrasebook.lookup('internal-error'))
+                        @notifier.do_notify(player, Phrasebook.lookup('internal-error'))
                         $stderr.puts("PANIC weird object: typeof(thing) = #{typeof(thing)}\n")
                 end
             end
@@ -184,13 +184,13 @@ module TinyMud
         #Creating an object costs penies.
         def do_create(player,name,cost)
             if(name == nil)
-                Interface.do_notify(player, Phrasebook.lookup('create-what'))
+                @notifier.do_notify(player, Phrasebook.lookup('create-what'))
                 return
             elsif(!@pred.ok_name(name))
-                Interface.do_notify(player, Phrasebook.lookup('silly-thing-name'))
+                @notifier.do_notify(player, Phrasebook.lookup('silly-thing-name'))
                 return
             elsif(cost < 0)
-                Interface.do_notify(player, Phrasebook.lookup('objects-must-have-a-value'))
+                @notifier.do_notify(player, Phrasebook.lookup('objects-must-have-a-value'))
                 return
             elsif(cost < OBJECT_COST)
                 cost = OBJECT_COST
@@ -199,7 +199,7 @@ module TinyMud
             
             
             if (!@pred.payfor(player, cost))
-                Interface.do_notify(player, Phrasebook.lookup('sorry-poor'))
+                @notifier.do_notify(player, Phrasebook.lookup('sorry-poor'))
             else
                 #Okay, create the object and initialize it.
                 thing = @db.add_new_record()
@@ -229,7 +229,7 @@ module TinyMud
                 thing_record.next = player_record.contents
                 player_record.contents = thing
                 
-                Interface.do_notify(player, Phrasebook.lookup('created'))
+                @notifier.do_notify(player, Phrasebook.lookup('created'))
             end
                 
         end
@@ -244,11 +244,11 @@ module TinyMud
         #do_dig digs into an area, creating a new room.
         def do_dig(player,name)
             if(name == nil)
-                Interface.do_notify(player, Phrasebook.lookup('dig-what'))
+                @notifier.do_notify(player, Phrasebook.lookup('dig-what'))
             elsif(!@pred.ok_name(name))
-                Interface.do_notify(player, Phrasebook.lookup('silly-room-name'))
+                @notifier.do_notify(player, Phrasebook.lookup('silly-room-name'))
             elsif(!@pred.payfor(player, ROOM_COST))
-                Interface.do_notify(player, Phrasebook.lookup('sorry-poor-dig'))
+                @notifier.do_notify(player, Phrasebook.lookup('sorry-poor-dig'))
             else
                 #Everything is okay, create and initialize room
                 room = @db.add_new_record()
@@ -259,7 +259,7 @@ module TinyMud
                 room_record.owner = player
                 room_record.flags = TYPE_ROOM
                 
-                Interface.do_notify(player, Phrasebook.lookup('created-room', name, room))
+                @notifier.do_notify(player, Phrasebook.lookup('created-room', name, room))
             end
         end
     end

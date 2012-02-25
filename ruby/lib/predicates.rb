@@ -4,8 +4,9 @@ module TinyMud
   class Predicates
     include Helpers
 
-    def initialize(db)
+    def initialize(db, notifier)
       @db = db
+      @notifier = notifier
     end
 
     def can_link_to(who, where)
@@ -30,23 +31,23 @@ module TinyMud
       if (!could_doit(player, thing))
         # can't do it
         if (@db[thing].fail)
-          Interface.do_notify(player, @db[thing].fail)
+          @notifier.do_notify(player, @db[thing].fail)
         elsif (default_fail_msg)
-          Interface.do_notify(player, default_fail_msg)
+          @notifier.do_notify(player, default_fail_msg)
         end
   
         if (@db[thing].ofail)
-          Speech.new(@db).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].ofail}".to_s)
+          Speech.new(@db, @notifier).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].ofail}".to_s)
         end
         false
       else
         # can do it
         if (@db[thing].succ)
-          Interface.do_notify(player, @db[thing].succ)
+          @notifier.do_notify(player, @db[thing].succ)
         end
     
         if (@db[thing].osucc)
-          Speech.new(@db).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].osucc}")
+          Speech.new(@db, @notifier).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].osucc}")
         end
         true
       end
@@ -101,7 +102,7 @@ module TinyMud
       return false if name.nil?
       return false unless ok_name(name)
       return false if name.match(/[^[:graph:]]/)
-      return Player.new(@db).lookup_player(name) == NOTHING
+      return Player.new(@db, @notifier).lookup_player(name) == NOTHING
     end
   end
 end

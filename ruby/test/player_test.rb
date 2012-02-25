@@ -8,6 +8,7 @@ module TinyMud
     class TestPlayer < Test::Unit::TestCase
 		def setup
 			@db = TinyMud::Db.new()
+			@notifier = mock()
 		end
 
 		def teardown
@@ -15,7 +16,7 @@ module TinyMud
 		end
 
 		def test_lookup_player
-			player = Player.new(@db)
+			player = Player.new(@db, @notifier)
 			assert_equal(NOTHING, player.lookup_player("sir green nose"))
 			
 			@db.add_new_record
@@ -31,7 +32,7 @@ module TinyMud
 		end
 
 		def test_connect_player
-			player = Player.new(@db)
+			player = Player.new(@db, @notifier)
 			assert_equal(NOTHING, player.connect_player("name", "password"))
 			
 			@db.add_new_record
@@ -48,7 +49,7 @@ module TinyMud
 		end
 		
 		def test_create_player
-			player = Player.new(@db)
+			player = Player.new(@db, @notifier)
 			assert_equal(NOTHING, player.create_player("", ""))
 			assert_equal(NOTHING, player.create_player("", "pwd"))
 			assert_equal(NOTHING, player.create_player(" ", "pwd"))
@@ -60,7 +61,7 @@ module TinyMud
 			assert_equal(NOTHING, player.create_player("here", "pwd"))
 			
 			@db = Db.Minimal()
-			player = Player.new(@db)
+			player = Player.new(@db, @notifier)
 
 			record = @db[0]
 			assert_equal(1, record.contents)
@@ -108,11 +109,11 @@ module TinyMud
 		end
 		
 		def test_change_password
-			player = Player.new(@db)
+			player = Player.new(@db, @notifier)
 			ref = player.create_player("bob", "pwd")
-			Interface.expects(:do_notify).with(0, Phrasebook.lookup('password-changed'))
+			@notifier.expects(:do_notify).with(0, Phrasebook.lookup('password-changed'))
 			player.change_password(ref, "pwd", "ham")
-			Interface.expects(:do_notify).with(0, Phrasebook.lookup('sorry'))
+			@notifier.expects(:do_notify).with(0, Phrasebook.lookup('sorry'))
 			player.change_password(ref, "hamy", "cheese")
 		end
     end

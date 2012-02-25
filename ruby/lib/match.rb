@@ -4,8 +4,9 @@ module TinyMud
   class Match
     include Helpers
 
-    def initialize(db)
+    def initialize(db, notifier)
       @db = db
+      @notifier = notifier
     end
 
     def init_match(player, name, type)
@@ -24,9 +25,9 @@ module TinyMud
     end
 
     def match_player()
-      if (@match_name and @match_name[0] == LOOKUP_TOKEN && Predicates.new(@db).payfor(@match_who, LOOKUP_COST))
+      if (@match_name and @match_name[0] == LOOKUP_TOKEN && Predicates.new(@db, @notifier).payfor(@match_who, LOOKUP_COST))
           player_id = @match_name[1..-1].lstrip()
-          match = Player.new(@db).lookup_player(player_id)
+          match = Player.new(@db, @notifier).lookup_player(player_id)
           @exact_match = match if (match != NOTHING)
       end
     end
@@ -63,7 +64,7 @@ module TinyMud
       loc = @db[@match_who].location
       if (loc != NOTHING)
         absolute = absolute_name()
-        absolute = NOTHING if (!Predicates.new(@db).controls(@match_who, absolute))
+        absolute = NOTHING if (!Predicates.new(@db, @notifier).controls(@match_who, absolute))
 
         enum(@db[loc].exits).each do |exit|
           if (exit == absolute)
@@ -74,7 +75,7 @@ module TinyMud
               if (name.downcase.strip.start_with?(@match_name.downcase))
                   # ! Matthew - Modified original code -> Bug fix?
                   if (@check_keys)
-                      could_doit = Predicates.new(@db).could_doit(@match_who, exit)
+                      could_doit = Predicates.new(@db, @notifier).could_doit(@match_who, exit)
                       @match_count += 1 if could_doit		     
                   else
                       @match_count += 1
@@ -122,10 +123,10 @@ module TinyMud
       match = match_result()
       case match
         when NOTHING
-          Interface.do_notify(@match_who, Phrasebook.lookup('dont-see-that'))
+          @notifier.do_notify(@match_who, Phrasebook.lookup('dont-see-that'))
           NOTHING
         when AMBIGUOUS
-          Interface.do_notify(@match_who, Phrasebook.lookup('which-one'))
+          @notifier.do_notify(@match_who, Phrasebook.lookup('which-one'))
           NOTHING
         else
           match
@@ -150,7 +151,7 @@ module TinyMud
 
     def match_list(first)
         absolute = absolute_name()
-        absolute = NOTHING if (!Predicates.new(@db).controls(@match_who, absolute))
+        absolute = NOTHING if (!Predicates.new(@db, @notifier).controls(@match_who, absolute))
 
         enum(first).each do |i|
           if (i == absolute)
@@ -193,8 +194,8 @@ module TinyMud
         end
     
         if (@check_keys)
-            has1 = Predicates.new(@db).could_doit(@match_who, thing1)
-            has2 = Predicates.new(@db).could_doit(@match_who, thing2)
+            has1 = Predicates.new(@db, @notifier).could_doit(@match_who, thing1)
+            has2 = Predicates.new(@db, @notifier).could_doit(@match_who, thing2)
             if (has1 && !has2)
                 return thing1
             elsif (has2 && !has1)

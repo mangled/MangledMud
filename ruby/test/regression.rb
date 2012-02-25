@@ -21,8 +21,6 @@ module TinyMud
         end
 
         def test_process_command_regressions
-            CommandHelpers.AliasInterface()
-
             cmd_files().each do |cmd_file|
                 db = Db.Minimal()
                 current_result = open(cmd_file) {|content| CommandHelpers.collect_responses(db, content) }
@@ -41,8 +39,6 @@ module TinyMud
                 end
                 db.free()
             end
-
-            CommandHelpers.DeAliasInterface()
         end
     end
 end
