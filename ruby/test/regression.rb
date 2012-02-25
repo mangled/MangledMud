@@ -33,6 +33,7 @@ module TinyMud
                     diff = `diff #{pass_file} #{tmp_file}`
                     unless $? == 0
                         puts diff
+                        assert(false, "regression failed")
                     else
                         File.delete(tmp_file)
                     end

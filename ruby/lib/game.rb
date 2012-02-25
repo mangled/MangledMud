@@ -9,51 +9,10 @@ module TinyMud
       return rand(0x7FFFFFFF)
     end
 
-    # These are class level due to the way the original code was structured
-    # resulting in this being the easiest way to  "hack" in some control over
-    # the "c" static (yes its messy...for now)
-    @epoch = 0
-    @db_to_dump = nil
-    @dump_file_name = nil
-
-    def self.dump_database_to_file(filename)
-      @dump_file_name = filename
-      self.dump_database
-    end
-
-    def self.set_dumpfile_name(filename)
-      @dump_file_name = filename
-    end
-
-    def self.set_db=(db)
-      @db_to_dump = db
-    end
-
-    # Todo: This code needs to handle disk errors
-    def self.dump_database
-      @epoch = @epoch + 1
-      $stderr.puts("DUMPING: #{@dump_file_name}.##{@epoch}#")
-
-      # nuke our predecessor
-      tmpfile = "#{@dump_file_name}.##{@epoch - 1}#"
-      File.delete(tmpfile) if File.exists?(tmpfile)
-  
-      # Dump current
-      tmpfile = "#{@dump_file_name}.##{@epoch}#"
-      @db_to_dump.write(tmpfile)
-
-      # Finalize name
-      File.rename(tmpfile, @dump_file_name)
-  
-      $stderr.puts("DUMPING: #{@dump_file_name}.##{@epoch}# (done)")
-    end
-
     def initialize(db, notifier)
       @db = db
       @notifier = notifier
-
-      # Set-up the hacky access to the db for the tests/regression scripts
-      Game.set_db = db
+      @epoch = 0
 
       # We may not use all of these here...
       @create = Create.new(db, notifier)
@@ -127,6 +86,25 @@ module TinyMud
       end
     end
 
+    # Todo: This code needs to handle disk errors
+    def dump_database(filename)
+      @epoch = @epoch + 1
+      $stderr.puts("DUMPING: #{filename}.##{@epoch}#")
+
+      # nuke our predecessor
+      tmpfile = "#{filename}.##{@epoch - 1}#"
+      File.delete(tmpfile) if File.exists?(tmpfile)
+  
+      # Dump current
+      tmpfile = "#{filename}.##{@epoch}#"
+      @db.write(tmpfile)
+
+      # Finalize name
+      File.rename(tmpfile, filename)
+  
+      $stderr.puts("DUMPING: #{filename}.##{@epoch}# (done)")
+    end
+
     def process_command(player, command)
       # We need to define a more ruby like way for killing the connection
       # if (command == 0) abort()
@@ -164,6 +142,7 @@ module TinyMud
         # command is an exact match for an exit 
         @move.do_move(player, command)
       else
+        # Todo: Make this a little more readable!
         command =~ /^(\S+)(.*)/
         command = $1
         arg1 = $2

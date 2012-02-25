@@ -502,7 +502,6 @@ wizard> i
 wizard> drop foof
 wizard> examine #{foof}
 
-!dumpfile peanut.dump
 mat>@dump
 wizard>@dump mat
 

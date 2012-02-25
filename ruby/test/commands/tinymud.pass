@@ -1529,7 +1529,6 @@ Creating player: "max" with password "bar"
 	[31;1m1 foof(#53) [mat] Key:  ***NOTHING***(#-1) Pennies: 1 Type: Thing[0m
 	[31;1m1 Home: mat's place(#8)[0m
 	[31;1m1 Location: Limbo(#0)[0m
-Setting dump file name to peanut.dump
 [32;1mmat(2): @dump[0m
 	[31;1m2 Sorry, you are in a no dumping zone.[0m
 [32;1mwizard(1): @dump mat[0m
