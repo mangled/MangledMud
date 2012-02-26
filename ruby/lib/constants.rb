@@ -1,4 +1,7 @@
 module TinyMud
+  # Networking
+  DEFAULT_PORT  = 4201
+
   # Flags
   TYPE_ROOM =	0x0
   TYPE_THING = 0x1

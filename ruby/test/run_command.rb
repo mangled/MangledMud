@@ -22,5 +22,5 @@ if __FILE__ == $0
     
     # Go!
     db = TinyMud::Db.Minimal()
-    open(cmd_file) {|content| TinyMud::CommandHelpers.collect_responses(db, content) }.each{|line| puts line }
+    open(cmd_file) {|content| TinyMud::CommandHelpers.collect_responses(db, "not used", content) }.each{|line| puts line }
 end

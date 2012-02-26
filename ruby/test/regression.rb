@@ -23,7 +23,7 @@ module TinyMud
         def test_process_command_regressions
             cmd_files().each do |cmd_file|
                 db = Db.Minimal()
-                current_result = open(cmd_file) {|content| CommandHelpers.collect_responses(db, content) }
+                current_result = open(cmd_file) {|content| CommandHelpers.collect_responses(db, "not used", content) }
                 tmp_file = cmd_file.gsub(".cmd", ".tmp")
                 open(tmp_file, "w") {|file| file.write(current_result.join)}
                 pass_file = pass_file(cmd_file)

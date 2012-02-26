@@ -30,13 +30,13 @@ module TinyMud
         
         # Read content, apply commands to db (note the db is currently static
         # this will change at some point - As I migrate the C code over)
-        def CommandHelpers.collect_responses(db, content)
+        def CommandHelpers.collect_responses(db, dumpfile, content)
 
             players = { "wizard" => 1 }
 
             result = []
             notifier = Notifier.new(result)
-            game = TinyMud::Game.new(db, notifier)
+            game = TinyMud::Game.new(db, dumpfile, notifier)
 
             # Ensure we never give pennies and never manage to kill
 			Game.stubs(:do_rand).returns(17)

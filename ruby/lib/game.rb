@@ -1,4 +1,16 @@
 require_relative 'helpers'
+require_relative 'create'
+require_relative 'help'
+require_relative 'look'
+require_relative 'match'
+require_relative 'move'
+require_relative 'player'
+require_relative 'predicates'
+require_relative 'rob'
+require_relative 'set'
+require_relative 'speech'
+require_relative 'utils'
+require_relative 'wiz'
 
 module TinyMud
   class Game
@@ -9,8 +21,9 @@ module TinyMud
       return rand(0x7FFFFFFF)
     end
 
-    def initialize(db, notifier)
+    def initialize(db, dumpfile, notifier)
       @db = db
+      @dumpfile = dumpfile
       @notifier = notifier
       @epoch = 0
 
@@ -77,9 +90,9 @@ module TinyMud
     end
 
     def do_dump(player)
-      # This is non-functional, we need the networking code in place...
+      puts "**** This is non-functional, we need the networking code in place..."
       if (is_wizard(player))
-        # Todo!!!
+        # Todo!!! - Trigger dump and end
         @notifier.do_notify(player, Phrasebook.lookup('dumping'))
       else
         @notifier.do_notify(player, Phrasebook.lookup('sorry-no-dump'))

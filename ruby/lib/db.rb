@@ -21,7 +21,7 @@ module TinyMud
     # Loads a database from the given filename (replaces current contents)
     def load(filename)
       @record_array = Array.new()
-      raise "File not found at #{location}" unless File.exist?(filename)
+      raise "File not found at #{filename}" unless File.exist?(filename)
 
       record_size = 16
       end_of_records = Regexp.escape("***END OF DUMP***")
