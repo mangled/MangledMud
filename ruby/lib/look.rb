@@ -201,11 +201,13 @@ module TinyMud
       if (!@predicates.payfor(player, LOOKUP_COST))
         @notifier.do_notify(player, Phrasebook.lookup('too-poor'))
       else
-        0.upto(@db.length - 1) do |i|
-            # Note: this isn't the same code as the original stringutil, fix
-            if (!exit?(i) && @predicates.controls(player, i) && (@db[i].name.include?(name)))
-              @notifier.do_notify(player, "#{@db[i].name}(##{i})")
-            end
+        if name
+          0.upto(@db.length - 1) do |i|
+              # Note: this isn't the same code as the original stringutil, fix
+              if (!exit?(i) && @predicates.controls(player, i) && (@db[i].name.include?(name)))
+                @notifier.do_notify(player, "#{@db[i].name}(##{i})")
+              end
+          end
         end
         @notifier.do_notify(player, Phrasebook.lookup('end-of-list'))
       end

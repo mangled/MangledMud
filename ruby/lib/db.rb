@@ -75,12 +75,14 @@ module TinyMud
     end
 
     def parse_dbref(s)
-        x = s.to_i
-        if (x > 0)
-            return x
-        elsif (x == 0)
-            s = s.lstrip() unless s.nil?
-            return 0 if (s and s.start_with?('0'))
+        if s
+          x = s.to_i
+          if (x > 0)
+              return x
+          elsif (x == 0)
+              s = s.lstrip()
+              return 0 if (s and s.start_with?('0'))
+          end
         end
         # else x < 0 or s != 0
         return NOTHING

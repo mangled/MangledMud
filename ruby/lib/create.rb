@@ -14,19 +14,19 @@ module TinyMud
         #Given a room name or special keyowrds "here" or "home", parse_linkable_room attempts to find the room
         #player is asking to link to, and return the index for the room it is associated with (or tell the player they can't).
         def parse_linkable_room(player, room_name)
-            if(room_name.downcase == "here")
+            if (room_name and room_name.downcase == "here")
                 room = @db[player].location
-            elsif(room_name.downcase == "home")
+            elsif (room_name and room_name.downcase == "home")
                 return HOME
             else
                 room = @db.parse_dbref(room_name)
             end
             
             #Check room
-            if((room < 0) || (room >= @db.length) || (!room?(room)))
+            if ((room < 0) || (room >= @db.length) || (!room?(room)))
                 @notifier.do_notify(player, Phrasebook.lookup('not-a-room'))
                 return NOTHING
-            elsif(!@pred.can_link_to(player, room))
+            elsif (!@pred.can_link_to(player, room))
                 @notifier.do_notify(player, Phrasebook.lookup('bad-link'))
                 return NOTHING
             else

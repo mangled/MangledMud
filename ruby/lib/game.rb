@@ -89,6 +89,15 @@ module TinyMud
       }
     end
 
+    def do_shutdown(player)
+        if (is_wizard(player))
+          $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
+          puts "*** Shutdown has not been implemented!!!!"
+        else
+          @notifier.notify(player, "Your delusions of grandeur have been duly noted.")
+        end
+    end
+
     def do_dump(player)
       puts "**** This is non-functional, we need the networking code in place..."
       if (is_wizard(player))
@@ -158,10 +167,20 @@ module TinyMud
         # Todo: Make this a little more readable!
         command =~ /^(\S+)(.*)/
         command = $1
+
+        if command.nil?
+          @notifier.do_notify(player, Phrasebook.lookup('huh'))
+          return
+        end
+
         arg1 = $2
         arg2 = nil
-        arg1.strip! unless arg1.nil?
-        arg1 = nil if arg1.empty?
+
+        unless arg1.nil?
+          arg1.strip!
+          arg1 = nil if arg1.empty?
+        end
+
         if arg1 and arg1.include?('=')
           args = arg1.split('=')
           arg1 = args[0]

@@ -107,7 +107,7 @@ module TinyMud
     end
 
     def do_move(player, direction)
-      if (direction.casecmp("home") == 0)
+      if (direction and direction.casecmp("home") == 0)
         # send him home
         # but steal all his possessions
         loc = @db[player].location
