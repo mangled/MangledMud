@@ -1,5 +1,6 @@
 # The "front end" to MangledMUD
 require 'socket'
+require 'time'
 require_relative 'constants'
 require_relative 'db'
 require_relative 'game'
@@ -20,7 +21,7 @@ class MangledMUDServer
   NEWS_FILE = "news.txt"
 
   def initialize(host, port)
-    @connect_details = Struct.new(:player, :output_prefix, :output_suffix)
+    @connect_details = Struct.new(:player, :last_time, :output_prefix, :output_suffix)
     @descriptors = Hash.new { |hash, key| hash[key] = @connect_details.new(nil) }
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
@@ -34,6 +35,7 @@ class MangledMUDServer
   end
 
   def run(db, game)
+    # todo: consider binding player to the descriptor
     player = TinyMud::Player.new(db, self)
     look = TinyMud::Look.new(db, self)
 
@@ -58,6 +60,7 @@ class MangledMUDServer
                 @descriptors.delete(sock)
             else
                 # Should this be gets? what if there are multiple strings?
+                @descriptors[sock][:last_time] = Time.now()
                 do_command(db, game, player, look, sock, sock.gets())
             end
           end
@@ -69,21 +72,26 @@ class MangledMUDServer
 private
 
   def do_command(db, game, player, look, descriptor, command)
-      if (command == QUIT_COMMAND)
+      command.chomp!()
+
+      if (command.strip() == QUIT_COMMAND)
         goodbye_user(descriptor)
+        # Yuk, here?
+        descriptor.close
+        @descriptors.delete(descriptor)
         0
-      elsif (command == WHO_COMMAND)
-        #dump_users(d)
-      elsif (command == PREFIX_COMMAND)
-        #set_userstring (&d->output_prefix, command+strlen(PREFIX_COMMAND))
-      elsif (command == SUFFIX_COMMAND)
-        #set_userstring (&d->output_suffix, command+strlen(SUFFIX_COMMAND))
+      elsif (command.strip() == WHO_COMMAND)
+        dump_users(db, descriptor)
+      elsif (command.start_with?(PREFIX_COMMAND))
+        @descriptors[descriptor][:output_prefix] = command[PREFIX_COMMAND.length + 1..-1]
+      elsif (command.start_with?(SUFFIX_COMMAND))
+        @descriptors[descriptor][:output_suffix] = command[SUFFIX_COMMAND.length + 1..-1]
       else
         connection_details = @descriptors[descriptor]
         if connection_details[:player]
+
             if connection_details[:output_prefix]
               notify(descriptor, connection_details[:output_prefix])
-              notify(descriptor, "\n")
             end
 
             # Main game command processing
@@ -91,7 +99,6 @@ private
 
             if connection_details[:output_suffix]
               notify(descriptor, connection_details[:output_suffix])
-              notify(descriptor, "\n")
             end
         else
             check_connect(db, player, look, descriptor, command)
@@ -103,6 +110,22 @@ private
   def notify(descriptor, message)
     raise "Arg" if descriptor == @serverSocket
     descriptor.puts(message)
+  end
+
+  def dump_users(db, descriptor)
+    now = Time.now()
+    notify(descriptor, "Current Players:")
+    @descriptors.each do |d, info|
+      if d != @serverSocket
+        if info[:player]
+          if info[:last_time]
+            notify(descriptor, "#{db[info[:player]].name} idle #{(now - info[:last_time]).to_i} seconds")
+          else
+            notify(descriptor, "#{db[info[:player]].name} idle forever")
+          end
+        end
+      end
+    end
   end
 
   def accept_new_connection
@@ -117,7 +140,7 @@ private
   end
 
   def goodbye_user(descriptor)
-      notify(descriptor, TinyMud::Phrasebook.lookup('leave-message'))
+    notify(descriptor, TinyMud::Phrasebook.lookup('leave-message'))
   end
 
   def check_connect(db, player, look, descriptor, message)

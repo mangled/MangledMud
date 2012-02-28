@@ -8,12 +8,13 @@
 # quickly as the tests are comprehensive.
 #
 
-'welcome-message'           : "Welcome to MangledMUD\nTo connect to your existing character, enter \"connect name password\"\nTo create a new character, enter \"create name password\"\nUse the news command to get up-to-date news on program changes.\n\nYou can disconnect using the QUIT command, which must be capitalized as shown.\n\nUse the WHO command to find out who is currently active.\n\n"
+'welcome-message'           : "Welcome to TinyMUD\nTo connect to your existing character, enter \"connect name password\"\nTo create a new character, enter \"create name password\"\nUse the news command to get up-to-date news on program changes.\n\nYou can disconnect using the QUIT command, which must be capitalized as shown.\n\nUse the WHO command to find out who is currently active.\n\n"
 'leave-message'             : "\n***Disconnected***\n"
 'connect-fail'              : "Either that player does not exist, or has a different password.\n"
 'create-fail'               : "Either there is already a player with that name, or that name is illegal.\n"
 'flushed-message'           : "<Output Flushed>\n"
 'shutdown-message'          : "Going down - Bye\n"
+'delusional'                : "Your delusions of grandeur have been duly noted."
 'anti-locked'               : "Anti-Locked."
 'bad-destination'           : "Bad destination."
 'what-wall'                 : "But what do you want to do with the wall?"

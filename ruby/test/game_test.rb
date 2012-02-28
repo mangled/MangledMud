@@ -24,6 +24,13 @@ module TinyMud
 			
 			# Bad player ref goes to stderr!
 			game.process_command(-1, "foo")
+
+			# Do a shutdown as a non-wizard
+			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('delusional'))
+			game.do_shutdown(bob)
+
+			# Shutdown as a wizard - Not implemented
+			game.do_shutdown(wizard)
 			
 			# Simple (one character) commands
 			#

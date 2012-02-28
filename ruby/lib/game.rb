@@ -94,7 +94,7 @@ module TinyMud
           $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
           puts "*** Shutdown has not been implemented!!!!"
         else
-          @notifier.notify(player, "Your delusions of grandeur have been duly noted.")
+          @notifier.do_notify(player, Phrasebook.lookup('delusional'))
         end
     end
 
