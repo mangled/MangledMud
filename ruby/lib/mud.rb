@@ -39,7 +39,7 @@ class MangledMUDServer
     player = TinyMud::Player.new(db, self)
     look = TinyMud::Look.new(db, self)
 
-    while true # This would break on interrupt - signals.
+    while !game.shutdown
       res = select(@descriptors.keys, nil, nil, nil)
       if res
         # Iterate through the tagged read descriptors
@@ -62,11 +62,15 @@ class MangledMUDServer
                 # Should this be gets? what if there are multiple strings?
                 @descriptors[sock][:last_time] = Time.now()
                 do_command(db, game, player, look, sock, sock.gets())
+                break if game.shutdown()
             end
           end
         end
       end
     end
+
+    # I think we should clean up descriptors before we die?? YES you should and inform all players
+    # See close_sockets() in interface.c
   end
 
 private
@@ -200,8 +204,13 @@ if __FILE__ == $0
     puts "LOADING: #{database} (done)"
 
     # todo - this needs sorting out, its a little untidy
+    # todo - assert dumpfile can be written to?
     server = MangledMUDServer.new("localhost", port)
+    game = TinyMud::Game.new(db, dumpfile, server)
+
     server.run(db, TinyMud::Game.new(db, dumpfile, server))
+
+    game.dump_database()
 
     exit(0)
 end

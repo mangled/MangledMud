@@ -16,6 +16,8 @@ module TinyMud
   class Game
     include Helpers
 
+    attr_reader :shutdown
+
     # To control penny checks and general random choices (via stubbing)
     def Game.do_rand()
       return rand(0x7FFFFFFF)
@@ -26,6 +28,7 @@ module TinyMud
       @dumpfile = dumpfile
       @notifier = notifier
       @epoch = 0
+      @shutdown = false;
 
       # We may not use all of these here...
       @create = Create.new(db, notifier)
@@ -87,29 +90,115 @@ module TinyMud
         "@unlock"   => ->(p, a, b) { @set.do_unlock(p, a) },
         "@wall"     => ->(p, a, b) { @speech.do_wall(p, a, b) }
       }
+
+      # Setup signal handlers
+      # trap("INT") { urls_to_crawl.kill(true) }
+      # signal(SIGALRM, alarm_handler);
+      # signal(SIGHUP, alarm_handler);
+      # signal(SIGCHLD, reaper);
+      # alarm_triggered = 0;
+      # alarm(DUMP_INTERVAL);
     end
+
+#void set_signals()
+#{
+#    /* we don't care about SIGPIPE, we notice it in select() and write() */
+#    signal (SIGPIPE, SIG_IGN);
+#
+#    /* standard termination signals */
+#    signal (SIGINT, bailout);
+#    signal (SIGTERM, bailout);
+#
+#    /* catch these because we might as well */
+#    signal (SIGQUIT, bailout);
+#    signal (SIGILL, bailout);
+#    signal (SIGTRAP, bailout);
+#    signal (SIGIOT, bailout);
+##if !defined linux
+#    signal (SIGEMT, bailout);
+##endif
+#    signal (SIGFPE, bailout);
+#    signal (SIGBUS, bailout);
+#    signal (SIGSEGV, bailout);
+#    signal (SIGSYS, bailout);
+#    signal (SIGTERM, bailout);
+#    signal (SIGXCPU, bailout);
+#    signal (SIGXFSZ, bailout);
+#    signal (SIGVTALRM, bailout);
+#    signal (SIGUSR2, bailout);
+#
+#    /* status dumper (predates "WHO" command) */
+#    signal (SIGUSR1, dump_status);
+#}
+
+#void bailout(int sig)
+#{
+#    char message[1024];
+#    
+#    sprintf (message, "BAILOUT: caught signal %d", sig);
+#    panic(message);
+#    _exit (7);
+#    return;
+#}
+
+#void panic(const char *message)
+#{
+#    char panicfile[2048];
+#    FILE *f;
+#    int i;
+#
+#    fprintf(stderr, "PANIC: %s\n", message);
+#
+#    /* turn off signals */
+#    for(i = 0; i < NSIG; i++) {
+#	signal(i, SIG_IGN);
+#    }
+#
+#    /* shut down interface */
+#    emergency_shutdown();
+#
+#    /* dump panic file */
+#    sprintf(panicfile, "%s.PANIC", dumpfile);
+#    if((f = fopen(panicfile, "w")) == NULL) {
+#	perror("CANNOT OPEN PANIC FILE, YOU LOSE:");
+#	_exit(135);
+#    } else {
+#	fprintf(stderr, "DUMPING: %s\n", panicfile);
+#	db_write(f);
+#	fclose(f);
+#	fprintf(stderr, "DUMPING: %s (done)\n", panicfile);
+#	_exit(136);
+#    }
+#}
 
     def do_shutdown(player)
         if (is_wizard(player))
           $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
-          puts "*** Shutdown has not been implemented!!!!"
+          @shutdown = true
         else
           @notifier.do_notify(player, Phrasebook.lookup('delusional'))
         end
     end
 
     def do_dump(player)
-      puts "**** This is non-functional, we need the networking code in place..."
+      puts "**** do_dump - This is non-functional, we need the networking code in place..."
       if (is_wizard(player))
-        # Todo!!! - Trigger dump and end
+        alarm_triggered = 1
         @notifier.do_notify(player, Phrasebook.lookup('dumping'))
       else
         @notifier.do_notify(player, Phrasebook.lookup('sorry-no-dump'))
       end
     end
 
-    # Todo: This code needs to handle disk errors
-    def dump_database(filename)
+    def dump_database()
+        @epoch = @epoch + 1
+        $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}#"
+        dump_database_internal(@dumpfile)
+        $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
+    end
+
+    # Todo: This code needs to handle disk errors - It should probably be private too
+    def dump_database_internal(filename)
       @epoch = @epoch + 1
       $stderr.puts("DUMPING: #{filename}.##{@epoch}#")
 
