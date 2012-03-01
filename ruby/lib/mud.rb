@@ -21,16 +21,18 @@ class MangledMUDServer
   NEWS_FILE = "news.txt"
 
   def initialize(host, port)
+    # todo - convert to an array
     @connect_details = Struct.new(:player, :last_time, :output_prefix, :output_suffix)
     @descriptors = Hash.new { |hash, key| hash[key] = @connect_details.new(nil) }
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
-    @descriptors[@serverSocket]
     puts "Server started at #{host} on port #{port}"
   end
 
   def do_notify(player_ref, s)
     player = @descriptors.find {|k, v| v[:player] == player_ref }
+    # Because the db has no concept of a logged off player, messages can be sent
+    # to players who are in a room etc. but not connected!
     notify(player[0], s) if player
   end
 
@@ -40,8 +42,15 @@ class MangledMUDServer
     look = TinyMud::Look.new(db, self)
 
     while !game.shutdown
-      res = select(@descriptors.keys, nil, nil, nil)
+      # TIDY this, can pass in [@serverSocket] + , and just @desc into the 3rd arg, for other errors
+      res = select([@serverSocket] + @descriptors.keys, nil, @descriptors.keys, nil)
       if res
+        # Errors
+        res[2].each do |sock|
+            sock.close
+            @descriptors.delete(sock)
+            raise "socket had error" ##{sock.peeraddr.join(':')} 
+        end
         # Iterate through the tagged read descriptors
         res[0].each do |sock|
           # Received a connect to the server (listening) socket
@@ -49,6 +58,7 @@ class MangledMUDServer
             accept_new_connection()
           else
             # Received something on a client socket
+            # Can hang with (Errno::ECONNRESET)
             if sock.eof?
                 player = @descriptors[sock][:player]
                 if player
@@ -59,10 +69,13 @@ class MangledMUDServer
                 sock.close
                 @descriptors.delete(sock)
             else
-                # Should this be gets? what if there are multiple strings?
-                @descriptors[sock][:last_time] = Time.now()
-                do_command(db, game, player, look, sock, sock.gets())
-                break if game.shutdown()
+                unless sock == @serverSocket
+                  # Should this be gets? what if there are multiple strings?
+                  @descriptors[sock][:last_time] = Time.now()
+                  line = sock.gets()
+                  do_command(db, game, player, look, sock, line)
+                  break if game.shutdown()
+                end
             end
           end
         end
@@ -71,6 +84,12 @@ class MangledMUDServer
 
     # I think we should clean up descriptors before we die?? YES you should and inform all players
     # See close_sockets() in interface.c
+    @descriptors.each do |d, v|
+      notify(d, TinyMud::Phrasebook.lookup('shutdown-message'))
+      d.flush
+      d.close
+    end
+    @descriptors.clear()
   end
 
 private
@@ -80,12 +99,25 @@ private
 
       if (command.strip() == QUIT_COMMAND)
         goodbye_user(descriptor)
+        player = @descriptors[descriptor][:player]
+        if player
+          puts "DISCONNECTED #{db[player].name} #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]}"
+        else
+          puts "DISCONNECTED #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]}"
+        end
         # Yuk, here?
         descriptor.close
         @descriptors.delete(descriptor)
-        0
       elsif (command.strip() == WHO_COMMAND)
+        # added these so we can sync. for tests, it seems reasonable though
+        connection_details = @descriptors[descriptor]
+        if connection_details[:output_prefix]
+          notify(descriptor, connection_details[:output_prefix])
+        end
         dump_users(db, descriptor)
+        if connection_details[:output_suffix]
+          notify(descriptor, connection_details[:output_suffix])
+        end
       elsif (command.start_with?(PREFIX_COMMAND))
         @descriptors[descriptor][:output_prefix] = command[PREFIX_COMMAND.length + 1..-1]
       elsif (command.start_with?(SUFFIX_COMMAND))
@@ -108,19 +140,20 @@ private
             check_connect(db, player, look, descriptor, command)
         end
       end
-      1
   end
 
   def notify(descriptor, message)
     raise "Arg" if descriptor == @serverSocket
-    descriptor.puts(message)
+    # We need a tidier way of doing this!!!
+    # Errno::EPIPE
+    descriptor.write(message.chomp().gsub("\n", "\r\n") + "\r\n")
   end
 
   def dump_users(db, descriptor)
     now = Time.now()
     notify(descriptor, "Current Players:")
     @descriptors.each do |d, info|
-      if d != @serverSocket
+      if d != @serverSocket # not needed now
         if info[:player]
           if info[:last_time]
             notify(descriptor, "#{db[info[:player]].name} idle #{(now - info[:last_time]).to_i} seconds")

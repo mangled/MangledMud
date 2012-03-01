@@ -199,7 +199,6 @@ module TinyMud
 
     # Todo: This code needs to handle disk errors - It should probably be private too
     def dump_database_internal(filename)
-      @epoch = @epoch + 1
       $stderr.puts("DUMPING: #{filename}.##{@epoch}#")
 
       # nuke our predecessor
@@ -232,8 +231,9 @@ module TinyMud
         return
       end
 
-      # eat leading and trailing whitespace
+      # eat leading and trailing whitespace and any eol's
       command.strip!()
+      command.chomp!()
 
       # collapse white space
       command.gsub!(/\s+/, " ")

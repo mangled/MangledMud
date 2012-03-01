@@ -62,7 +62,7 @@ module TinyMud
         another_bob = TinyMudTest::Player.new(@regression, "bob", "5678", true, true)
 
         # Who
-        wizard.who()
+        wizard.cmd("WHO")
 
         # non wizard dump and shutdown
         bob.cmd("@dump")
@@ -77,7 +77,7 @@ module TinyMud
 
         # Invalid password
         bob = TinyMudTest::Player.new(@regression, "bob", "1111", false, true)
-
+        
         # Now connect and create a number of players (on threads)
         # each player will create a number of items in order
         # then list their inventory - Which should contain

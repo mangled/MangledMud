@@ -41,23 +41,14 @@
 (tx) wizard: WHO
 (rx) wizard: bob is briefly visible through the mist.
 (rx) wizard: Current Players:
-(rx) wizard: bob idle 0 seconds
 (rx) wizard: Wizard idle 0 seconds
+(rx) wizard: bob idle 0 seconds
 (tx) bob: @dump
-(rx) bob: suffix
-(rx) bob: 
 (rx) bob: Sorry, you are in a no dumping zone.
-(rx) bob: > 
 (tx) bob: @shutdown
-(rx) bob: suffix
-(rx) bob: 
 (rx) bob: Your delusions of grandeur have been duly noted.
-(rx) bob: > 
 (tx) wizard: @dump
-(rx) wizard: suffix
 (rx) wizard: Dumping...
-(rx) wizard: 
-(rx) wizard: > 
 (tx) bob: QUIT
 (rx) bob: 
 (rx) bob: ***Disconnected***
@@ -109,9 +100,7 @@
 (rx) 1: Wizard
 (tx) wizard: give 1=100
 (rx) wizard: 1 is briefly visible through the mist.
-(rx) wizard: suffix
 (rx) wizard: You give 100 pennies to 1.
-(rx) wizard: > 
 (rx) 2: Welcome to TinyMUD
 (rx) 2: To connect to your existing character, enter "connect name password"
 (rx) 2: To create a new character, enter "create name password"
@@ -130,9 +119,7 @@
 (rx) 2: Wizard
 (tx) wizard: give 2=100
 (rx) wizard: 2 is briefly visible through the mist.
-(rx) wizard: suffix
 (rx) wizard: You give 100 pennies to 2.
-(rx) wizard: > 
 (rx) 3: Welcome to TinyMUD
 (rx) 3: To connect to your existing character, enter "connect name password"
 (rx) 3: To create a new character, enter "create name password"
@@ -152,10 +139,7 @@
 (rx) 3: Wizard
 (tx) wizard: give 3=100
 (rx) wizard: 3 is briefly visible through the mist.
-(rx) wizard: suffix
-(rx) wizard: 
 (rx) wizard: You give 100 pennies to 3.
-(rx) wizard: > 
 (rx) 4: Welcome to TinyMUD
 (rx) 4: To connect to your existing character, enter "connect name password"
 (rx) 4: To create a new character, enter "create name password"
@@ -176,10 +160,7 @@
 (rx) 4: Wizard
 (tx) wizard: give 4=100
 (rx) wizard: 4 is briefly visible through the mist.
-(rx) wizard: suffix
-(rx) wizard: 
 (rx) wizard: You give 100 pennies to 4.
-(rx) wizard: > 
 (rx) 5: Welcome to TinyMUD
 (rx) 5: To connect to your existing character, enter "connect name password"
 (rx) 5: To create a new character, enter "create name password"
@@ -201,13 +182,8 @@
 (rx) 5: Wizard
 (tx) wizard: give 5=100
 (rx) wizard: 5 is briefly visible through the mist.
-(rx) wizard: suffix
-(rx) wizard: 
 (rx) wizard: You give 100 pennies to 5.
-(rx) wizard: > 
 (tx) 1: inventory
-(rx) 1: suffix
-(rx) 1: 
 (rx) 1: You are carrying:
 (rx) 1: 110()
 (rx) 1: 19()
@@ -220,19 +196,13 @@
 (rx) 1: 12()
 (rx) 1: 11()
 (rx) 1: You have 0 pennies.
-(rx) 1: > 
 (tx) 1: say 1
-(rx) 1: suffix
-(rx) 1: 
 (rx) 1: You say "1"
-(rx) 1: > 
 (tx) 1: QUIT
 (rx) 1: 
 (rx) 1: ***Disconnected***
 (tx) 2: inventory
 (rx) 2: 1 says "1"
-(rx) 2: suffix
-(rx) 2: 
 (rx) 2: You are carrying:
 (rx) 2: 210()
 (rx) 2: 29()
@@ -245,20 +215,14 @@
 (rx) 2: 22()
 (rx) 2: 21()
 (rx) 2: You have 0 pennies.
-(rx) 2: > 
 (tx) 2: say 2
-(rx) 2: suffix
-(rx) 2: 
 (rx) 2: You say "2"
-(rx) 2: > 
 (tx) 2: QUIT
 (rx) 2: 
 (rx) 2: ***Disconnected***
 (tx) 3: inventory
 (rx) 3: 1 says "1"
 (rx) 3: 2 says "2"
-(rx) 3: suffix
-(rx) 3: 
 (rx) 3: You are carrying:
 (rx) 3: 310()
 (rx) 3: 39()
@@ -271,12 +235,8 @@
 (rx) 3: 32()
 (rx) 3: 31()
 (rx) 3: You have 0 pennies.
-(rx) 3: > 
 (tx) 3: say 3
-(rx) 3: suffix
-(rx) 3: 
 (rx) 3: You say "3"
-(rx) 3: > 
 (tx) 3: QUIT
 (rx) 3: 
 (rx) 3: ***Disconnected***
@@ -284,8 +244,6 @@
 (rx) 4: 1 says "1"
 (rx) 4: 2 says "2"
 (rx) 4: 3 says "3"
-(rx) 4: suffix
-(rx) 4: 
 (rx) 4: You are carrying:
 (rx) 4: 410()
 (rx) 4: 49()
@@ -298,12 +256,8 @@
 (rx) 4: 42()
 (rx) 4: 41()
 (rx) 4: You have 0 pennies.
-(rx) 4: > 
 (tx) 4: say 4
-(rx) 4: suffix
-(rx) 4: 
 (rx) 4: You say "4"
-(rx) 4: > 
 (tx) 4: QUIT
 (rx) 4: 
 (rx) 4: ***Disconnected***
@@ -312,8 +266,6 @@
 (rx) 5: 2 says "2"
 (rx) 5: 3 says "3"
 (rx) 5: 4 says "4"
-(rx) 5: suffix
-(rx) 5: 
 (rx) 5: You are carrying:
 (rx) 5: 510()
 (rx) 5: 59()
@@ -326,12 +278,8 @@
 (rx) 5: 52()
 (rx) 5: 51()
 (rx) 5: You have 0 pennies.
-(rx) 5: > 
 (tx) 5: say 5
-(rx) 5: suffix
-(rx) 5: 
 (rx) 5: You say "5"
-(rx) 5: > 
 (tx) 5: QUIT
 (rx) 5: 
 (rx) 5: ***Disconnected***
