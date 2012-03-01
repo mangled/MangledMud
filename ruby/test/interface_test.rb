@@ -6,6 +6,8 @@
 require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
+require 'diff/lcs'
+require 'diff/lcs/array'
 require 'mocha'
 require 'net/telnet'
 require 'thwait'
@@ -20,7 +22,7 @@ module TinyMud
         @regression_tmp_filename = File.join(File.dirname(__FILE__), "#{@test_name}.tmp")
         @regression_pass_filename = File.join(File.dirname(__FILE__), "#{@test_name}.pass")
         File.delete @regression_tmp_filename if File.exists? @regression_tmp_filename
-        @regression = File.open(@regression_tmp_filename, "w")
+        @regression = File.open(@regression_tmp_filename, "wb")
       end
 
       def teardown
@@ -28,10 +30,17 @@ module TinyMud
         if !File.exists? @regression_pass_filename
             raise "Missing pass file #{@regression_pass_filename} for test #{@test_name}"
         else
-            diff = `diff #{@regression_pass_filename} #{@regression_tmp_filename}`
-            unless $? == 0
-                puts diff
-                assert(false, "regression failed for test #{@test_name}")
+            # Faf, due to windows/linux diff and eol's
+            pass = open(@regression_pass_filename) {|f| f.readlines }
+            curr = open(@regression_tmp_filename) {|f| f.readlines }
+            diffs = Diff::LCS.diff(curr, pass)
+            if diffs.length > 0
+                diffs.each do |diff|
+                    diff.each do |change|
+                        puts "#{change.position} #{change.action} #{change.element}"
+                    end
+                end
+                assert_equal(0, diffs.length, "regression failed for #{@regression_pass_filename}")
             else
                 File.delete(@regression_tmp_filename)
             end
