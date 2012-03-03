@@ -28,7 +28,9 @@ module TinyMud
       @dumpfile = dumpfile
       @notifier = notifier
       @epoch = 0
-      @shutdown = false;
+      @shutdown = false
+      @alarm_block = false
+      @alarm_triggered = false
 
       # We may not use all of these here...
       @create = Create.new(db, notifier)
@@ -91,85 +93,54 @@ module TinyMud
         "@wall"     => ->(p, a, b) { @speech.do_wall(p, a, b) }
       }
 
-      # Setup signal handlers
-      # trap("INT") { urls_to_crawl.kill(true) }
-      # signal(SIGALRM, alarm_handler);
-      # signal(SIGHUP, alarm_handler);
-      # signal(SIGCHLD, reaper);
-      # alarm_triggered = 0;
-      # alarm(DUMP_INTERVAL);
+      # Setup signal handlers - Just ctrl-c for now
+      # todo - add others
+      # todo - test does this work under windows
+      trap("SIGINT") { bailout() }
+
+      # There isn't an easy way to-do this, will keep looking
+      # Suggest spinning off a thread, waiting, when it wakes it makes the call
+      # this is likely to be o/s independent.
+
+      # Will need to kill it!!! and restart it.
+      #y = Thread.start {
+      #  sleep DUMP_INTERVAL
+      #  fork and dump ???
+      #end
+      # alarm(DUMP_INTERVAL)
     end
 
-#void set_signals()
-#{
-#    /* we don't care about SIGPIPE, we notice it in select() and write() */
-#    signal (SIGPIPE, SIG_IGN);
-#
-#    /* standard termination signals */
-#    signal (SIGINT, bailout);
-#    signal (SIGTERM, bailout);
-#
-#    /* catch these because we might as well */
-#    signal (SIGQUIT, bailout);
-#    signal (SIGILL, bailout);
-#    signal (SIGTRAP, bailout);
-#    signal (SIGIOT, bailout);
-##if !defined linux
-#    signal (SIGEMT, bailout);
-##endif
-#    signal (SIGFPE, bailout);
-#    signal (SIGBUS, bailout);
-#    signal (SIGSEGV, bailout);
-#    signal (SIGSYS, bailout);
-#    signal (SIGTERM, bailout);
-#    signal (SIGXCPU, bailout);
-#    signal (SIGXFSZ, bailout);
-#    signal (SIGVTALRM, bailout);
-#    signal (SIGUSR2, bailout);
-#
-#    /* status dumper (predates "WHO" command) */
-#    signal (SIGUSR1, dump_status);
-#}
-
-#void bailout(int sig)
-#{
-#    char message[1024];
-#    
-#    sprintf (message, "BAILOUT: caught signal %d", sig);
-#    panic(message);
-#    _exit (7);
-#    return;
-#}
-
-#void panic(const char *message)
-#{
-#    char panicfile[2048];
-#    FILE *f;
-#    int i;
-#
-#    fprintf(stderr, "PANIC: %s\n", message);
-#
-#    /* turn off signals */
-#    for(i = 0; i < NSIG; i++) {
-#	signal(i, SIG_IGN);
-#    }
-#
-#    /* shut down interface */
-#    emergency_shutdown();
-#
-#    /* dump panic file */
-#    sprintf(panicfile, "%s.PANIC", dumpfile);
-#    if((f = fopen(panicfile, "w")) == NULL) {
-#	perror("CANNOT OPEN PANIC FILE, YOU LOSE:");
-#	_exit(135);
-#    } else {
-#	fprintf(stderr, "DUMPING: %s\n", panicfile);
-#	db_write(f);
-#	fclose(f);
-#	fprintf(stderr, "DUMPING: %s (done)\n", panicfile);
-#	_exit(136);
-#    }
-#}
+    def bailout()
+        # todo - add to phrasebook
+        panic("BAILOUT: caught signal")
+        exit(7)
+    end
+  
+    def panic(message)
+        # todo - add to phrasebook
+        $stderr.puts "PANIC: #{message}"
+    
+        # turn off signals - check this!!! Its disabling all
+        # I really don't like this!!!! Sanity check it
+        Signal.list.each {|name, id| trap(name, "SIG_IGN") }
+  
+        # shut down interface
+        puts "TODO - SHUTDOWN SOCKETS"
+        # emergency_shutdown()
+    
+        # dump panic file
+        # todo - add to phrasebook
+        panic_file = "#{@dumpfile}.PANIC"
+        begin
+          $stderr.puts "DUMPING: #{panic_file}"
+          @db.write(panic_file)
+          $stderr.puts "DUMPING: #{panic_file} (done)"
+          exit(136)
+        rescue
+          perror("CANNOT OPEN PANIC FILE #{panic_file}, YOU LOSE:")
+          exit(135)
+        end
+    end
 
     def do_shutdown(player)
         if (is_wizard(player))
@@ -180,10 +151,30 @@ module TinyMud
         end
     end
 
+    def fork_and_dump()
+        @epoch += 1
+
+        $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
+        pid = fork do
+          dump_database_internal(@dumpfile)
+          exit!(0)
+        end
+
+        if (pid < 0)
+          $stderr.puts "fork_and_dump: fork()"
+        else
+          Process.detach(pid)
+        end
+
+        # in the parent - reset alarm
+        @alarm_triggered = false
+        # Todo - fix this
+        # alarm(DUMP_INTERVAL)
+    end
+
     def do_dump(player)
-      puts "**** do_dump - This is non-functional, we need the networking code in place..."
       if (is_wizard(player))
-        alarm_triggered = 1
+        @alarm_triggered = true
         @notifier.do_notify(player, Phrasebook.lookup('dumping'))
       else
         @notifier.do_notify(player, Phrasebook.lookup('sorry-no-dump'))
@@ -191,7 +182,7 @@ module TinyMud
     end
 
     def dump_database()
-        @epoch = @epoch + 1
+        @epoch += 1
         $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}#"
         dump_database_internal(@dumpfile)
         $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
@@ -244,7 +235,10 @@ module TinyMud
         return
       end
 
-      # check for single-character commands 
+      # We could modify the db from here on...
+      @alarm_block = true
+
+      # check for single-character commands
       if (command[0] == SAY_TOKEN)
         @speech.do_say(player, command[1..-1], nil)
       elsif (command[0] == POSE_TOKEN)
@@ -283,6 +277,9 @@ module TinyMud
           @notifier.do_notify(player, Phrasebook.lookup('huh'))
         end
       end
+      # Db access done, dump if required
+      @alarm_block = false
+      fork_and_dump() if @alarm_triggered
     end
   end
 end

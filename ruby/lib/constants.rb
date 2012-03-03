@@ -2,6 +2,9 @@ module TinyMud
   # Networking
   DEFAULT_PORT  = 4201
 
+  # Timing
+  DUMP_INTERVAL = 3600	# seconds between dumps
+
   # Flags
   TYPE_ROOM =	0x0
   TYPE_THING = 0x1

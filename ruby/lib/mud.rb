@@ -10,9 +10,15 @@ require_relative 'phrasebook'
 
 require 'pp'
 
+# *** THIS IS WIP AND YET TO BE REFACTORED ****
+# It also needs to rescue itself from potential errors
+# I can add some tests possibly to the interface tests
+# e.g. send then disconnect. Possibly I will have to use
+# raw sockets.
+
 class MangledMUDServer
 
-  # todo - move these out
+  # todo - move these out into the prasebook
   QUIT_COMMAND = "QUIT"
   WHO_COMMAND = "WHO"
   PREFIX_COMMAND = "OUTPUTPREFIX"
@@ -23,6 +29,7 @@ class MangledMUDServer
   def initialize(host, port)
     # todo - convert to an array
     @connect_details = Struct.new(:player, :last_time, :output_prefix, :output_suffix)
+    # Use an array?
     @descriptors = Hash.new { |hash, key| hash[key] = @connect_details.new(nil) }
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
@@ -71,6 +78,7 @@ class MangledMUDServer
             else
                 unless sock == @serverSocket
                   # Should this be gets? what if there are multiple strings?
+                  # I think it will arrive as a single massive string - add a test for this case		  
                   @descriptors[sock][:last_time] = Time.now()
                   line = sock.gets()
                   do_command(db, game, player, look, sock, line)
@@ -81,9 +89,12 @@ class MangledMUDServer
         end
       end
     end
+    close_sockets()
+  end
 
-    # I think we should clean up descriptors before we die?? YES you should and inform all players
-    # See close_sockets() in interface.c
+private
+
+  def close_sockets()
     @descriptors.each do |d, v|
       notify(d, TinyMud::Phrasebook.lookup('shutdown-message'))
       d.flush
@@ -91,8 +102,6 @@ class MangledMUDServer
     end
     @descriptors.clear()
   end
-
-private
 
   def do_command(db, game, player, look, descriptor, command)
       command.chomp!()
@@ -143,6 +152,7 @@ private
   end
 
   def notify(descriptor, message)
+    # All messages should go into a queue and send at end of processing
     raise "Arg" if descriptor == @serverSocket
     # We need a tidier way of doing this!!!
     # Errno::EPIPE
