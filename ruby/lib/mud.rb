@@ -60,31 +60,37 @@ class MangledMUDServer
         end
         # Iterate through the tagged read descriptors
         res[0].each do |sock|
-          # Received a connect to the server (listening) socket
-          if sock == @serverSocket then
-            accept_new_connection()
-          else
-            # Received something on a client socket
-            # Can hang with (Errno::ECONNRESET)
-            if sock.eof?
-                player = @descriptors[sock][:player]
-                if player
-                  puts "DISCONNECT #{sock.peeraddr[2]}:#{sock.peeraddr[1]} player #{db[player]}(#{player})"
-                else
-                  puts "DISCONNECT descriptor #{sock.peeraddr[2]}:#{sock.peeraddr[1]} never connected"
-                end
-                sock.close
-                @descriptors.delete(sock)
+          begin
+            # Received a connect to the server (listening) socket
+            if sock == @serverSocket then
+              accept_new_connection()
             else
-                unless sock == @serverSocket
-                  # Should this be gets? what if there are multiple strings?
-                  # I think it will arrive as a single massive string - add a test for this case		  
-                  @descriptors[sock][:last_time] = Time.now()
-                  line = sock.gets()
-                  do_command(db, game, player, look, sock, line)
-                  break if game.shutdown()
-                end
+              # Received something on a client socket
+              # Can hang with (Errno::ECONNRESET)
+              if sock.eof?
+                  p = @descriptors[sock][:player]
+                  if p
+                    puts "DISCONNECT #{sock.peeraddr[2]}:#{sock.peeraddr[1]} player #{db[p]}(#{p})"
+                  else
+                    puts "DISCONNECT descriptor #{sock.peeraddr[2]}:#{sock.peeraddr[1]} never connected"
+                  end
+                  sock.close
+                  @descriptors.delete(sock)
+              else
+                  unless sock == @serverSocket
+                    # Should this be gets? what if there are multiple strings?
+                    # I think it will arrive as a single massive string - add a test for this case		  
+                    @descriptors[sock][:last_time] = Time.now()
+                    line = sock.gets()
+                    do_command(db, game, player, look, sock, line)
+                    break if game.shutdown()
+                  end
+              end
             end
+          rescue Exception => e # Errno::'s catch specific
+            puts "ERROR: #{e}"
+            sock.close
+            @descriptors.delete(sock)
           end
         end
       end
@@ -93,7 +99,6 @@ class MangledMUDServer
   end
 
   def close_sockets()
-puts "closing sockets"
     @descriptors.each do |d, v|
       notify(d, TinyMud::Phrasebook.lookup('shutdown-message'))
       d.flush
@@ -155,9 +160,18 @@ private
   def notify(descriptor, message)
     # All messages should go into a queue and send at end of processing
     raise "Arg" if descriptor == @serverSocket
+    return unless @descriptors.keys.find {|d| d == descriptor }
+
     # We need a tidier way of doing this!!!
     # Errno::EPIPE
-    descriptor.write(message.chomp().gsub("\n", "\r\n") + "\r\n")
+    begin
+      descriptor.write(message.chomp().gsub("\n", "\r\n") + "\r\n")
+    rescue Exception => e # Errno::'s catch specific
+      puts "ERROR: #{e}"
+      # Yuk, here?
+      descriptor.close
+      @descriptors.delete(descriptor)
+    end
   end
 
   def dump_users(db, descriptor)

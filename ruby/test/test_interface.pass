@@ -1,3 +1,9 @@
+Welcome to TinyMUD
+Welcome to TinyMUD
+Welcome to TinyMUD
+To connect to your existing character, enter "connect name password"
+Welcome to TinyMUD
+To connect to your existing character, enter "connect name password"
 (rx) wizard: Welcome to TinyMUD
 (rx) wizard: To connect to your existing character, enter "connect name password"
 (rx) wizard: To create a new character, enter "create name password"
@@ -10,6 +16,8 @@
 (tx) wizard: connect wizard potrzebie
 (rx) wizard: Limbo (#0)
 (rx) wizard: You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.
+(rx) wizard: Contents:
+(rx) wizard: foo(#2)
 (rx) bob: Welcome to TinyMUD
 (rx) bob: To connect to your existing character, enter "connect name password"
 (rx) bob: To create a new character, enter "create name password"
@@ -23,6 +31,7 @@
 (rx) bob: Limbo
 (rx) bob: You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.
 (rx) bob: Contents:
+(rx) bob: foo
 (rx) bob: Wizard
 (rx) bob: Welcome to TinyMUD
 (rx) bob: To connect to your existing character, enter "connect name password"
@@ -82,7 +91,8 @@
 (rx) wizard: Limbo (#0)
 (rx) wizard: You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.
 (rx) wizard: Contents:
-(rx) wizard: bob(#2)
+(rx) wizard: bob(#3)
+(rx) wizard: foo(#2)
 (rx) 1: Welcome to TinyMUD
 (rx) 1: To connect to your existing character, enter "connect name password"
 (rx) 1: To create a new character, enter "create name password"
@@ -97,6 +107,7 @@
 (rx) 1: You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.
 (rx) 1: Contents:
 (rx) 1: bob
+(rx) 1: foo
 (rx) 1: Wizard
 (tx) wizard: give 1=100
 (rx) wizard: 1 is briefly visible through the mist.
@@ -116,6 +127,7 @@
 (rx) 2: Contents:
 (rx) 2: 1
 (rx) 2: bob
+(rx) 2: foo
 (rx) 2: Wizard
 (tx) wizard: give 2=100
 (rx) wizard: 2 is briefly visible through the mist.
@@ -136,6 +148,7 @@
 (rx) 3: 2
 (rx) 3: 1
 (rx) 3: bob
+(rx) 3: foo
 (rx) 3: Wizard
 (tx) wizard: give 3=100
 (rx) wizard: 3 is briefly visible through the mist.
@@ -157,6 +170,7 @@
 (rx) 4: 2
 (rx) 4: 1
 (rx) 4: bob
+(rx) 4: foo
 (rx) 4: Wizard
 (tx) wizard: give 4=100
 (rx) wizard: 4 is briefly visible through the mist.
@@ -179,6 +193,7 @@
 (rx) 5: 2
 (rx) 5: 1
 (rx) 5: bob
+(rx) 5: foo
 (rx) 5: Wizard
 (tx) wizard: give 5=100
 (rx) wizard: 5 is briefly visible through the mist.
@@ -304,11 +319,12 @@
 (rx) wizard: Limbo (#0)
 (rx) wizard: You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.
 (rx) wizard: Contents:
-(rx) wizard: 5(#7)
-(rx) wizard: 4(#6)
-(rx) wizard: 3(#5)
-(rx) wizard: 2(#4)
-(rx) wizard: 1(#3)
-(rx) wizard: bob(#2)
+(rx) wizard: 5(#8)
+(rx) wizard: 4(#7)
+(rx) wizard: 3(#6)
+(rx) wizard: 2(#5)
+(rx) wizard: 1(#4)
+(rx) wizard: bob(#3)
+(rx) wizard: foo(#2)
 (tx) wizard: @shutdown
 (rx) wizard: Going down - Bye
