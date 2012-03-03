@@ -28,7 +28,7 @@ class MangledMUDServer
 
   def initialize(host, port)
     # todo - convert to an array
-    @connect_details = Struct.new(:player, :last_time, :output_prefix, :output_suffix)
+    @connect_details = Struct.new(:player, :last_time, :output_prefix, :output_suffix, :output_buffer)
     # Use an array?
     @descriptors = Hash.new { |hash, key| hash[key] = @connect_details.new(nil) }
     @serverSocket = TCPServer.new(host, port)
@@ -56,7 +56,7 @@ class MangledMUDServer
         res[2].each do |sock|
             sock.close
             @descriptors.delete(sock)
-            raise "socket had error" ##{sock.peeraddr.join(':')} 
+            $stderr.puts "socket had an error"
         end
         # Iterate through the tagged read descriptors
         res[0].each do |sock|
@@ -81,15 +81,17 @@ class MangledMUDServer
                     # Should this be gets? what if there are multiple strings?
                     # I think it will arrive as a single massive string - add a test for this case		  
                     @descriptors[sock][:last_time] = Time.now()
+                    @descriptors[sock][:output_buffer] = []
                     line = sock.gets()
                     do_command(db, game, player, look, sock, line)
+                    write_buffer()
                     break if game.shutdown()
                   end
               end
             end
           rescue Exception => e # Errno::'s catch specific
-            puts "ERROR: #{e}"
-            sock.close
+            puts "ERROR1: #{e}"
+            sock.close unless sock.closed?
             @descriptors.delete(sock)
           end
         end
@@ -101,8 +103,15 @@ class MangledMUDServer
   def close_sockets()
     @descriptors.each do |d, v|
       notify(d, TinyMud::Phrasebook.lookup('shutdown-message'))
-      d.flush
-      d.close
+    end
+    write_buffer()
+    @descriptors.each do |d, v|
+      begin
+        d.flush unless d.closed?
+        d.close unless d.closed?
+      rescue Exception => e # Errno::'s catch specific
+        puts "2ERROR: #{e}"
+      end
     end
     @descriptors.clear()
   end
@@ -157,21 +166,26 @@ private
       end
   end
 
+  def write_buffer()
+    @descriptors.each do |d, v|
+      begin
+        buffer = @descriptors[d][:output_buffer]
+        d.write(buffer.join('')) if buffer.length > 0
+        @descriptors[d][:output_buffer] = []
+      rescue Exception => e # Errno::'s catch specific
+        puts "2ERROR: #{e}"
+        d.close
+        @descriptors.delete(d)
+      end
+    end
+  end
+
   def notify(descriptor, message)
     # All messages should go into a queue and send at end of processing
     raise "Arg" if descriptor == @serverSocket
     return unless @descriptors.keys.find {|d| d == descriptor }
-
     # We need a tidier way of doing this!!!
-    # Errno::EPIPE
-    begin
-      descriptor.write(message.chomp().gsub("\n", "\r\n") + "\r\n")
-    rescue Exception => e # Errno::'s catch specific
-      puts "ERROR: #{e}"
-      # Yuk, here?
-      descriptor.close
-      @descriptors.delete(descriptor)
-    end
+    @descriptors[descriptor][:output_buffer] << message.chomp().gsub("\n", "\r\n") + "\r\n"
   end
 
   def dump_users(db, descriptor)
@@ -193,8 +207,10 @@ private
   def accept_new_connection
     descriptor = @serverSocket.accept
     @descriptors[descriptor]
+    @descriptors[descriptor][:output_buffer] = []
     puts "ACCEPT #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]}"
     welcome_user(descriptor)
+    write_buffer()
   end
 
   def welcome_user(descriptor)
@@ -203,6 +219,7 @@ private
 
   def goodbye_user(descriptor)
     notify(descriptor, TinyMud::Phrasebook.lookup('leave-message'))
+    write_buffer()
   end
 
   def check_connect(db, player, look, descriptor, message)
