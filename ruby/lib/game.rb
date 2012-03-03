@@ -211,10 +211,7 @@ module TinyMud
       $stderr.puts("DUMPING: #{filename}.##{@epoch}# (done)")
     end
 
-    def process_command(player, command)
-      # We need to define a more ruby like way for killing the connection
-      # if (command == 0) abort()
-  
+    def process_command(player, command)  
       # robustify player 
       if (player < 0 || player >= @db.length || !player?(player))
         $stderr.puts("process_command: bad player #{player}")

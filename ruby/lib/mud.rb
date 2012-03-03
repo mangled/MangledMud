@@ -1,4 +1,3 @@
-# The "front end" to MangledMUD
 require 'socket'
 require 'time'
 require_relative 'constants'
@@ -8,14 +7,8 @@ require_relative 'player'
 require_relative 'look'
 require_relative 'phrasebook'
 
-require 'pp'
 
 # *** THIS IS WIP AND YET TO BE REFACTORED ****
-# It also needs to rescue itself from potential errors
-# I can add some tests possibly to the interface tests
-# e.g. send then disconnect. Possibly I will have to use
-# raw sockets.
-
 class MangledMUDServer
 
   # todo - move these out into the prasebook
@@ -27,9 +20,8 @@ class MangledMUDServer
   NEWS_FILE = "news.txt"
 
   def initialize(host, port)
-    # todo - convert to an array
     @connect_details = Struct.new(:player, :last_time, :output_prefix, :output_suffix, :output_buffer)
-    # Use an array?
+    # Use an array? Else WHO will return odd orders
     @descriptors = Hash.new { |hash, key| hash[key] = @connect_details.new(nil) }
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
@@ -90,7 +82,7 @@ class MangledMUDServer
                   end
               end
             end
-          rescue Exception => e # Errno::'s catch specific
+          rescue Exception => e # Errno::'s catch specific --> SystemCallError
             puts "ERROR1: #{e}"
             sock.close unless sock.closed?
             @descriptors.delete(sock)
@@ -110,7 +102,7 @@ class MangledMUDServer
       begin
         d.flush unless d.closed?
         d.close unless d.closed?
-      rescue Exception => e # Errno::'s catch specific
+      rescue Exception => e # Errno::'s catch specific --> SystemCallError
         puts "2ERROR: #{e}"
       end
     end
