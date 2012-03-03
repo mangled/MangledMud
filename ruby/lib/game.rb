@@ -98,16 +98,12 @@ module TinyMud
       # todo - test does this work under windows
       trap("SIGINT") { bailout(emergency_shutdown) }
 
-      # There isn't an easy way to-do this, will keep looking
-      # Suggest spinning off a thread, waiting, when it wakes it makes the call
-      # this is likely to be o/s independent.
 
-      # Will need to kill it!!! and restart it.
-      #y = Thread.start {
-      #  sleep DUMP_INTERVAL
-      #  fork and dump ???
-      #end
-      # alarm(DUMP_INTERVAL)
+      # Create a thread to handle periodic database dumping
+      @dumper_thread = Thread.new do
+        sleep(DUMP_INTERVAL)
+        fork_and_dump()
+      end
     end
 
     def bailout(emergency_shutdown)
@@ -117,6 +113,9 @@ module TinyMud
     end
   
     def panic(emergency_shutdown, message)
+        # Kill the dumper thread
+        Thread.kill(@dumper_thread)
+
         # todo - add to phrasebook
         $stderr.puts "PANIC: #{message}"
     
@@ -143,6 +142,9 @@ module TinyMud
 
     def do_shutdown(player)
         if (is_wizard(player))
+          # Kill the dumper thread
+          Thread.kill(@dumper_thread)
+
           $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
           @shutdown = true
         else
@@ -167,8 +169,12 @@ module TinyMud
 
         # in the parent - reset alarm
         @alarm_triggered = false
-        # Todo - fix this
-        # alarm(DUMP_INTERVAL)
+
+        # restart the dumper
+        @dumper_thread = Thread.new do
+          sleep(DUMP_INTERVAL)
+          fork_and_dump()
+        end
     end
 
     def do_dump(player)

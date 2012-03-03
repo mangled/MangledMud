@@ -48,6 +48,7 @@ class MangledMUDServer
     player = TinyMud::Player.new(db, self)
     look = TinyMud::Look.new(db, self)
 
+    # todo - this is far too nested, its unreadable and a mess
     while !game.shutdown
       # TIDY this, can pass in [@serverSocket] + , and just @desc into the 3rd arg, for other errors
       res = select([@serverSocket] + @descriptors.keys, nil, @descriptors.keys, nil)
