@@ -23,7 +23,7 @@ module TinyMud
       return rand(0x7FFFFFFF)
     end
 
-    def initialize(db, dumpfile, notifier)
+    def initialize(db, dumpfile, notifier, emergency_shutdown = nil)
       @db = db
       @dumpfile = dumpfile
       @notifier = notifier
@@ -48,55 +48,55 @@ module TinyMud
 
       # Set up command handlers
       @commands = {
-        "@chown"    => ->(p, a, b) { @set.do_chown(p, a, b) },
-        "@create"   => ->(p, a, b) { @create.do_create(p, a, b.to_i) },
-        "@describe" => ->(p, a, b) { @set.do_describe(p, a, b) },
-        "@dig"      => ->(p, a, b) { @create.do_dig(p, a) },
-        "drop"      => ->(p, a, b) { @move.do_drop(p, a) },
-        "@dump"     => ->(p, a, b) { do_dump(p) },
-        "examine"   => ->(p, a, b) { @look.do_examine(p, a) },
-        "@fail"     => ->(p, a, b) { @set.do_fail(p, a, b) },
-        "@find"     => ->(p, a, b) { @look.do_find(p, a) },
-        "@force"    => ->(p, a, b) { @wiz.do_force(self, p, a, b) },
-        "get"       => ->(p, a, b) { @move.do_get(p, a) },
-        "give"      => ->(p, a, b) { @rob.do_give(p, a, b.to_i) },
-        "goto"      => ->(p, a, b) { @move.do_move(p, a) },
-        "gripe"     => ->(p, a, b) { @speech.do_gripe(p, a, b) },
-        "help"      => ->(p, a, b) { @help.do_help(p) },
-        "inventory" => ->(p, a, b) { @look.do_inventory(p) },
-        "kill"      => ->(p, a, b) { @rob.do_kill(p, a, b.to_i) },
-        "@link"     => ->(p, a, b) { @create.do_link(p, a, b) },
-        "@lock"     => ->(p, a, b) { @set.do_lock(p, a, b) },
-        "look"      => ->(p, a, b) { @look.do_look_at(p, a) },
-        "move"      => ->(p, a, b) { @move.do_move(p, a) },
-        "@name"     => ->(p, a, b) { @set.do_name(p, a, b) },
-        "news"      => ->(p, a, b) { @help.do_news(p) },
-        "@ofail"    => ->(p, a, b) { @set.do_ofail(p, a, b) },
-        "@open"     => ->(p, a, b) { @create.do_open(p, a, b) },
-        "@osuccess" => ->(p, a, b) { @set.do_osuccess(p, a, b) },
-        "page"      => ->(p, a, b) { @speech.do_page(p, a) },
-        "@password" => ->(p, a, b) { @player.change_password(p, a, b) },
-        "read"      => ->(p, a, b) { @look.do_look_at(p, a) },
-        "rob"       => ->(p, a, b) { @rob.do_rob(p, a) },
-        "say"       => ->(p, a, b) { @speech.do_say(p, a, b) },
-        "score"     => ->(p, a, b) { @look.do_score(p) },
-        "@set"      => ->(p, a, b) { @set.do_set(p, a, b) },
-        "@shutdown" => ->(p, a, b) { do_shutdown(p) },
-        "@stats"    => ->(p, a, b) { @wiz.do_stats(p, a) },
-        "@success"  => ->(p, a, b) { @set.do_success(p, a, b) },
-        "take"      => ->(p, a, b) { @move.do_get(p, a) },
-        "@teleport" => ->(p, a, b) { @wiz.do_teleport(p, a, b) },
-        "throw"     => ->(p, a, b) { @move.do_drop(p, a) },
-        "@toad"     => ->(p, a, b) { @wiz.do_toad(p, a) },
-        "@unlink"   => ->(p, a, b) { @set.do_unlink(p, a) },
-        "@unlock"   => ->(p, a, b) { @set.do_unlock(p, a) },
-        "@wall"     => ->(p, a, b) { @speech.do_wall(p, a, b) }
+        "@chown"    => [->(p, a, b) { @set.do_chown(p, a, b) }, false],
+        "@create"   => [->(p, a, b) { @create.do_create(p, a, b.to_i) }, false],
+        "@describe" => [->(p, a, b) { @set.do_describe(p, a, b) }, false],
+        "@dig"      => [->(p, a, b) { @create.do_dig(p, a) }, false],
+        "drop"      => [->(p, a, b) { @move.do_drop(p, a) }, false],
+        "@dump"     => [->(p, a, b) { do_dump(p) }, false],
+        "examine"   => [->(p, a, b) { @look.do_examine(p, a) }, false],
+        "@fail"     => [->(p, a, b) { @set.do_fail(p, a, b) }, false],
+        "@find"     => [->(p, a, b) { @look.do_find(p, a) }, false],
+        "@force"    => [->(p, a, b) { @wiz.do_force(self, p, a, b) }, false],
+        "get"       => [->(p, a, b) { @move.do_get(p, a) }, false],
+        "give"      => [->(p, a, b) { @rob.do_give(p, a, b.to_i) }, false],
+        "goto"      => [->(p, a, b) { @move.do_move(p, a) }, false],
+        "gripe"     => [->(p, a, b) { @speech.do_gripe(p, a, b) }, false],
+        "help"      => [->(p, a, b) { @help.do_help(p) }, false],
+        "inventory" => [->(p, a, b) { @look.do_inventory(p) }, false],
+        "kill"      => [->(p, a, b) { @rob.do_kill(p, a, b.to_i) }, false],
+        "@link"     => [->(p, a, b) { @create.do_link(p, a, b) }, false],
+        "@lock"     => [->(p, a, b) { @set.do_lock(p, a, b) }, false],
+        "look"      => [->(p, a, b) { @look.do_look_at(p, a) }, false],
+        "move"      => [->(p, a, b) { @move.do_move(p, a) }, false],
+        "@name"     => [->(p, a, b) { @set.do_name(p, a, b) }, false],
+        "news"      => [->(p, a, b) { @help.do_news(p) }, true],
+        "@ofail"    => [->(p, a, b) { @set.do_ofail(p, a, b) }, false],
+        "@open"     => [->(p, a, b) { @create.do_open(p, a, b) }, false],
+        "@osuccess" => [->(p, a, b) { @set.do_osuccess(p, a, b) }, false],
+        "page"      => [->(p, a, b) { @speech.do_page(p, a) }, false],
+        "@password" => [->(p, a, b) { @player.change_password(p, a, b) }, false],
+        "read"      => [->(p, a, b) { @look.do_look_at(p, a) }, false],
+        "rob"       => [->(p, a, b) { @rob.do_rob(p, a) }, false],
+        "say"       => [->(p, a, b) { @speech.do_say(p, a, b) }, false],
+        "score"     => [->(p, a, b) { @look.do_score(p) }, false],
+        "@set"      => [->(p, a, b) { @set.do_set(p, a, b) }, false],
+        "@shutdown" => [->(p, a, b) { do_shutdown(p) }, false],
+        "@stats"    => [->(p, a, b) { @wiz.do_stats(p, a) }, false],
+        "@success"  => [->(p, a, b) { @set.do_success(p, a, b) }, false],
+        "take"      => [->(p, a, b) { @move.do_get(p, a) }, false],
+        "@teleport" => [->(p, a, b) { @wiz.do_teleport(p, a, b) }, false],
+        "throw"     => [->(p, a, b) { @move.do_drop(p, a) }, false],
+        "@toad"     => [->(p, a, b) { @wiz.do_toad(p, a) }, true],
+        "@unlink"   => [->(p, a, b) { @set.do_unlink(p, a) }, false],
+        "@unlock"   => [->(p, a, b) { @set.do_unlock(p, a) }, false],
+        "@wall"     => [->(p, a, b) { @speech.do_wall(p, a, b) }, false]
       }
 
       # Setup signal handlers - Just ctrl-c for now
       # todo - add others
       # todo - test does this work under windows
-      trap("SIGINT") { bailout() }
+      trap("SIGINT") { bailout(emergency_shutdown) }
 
       # There isn't an easy way to-do this, will keep looking
       # Suggest spinning off a thread, waiting, when it wakes it makes the call
@@ -110,13 +110,13 @@ module TinyMud
       # alarm(DUMP_INTERVAL)
     end
 
-    def bailout()
+    def bailout(emergency_shutdown)
         # todo - add to phrasebook
-        panic("BAILOUT: caught signal")
+        panic(emergency_shutdown, "BAILOUT: caught signal")
         exit(7)
     end
   
-    def panic(message)
+    def panic(emergency_shutdown, message)
         # todo - add to phrasebook
         $stderr.puts "PANIC: #{message}"
     
@@ -125,9 +125,8 @@ module TinyMud
         Signal.list.each {|name, id| trap(name, "SIG_IGN") }
   
         # shut down interface
-        puts "TODO - SHUTDOWN SOCKETS"
-        # emergency_shutdown()
-    
+        emergency_shutdown.call() if emergency_shutdown
+
         # dump panic file
         # todo - add to phrasebook
         panic_file = "#{@dumpfile}.PANIC"
@@ -270,9 +269,18 @@ module TinyMud
           arg2 = args[1]
         end
 
-        matched_command = @commands.keys.find {|c| c.start_with?(command.downcase()) }
-        if matched_command
-          @commands[matched_command].call(player, arg1, arg2)
+        matched_commands = @commands.find_all {|name, cmd| name.start_with?(command.downcase()) }
+        if matched_commands.length == 1
+          name, cmd = matched_commands[0]
+          if cmd[1]
+            if name == command.downcase()
+              cmd[0].call(player, arg1, arg2)
+            else
+              @notifier.do_notify(player, Phrasebook.lookup('huh'))
+            end
+          else
+            cmd[0].call(player, arg1, arg2)
+          end
         else
           @notifier.do_notify(player, Phrasebook.lookup('huh'))
         end

@@ -45,7 +45,17 @@ module TinyMud
 			@notifier.expects(:do_notify).with(bob, 'bob treacle').in_sequence(@notify)
 			@notifier.expects(:do_notify).with(wizard, 'bob treacle').in_sequence(@notify)
 			game.process_command(bob, ":treacle")
-			
+
+			# news and @toad must match completely
+			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('huh')).in_sequence(@notify)
+			game.process_command(bob, "new")
+			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('huh')).in_sequence(@notify)
+			game.process_command(bob, "@toa")
+
+			# Others don't e.g. drop
+			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('dont-have-it')).in_sequence(@notify)
+			game.process_command(bob, "dr")
+
 			# !! Command is an exact match for an exit - Check later - We don't have an exit!!!
 			
 			# Bad command (doesn't start with @)

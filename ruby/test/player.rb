@@ -20,7 +20,6 @@ module TinyMudTest
       @prefix = "prefix"
       @suffix = ">done<"
       @session = new_session(TINYMUD_HOST, TINYMUD_PORT)
-      @session.binmode = true
 
       log(@session.waitfor(/currently active/), :in)
       if create

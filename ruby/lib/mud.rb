@@ -92,9 +92,8 @@ class MangledMUDServer
     close_sockets()
   end
 
-private
-
   def close_sockets()
+puts "closing sockets"
     @descriptors.each do |d, v|
       notify(d, TinyMud::Phrasebook.lookup('shutdown-message'))
       d.flush
@@ -102,6 +101,8 @@ private
     end
     @descriptors.clear()
   end
+
+private
 
   def do_command(db, game, player, look, descriptor, command)
       command.chomp!()
@@ -249,9 +250,10 @@ if __FILE__ == $0
     # todo - this needs sorting out, its a little untidy
     # todo - assert dumpfile can be written to?
     server = MangledMUDServer.new("localhost", port)
-    game = TinyMud::Game.new(db, dumpfile, server)
+    # todo - fix dependencies
+    game = TinyMud::Game.new(db, dumpfile, server, lambda { server.close_sockets() })
 
-    server.run(db, TinyMud::Game.new(db, dumpfile, server))
+    server.run(db, game)
 
     game.dump_database()
 
