@@ -297,9 +297,6 @@
 	[31;1m1 You must specify a flag to set.[0m
 [32;1mwizard(1): @set a b[0m
 	[31;1m1 You must specify a flag to set.[0m
-[32;1mwizard(1): @shutdown[0m
-[32;1mwizard(1): @shutdown a[0m
-[32;1mwizard(1): @shutdown a b[0m
 [32;1mwizard(1): @stats[0m
 	[31;1m1 8 objects = 3 rooms, 2 exits, 2 things, 1 players, 0 unknowns.[0m
 [32;1mwizard(1): @stats a[0m
@@ -354,3 +351,4 @@
 	[31;1m1 Wizard shouts "a"[0m
 [32;1mwizard(1): @wall a b[0m
 	[31;1m1 Wizard shouts "a b"[0m
+[32;1mwizard(1): @shutdown[0m

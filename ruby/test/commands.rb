@@ -50,9 +50,10 @@ module TinyMud
                             players[cmds[1]] = TinyMud::Player.new(db, notifier).create_player(cmds[1], cmds[2])
                         elsif cmds[0] == "@dump"
                             result << "Dumping database\n"
-                            game.dump_database_internal('cheese.dump')
+                            Dump.new(db, nil).dump_database_internal('cheese.dump')
                         elsif cmds[0] == "load"
                             result << "Reading database from: " << cmds[1] << "\n"
+                            game = TinyMud::Game.new(db, dumpfile, notifier)
                             db.load(cmds[1])
                         end
                     elsif line =~ /^(\w+)>(.*)/

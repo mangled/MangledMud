@@ -176,11 +176,6 @@ wizard>@set
 wizard>@set a
 wizard>@set a b
 
-# shutdown
-wizard>@shutdown
-wizard>@shutdown a
-wizard>@shutdown a b
-
 # stats
 wizard>@stats
 wizard>@stats a
@@ -226,3 +221,6 @@ wizard>@wall
 wizard>@wall a
 wizard>@wall a b
 
+# shutdown - can't test all combinations as we explicitly stop further processing
+# any more calls will raise an exception
+wizard>@shutdown

@@ -24,13 +24,6 @@ module TinyMud
 			
 			# Bad player ref goes to stderr!
 			game.process_command(-1, "foo")
-
-			# Do a shutdown as a non-wizard
-			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('delusional'))
-			game.do_shutdown(bob)
-
-			# Shutdown as a wizard - Not implemented
-			game.do_shutdown(wizard)
 			
 			# Simple (one character) commands
 			#
@@ -61,7 +54,19 @@ module TinyMud
 			# Bad command (doesn't start with @)
 			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('huh')).in_sequence(@notify)
 			game.process_command(bob, "!treacle")
-			
+
+			# Do a shutdown as a non-wizard
+			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('delusional'))
+			game.do_shutdown(bob)
+
+			# Shutdown as a wizard
+			game.do_shutdown(wizard)
+
+			# This kills further processing
+			assert_raise RuntimeError do
+				game.process_command(wizard, "!treacle")
+			end
+
 			# The rest of the testing of "game" is handled through regression.rb
 		end
 

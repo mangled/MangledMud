@@ -1,4 +1,5 @@
 require_relative 'helpers'
+require_relative 'dump'
 require_relative 'create'
 require_relative 'help'
 require_relative 'look'
@@ -25,14 +26,12 @@ module TinyMud
 
     def initialize(db, dumpfile, notifier, emergency_shutdown = nil)
       @db = db
-      @dumpfile = dumpfile
       @notifier = notifier
-      @epoch = 0
       @shutdown = false
-      @alarm_block = false
       @alarm_triggered = false
 
-      # We may not use all of these here...
+      # todo - pass this in.
+      @dump = Dump.new(db, dumpfile, emergency_shutdown)
       @create = Create.new(db, notifier)
       @help = Help.new(db, notifier)
       @look = Look.new(db, notifier)
@@ -92,88 +91,15 @@ module TinyMud
         "@unlock"   => [->(p, a, b) { @set.do_unlock(p, a) }, false],
         "@wall"     => [->(p, a, b) { @speech.do_wall(p, a, b) }, false]
       }
-
-      # Setup signal handlers - Just ctrl-c for now
-      # todo - add others
-      # todo - test does this work under windows
-      trap("SIGINT") { bailout(emergency_shutdown) }
-
-
-      # Create a thread to handle periodic database dumping
-      @dumper_thread = Thread.new do
-        sleep(DUMP_INTERVAL)
-        fork_and_dump()
-      end
-    end
-
-    def bailout(emergency_shutdown)
-        # todo - add to phrasebook
-        panic(emergency_shutdown, "BAILOUT: caught signal")
-        exit(7)
-    end
-  
-    def panic(emergency_shutdown, message)
-        # Kill the dumper thread
-        Thread.kill(@dumper_thread)
-
-        # todo - add to phrasebook
-        $stderr.puts "PANIC: #{message}"
-    
-        # turn off signals - check this!!! Its disabling all
-        # I really don't like this!!!! Sanity check it
-        Signal.list.each {|name, id| trap(name, "SIG_IGN") }
-  
-        # shut down interface
-        emergency_shutdown.call() if emergency_shutdown
-
-        # dump panic file
-        # todo - add to phrasebook
-        panic_file = "#{@dumpfile}.PANIC"
-        begin
-          $stderr.puts "DUMPING: #{panic_file}"
-          @db.write(panic_file)
-          $stderr.puts "DUMPING: #{panic_file} (done)"
-          exit(136)
-        rescue
-          perror("CANNOT OPEN PANIC FILE #{panic_file}, YOU LOSE:")
-          exit(135)
-        end
     end
 
     def do_shutdown(player)
         if (is_wizard(player))
-          # Kill the dumper thread
-          Thread.kill(@dumper_thread)
-
+          @dump.do_shutdown()
           $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
           @shutdown = true
         else
           @notifier.do_notify(player, Phrasebook.lookup('delusional'))
-        end
-    end
-
-    def fork_and_dump()
-        @epoch += 1
-
-        $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
-        pid = fork do
-          dump_database_internal(@dumpfile)
-          exit!(0)
-        end
-
-        if (pid < 0)
-          $stderr.puts "fork_and_dump: fork()"
-        else
-          Process.detach(pid)
-        end
-
-        # in the parent - reset alarm
-        @alarm_triggered = false
-
-        # restart the dumper
-        @dumper_thread = Thread.new do
-          sleep(DUMP_INTERVAL)
-          fork_and_dump()
         end
     end
 
@@ -187,31 +113,14 @@ module TinyMud
     end
 
     def dump_database()
-        @epoch += 1
-        $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}#"
-        dump_database_internal(@dumpfile)
-        $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
+        # todo - pass the dumper in...
+        @dump.dump_database()
     end
 
-    # Todo: This code needs to handle disk errors - It should probably be private too
-    def dump_database_internal(filename)
-      $stderr.puts("DUMPING: #{filename}.##{@epoch}#")
+    def process_command(player, command)
+      # This is a code smell, we could return a state instead.
+      raise "Shutdown signalled but still processing commands" if @shutdown
 
-      # nuke our predecessor
-      tmpfile = "#{filename}.##{@epoch - 1}#"
-      File.delete(tmpfile) if File.exists?(tmpfile)
-  
-      # Dump current
-      tmpfile = "#{filename}.##{@epoch}#"
-      @db.write(tmpfile)
-
-      # Finalize name
-      File.rename(tmpfile, filename)
-  
-      $stderr.puts("DUMPING: #{filename}.##{@epoch}# (done)")
-    end
-
-    def process_command(player, command)  
       # robustify player 
       if (player < 0 || player >= @db.length || !player?(player))
         $stderr.puts("process_command: bad player #{player}")
@@ -238,7 +147,7 @@ module TinyMud
       end
 
       # We could modify the db from here on...
-      @alarm_block = true
+      @dump.alarm_block = true
 
       # check for single-character commands
       if (command[0] == SAY_TOKEN)
@@ -289,8 +198,11 @@ module TinyMud
         end
       end
       # Db access done, dump if required
-      @alarm_block = false
-      fork_and_dump() if @alarm_triggered
+      @dump.alarm_block = false
+      if @alarm_triggered
+        @dump.fork_and_dump()
+        @alarm_triggered = false
+      end
     end
   end
 end
