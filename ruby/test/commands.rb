@@ -28,15 +28,14 @@ module TinyMud
             raise "Find #{name} failed!"
         end
         
-        # Read content, apply commands to db (note the db is currently static
-        # this will change at some point - As I migrate the C code over)
+        # Read content, apply commands to db
         def CommandHelpers.collect_responses(db, dumpfile, content)
 
             players = { "wizard" => 1 }
 
             result = []
             notifier = Notifier.new(result)
-            game = TinyMud::Game.new(db, dumpfile, notifier)
+            game = TinyMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
 
             # Ensure we never give pennies and never manage to kill
 			Game.stubs(:do_rand).returns(17)
@@ -53,7 +52,7 @@ module TinyMud
                             Dump.new(db, nil).dump_database_internal('cheese.dump')
                         elsif cmds[0] == "load"
                             result << "Reading database from: " << cmds[1] << "\n"
-                            game = TinyMud::Game.new(db, dumpfile, notifier)
+                            game = TinyMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
                             db.load(cmds[1])
                         end
                     elsif line =~ /^(\w+)>(.*)/

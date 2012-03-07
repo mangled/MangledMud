@@ -231,11 +231,14 @@
 [32;1mwizard(1): @name a b[0m
 	[31;1m1 Give it what new name?[0m
 [32;1mwizard(1): news[0m
-	[31;1m1 Sorry, news.txt is broken.  Management has been notified.[0m
+	[31;1m1 No news today.[0m
+	[31;1m1 [0m
 [32;1mwizard(1): news a[0m
-	[31;1m1 Sorry, news.txt is broken.  Management has been notified.[0m
+	[31;1m1 No news today.[0m
+	[31;1m1 [0m
 [32;1mwizard(1): news a b[0m
-	[31;1m1 Sorry, news.txt is broken.  Management has been notified.[0m
+	[31;1m1 No news today.[0m
+	[31;1m1 [0m
 [32;1mwizard(1): @ofail[0m
 	[31;1m1 I don't see that here.[0m
 [32;1mwizard(1): @ofail a[0m

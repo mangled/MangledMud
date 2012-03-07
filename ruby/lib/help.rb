@@ -3,17 +3,16 @@ require_relative 'constants'
 module TinyMud
   class Help
 
-    def initialize(db, notifier)
-      @db = db
+    def initialize(notifier)
       @notifier = notifier
     end
 
-    def do_help(player)
-      spit_file(player, HELP_FILE)
+    def do_help(player, help_file)
+      spit_file(player, help_file)
     end
-    
-    def do_news(player)
-      spit_file(player, NEWS_FILE)
+
+    def do_news(player, news_file)
+      spit_file(player, news_file)
     end
 
     private

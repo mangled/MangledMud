@@ -14,7 +14,7 @@ module TinyMud
       @epoch = 0
 
       # This is unused at present - It should be renamed, it means
-      # game is potentially accessing the db so don't touch it if
+      # game.rb is potentially accessing the db so don't touch it if
       # a signal of less importance occurs. To be honest I'm considering
       # removing the forking etc. as it simplifies code at the expense
       # of introducing a small delay while the db is dumped. It will make

@@ -35,7 +35,8 @@ Creating player: "bob" with password "bar"
 [32;1mbob(3): gripe I'm clueless[0m
 	[31;1m3 Your complaint has been duly noted.[0m
 [32;1mmat(2): news[0m
-	[31;1m2 Sorry, news.txt is broken.  Management has been notified.[0m
+	[31;1m2 No news today.[0m
+	[31;1m2 [0m
 [32;1mmat(2): look bob[0m
 	[31;1m2 Strange but nice[0m
 [32;1mbob(3): look wizard[0m

@@ -24,16 +24,18 @@ module TinyMud
       return rand(0x7FFFFFFF)
     end
 
-    def initialize(db, dumpfile, notifier, emergency_shutdown = nil)
+    def initialize(db, dumpfile, help_file, news_file, notifier, emergency_shutdown = nil)
       @db = db
       @notifier = notifier
       @shutdown = false
       @alarm_triggered = false
+      @help_file = help_file
+      @news_file = news_file
 
       # todo - pass this in.
       @dump = Dump.new(db, dumpfile, emergency_shutdown)
       @create = Create.new(db, notifier)
-      @help = Help.new(db, notifier)
+      @help = Help.new(notifier)
       @look = Look.new(db, notifier)
       @match = Match.new(db, notifier)
       @move = Move.new(@db, notifier)
@@ -61,7 +63,7 @@ module TinyMud
         "give"      => [->(p, a, b) { @rob.do_give(p, a, b.to_i) }, false],
         "goto"      => [->(p, a, b) { @move.do_move(p, a) }, false],
         "gripe"     => [->(p, a, b) { @speech.do_gripe(p, a, b) }, false],
-        "help"      => [->(p, a, b) { @help.do_help(p) }, false],
+        "help"      => [->(p, a, b) { @help.do_help(p, @help_file) }, false],
         "inventory" => [->(p, a, b) { @look.do_inventory(p) }, false],
         "kill"      => [->(p, a, b) { @rob.do_kill(p, a, b.to_i) }, false],
         "@link"     => [->(p, a, b) { @create.do_link(p, a, b) }, false],
@@ -69,7 +71,7 @@ module TinyMud
         "look"      => [->(p, a, b) { @look.do_look_at(p, a) }, false],
         "move"      => [->(p, a, b) { @move.do_move(p, a) }, false],
         "@name"     => [->(p, a, b) { @set.do_name(p, a, b) }, false],
-        "news"      => [->(p, a, b) { @help.do_news(p) }, true],
+        "news"      => [->(p, a, b) { @help.do_news(p, @news_file) }, true],
         "@ofail"    => [->(p, a, b) { @set.do_ofail(p, a, b) }, false],
         "@open"     => [->(p, a, b) { @create.do_open(p, a, b) }, false],
         "@osuccess" => [->(p, a, b) { @set.do_osuccess(p, a, b) }, false],
@@ -127,7 +129,7 @@ module TinyMud
         return
       end
 
-      # Check for a nil command
+      # Check for a nil command - should Huh?
       if (command.nil?)
         $stderr.puts("process_command: bad (nil) command")
         return
@@ -140,7 +142,7 @@ module TinyMud
       # collapse white space
       command.gsub!(/\s+/, " ")
 
-      # Is the command empty now (or previously - implied)?
+      # Is the command empty now (or previously - implied)? - should Huh?
       if (command.empty?)
         $stderr.puts("process_command: bad (empty) command")
         return
@@ -158,6 +160,36 @@ module TinyMud
         # command is an exact match for an exit 
         @move.do_move(player, command)
       else
+        command, arg1, arg2 = parse(command, @notifier)
+
+        matched_commands = @commands.find_all {|name, cmd| name.start_with?(command.downcase()) }
+        # todo - this is messy, its basically asking do you need a full match to invoke this command
+        # we should make the code more readable and then delete this comment.
+        if matched_commands.length == 1
+          name, cmd = matched_commands[0]
+          if cmd[1]
+            if name == command.downcase()
+              cmd[0].call(player, arg1, arg2)
+            else
+              @notifier.do_notify(player, Phrasebook.lookup('huh'))
+            end
+          else
+            cmd[0].call(player, arg1, arg2)
+          end
+        else
+          @notifier.do_notify(player, Phrasebook.lookup('huh'))
+        end
+      end
+
+      # Db access done, dump if required
+      @dump.alarm_block = false
+      if @alarm_triggered
+        @dump.fork_and_dump()
+        @alarm_triggered = false
+      end
+    end
+
+    def parse(command, notifier)
         # Todo: Make this a little more readable!
         command =~ /^(\S+)(.*)/
         command = $1
@@ -181,28 +213,8 @@ module TinyMud
           arg2 = args[1]
         end
 
-        matched_commands = @commands.find_all {|name, cmd| name.start_with?(command.downcase()) }
-        if matched_commands.length == 1
-          name, cmd = matched_commands[0]
-          if cmd[1]
-            if name == command.downcase()
-              cmd[0].call(player, arg1, arg2)
-            else
-              @notifier.do_notify(player, Phrasebook.lookup('huh'))
-            end
-          else
-            cmd[0].call(player, arg1, arg2)
-          end
-        else
-          @notifier.do_notify(player, Phrasebook.lookup('huh'))
-        end
-      end
-      # Db access done, dump if required
-      @dump.alarm_block = false
-      if @alarm_triggered
-        @dump.fork_and_dump()
-        @alarm_triggered = false
-      end
+        [command, arg1, arg2]
     end
+
   end
 end
