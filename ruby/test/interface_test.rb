@@ -1,6 +1,7 @@
 # Drive a running instance of TinyMUD through a scripted set of commands
-# This is used to test the networking implementation in interface.rb
-# it could be extended to perform a wider set of tests, but the regression
+# This is used to test the networking
+#
+# It could be extended to perform a wider set of tests, but the regression
 # commands already do this and they don't require networking, which makes
 # them cleaner.
 require 'rubygems'
