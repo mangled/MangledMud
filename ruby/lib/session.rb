@@ -14,7 +14,7 @@ module TinyMud
       @game = game
       @descriptor_details = descriptor_details
       @connected_players = connected_players
-  
+
       @player_id = nil
       @last_time = nil
       @output_prefix = nil
@@ -27,16 +27,18 @@ module TinyMud
       welcome_user()
     end
   
-    def do_command(db, game, command)
+    def do_command(command)
         @last_time = Time.now()
         @output_buffer = []
-        player_quit = false
-  
+        has_player_quit = false
+
+        raise "Error: command cannot be nil" if command.nil?
+
         command.chomp!()
         case
           when (command.strip() == Phrasebook.lookup('quit-command'))
             player_quit()
-            player_quit = true
+            has_player_quit = true
           when (command.strip() == Phrasebook.lookup('who-command'))
             wrap_command(->() { dump_users() })
           when (command.start_with?(Phrasebook.lookup('prefix-command')))
@@ -51,9 +53,9 @@ module TinyMud
             end
         end
   
-        player_quit
+        has_player_quit
     end
-  
+
     def queue(message)
       @output_buffer << normalize_line_endings_for_transmission(message)
     end
@@ -66,15 +68,17 @@ module TinyMud
   
     def check_connect(message)
         command, user, password = parse_connect(message)
-        case
-          when command.nil?
-            welcome_user()
-          when command.start_with?("co")
-            connect_player(user, password)
-          when command.start_with?("cr")
-            create_player(user, password)
-          else
-            welcome_user()
+        if command
+          case
+            when command.start_with?("co")
+              connect_player(user, password)
+            when command.start_with?("cr")
+              create_player(user, password)
+            else
+              welcome_user()
+          end
+        else
+          welcome_user()
         end
     end
   
@@ -121,7 +125,7 @@ module TinyMud
 
     def dump_users()
       now = Time.now()
-      queue("Current Players:")
+      queue(Phrasebook.lookup('current-players'))
       connected_players = @connected_players.call()
       connected_players.each do |connected_player|
         if connected_player.last_time

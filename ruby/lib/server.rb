@@ -36,7 +36,7 @@ class Server
             else
               unless descriptor_closed(db, descriptor)	  
                 session = @descriptors[descriptor]
-                player_quit = session.do_command(db, game, descriptor.gets())
+                player_quit = session.do_command(descriptor.gets())
               end
             end
             write_buffers()

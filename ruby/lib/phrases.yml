@@ -28,6 +28,7 @@
 'create-fail'               : "Either there is already a player with that name, or that name is illegal.\n"
 'flushed-message'           : "<Output Flushed>\n"
 'shutdown-message'          : "Going down - Bye\n"
+'current-players'           : "Current Players:"
 'delusional'                : "Your delusions of grandeur have been duly noted."
 'anti-locked'               : "Anti-Locked."
 'bad-destination'           : "Bad destination."
