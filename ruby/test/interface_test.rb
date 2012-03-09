@@ -63,7 +63,7 @@ module TinyMudTest
         bob = TinyMudTest::Player.new(@regression, "bob", "1234", true)
         
         # Try to connect another player bob...
-        another_bob = TinyMudTest::Player.new(@regression, "bob", "5678", true, true)
+        TinyMudTest::Player.new(@regression, "bob", "5678", true, true)
         
         # Who
         wizard.cmd("WHO")

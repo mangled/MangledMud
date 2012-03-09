@@ -43,8 +43,10 @@ module TinyMud
             wrap_command(->() { dump_users() })
           when (command.start_with?(Phrasebook.lookup('prefix-command')))
             @output_prefix = command[Phrasebook.lookup('prefix-command').length + 1..-1]
+            queue(Phrasebook.lookup('done-fix'))
           when (command.start_with?(Phrasebook.lookup('suffix-command')))
             @output_suffix = command[Phrasebook.lookup('suffix-command').length + 1..-1]
+            queue(Phrasebook.lookup('done-fix'))
           else
             if @player_id
                 wrap_command(->() { @game.process_command(@player_id, command) })

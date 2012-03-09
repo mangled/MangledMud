@@ -20,12 +20,8 @@ class Server
 
   def run(db, game)
     while !game.shutdown
-      res = select([@serverSocket] + @descriptors.keys, nil, @descriptors.keys, nil)
+      res = select([@serverSocket] + @descriptors.keys, nil, nil, nil)
       if res
-        res[2].each do |descriptor|
-            remove(descriptor)
-            $stderr.puts "socket had an error"
-        end
         res[0].each do |descriptor|
           begin
             player_quit = false
@@ -39,7 +35,7 @@ class Server
             end
             write_buffers()
             remove(descriptor) if player_quit
-          rescue SystemCallError => e
+          rescue SystemCallError, IOError => e
             puts "ERROR READING SOCKET: #{e}"
             remove(descriptor)
           end
@@ -56,7 +52,7 @@ class Server
     if descriptor.eof?
       player_id = @descriptors[descriptor].player_id
       if player_id
-        puts "DISCONNECT #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]} player #{db[player_id]}(#{player_id})"
+        puts "DISCONNECT #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]} player #{db[player_id].name}(#{player_id})"
       else
         puts "DISCONNECT descriptor #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]} never connected"
       end
@@ -77,7 +73,7 @@ class Server
           descriptor.flush
           descriptor.close
         end
-      rescue SystemCallError => e
+      rescue SystemCallError, IOError => e
         puts "ERROR CLOSING SOCKET: #{e}"
       end
     end
@@ -108,7 +104,7 @@ private
         buffer = session.output_buffer
         descriptor.write(buffer.join('')) if buffer.length > 0
         session.output_buffer = []
-      rescue Exception => e
+      rescue SystemCallError, IOError => e
         puts "ERROR: #{e}"
         remove(descriptor)
       end

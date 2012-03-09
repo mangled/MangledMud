@@ -29,6 +29,7 @@
 'flushed-message'           : "<Output Flushed>\n"
 'shutdown-message'          : "Going down - Bye\n"
 'current-players'           : "Current Players:"
+'done-fix'                  : "Done."
 'delusional'                : "Your delusions of grandeur have been duly noted."
 'anti-locked'               : "Anti-Locked."
 'bad-destination'           : "Bad destination."

@@ -74,8 +74,13 @@ module TinyMud
       connected_players = mock()
 
       session = Session.new(@db, game, "foo", connected_players, @notifier)
+
       assert(!session.do_command(Phrasebook.lookup('prefix-command') + " prefix"), "should return false if quit isn't signalled")
+      assert_equal(1, session.output_buffer.length)
+      assert_match(/#{Phrasebook.lookup('done-fix')}/, session.output_buffer[0])
+
       assert(!session.do_command(Phrasebook.lookup('suffix-command') + " suffix"), "should return false if quit isn't signalled")
+      assert_match(/#{Phrasebook.lookup('done-fix')}/, session.output_buffer[0])
 
       # Who should be wrapped
       connected_players.expects(:call).returns([])

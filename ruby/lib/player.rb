@@ -17,8 +17,6 @@ module TinyMud
 
 			for i in (0..@db.length()-1)
 				current_record = @db[i]
-				#puts "Comparing name: #{current_record.name()} to #{player_name}"
-				#puts "flags == TYPE_PLAYER? : #{(current_record.flags & TYPE_MASK) != 0}"
 				if (((current_record.flags() & TYPE_MASK) == TYPE_PLAYER) && current_record.name && current_record.name().upcase() == player_name.upcase())
 					return i
 				end
@@ -57,8 +55,7 @@ module TinyMud
 				player.owner = player_index
 				player.flags = TYPE_PLAYER
 				player.password = password
-				
-				#in DB.h #define PUSH(thing, locative) ((db[(thing)].next = (locative)), (locative) = (thing))
+
 				# link him to PLAYER_START 
 				player.next = @db[PLAYER_START].contents
 				@db[PLAYER_START].contents = player_index

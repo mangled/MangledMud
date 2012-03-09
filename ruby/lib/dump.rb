@@ -71,15 +71,21 @@ module TinyMud
         @epoch += 1
 
         $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
-        pid = fork do
+        begin
+          pid = fork do
+            dump_database_internal(@dumpfile)
+            exit!(0)
+          end
+  
+          if (pid < 0)
+            $stderr.puts "fork_and_dump: fork()"
+          else
+            Process.detach(pid)
+          end
+        rescue NotImplementedError => e
+          $stderr.puts e
+          $stderr.puts "Dumping on main thread instead..."
           dump_database_internal(@dumpfile)
-          exit!(0)
-        end
-
-        if (pid < 0)
-          $stderr.puts "fork_and_dump: fork()"
-        else
-          Process.detach(pid)
         end
 
         # restart the dumper

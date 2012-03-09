@@ -21,23 +21,34 @@ module TinyMudTest
       @suffix = ">done<"
       @session = new_session(TINYMUD_HOST, TINYMUD_PORT)
 
-      log(@session.waitfor(/currently active/), :in)
+      # Wait fot the intro. message
+      log(@session.waitfor(/currently active\./), :in)
+
       if create
-        do_puts("create #{name} #{password}")
+        if expect_fail
+          pre_suffix_set_cmd("create #{name} #{password}", /that name is illegal/)
+        else
+          pre_suffix_set_cmd("create #{name} #{password}", /to find it again/)
+        end
       else
-        do_puts("connect #{name} #{password}")
+        if expect_fail
+          pre_suffix_set_cmd("connect #{name} #{password}", /or has a different password/)
+        else
+          pre_suffix_set_cmd("connect #{name} #{password}", /to find it again/)
+        end
       end
       if expect_fail
-        log(@session.waitfor(/that name is illegal|or has a different password/), :in) #that name is illegal
+        pre_suffix_set_cmd("QUIT", /\*\*\*Disconnected\*\*\*/)
       else
-        log(@session.waitfor(/to find it again/), :in)
+        pre_suffix_set_cmd("OUTPUTPREFIX #{@prefix}", /Done/, false)
+        pre_suffix_set_cmd("OUTPUTSUFFIX #{@suffix}", /Done/, false)
       end
-      if expect_fail
-        do_puts("QUIT")
-        log(@session.waitfor(/\*\*\*Disconnected\*\*\*/), :in)
-      else
-        do_puts("OUTPUTPREFIX #{@prefix}", false)
-        do_puts("OUTPUTSUFFIX #{@suffix}", false)
+    end
+    
+    def pre_suffix_set_cmd(action, match, logout = true)
+      log(action, :out) if logout
+      @session.cmd('String' => action, 'Match' => match) do |response|
+        log(response, :in) if logout
       end
     end
     
@@ -69,11 +80,11 @@ module TinyMudTest
     
     def log(s, direction)
       if direction == :out
-        s.each_line {|line| @stdout.puts "(tx) #{@name}: #{line.chomp}" }
+        s.each_line {|line| @stdout.puts "(tx) #{@name}: #{line}" }
       else
         if s
           s.each_line do |line|
-            next if line =~ /#{@prefix}/ or line =~ /#{@suffix}/
+            next if line =~ /^#{@prefix}/ or line =~ /^#{@suffix}/
             @stdout.puts "(rx) #{@name}: #{line.chomp}"
           end
         else
