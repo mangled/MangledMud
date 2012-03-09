@@ -5,7 +5,6 @@ require_relative 'session'
 class Server
 
   def initialize(host, port)
-    # Use an array? Else WHO will return odd orders
     @descriptors = {}
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
@@ -23,7 +22,6 @@ class Server
     while !game.shutdown
       res = select([@serverSocket] + @descriptors.keys, nil, @descriptors.keys, nil)
       if res
-        # Errors
         res[2].each do |descriptor|
             remove(descriptor)
             $stderr.puts "socket had an error"
@@ -48,6 +46,7 @@ class Server
         end
       end
     end
+    # Shutdown
     shutdown_sessions()
     write_buffers()
     close_sockets()
