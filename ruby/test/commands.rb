@@ -37,6 +37,9 @@ module TinyMud
             notifier = Notifier.new(result)
             game = TinyMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
 
+            # Keep a track of dumped database files and delete them
+            dumped_databases = []
+
             # Ensure we never give pennies and never manage to kill
 			Game.stubs(:do_rand).returns(17)
             
@@ -49,7 +52,8 @@ module TinyMud
                             players[cmds[1]] = TinyMud::Player.new(db, notifier).create_player(cmds[1], cmds[2])
                         elsif cmds[0] == "@dump"
                             result << "Dumping database\n"
-                            Dump.new(db, nil).dump_database_internal('cheese.dump')
+                            dumped_databases << 'cheese.dump'
+                            Dump.new(db, nil).dump_database_internal(dumped_databases[-1])
                         elsif cmds[0] == "load"
                             result << "Reading database from: " << cmds[1] << "\n"
                             game = TinyMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
@@ -71,6 +75,11 @@ module TinyMud
                         result << "Failed parsing line: #{line}\n"
                     end
                 end
+            end
+
+            # Remove any (temp.) dumped database files
+            dumped_databases.each do |file|
+                File.delete(file)
             end
             
             result
