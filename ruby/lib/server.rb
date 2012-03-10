@@ -8,7 +8,6 @@ class Server
     @descriptors = {}
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
-    puts "Server started at #{host} on port #{port}"
   end
 
   def do_notify(player_id, message)

@@ -1,6 +1,7 @@
 module TinyMud
   # Networking
   DEFAULT_PORT  = 4201
+  DEFAULT_HOST  = "localhost"
 
   # Timing
   DUMP_INTERVAL = 3600	# seconds between dumps
