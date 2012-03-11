@@ -1,4 +1,4 @@
-# Drive a running instance of TinyMUD through a scripted set of commands
+# Drive a running instance of MangledMUD through a scripted set of commands
 # This is used to test the networking
 #
 # It could be extended to perform a wider set of tests, but the regression
@@ -14,7 +14,7 @@ require 'net/telnet'
 require 'thwait'
 require_relative 'player'
 
-module TinyMudTest
+module MangledMudTest
 
     class Test::Unit::TestCase
 
@@ -57,13 +57,13 @@ module TinyMudTest
         check_network_failure_handling()
 
         # Connect the wizard
-        wizard = TinyMudTest::Player.new(@regression, "wizard", "potrzebie")
+        wizard = MangledMudTest::Player.new(@regression, "wizard", "potrzebie")
         
         # Connect and create a new player bob
-        bob = TinyMudTest::Player.new(@regression, "bob", "1234", true)
+        bob = MangledMudTest::Player.new(@regression, "bob", "1234", true)
         
         # Try to connect another player bob...
-        TinyMudTest::Player.new(@regression, "bob", "5678", true, true)
+        MangledMudTest::Player.new(@regression, "bob", "5678", true, true)
         
         # Who
         wizard.cmd("WHO")
@@ -80,7 +80,7 @@ module TinyMudTest
         wizard.quit
         
         # Invalid password
-        bob = TinyMudTest::Player.new(@regression, "bob", "1111", false, true)
+        bob = MangledMudTest::Player.new(@regression, "bob", "1111", false, true)
         
         # Now connect and create a number of players (on threads)
         # each player will create a number of items in order
@@ -91,10 +91,10 @@ module TinyMudTest
         # fact the threads can execute in any order and so I don't want
         # the regression tests to always fail as a result. The main
         # "assertion" is that their inventories have the correct content
-        wizard = TinyMudTest::Player.new(@regression, "wizard", "potrzebie")
+        wizard = MangledMudTest::Player.new(@regression, "wizard", "potrzebie")
         player_connections = {}
         1.upto(5) do |i|
-          player_connections[i] = TinyMudTest::Player.new(@regression, "#{i}", "password", true)
+          player_connections[i] = MangledMudTest::Player.new(@regression, "#{i}", "password", true)
           wizard.cmd("give #{i}=100")
         end
         players = ThreadsWait.new
@@ -113,7 +113,7 @@ module TinyMudTest
         
         # Do this last...
         # Connect the wizard again
-        wizard = TinyMudTest::Player.new(@regression, "wizard", "potrzebie")
+        wizard = MangledMudTest::Player.new(@regression, "wizard", "potrzebie")
         wizard.shutdown()
       end
 

@@ -1,6 +1,6 @@
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
   class Speech
     include Helpers
 

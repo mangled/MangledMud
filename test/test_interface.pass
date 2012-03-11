@@ -1,10 +1,10 @@
-Welcome to TinyMUD
-Welcome to TinyMUD
-Welcome to TinyMUD
+Welcome to MangledMUD
+Welcome to MangledMUD
+Welcome to MangledMUD
 To connect to your existing character, enter "connect name password"
-Welcome to TinyMUD
+Welcome to MangledMUD
 To connect to your existing character, enter "connect name password"
-(rx) wizard: Welcome to TinyMUD
+(rx) wizard: Welcome to MangledMUD
 (rx) wizard: To connect to your existing character, enter "connect name password"
 (rx) wizard: To create a new character, enter "create name password"
 (rx) wizard: Use the news command to get up-to-date news on program changes.
@@ -18,7 +18,7 @@ To connect to your existing character, enter "connect name password"
 (rx) wizard: You are in a dense mist that seems to go on forever. If you drop an object here, or set its home to be here, you probably won't be able to find it again.
 (rx) wizard: Contents:
 (rx) wizard: foo(#2)
-(rx) bob: Welcome to TinyMUD
+(rx) bob: Welcome to MangledMUD
 (rx) bob: To connect to your existing character, enter "connect name password"
 (rx) bob: To create a new character, enter "create name password"
 (rx) bob: Use the news command to get up-to-date news on program changes.
@@ -33,7 +33,7 @@ To connect to your existing character, enter "connect name password"
 (rx) bob: Contents:
 (rx) bob: foo
 (rx) bob: Wizard
-(rx) bob: Welcome to TinyMUD
+(rx) bob: Welcome to MangledMUD
 (rx) bob: To connect to your existing character, enter "connect name password"
 (rx) bob: To create a new character, enter "create name password"
 (rx) bob: Use the news command to get up-to-date news on program changes.
@@ -64,7 +64,7 @@ To connect to your existing character, enter "connect name password"
 (tx) wizard: QUIT
 (rx) wizard: 
 (rx) wizard: ***Disconnected***
-(rx) bob: Welcome to TinyMUD
+(rx) bob: Welcome to MangledMUD
 (rx) bob: To connect to your existing character, enter "connect name password"
 (rx) bob: To create a new character, enter "create name password"
 (rx) bob: Use the news command to get up-to-date news on program changes.
@@ -78,7 +78,7 @@ To connect to your existing character, enter "connect name password"
 (tx) bob: QUIT
 (rx) bob: 
 (rx) bob: ***Disconnected***
-(rx) wizard: Welcome to TinyMUD
+(rx) wizard: Welcome to MangledMUD
 (rx) wizard: To connect to your existing character, enter "connect name password"
 (rx) wizard: To create a new character, enter "create name password"
 (rx) wizard: Use the news command to get up-to-date news on program changes.
@@ -93,7 +93,7 @@ To connect to your existing character, enter "connect name password"
 (rx) wizard: Contents:
 (rx) wizard: bob(#3)
 (rx) wizard: foo(#2)
-(rx) 1: Welcome to TinyMUD
+(rx) 1: Welcome to MangledMUD
 (rx) 1: To connect to your existing character, enter "connect name password"
 (rx) 1: To create a new character, enter "create name password"
 (rx) 1: Use the news command to get up-to-date news on program changes.
@@ -112,7 +112,7 @@ To connect to your existing character, enter "connect name password"
 (tx) wizard: give 1=100
 (rx) wizard: 1 is briefly visible through the mist.
 (rx) wizard: You give 100 pennies to 1.
-(rx) 2: Welcome to TinyMUD
+(rx) 2: Welcome to MangledMUD
 (rx) 2: To connect to your existing character, enter "connect name password"
 (rx) 2: To create a new character, enter "create name password"
 (rx) 2: Use the news command to get up-to-date news on program changes.
@@ -132,7 +132,7 @@ To connect to your existing character, enter "connect name password"
 (tx) wizard: give 2=100
 (rx) wizard: 2 is briefly visible through the mist.
 (rx) wizard: You give 100 pennies to 2.
-(rx) 3: Welcome to TinyMUD
+(rx) 3: Welcome to MangledMUD
 (rx) 3: To connect to your existing character, enter "connect name password"
 (rx) 3: To create a new character, enter "create name password"
 (rx) 3: Use the news command to get up-to-date news on program changes.
@@ -153,7 +153,7 @@ To connect to your existing character, enter "connect name password"
 (tx) wizard: give 3=100
 (rx) wizard: 3 is briefly visible through the mist.
 (rx) wizard: You give 100 pennies to 3.
-(rx) 4: Welcome to TinyMUD
+(rx) 4: Welcome to MangledMUD
 (rx) 4: To connect to your existing character, enter "connect name password"
 (rx) 4: To create a new character, enter "create name password"
 (rx) 4: Use the news command to get up-to-date news on program changes.
@@ -175,7 +175,7 @@ To connect to your existing character, enter "connect name password"
 (tx) wizard: give 4=100
 (rx) wizard: 4 is briefly visible through the mist.
 (rx) wizard: You give 100 pennies to 4.
-(rx) 5: Welcome to TinyMUD
+(rx) 5: Welcome to MangledMUD
 (rx) 5: To connect to your existing character, enter "connect name password"
 (rx) 5: To create a new character, enter "create name password"
 (rx) 5: Use the news command to get up-to-date news on program changes.
@@ -306,7 +306,7 @@ To connect to your existing character, enter "connect name password"
 (rx) wizard: 5 says "5"
 (rx) wizard: 
 (rx) wizard: ***Disconnected***
-(rx) wizard: Welcome to TinyMUD
+(rx) wizard: Welcome to MangledMUD
 (rx) wizard: To connect to your existing character, enter "connect name password"
 (rx) wizard: To create a new character, enter "create name password"
 (rx) wizard: Use the news command to get up-to-date news on program changes.

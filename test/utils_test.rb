@@ -5,13 +5,13 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestUtils < Test::Unit::TestCase
 		
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = MangledMud::Db.new()
 		end
 
 		def teardown

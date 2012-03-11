@@ -5,7 +5,7 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestWiz < Test::Unit::TestCase
         
         include TestHelpers
@@ -43,7 +43,7 @@ module TinyMud
 			record(another_jam) {|r| r.merge!({ :name => "jamm", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 
-			wiz = TinyMud::Wiz.new(@db, @notifier)
+			wiz = MangledMud::Wiz.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Only a wizard can do this
@@ -143,7 +143,7 @@ module TinyMud
 			wizard = 1
 			bob = Player.new(@db, @notifier).create_player("bob", "sprout")
 
-			wiz = TinyMud::Wiz.new(@db, @notifier)
+			wiz = MangledMud::Wiz.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Only a wizard can use this
@@ -179,7 +179,7 @@ module TinyMud
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			record(unknown) {|r| r.merge!( :flags => 0xFF ) }
 			
-			wiz = TinyMud::Wiz.new(@db, @notifier)
+			wiz = MangledMud::Wiz.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Non wizards get minimal stats (the second arg is ignored)
@@ -210,7 +210,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			wiz = TinyMud::Wiz.new(@db, @notifier)
+			wiz = MangledMud::Wiz.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Only wizards can do this

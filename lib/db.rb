@@ -1,7 +1,7 @@
 require_relative 'constants'
 require_relative 'record'
 
-module TinyMud
+module MangledMud
 
   class Db
 

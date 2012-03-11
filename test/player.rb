@@ -1,4 +1,4 @@
-module TinyMudTest
+module MangledMudTest
   # Yuk :-)
   TINYMUD_HOST = "localhost"
   TINYMUD_PORT = 4201
@@ -7,7 +7,7 @@ module TinyMudTest
     def initialize(stdout, name, password, create = false, expect_fail = false)
       # some of this needs explaining!
       # In order to ensure we parse commands back from the server we hook into
-      # un-documented TinyMUD commands, OUTPUTPREFIX and OUTPUTSUFFIX.
+      # un-documented MangledMUD commands, OUTPUTPREFIX and OUTPUTSUFFIX.
       # OUTPUTSUFFIX is the key, by setting it to a known value we can get the
       # telnet class to look out for the suffix and recognise the end of a command
       # response (see initialization of the telnet class below). BUT you need to

@@ -107,7 +107,7 @@
 [32;1mwizard(1): gripe a b[0m
 	[31;1m1 Your complaint has been duly noted.[0m
 [32;1mwizard(1): help[0m
-	[31;1m1 This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.[0m
+	[31;1m1 This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.[0m
 	[31;1m1 Basic commands: [0m
 	[31;1m1  move/go <direction>[0m
 	[31;1m1  get/take <thing>; drop/throw <thing>[0m
@@ -131,7 +131,7 @@
 	[31;1m1 north of the Temple.[0m
 	[31;1m1 Remember, no matter how bad it gets, you can always go home.[0m
 [32;1mwizard(1): help a[0m
-	[31;1m1 This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.[0m
+	[31;1m1 This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.[0m
 	[31;1m1 Basic commands: [0m
 	[31;1m1  move/go <direction>[0m
 	[31;1m1  get/take <thing>; drop/throw <thing>[0m
@@ -155,7 +155,7 @@
 	[31;1m1 north of the Temple.[0m
 	[31;1m1 Remember, no matter how bad it gets, you can always go home.[0m
 [32;1mwizard(1): help a b[0m
-	[31;1m1 This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.[0m
+	[31;1m1 This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.[0m
 	[31;1m1 Basic commands: [0m
 	[31;1m1  move/go <direction>[0m
 	[31;1m1  get/take <thing>; drop/throw <thing>[0m

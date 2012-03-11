@@ -5,13 +5,13 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestMove < Test::Unit::TestCase
 		
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = MangledMud::Db.new()
 			@notifier = mock()
 
 			# Ensure we never give pennies
@@ -29,7 +29,7 @@ module TinyMud
 			record(somewhere) {|r| r[:contents] = NOTHING }
 			bob = Player.new(@db, @notifier).create_player("bob", "pwd")
 		
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 			# bob is in nothing and is going to be moved to "0"
 			record(bob) {|r| r[:location] = NOTHING }
 			record(0) {|r| r[:contents] = NOTHING }
@@ -83,7 +83,7 @@ module TinyMud
 			start_loc = @db.add_new_record
 			place = @db.add_new_record
 		
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 		
 			# Move to same location
 			set_up_objects(start_loc, bob, anne, jim, place)
@@ -187,7 +187,7 @@ module TinyMud
 			exit = @db.add_new_record
 			place = @db.add_new_record
 		
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 			record(limbo) {|r| r.merge!( :contents => anne ) }
 			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM, :next => NOTHING }) }
 			record(anne) {|r| r.merge!({ :location => limbo, :exits => place, :flags => TYPE_PLAYER, :next => NOTHING, :contents => NOTHING }) }
@@ -227,7 +227,7 @@ module TinyMud
 		
 		def test_can_move
 			# Going home should always work (no db etc. needed to test)
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 			assert_equal(true, move.can_move(0, "home"))
 			
 			# Check players directions
@@ -270,7 +270,7 @@ module TinyMud
 			place = @db.add_new_record
 			cheese = @db.add_new_record
 
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 
 			# Move to same location
 			set_up_objects(start_loc, bob, anne, jim, place)
@@ -350,7 +350,7 @@ module TinyMud
 			record(bob) {|r| r.merge!( :contents => cheese, :location => place, :next => NOTHING ) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => wizard, :next => NOTHING ) }
 			
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# Pick up a person
@@ -464,7 +464,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => ear ) }
 			record(exit) {|r| r.merge!( :location => bob, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			move = TinyMud::Move.new(@db, @notifier)
+			move = MangledMud::Move.new(@db, @notifier)
 			notify = sequence('notify')
 		
 			# Drop cheese whilst nowhere!

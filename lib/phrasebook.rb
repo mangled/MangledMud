@@ -1,8 +1,8 @@
-# Experiment with putting TinyMUD strings into one place!!!
+# Experiment with putting MangledMUD strings into one place!!!
 # WIP
 require 'yaml'
 
-module TinyMud
+module MangledMud
   class Phrasebook
 
     # Holds the phrases :-)

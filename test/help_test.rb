@@ -4,7 +4,7 @@ require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
 
-module TinyMud
+module MangledMud
     class TestHelp < Test::Unit::TestCase
 		
 		def setup
@@ -15,20 +15,20 @@ module TinyMud
 		end
 
 		def test_do_help
-			help = TinyMud::Help.new(@notifier)
+			help = MangledMud::Help.new(@notifier)
 			notify = sequence('notify')
 
 			@notifier.expects(:do_notify).with(0, Phrasebook.lookup('sorry-bad-file', "missing-help.txt")).in_sequence(notify)
 			help.do_help(0, "missing-help.txt")
 
-			@notifier.expects(:do_notify).with(0, "This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.").in_sequence(notify)
+			@notifier.expects(:do_notify).with(0, "This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.").in_sequence(notify)
 			@notifier.expects(:do_notify).with(0, "Basic commands: ").in_sequence(notify)
 			@notifier.expects(:do_notify).with(0, anything()).times(21).in_sequence(notify)
 			help.do_help(0, "help.txt")
 		end
 
 		def test_do_news
-			help = TinyMud::Help.new(@notifier)
+			help = MangledMud::Help.new(@notifier)
 			notify = sequence('notify')
 
 			@notifier.expects(:do_notify).with(0, Phrasebook.lookup('sorry-bad-file', "missing-news.txt")).in_sequence(notify)

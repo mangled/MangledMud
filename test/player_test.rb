@@ -4,10 +4,10 @@ require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
 
-module TinyMud
+module MangledMud
     class TestPlayer < Test::Unit::TestCase
 		def setup
-			@db = TinyMud::Db.new()
+			@db = MangledMud::Db.new()
 			@notifier = mock()
 		end
 

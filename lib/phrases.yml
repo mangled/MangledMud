@@ -1,4 +1,4 @@
-# YAML Phrasebook for TinyMUD
+# YAML Phrasebook for MangledMUD
 #############################
 # Note: We have ported 99.9% of the strings, there might be the odd few lurking away!
 # Some formatted output strings, e.g. name(#number) are not here - As they do not contain
@@ -22,7 +22,7 @@
 # General Messages
 ##################
 
-'welcome-message'           : "Welcome to TinyMUD\nTo connect to your existing character, enter \"connect name password\"\nTo create a new character, enter \"create name password\"\nUse the news command to get up-to-date news on program changes.\n\nYou can disconnect using the QUIT command, which must be capitalized as shown.\n\nUse the WHO command to find out who is currently active.\n\n"
+'welcome-message'           : "Welcome to MangledMUD\nTo connect to your existing character, enter \"connect name password\"\nTo create a new character, enter \"create name password\"\nUse the news command to get up-to-date news on program changes.\n\nYou can disconnect using the QUIT command, which must be capitalized as shown.\n\nUse the WHO command to find out who is currently active.\n\n"
 'leave-message'             : "\n***Disconnected***\n"
 'connect-fail'              : "Either that player does not exist, or has a different password.\n"
 'create-fail'               : "Either there is already a player with that name, or that name is illegal.\n"

@@ -6,13 +6,13 @@ require_relative 'include'
 require_relative 'helpers'
 
 
-module TinyMud
+module MangledMud
     class TestLook < Test::Unit::TestCase
 		
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = MangledMud::Db.new()
 			@notifier = mock()
 		end
 
@@ -34,7 +34,7 @@ module TinyMud
 			record(bob) {|r| r.merge!( :contents => NOTHING, :location => limbo, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :exits => limbo }) }
 			
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			# look when can link to (owns or link ok set) - first link set (see above room flags)
 			# Note: player doesn't need to be in the room!
@@ -102,7 +102,7 @@ module TinyMud
 			place = @db.add_new_record
 			record(bob) {|r| r.merge!( :contents => NOTHING, :location => NOTHING, :next => NOTHING ) }
 			record(place) {|r| r.merge!({:name => "place", :description => "yellow", :osucc => "ping", :contents => bob, :flags => TYPE_ROOM | LINK_OK, :exits => NOTHING }) }
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			look.do_look_around(bob) # Should be a no-op
 
@@ -135,7 +135,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
 			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			# Look at nothing
 			@notifier.expects(:do_notify).with(bob, @db[place].name).in_sequence(notify)
@@ -213,7 +213,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
 			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			# Look at place (non-owned)
 			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('can-only-examine-owned')).in_sequence(notify)
@@ -311,7 +311,7 @@ module TinyMud
 		
 		def test_do_score
 			bob = Player.new(@db, @notifier).create_player("bob", "pwd")
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			@notifier.expects(:do_notify).with(bob, "You have 0 pennies.").in_sequence(notify)
 			look.do_score(bob)
@@ -328,7 +328,7 @@ module TinyMud
 			record(bob) {|r| r.merge!( :contents => NOTHING ) }
 
 			# With nothing
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('carrying-nothing')).in_sequence(notify)
 			@notifier.expects(:do_notify).with(bob, "You have 0 pennies.").in_sequence(notify)
@@ -364,7 +364,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => jam, :location => place, :next => fish ) }
 			record(exit) {|r| r.merge!( :location => place, :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 			
-			look = TinyMud::Look.new(@db, @notifier)
+			look = MangledMud::Look.new(@db, @notifier)
 			notify = sequence('notify')
 			# Find without enough money!
 			@notifier.expects(:do_notify).with(bob, Phrasebook.lookup('too-poor')).in_sequence(notify)

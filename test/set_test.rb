@@ -5,13 +5,13 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestSet < Test::Unit::TestCase
 		
 		include TestHelpers
 		
 		def setup
-			@db = TinyMud::Db.new()
+			@db = MangledMud::Db.new()
 			@notifier = mock()
 		end
 
@@ -31,7 +31,7 @@ module TinyMud
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			record(fish) {|r| r.merge!({ :name => "fish", :location => place, :description => "slimy", :flags => TYPE_THING, :owner => anne  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist
@@ -89,7 +89,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -115,7 +115,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :fail => "fail"  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -141,7 +141,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :succ => "success"  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -167,7 +167,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :osucc => "osuccess"  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -193,7 +193,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING, :ofail => "ofail"  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# Thing doesn't exist
@@ -225,7 +225,7 @@ module TinyMud
 			record(cheese2) {|r| r.merge!({ :name => "cheesey", :location => bob, :description => "smelly", :flags => TYPE_THING, :owner => bob, :next => exit  }) }
 			record(exit) {|r| r.merge!( :location => bob, :name => "exit", :flags => TYPE_EXIT, :owner => bob, :next => NOTHING ) }
 
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist
@@ -273,7 +273,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist
@@ -319,7 +319,7 @@ module TinyMud
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => exit2 ) }
 			record(exit2) {|r| r.merge!( :location => limbo, :name => "exitw", :description => "w", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Thing doesn't exist or is a player
@@ -378,7 +378,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => bob, :next => NOTHING }) }
 			record(exit) {|r| r.merge!( :name => "exit", :description => "long", :flags => TYPE_EXIT, :owner => anne, :next => NOTHING ) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Person must be a wizard
@@ -413,7 +413,7 @@ module TinyMud
 			record(anne) {|r| r.merge!( :contents => NOTHING, :location => place, :next => NOTHING ) }
 			record(cheese) {|r| r.merge!({ :name => "cheese", :location => bob, :description => "wiffy", :flags => TYPE_THING, :owner => bob, :next => NOTHING  }) }
 			
-			set = TinyMud::Set.new(@db, @notifier)
+			set = MangledMud::Set.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Thing must exist

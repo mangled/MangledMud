@@ -1,6 +1,6 @@
 require_relative 'constants.rb'
 
-module TinyMud
+module MangledMud
 
   # Handles dumping the database
   class Dump

@@ -3,7 +3,7 @@ require 'rubygems'
 require 'optparse'
 require_relative 'constants'
 
-module TinyMud
+module MangledMud
     class MudOptions
 
         def MudOptions.default

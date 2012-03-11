@@ -5,7 +5,7 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestRob < Test::Unit::TestCase
 		
 		include TestHelpers
@@ -38,7 +38,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => NOTHING  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			rob = TinyMud::Rob.new(@db, @notifier)
+			rob = MangledMud::Rob.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Player in nothing
@@ -135,7 +135,7 @@ module TinyMud
 			record(cabin) {|r| r.merge!({ :location => NOTHING, :name => "cabin", :contents => sam, :flags => TYPE_ROOM, :next => NOTHING }) }
 			record(sam) {|r| r.merge!( :contents => NOTHING, :location => cabin, :next => NOTHING, :exits => limbo ) }
 			
-			rob = TinyMud::Rob.new(@db, @notifier)
+			rob = MangledMud::Rob.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Player somewhere else
@@ -216,7 +216,7 @@ module TinyMud
 			record(jam) {|r| r.merge!({ :name => "jam", :location => place, :description => "red", :flags => TYPE_THING, :owner => NOTHING, :next => NOTHING  }) }
 			record(exit) {|r| r.merge!( :location => limbo, :name => "exit", :description => "long", :flags => TYPE_EXIT, :next => NOTHING ) }
 			
-			rob = TinyMud::Rob.new(@db, @notifier)
+			rob = MangledMud::Rob.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# Wizards can "rob" this way, but bob isn't!

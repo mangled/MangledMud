@@ -5,7 +5,7 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestMatch < Test::Unit::TestCase
 		
 		include TestHelpers

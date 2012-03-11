@@ -13,7 +13,7 @@ require_relative 'speech'
 require_relative 'utils'
 require_relative 'wiz'
 
-module TinyMud
+module MangledMud
   class Game
     include Helpers
 

@@ -1,4 +1,4 @@
-This is TinyMUD version 1.3, a user-extendible, multi-user adventure game.
+This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.
 Basic commands: 
  move/go <direction>
  get/take <thing>; drop/throw <thing>

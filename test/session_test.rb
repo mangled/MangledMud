@@ -6,14 +6,14 @@ require_relative 'include'
 require_relative 'helpers'
 
 
-module TinyMud
+module MangledMud
   # To simplify assertions we disregard some phrasebook lookups, so this test would break
   # in obvious ways, if the phrasebook strings were modified
   class TestSession < Test::Unit::TestCase
     include TestHelpers
 
     def setup
-      @db = TinyMud::Db.new()
+      @db = MangledMud::Db.new()
       @notifier = mock()
     end
 
@@ -29,7 +29,7 @@ module TinyMud
       assert(session.player_id.nil?, "player id should be nil")
       assert(session.last_time.nil?, "last command time should be nil")
       assert_equal(1, session.output_buffer.length)
-      assert_match(/Welcome to TinyMUD/, session.output_buffer[0], "output buffer should be greeting player")
+      assert_match(/Welcome to MangledMUD/, session.output_buffer[0], "output buffer should be greeting player")
     end
 
     def test_do_command_quit
@@ -140,13 +140,13 @@ module TinyMud
       session = Session.new(@db, game, "foo", connected_players, @notifier)
       assert(!session.do_command('connect'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
-      assert_match(/Welcome to TinyMUD/, session.output_buffer[0])
+      assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
 
       # Missing password
       session = Session.new(@db, game, "foo", connected_players, @notifier)
       assert(!session.do_command('connect bar'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
-      assert_match(/Welcome to TinyMUD/, session.output_buffer[0])
+      assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
     end
 
     def test_session_create
@@ -181,13 +181,13 @@ module TinyMud
       session = Session.new(@db, game, "foo", connected_players, @notifier)
       assert(!session.do_command('create'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
-      assert_match(/Welcome to TinyMUD/, session.output_buffer[0])
+      assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
 
       # Missing password
       session = Session.new(@db, game, "foo", connected_players, @notifier)
       assert(!session.do_command('create bar'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
-      assert_match(/Welcome to TinyMUD/, session.output_buffer[0])
+      assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
     end
 
     def test_unconnected_unrecognized_command
@@ -205,7 +205,7 @@ module TinyMud
       notify = sequence('notify')
       assert(!session.do_command("cheese string"), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
-      assert_match(/Welcome to TinyMUD/, session.output_buffer[0])
+      assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
     end
   end
 end

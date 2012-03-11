@@ -24,10 +24,10 @@ def print(record) # to_s?
 	puts "Pwd : #{record.password}"
 end
 
-module TinyMud
+module MangledMud
     class TestDb < Test::Unit::TestCase
 		def setup
-			@db = TinyMud::Db.new()
+			@db = MangledMud::Db.new()
 		end
 
 		def teardown

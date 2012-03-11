@@ -1,6 +1,6 @@
 require_relative 'constants'
 
-module TinyMud
+module MangledMud
   class Help
 
     def initialize(notifier)

@@ -1,6 +1,6 @@
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
   class Look
     include Helpers
 

@@ -4,7 +4,7 @@ require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
 
-module TinyMud
+module MangledMud
     class TestGame < Test::Unit::TestCase
 		def setup
 			@db = Db.Minimal()
@@ -19,7 +19,7 @@ module TinyMud
 			bob = Player.new(@db, @notifier).create_player("bob", "sprout")
 			sam = Player.new(@db, @notifier).create_player("sam", "sprout")
 
-			game = TinyMud::Game.new(@db, "dumpfile", nil, nil, @notifier)
+			game = MangledMud::Game.new(@db, "dumpfile", nil, nil, @notifier)
 			@notifier.expects(:do_emergency_shutdown).never
 			
 			# Bad player ref goes to stderr!

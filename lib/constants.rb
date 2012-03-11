@@ -1,4 +1,4 @@
-module TinyMud
+module MangledMud
   # Networking
   DEFAULT_PORT  = 4201
   DEFAULT_HOST  = "localhost"

@@ -21,6 +21,6 @@ if __FILE__ == $0
     end
     
     # Go!
-    db = TinyMud::Db.Minimal()
-    open(cmd_file) {|content| TinyMud::CommandHelpers.collect_responses(db, "dump", content) }.each{|line| puts line }
+    db = MangledMud::Db.Minimal()
+    open(cmd_file) {|content| MangledMud::CommandHelpers.collect_responses(db, "dump", content) }.each{|line| puts line }
 end

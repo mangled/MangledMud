@@ -1,6 +1,6 @@
 require_relative 'constants'
 
-module TinyMud
+module MangledMud
 	
 	#Player class takes care of player's creation, access, and connection.
 	class Player

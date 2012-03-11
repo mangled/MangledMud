@@ -84,7 +84,7 @@ private
   def accept_new_connection(db, game)
     descriptor = @serverSocket.accept
     connected_players = ->() { @descriptors.values.find_all {|session| session.player_id } }
-    @descriptors[descriptor] = TinyMud::Session.new(db, game, "#{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]}", connected_players, self)
+    @descriptors[descriptor] = MangledMud::Session.new(db, game, "#{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]}", connected_players, self)
     puts "ACCEPT #{descriptor.peeraddr[2]}:#{descriptor.peeraddr[1]}"
     write_buffers()
   end

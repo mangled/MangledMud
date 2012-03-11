@@ -5,7 +5,7 @@ require 'mocha'
 require_relative 'include'
 require_relative 'helpers'
 
-module TinyMud
+module MangledMud
     class TestCreate < Test::Unit::TestCase
 		
 		include TestHelpers
@@ -26,7 +26,7 @@ module TinyMud
 			bob = Player.new(@db, @notifier).create_player("bob", "pwd")
 			record(bob) {|r| r.merge!( :location => NOTHING ) }
 			
-			create = TinyMud::Create.new(@db, @notifier)
+			create = MangledMud::Create.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# We must be somewhere (not NOTHING)
@@ -136,7 +136,7 @@ module TinyMud
 			record(wizard) {|r| r.merge!({ :next => bob }) }
 			record(place) {|r| r.merge!({ :name => "place", :flags => TYPE_ROOM }) }
 
-			create = TinyMud::Create.new(@db, @notifier)
+			create = MangledMud::Create.new(@db, @notifier)
 			notify = sequence('notify')
 
 			# We must be somewhere (not NOTHING)
@@ -255,7 +255,7 @@ module TinyMud
 			record(limbo) {|r| r.merge!({ :name => "limbo", :contents => wizard, :owner => wizard, :flags => TYPE_ROOM }) }
 			record(wizard) {|r| r.merge!({ :next => bob }) }
 
-			create = TinyMud::Create.new(@db, @notifier)
+			create = MangledMud::Create.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# don't specify what you want to dig
@@ -291,7 +291,7 @@ module TinyMud
 			record(wizard) {|r| r.merge!({ :next => bob }) }
 			record(bob) {|r| r.merge!({ :location => limbo, :exits => exit }) }
 
-			create = TinyMud::Create.new(@db, @notifier)
+			create = MangledMud::Create.new(@db, @notifier)
 			notify = sequence('notify')
 			
 			# don't specify what you want to create

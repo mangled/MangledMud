@@ -1,6 +1,6 @@
 require_relative 'constants'
 
-module TinyMud
+module MangledMud
   class Record
     attr_accessor :name         # The name of the object
     attr_accessor :description  # A description of the object

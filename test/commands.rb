@@ -6,7 +6,7 @@ require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
 
-module TinyMud
+module MangledMud
     
     class Notifier
         def initialize(buffer)
@@ -35,7 +35,7 @@ module TinyMud
 
             result = []
             notifier = Notifier.new(result)
-            game = TinyMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
+            game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
 
             # Keep a track of dumped database files and delete them
             dumped_databases = []
@@ -49,14 +49,14 @@ module TinyMud
                         cmds = $1.split(' ')
                         if cmds[0] == "create_player"
                             result << "Creating player: \"#{cmds[1]}\" with password \"#{cmds[2]}\"\n"
-                            players[cmds[1]] = TinyMud::Player.new(db, notifier).create_player(cmds[1], cmds[2])
+                            players[cmds[1]] = MangledMud::Player.new(db, notifier).create_player(cmds[1], cmds[2])
                         elsif cmds[0] == "@dump"
                             result << "Dumping database\n"
                             dumped_databases << 'cheese.dump'
                             Dump.new(db, nil).dump_database_internal(dumped_databases[-1])
                         elsif cmds[0] == "load"
                             result << "Reading database from: " << cmds[1] << "\n"
-                            game = TinyMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
+                            game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
                             db.load(cmds[1])
                         end
                     elsif line =~ /^(\w+)>(.*)/

@@ -3,7 +3,7 @@ require_relative 'player'
 require_relative 'look'
 require_relative 'phrasebook'
 
-module TinyMud
+module MangledMud
 
   # Represents a players session (connected and unconnected)
   class Session

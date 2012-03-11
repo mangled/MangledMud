@@ -8,7 +8,7 @@ require 'mocha'
 require_relative 'include'
 require_relative 'commands'
 
-module TinyMud
+module MangledMud
     
     class TestRegression < Test::Unit::TestCase
         
