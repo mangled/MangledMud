@@ -188,7 +188,7 @@ module MangledMud
     end
 
     def parse(command, notifier)
-      # Todo: Make this a little more readable :-)
+      # Grab the first non-whitespace text chunk
       command =~ /^(\S+)(.*)/
       command = $1
 
@@ -197,14 +197,18 @@ module MangledMud
         return
       end
 
+      # There might be some arguments to the command? If so assume there is one
+      # and shove it in arg1
       arg1 = $2
       arg2 = nil
 
+      # nil arg1 if it turns out to not exist
       unless arg1.nil?
         arg1.strip!
         arg1 = nil if arg1.empty?
       end
 
+      # If there is an equals in arg1 then split the text between it and arg2
       if arg1 and arg1.include?('=')
         args = arg1.split('=')
         arg1 = args[0]
