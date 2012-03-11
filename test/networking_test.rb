@@ -20,6 +20,8 @@ module MangledMudTest
 
     def setup
       @test_name = self.instance_variable_get(:@__name__)
+      # Swap file name about
+      @test_name = @test_name.gsub('test_', "") + "_test"
       @regression_tmp_filename = File.join(File.dirname(__FILE__), "#{@test_name}.tmp")
       @regression_pass_filename = File.join(File.dirname(__FILE__), "#{@test_name}.pass")
       File.delete @regression_tmp_filename if File.exists? @regression_tmp_filename
@@ -52,7 +54,7 @@ module MangledMudTest
     # I tried starting the process and killing it per test but it bails out
     # and doesn't clean up the ports properly, so things go wrong on the second
     # run.
-    def test_interface
+    def test_networking
       # As it says!
       check_network_failure_handling()
 
