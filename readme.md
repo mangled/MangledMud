@@ -5,7 +5,7 @@ MangledMud
 
 MangledMud is a ruby port of [TinyMUD](https://en.wikipedia.org/wiki/TinyMUD).
 
-The port has been a painstaking exercise in testing! All of the original "C" code was wrapped in ruby extensions,
+The port has been a labour of love and a painstaking exercise in testing! All of the original "C" code was wrapped in ruby extensions,
 unit tests added, line coverage checked then ruby replacements implemented which matched the original's behaviour.
 The full history of this port is held in the git repository, should you wish to delve.
 
@@ -20,8 +20,8 @@ Please enjoy, this is a great MUD and its history deserves to be retained and th
 Trying it out
 -------------
 
-We are running a server at TODO, you can try the MUD out by, say telnet'ing in to it: `telnet xyz 4201`. For documentation
-see the associated "Three's Unabridged Dictionary of Commands". HOW DO WE KEEP MARKDOWN AND HTML??????
+We are running a server at `f8f8ff.com` on port `2525`. You can try the MUD out by, say telnet'ing in to it: `telnet ip-address 2525` (you will need
+to lookup the ip address). For documentation see the associated "Three's Unabridged Dictionary of Commands" - See [Running](#Running).
 
 Install
 -------
@@ -53,7 +53,7 @@ In another terminal (for example):
 
 If any of these tests break, panic!!!
 
-Running
+<a id="Running"/>Running
 -------
 
 To run the server, type:
@@ -73,7 +73,8 @@ The Wizard player is always defined, you connect as them by typing:
 
 The password of [potrzebie](https://en.wikipedia.org/wiki/Potrzebie) has some associated history.
 
-We have also converted the original "Three's Unabridged Dictionary of Commands", if you `rake doc:yard` you will get local documentation (under doc).
+We have also converted the original "Three's Unabridged Dictionary of Commands", if you `rake doc:yard` you will get local documentation (under `doc`), or click on `guide.md`
+and GitHub will do the rest.
 
 Version
 -------

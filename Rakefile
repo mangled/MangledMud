@@ -13,7 +13,13 @@ namespace :doc do
   YARD::Rake::YardocTask.new(:yard) do |yt|
     # Default to just the lib directory, uncomment this if we want tests too
     # yt.files   = Dir.glob(File.join(root, '**', '*.rb'))
-    yt.options = ['--output-dir', dest, '--readme', File.join(root, 'readme.md'), '--files', File.join(root, 'guide.md')]
+    yt.options = [
+      '--output-dir', dest,
+      '--title', 'MangledMUD',
+      '--readme', 'readme.md',
+      '--files', 'guide.md',
+      '--asset', 'mud.png'
+    ]
   end
 end
 
