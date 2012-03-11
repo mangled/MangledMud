@@ -4,18 +4,18 @@ module MangledMud
   DEFAULT_HOST  = "localhost"
 
   # Timing
-  DUMP_INTERVAL = 3600	# seconds between dumps
+  DUMP_INTERVAL = 3600  # seconds between dumps
 
   # Flags
-  TYPE_ROOM =	0x0
+  TYPE_ROOM = 0x0
   TYPE_THING = 0x1
-  TYPE_EXIT =	0x2
+  TYPE_EXIT = 0x2
   TYPE_PLAYER = 0x3
-  NOTYPE	= 0x7
+  NOTYPE = 0x7
   TYPE_MASK = 0x7
-  ANTILOCK =	0x8
+  ANTILOCK = 0x8
   WIZARD = 0x10
-  LINK_OK	= 0x20
+  LINK_OK = 0x20
   DARK = 0x40
   TEMPLE = 0x80
   STICKY = 0x100
@@ -58,7 +58,7 @@ module MangledMud
   # Costs of kill command
   KILL_BASE_COST = 100 # prob = expenditure/KILL_BASE_COST
   KILL_MIN_COST = 10
-  KILL_BONUS = 50	# paid to victim
+  KILL_BONUS = 50 # paid to victim
 
   # 1/chance of getting a penny per room
   PENNY_RATE = 10

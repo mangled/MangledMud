@@ -76,7 +76,7 @@ module MangledMud
                   # ! Matthew - Modified original code -> Bug fix?
                   if (@check_keys)
                       could_doit = Predicates.new(@db, @notifier).could_doit(@match_who, exit)
-                      @match_count += 1 if could_doit		     
+                      @match_count += 1 if could_doit
                   else
                       @match_count += 1
                   end

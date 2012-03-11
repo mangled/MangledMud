@@ -145,7 +145,7 @@ module MangledMud
         end
         @db[victim].flags = TYPE_THING
         @db[victim].owner = player # you get it 
-        @db[victim].pennies = 1	# don't let him keep his immense wealth 
+        @db[victim].pennies = 1 # don't let him keep his immense wealth 
 
         # notify people 
         @notifier.do_notify(victim, Phrasebook.lookup('you-become-a-toad'))
