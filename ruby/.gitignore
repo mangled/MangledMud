@@ -1,9 +1,0 @@
-*.o
-*.so
-*.log
-*.ok
-cheese.dump
-test/env
-.yardoc/
-doc/
-
