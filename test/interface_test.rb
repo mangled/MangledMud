@@ -131,28 +131,28 @@ module MangledMudTest
 
         # Open a read, then close
         s = TCPSocket.new TINYMUD_HOST, TINYMUD_PORT
-        @regression.puts(s.gets)
+        @regression.puts(s.gets.chomp)
         s.close
 
         # Open, read, create, close
         s = TCPSocket.new TINYMUD_HOST, TINYMUD_PORT
-        @regression.puts(s.gets)
+        @regression.puts(s.gets.chomp)
         s.puts "create foo 1234"
         s.close
 
         # Open, send multiple lines
         s = TCPSocket.new TINYMUD_HOST, TINYMUD_PORT
-        @regression.puts(s.gets)
+        @regression.puts(s.gets.chomp)
         s.puts ["create foo 1234", "look", "@dig", "inventory", "look"].join("\n")
-        @regression.puts(s.gets)
+        @regression.puts(s.gets.chomp)
         sleep(0.25) # Ensure it gets time to consume
         s.close
 
         # as above, but fragment line
         s = TCPSocket.new TINYMUD_HOST, TINYMUD_PORT
-        @regression.puts(s.gets)
+        @regression.puts(s.gets.chomp)
         ["cr", "eate", " foo", " 12", "34\n"].each {|b| s.puts b }
-        @regression.puts(s.gets)
+        @regression.puts(s.gets.chomp)
         sleep(0.25)  # Ensure it gets time to consume
         s.close
       end
