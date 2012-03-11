@@ -46,7 +46,8 @@ module MangledMud
       @utils = Utils.new(db)
       @wiz = Wiz.new(db, notifier)
 
-      # Set up command handlers
+      # Set up command handlers, the true/false is grotty, it indicates if a full
+      # match should be taken or not...
       @commands = {
         "@chown"    => [->(p, a, b) { @set.do_chown(p, a, b) }, false],
         "@create"   => [->(p, a, b) { @create.do_create(p, a, b.to_i) }, false],
@@ -161,18 +162,14 @@ module MangledMud
         command, arg1, arg2 = parse(command, @notifier)
 
         matched_commands = @commands.find_all {|name, cmd| name.start_with?(command.downcase()) }
-        # todo - this is messy, its basically asking do you need a full match to invoke this command
-        # we should make the code more readable and then delete this comment.
+
         if matched_commands.length == 1
           name, cmd = matched_commands[0]
-          if cmd[1]
-            if name == command.downcase()
+          perform_full_match = cmd[1]
+          if !perform_full_match or (name == command.downcase())
               cmd[0].call(player, arg1, arg2)
-            else
-              @notifier.do_notify(player, Phrasebook.lookup('huh'))
-            end
           else
-            cmd[0].call(player, arg1, arg2)
+            @notifier.do_notify(player, Phrasebook.lookup('huh'))
           end
         else
           @notifier.do_notify(player, Phrasebook.lookup('huh'))
