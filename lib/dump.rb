@@ -8,29 +8,25 @@ module MangledMud
     attr_accessor :alarm_block
 
     def initialize(db, dumpfile, emergency_shutdown = nil)
-      # todo - are all of these used now?
       @db = db
       @dumpfile = dumpfile
       @epoch = 0
-
-      # This is unused at present - It should be renamed, it means
-      # game.rb is potentially accessing the db so don't touch it if
-      # a signal of less importance occurs. To be honest I'm considering
-      # removing the forking etc. as it simplifies code at the expense
-      # of introducing a small delay while the db is dumped. It will make
-      # the code more portable too. (windows can't fork())
       @alarm_block = false
 
       trap("SIGINT") { bailout(emergency_shutdown) }
 
+      start_dump_thread()
+    end
+
+    def start_dump_thread()
       @dumper_thread = Thread.new do
         sleep(DUMP_INTERVAL)
         fork_and_dump()
+        start_dump_thread()
       end
     end
 
     def bailout(emergency_shutdown)
-      # todo - add to phrasebook
       panic(emergency_shutdown, "BAILOUT: caught signal")
       exit(7)
     end
@@ -39,18 +35,15 @@ module MangledMud
       # Kill the dumper thread
       Thread.kill(@dumper_thread)
 
-      # todo - add to phrasebook
       $stderr.puts "PANIC: #{message}"
 
-      # turn off signals - check this!!! Its disabling all
-      # I really don't like this!!!! Sanity check it
+      # Turn off signals
       Signal.list.each {|name, id| trap(name, "SIG_IGN") }
 
       # shut down interface
       emergency_shutdown.call() if emergency_shutdown
 
       # dump panic file
-      # todo - add to phrasebook
       panic_file = "#{@dumpfile}.PANIC"
       begin
         $stderr.puts "DUMPING: #{panic_file}"
@@ -71,7 +64,7 @@ module MangledMud
       @epoch += 1
 
       $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
-      begin
+      if Process.respond_to?(:fork)
         pid = fork do
           dump_database_internal(@dumpfile)
           exit!(0)
@@ -82,16 +75,10 @@ module MangledMud
         else
           Process.detach(pid)
         end
-      rescue NotImplementedError => e
-        $stderr.puts e
-        $stderr.puts "Dumping on main thread instead..."
+      else
+        $stderr.puts "Fork unavailable so dumping on main thread instead..."
+        $stderr.puts "Warning: Currently executing a command on main thread - Dump could be corrupted!" if @alarm_block
         dump_database_internal(@dumpfile)
-      end
-
-      # restart the dumper
-      @dumper_thread = Thread.new do
-        sleep(DUMP_INTERVAL)
-        fork_and_dump()
       end
     end
 
@@ -102,7 +89,6 @@ module MangledMud
       $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
     end
 
-    # Todo: This code needs to handle disk errors
     def dump_database_internal(filename)
       $stderr.puts("DUMPING: #{filename}.##{@epoch}#")
 

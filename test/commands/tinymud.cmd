@@ -1,7 +1,5 @@
 # Script designed to test all of tinymud's commands and responses
 #################################################################
-# todo - errors, e.g. go to missing exit, pick up missing thing
-
 # NOTE: Might be worth upgrading the tool to change (n) to the players name?
 
 # Three people are enough (I think)
@@ -493,10 +491,7 @@ wizard>@boot mat
 wizard>who
 wizard>whisper
 
-# LAST TODO's
-
 # how do things get nothing? in limbo?
-# TRY
 wizard>@teleport #0
 wizard> i
 wizard> drop foof
@@ -508,7 +503,7 @@ wizard>@dump mat
 # dump and shutdown - separate test files?
 #wizard>@shutdown
 
-# do a dump --> FIX THIS -> PENNY drops are hard, need to trigger through mocha?
+# do a dump
 !@dump
 !load minimal.db
 wizard>@stats

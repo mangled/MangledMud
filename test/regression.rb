@@ -1,4 +1,3 @@
-# Todo: This will handle producing regression code
 require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'

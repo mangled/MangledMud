@@ -32,7 +32,6 @@ module MangledMud
       @help_file = help_file
       @news_file = news_file
 
-      # todo - pass this in.
       @dump = Dump.new(db, dumpfile, emergency_shutdown)
       @create = Create.new(db, notifier)
       @help = Help.new(notifier)
@@ -115,7 +114,6 @@ module MangledMud
     end
 
     def dump_database()
-      # todo - pass the dumper in...
       @dump.dump_database()
     end
 
@@ -190,7 +188,7 @@ module MangledMud
     end
 
     def parse(command, notifier)
-      # Todo: Make this a little more readable!
+      # Todo: Make this a little more readable :-)
       command =~ /^(\S+)(.*)/
       command = $1
 
