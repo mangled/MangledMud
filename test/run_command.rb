@@ -9,18 +9,18 @@ require_relative 'include'
 require_relative 'commands'
 
 if __FILE__ == $0
-    if ARGV.length != 1
-        puts "Please enter a script name (look under commands/*.cmd)"
-        exit(-1)
-    end
-    
-    cmd_file = ARGV[0]
-    unless File.exists?(cmd_file)
-        puts "Cannot find #{cmd_file}"
-        exit(-1)
-    end
-    
-    # Go!
-    db = MangledMud::Db.Minimal()
-    open(cmd_file) {|content| MangledMud::CommandHelpers.collect_responses(db, "dump", content) }.each{|line| puts line }
+  if ARGV.length != 1
+    puts "Please enter a script name (look under commands/*.cmd)"
+    exit(-1)
+  end
+
+  cmd_file = ARGV[0]
+  unless File.exists?(cmd_file)
+    puts "Cannot find #{cmd_file}"
+    exit(-1)
+  end
+
+  # Go!
+  db = MangledMud::Db.Minimal()
+  open(cmd_file) {|content| MangledMud::CommandHelpers.collect_responses(db, "dump", content) }.each{|line| puts line }
 end

@@ -96,13 +96,13 @@ module MangledMud
     end
 
     def do_shutdown(player)
-        if (is_wizard(player))
-          @dump.do_shutdown()
-          $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
-          @shutdown = true
-        else
-          @notifier.do_notify(player, Phrasebook.lookup('delusional'))
-        end
+      if (is_wizard(player))
+        @dump.do_shutdown()
+        $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
+        @shutdown = true
+      else
+        @notifier.do_notify(player, Phrasebook.lookup('delusional'))
+      end
     end
 
     def do_dump(player)
@@ -115,15 +115,15 @@ module MangledMud
     end
 
     def dump_database()
-        # todo - pass the dumper in...
-        @dump.dump_database()
+      # todo - pass the dumper in...
+      @dump.dump_database()
     end
 
     def process_command(player, command)
       # This is a code smell, we could return a state instead.
       raise "Shutdown signalled but still processing commands" if @shutdown
 
-      # robustify player 
+      # robustify player
       if (player < 0 || player >= @db.length || !player?(player))
         $stderr.puts("process_command: bad player #{player}")
         return
@@ -157,7 +157,7 @@ module MangledMud
       elsif (command[0] == POSE_TOKEN)
         @speech.do_pose(player, command[1..-1], nil)
       elsif (@move.can_move(player, command))
-        # command is an exact match for an exit 
+        # command is an exact match for an exit
         @move.do_move(player, command)
       else
         command, arg1, arg2 = parse(command, @notifier)
@@ -190,30 +190,30 @@ module MangledMud
     end
 
     def parse(command, notifier)
-        # Todo: Make this a little more readable!
-        command =~ /^(\S+)(.*)/
-        command = $1
+      # Todo: Make this a little more readable!
+      command =~ /^(\S+)(.*)/
+      command = $1
 
-        if command.nil?
-          @notifier.do_notify(player, Phrasebook.lookup('huh'))
-          return
-        end
+      if command.nil?
+        @notifier.do_notify(player, Phrasebook.lookup('huh'))
+        return
+      end
 
-        arg1 = $2
-        arg2 = nil
+      arg1 = $2
+      arg2 = nil
 
-        unless arg1.nil?
-          arg1.strip!
-          arg1 = nil if arg1.empty?
-        end
+      unless arg1.nil?
+        arg1.strip!
+        arg1 = nil if arg1.empty?
+      end
 
-        if arg1 and arg1.include?('=')
-          args = arg1.split('=')
-          arg1 = args[0]
-          arg2 = args[1]
-        end
+      if arg1 and arg1.include?('=')
+        args = arg1.split('=')
+        arg1 = args[0]
+        arg2 = args[1]
+      end
 
-        [command, arg1, arg2]
+      [command, arg1, arg2]
     end
 
   end

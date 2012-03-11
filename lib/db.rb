@@ -75,64 +75,64 @@ module MangledMud
     end
 
     def parse_dbref(s)
-        if s
-          x = s.to_i
-          if (x > 0)
-              return x
-          elsif (x == 0)
-              s = s.lstrip()
-              return 0 if (s and s.start_with?('0'))
-          end
+      if s
+        x = s.to_i
+        if (x > 0)
+          return x
+        elsif (x == 0)
+          s = s.lstrip()
+          return 0 if (s and s.start_with?('0'))
         end
-        # else x < 0 or s != 0
-        return NOTHING
+      end
+      # else x < 0 or s != 0
+      return NOTHING
     end
 
     #Writes current database to location
     def write(location)
-        File.open(location, "w") do |file|
-          @record_array.each_with_index do |r, i|
-              file.puts("##{i}\n")
-              file.puts(r.name)
-              file.puts(r.description)
-              file.puts(r.location)
-              file.puts(r.contents)
-              file.puts(r.exits)
-              file.puts(r.next)
-              file.puts(r.key)
-              file.puts(r.fail)
-              file.puts(r.succ)
-              file.puts(r.ofail)
-              file.puts(r.osucc)
-              file.puts(r.owner)
-              file.puts(r.pennies)
-              file.puts(r.flags)
-              file.puts(r.password)
-          end
-          file.puts("***END OF DUMP***")
+      File.open(location, "w") do |file|
+        @record_array.each_with_index do |r, i|
+          file.puts("##{i}\n")
+          file.puts(r.name)
+          file.puts(r.description)
+          file.puts(r.location)
+          file.puts(r.contents)
+          file.puts(r.exits)
+          file.puts(r.next)
+          file.puts(r.key)
+          file.puts(r.fail)
+          file.puts(r.succ)
+          file.puts(r.ofail)
+          file.puts(r.osucc)
+          file.puts(r.owner)
+          file.puts(r.pennies)
+          file.puts(r.flags)
+          file.puts(r.password)
         end
+        file.puts("***END OF DUMP***")
+      end
     end
 
     #free clears the database
     def free()
-        @record_array.clear() if @record_array
+      @record_array.clear() if @record_array
     end
 
-private
+    private
 
     def nullify(s)
       return s == "" ? nil : s
     end
 
     def get(index)
-        r = @record_array[index]
-        raise "invalid index #{index}" if r.nil?
-        return r
+      r = @record_array[index]
+      raise "invalid index #{index}" if r.nil?
+      return r
     end
 
     def put(index, record)
-        raise "invalid index #{index}" unless (0...@record_array.length()).include?(index)
-        @record_array[index] = record
+      raise "invalid index #{index}" unless (0...@record_array.length()).include?(index)
+      @record_array[index] = record
     end
   end
 end

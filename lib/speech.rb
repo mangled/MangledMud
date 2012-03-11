@@ -22,7 +22,7 @@ module MangledMud
       @notifier.do_notify(player, Phrasebook.lookup('you-say', message))
       notify_except(@db[loc].contents, player, Phrasebook.lookup('someone-says', @db[player].name, message))
     end
-    
+
     def do_pose(player, arg1, arg2)
       loc = getloc(player)
       return if (loc == NOTHING)
@@ -31,8 +31,8 @@ module MangledMud
       message = reconstruct_message(arg1, arg2)
       notify_except(@db[loc].contents, NOTHING, "#{@db[player].name} #{message}")
     end
-    
-    def do_wall(player, arg1, arg2)      
+
+    def do_wall(player, arg1, arg2)
       if (is_wizard(player))
         message = reconstruct_message(arg1, arg2)
         $stderr.puts("WALL from #{@db[player].name}(#{player}): #{message}")
@@ -42,14 +42,14 @@ module MangledMud
         @notifier.do_notify(player, Phrasebook.lookup('what-wall'))
       end
     end
-    
+
     def do_gripe(player, arg1, arg2)
       loc = @db[player].location
       message = reconstruct_message(arg1, arg2)
       $stderr.puts("GRIPE from #{@db[player].name}(#{player}) in #{Utils.new(@db).getname(loc)}(#{loc}): #{message}")
       @notifier.do_notify(player, Phrasebook.lookup('complaint-noted'))
     end
-    
+
     def do_page(player, arg1)
       target = Player.new(@db, @notifier).lookup_player(arg1)
       if (!Predicates.new(@db, @notifier).payfor(player, LOOKUP_COST))
@@ -66,7 +66,7 @@ module MangledMud
     def notify_except(first, exception, msg)
       enum(first).each do |i|
         if (is_player(i) && (i != exception))
-            @notifier.do_notify(i, msg)
+          @notifier.do_notify(i, msg)
         end
       end
     end

@@ -24,7 +24,7 @@ module MangledMud
   NOTHING = -1
   AMBIGUOUS = -2
   HOME = -3
-  
+
   # Special dbref positions
   PLAYER_START = 0
 
@@ -33,10 +33,10 @@ module MangledMud
   EXIT_COST = 1
   LINK_COST = 1
   ROOM_COST = 10
-  
+
   # amount at which temple stops being so profitable
   MAX_PENNIES = 10000
-  
+
   # cost to do a scan
   LOOKUP_COST = 1
 
@@ -51,10 +51,10 @@ module MangledMud
 
   # Maximum amount an object can be worth
   MAX_OBJECT_ENDOWMENT = 100
-  
+
   # Delimeter for lists of exit aliases
   EXIT_DELIMITER = ';'
-  
+
   # Costs of kill command
   KILL_BASE_COST = 100 # prob = expenditure/KILL_BASE_COST
   KILL_MIN_COST = 10

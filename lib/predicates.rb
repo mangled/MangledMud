@@ -10,10 +10,10 @@ module MangledMud
     end
 
     def can_link_to(who, where)
-        where >= 0 &&
-        where < @db.length &&
-        room?(where) &&
-        (controls(who, where) || is_link_ok(where))
+      where >= 0 &&
+      where < @db.length &&
+      room?(where) &&
+      (controls(who, where) || is_link_ok(where))
     end
 
     def could_doit(player, thing)
@@ -22,7 +22,7 @@ module MangledMud
       status = (player == key || Utils.new(@db).member(key, @db[player].contents))
       return is_antilock(thing) ? !status : status
     end
-  
+
     def can_doit(player, thing, default_fail_msg)
       loc = getloc(player)
 
@@ -35,7 +35,7 @@ module MangledMud
         elsif (default_fail_msg)
           @notifier.do_notify(player, default_fail_msg)
         end
-  
+
         if (@db[thing].ofail)
           Speech.new(@db, @notifier).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].ofail}".to_s)
         end
@@ -45,14 +45,14 @@ module MangledMud
         if (@db[thing].succ)
           @notifier.do_notify(player, @db[thing].succ)
         end
-    
+
         if (@db[thing].osucc)
           Speech.new(@db, @notifier).notify_except(@db[loc].contents, player, "#{@db[player].name} #{@db[thing].osucc}")
         end
         true
       end
     end
-  
+
     def can_see(player, thing, can_see_loc)
       if (player == thing || exit?(thing))
         return false
@@ -63,7 +63,7 @@ module MangledMud
         controls(player, thing)
       end
     end
-    
+
     def controls(who, what)
       # Wizard controls everything
       # owners control their stuff
@@ -71,11 +71,11 @@ module MangledMud
       what < @db.length &&
       (is_wizard(who) || who == @db[what].owner)
     end
-    
+
     def can_link(who, what)
       (exit?(what) && @db[what].location == NOTHING) || controls(who, what)
     end
-    
+
     def payfor(who, cost)
       if (is_wizard(who))
         return true

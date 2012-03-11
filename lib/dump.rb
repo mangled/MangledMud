@@ -30,76 +30,76 @@ module MangledMud
     end
 
     def bailout(emergency_shutdown)
-        # todo - add to phrasebook
-        panic(emergency_shutdown, "BAILOUT: caught signal")
-        exit(7)
+      # todo - add to phrasebook
+      panic(emergency_shutdown, "BAILOUT: caught signal")
+      exit(7)
     end
-  
+
     def panic(emergency_shutdown, message)
-        # Kill the dumper thread
-        Thread.kill(@dumper_thread)
+      # Kill the dumper thread
+      Thread.kill(@dumper_thread)
 
-        # todo - add to phrasebook
-        $stderr.puts "PANIC: #{message}"
-    
-        # turn off signals - check this!!! Its disabling all
-        # I really don't like this!!!! Sanity check it
-        Signal.list.each {|name, id| trap(name, "SIG_IGN") }
-  
-        # shut down interface
-        emergency_shutdown.call() if emergency_shutdown
+      # todo - add to phrasebook
+      $stderr.puts "PANIC: #{message}"
 
-        # dump panic file
-        # todo - add to phrasebook
-        panic_file = "#{@dumpfile}.PANIC"
-        begin
-          $stderr.puts "DUMPING: #{panic_file}"
-          @db.write(panic_file)
-          $stderr.puts "DUMPING: #{panic_file} (done)"
-          exit(136)
-        rescue
-          perror("CANNOT OPEN PANIC FILE #{panic_file}, YOU LOSE:")
-          exit(135)
-        end
+      # turn off signals - check this!!! Its disabling all
+      # I really don't like this!!!! Sanity check it
+      Signal.list.each {|name, id| trap(name, "SIG_IGN") }
+
+      # shut down interface
+      emergency_shutdown.call() if emergency_shutdown
+
+      # dump panic file
+      # todo - add to phrasebook
+      panic_file = "#{@dumpfile}.PANIC"
+      begin
+        $stderr.puts "DUMPING: #{panic_file}"
+        @db.write(panic_file)
+        $stderr.puts "DUMPING: #{panic_file} (done)"
+        exit(136)
+      rescue
+        perror("CANNOT OPEN PANIC FILE #{panic_file}, YOU LOSE:")
+        exit(135)
+      end
     end
 
     def do_shutdown()
-        Thread.kill(@dumper_thread)
+      Thread.kill(@dumper_thread)
     end
 
     def fork_and_dump()
-        @epoch += 1
+      @epoch += 1
 
-        $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
-        begin
-          pid = fork do
-            dump_database_internal(@dumpfile)
-            exit!(0)
-          end
-  
-          if (pid < 0)
-            $stderr.puts "fork_and_dump: fork()"
-          else
-            Process.detach(pid)
-          end
-        rescue NotImplementedError => e
-          $stderr.puts e
-          $stderr.puts "Dumping on main thread instead..."
+      $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
+      begin
+        pid = fork do
           dump_database_internal(@dumpfile)
+          exit!(0)
         end
 
-        # restart the dumper
-        @dumper_thread = Thread.new do
-          sleep(DUMP_INTERVAL)
-          fork_and_dump()
+        if (pid < 0)
+          $stderr.puts "fork_and_dump: fork()"
+        else
+          Process.detach(pid)
         end
+      rescue NotImplementedError => e
+        $stderr.puts e
+        $stderr.puts "Dumping on main thread instead..."
+        dump_database_internal(@dumpfile)
+      end
+
+      # restart the dumper
+      @dumper_thread = Thread.new do
+        sleep(DUMP_INTERVAL)
+        fork_and_dump()
+      end
     end
 
     def dump_database()
-        @epoch += 1
-        $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}#"
-        dump_database_internal(@dumpfile)
-        $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
+      @epoch += 1
+      $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}#"
+      dump_database_internal(@dumpfile)
+      $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
     end
 
     # Todo: This code needs to handle disk errors
@@ -109,14 +109,14 @@ module MangledMud
       # nuke our predecessor
       tmpfile = "#{filename}.##{@epoch - 1}#"
       File.delete(tmpfile) if File.exists?(tmpfile)
-  
+
       # Dump current
       tmpfile = "#{filename}.##{@epoch}#"
       @db.write(tmpfile)
 
       # Finalize name
       File.rename(tmpfile, filename)
-  
+
       $stderr.puts("DUMPING: #{filename}.##{@epoch}# (done)")
     end
   end

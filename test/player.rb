@@ -44,14 +44,14 @@ module MangledMudTest
         pre_suffix_set_cmd("OUTPUTSUFFIX #{@suffix}", /Done/, false)
       end
     end
-    
+
     def pre_suffix_set_cmd(action, match, logout = true)
       log(action, :out) if logout
       @session.cmd('String' => action, 'Match' => match) do |response|
         log(response, :in) if logout
       end
     end
-    
+
     def cmd(action, logout = true, strip_db_numbers = false)
       log(action, :out) if logout
       @session.cmd(action) do |response|
@@ -63,21 +63,21 @@ module MangledMudTest
         end
       end
     end
-    
+
     def quit()
       cmd("QUIT")
     end
-    
+
     def shutdown()
       cmd("@shutdown")
     end
-    
-  private
+
+    private
     def do_puts(s, logout = true)
       log(s, :out) if logout
       @session.puts(s)
     end
-    
+
     def log(s, direction)
       if direction == :out
         s.each_line {|line| @stdout.puts "(tx) #{@name}: #{line}" }

@@ -27,7 +27,7 @@ class Server
             if descriptor == @serverSocket
               accept_new_connection(db, game)
             else
-              unless descriptor_closed(db, descriptor)	  
+              unless descriptor_closed(db, descriptor)
                 session = @descriptors[descriptor]
                 player_quit = session.do_command(descriptor.gets())
               end
@@ -79,7 +79,7 @@ class Server
     @descriptors.clear()
   end
 
-private
+  private
 
   def accept_new_connection(db, game)
     descriptor = @serverSocket.accept
@@ -91,8 +91,8 @@ private
 
   def remove(descriptor)
     unless descriptor.closed?
-        descriptor.flush
-        descriptor.close
+      descriptor.flush
+      descriptor.close
     end
     @descriptors.delete(descriptor)
   end

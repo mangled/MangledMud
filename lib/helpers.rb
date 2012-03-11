@@ -59,7 +59,7 @@ module Helpers
   def is_wizard(item)
     ((@db[item].flags & MangledMud::WIZARD) != 0)
   end
-  
+
   def is_builder(item)
     ((@db[item].flags & (MangledMud::WIZARD | MangledMud::BUILDER)) != 0)
   end

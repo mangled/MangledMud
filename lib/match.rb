@@ -26,9 +26,9 @@ module MangledMud
 
     def match_player()
       if (@match_name and @match_name[0] == LOOKUP_TOKEN && Predicates.new(@db, @notifier).payfor(@match_who, LOOKUP_COST))
-          player_id = @match_name[1..-1].lstrip()
-          match = Player.new(@db, @notifier).lookup_player(player_id)
-          @exact_match = match if (match != NOTHING)
+        player_id = @match_name[1..-1].lstrip()
+        match = Player.new(@db, @notifier).lookup_player(player_id)
+        @exact_match = match if (match != NOTHING)
       end
     end
 
@@ -45,7 +45,7 @@ module MangledMud
 
     def match_here()
       if (@match_name and @match_name.casecmp("here") == 0 && @db[@match_who].location != NOTHING)
-          @exact_match = @db[@match_who].location
+        @exact_match = @db[@match_who].location
       end
     end
 
@@ -56,7 +56,7 @@ module MangledMud
     def match_neighbor()
       loc = @db[@match_who].location
       if (loc != NOTHING)
-          match_list(@db[loc].contents)
+        match_list(@db[loc].contents)
       end
     end
 
@@ -73,17 +73,17 @@ module MangledMud
             @db[exit].name.split(EXIT_DELIMITER).each do |name|
               # Allow a partial match - for ambiguous matching
               if (name.downcase.strip.start_with?(@match_name.downcase))
-                  # ! Matthew - Modified original code -> Bug fix?
-                  if (@check_keys)
-                      could_doit = Predicates.new(@db, @notifier).could_doit(@match_who, exit)
-                      @match_count += 1 if could_doit
-                  else
-                      @match_count += 1
-                  end
-                  # Only match exact if the names are equal
-                  if (@match_name.casecmp(name) == 0)
-                    @exact_match = choose_thing(@exact_match, exit)
-                  end
+                # ! Matthew - Modified original code -> Bug fix?
+                if (@check_keys)
+                  could_doit = Predicates.new(@db, @notifier).could_doit(@match_who, exit)
+                  @match_count += 1 if could_doit
+                else
+                  @match_count += 1
+                end
+                # Only match exact if the names are equal
+                if (@match_name.casecmp(name) == 0)
+                  @exact_match = choose_thing(@exact_match, exit)
+                end
               end
             end
           end
@@ -108,9 +108,9 @@ module MangledMud
         @exact_match
       else
         case @match_count
-          when 0 then NOTHING
-          when 1 then @last_match
-          else AMBIGUOUS
+        when 0 then NOTHING
+        when 1 then @last_match
+        else AMBIGUOUS
         end
       end
     end
@@ -122,14 +122,14 @@ module MangledMud
     def noisy_match_result()
       match = match_result()
       case match
-        when NOTHING
-          @notifier.do_notify(@match_who, Phrasebook.lookup('dont-see-that'))
-          NOTHING
-        when AMBIGUOUS
-          @notifier.do_notify(@match_who, Phrasebook.lookup('which-one'))
-          NOTHING
-        else
-          match
+      when NOTHING
+        @notifier.do_notify(@match_who, Phrasebook.lookup('dont-see-that'))
+        NOTHING
+      when AMBIGUOUS
+        @notifier.do_notify(@match_who, Phrasebook.lookup('which-one'))
+        NOTHING
+      else
+        match
       end
     end
 
@@ -138,73 +138,73 @@ module MangledMud
     # returns nnn if name = #nnn, else NOTHING
     def absolute_name()
       if (@match_name and @match_name[0] == NUMBER_TOKEN)
-          match = @db.parse_dbref(@match_name[1..-1])
-          if (match < 0 || match >= @db.length)
-              return NOTHING
-          else
-            match
-          end
+        match = @db.parse_dbref(@match_name[1..-1])
+        if (match < 0 || match >= @db.length)
+          return NOTHING
+        else
+          match
+        end
       else
         NOTHING
       end
     end
 
     def match_list(first)
-        absolute = absolute_name()
-        absolute = NOTHING if (!Predicates.new(@db, @notifier).controls(@match_who, absolute))
+      absolute = absolute_name()
+      absolute = NOTHING if (!Predicates.new(@db, @notifier).controls(@match_who, absolute))
 
-        enum(first).each do |i|
-          if (i == absolute)
-              @exact_match = i
-              return
-          elsif @match_name
-            if (@db[i].name.casecmp(@match_name) == 0)
-                # if there are multiple exact matches, randomly choose one
-                @exact_match = choose_thing(@exact_match, i)
-            else
-                # Match at the start of words - There must be a neater way
-                name_words = @db[i].name.split(/\s+/)
-                name_words.each do |word|
-                  if word.downcase.start_with?(@match_name.downcase)
-                    @last_match = i
-                    @match_count += 1
-                    break
-                  end
-                end
+      enum(first).each do |i|
+        if (i == absolute)
+          @exact_match = i
+          return
+        elsif @match_name
+          if (@db[i].name.casecmp(@match_name) == 0)
+            # if there are multiple exact matches, randomly choose one
+            @exact_match = choose_thing(@exact_match, i)
+          else
+            # Match at the start of words - There must be a neater way
+            name_words = @db[i].name.split(/\s+/)
+            name_words.each do |word|
+              if word.downcase.start_with?(@match_name.downcase)
+                @last_match = i
+                @match_count += 1
+                break
+              end
             end
           end
         end
+      end
     end
 
-    def choose_thing(thing1, thing2)   
-        if (thing1 == NOTHING)
-            return thing2
-        elsif (thing2 == NOTHING)
-            return thing1
-        end
-  
-        if (@preferred_type != NOTYPE)
-            if (typeof(thing1) == @preferred_type)
-                if (typeof(thing2) != @preferred_type)
-                    return thing1
-                end
-            elsif (typeof(thing2) == @preferred_type)
-                return thing2
-            end
-        end
-    
-        if (@check_keys)
-            has1 = Predicates.new(@db, @notifier).could_doit(@match_who, thing1)
-            has2 = Predicates.new(@db, @notifier).could_doit(@match_who, thing2)
-            if (has1 && !has2)
-                return thing1
-            elsif (has2 && !has1)
-                return thing2
-            end
-            # else fall through
-        end
+    def choose_thing(thing1, thing2)
+      if (thing1 == NOTHING)
+        return thing2
+      elsif (thing2 == NOTHING)
+        return thing1
+      end
 
-        return (Game.do_rand() % 2 ? thing1 : thing2)
+      if (@preferred_type != NOTYPE)
+        if (typeof(thing1) == @preferred_type)
+          if (typeof(thing2) != @preferred_type)
+            return thing1
+          end
+        elsif (typeof(thing2) == @preferred_type)
+          return thing2
+        end
+      end
+
+      if (@check_keys)
+        has1 = Predicates.new(@db, @notifier).could_doit(@match_who, thing1)
+        has2 = Predicates.new(@db, @notifier).could_doit(@match_who, thing2)
+        if (has1 && !has2)
+          return thing1
+        elsif (has2 && !has1)
+          return thing2
+        end
+        # else fall through
+      end
+
+      return (Game.do_rand() % 2 ? thing1 : thing2)
     end
   end
 end
