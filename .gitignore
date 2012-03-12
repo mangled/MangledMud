@@ -1,19 +1,5 @@
-# Ignore objects
-*.o
+# Ignore generated documention
+.yardoc
+doc
 
-# Ignore temp folders
-tmp
-tmp2
-
-# Ignore coverage files and folders
-*.gcda
-*.gcno
-coverage
-
-# Ignore output files
-dump
-extract
-netmud
-paths
-sanity-check
 
