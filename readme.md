@@ -15,7 +15,7 @@ could have refactored it even more, but wanted the initial release to retain as 
 Please enjoy, this is a great MUD and its history deserves to be retained and the code "lived in".
 
 - [MangledMe](http://www.google.com/recaptcha/mailhide/d?k=01vdgNNADQlgrqj5lMuKLpag==&c=dLzYSFd6PdPBc5paL9eJKJ62wOQODVZwCaNzqvMcxyI=)
-- [Alexander Morrow](mailto:amo3@umbc.edu)
+- [Alexander Morrow](http://www.google.com/recaptcha/mailhide/d?k=01n0PN-HG6h4hK6mVdmLzv9w==&c=kkuhcc5Ozzpy45FXpOqvJQ)
 
 Trying it out
 -------------
