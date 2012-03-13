@@ -317,7 +317,7 @@ You fail to use a thing when you cannot [TAKE](#TAKE) it (because it's lock fail
 [FLAGS](#FLAGS) are displayed as letters following an object's ID number. [FLAGS](#FLAGS) are set with the [@SET](#@SET) command. The flags are:
 
   * `A(bode)` [ABODE](#ABODE) (*not implemented*)
-  * [B(uilder)] (*not implemented*)
+  * `B(uilder)` (*not implemented*)
   * `C(hown_OK) CHOWN_OK` (*not implemented*)
   * `D(ark)` [DARK](#DARK)
   * `H(aven)` [HAVEN](#HAVEN) (*not implemented*)
