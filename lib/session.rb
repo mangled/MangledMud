@@ -9,7 +9,7 @@ module MangledMud
   class Session
     attr_accessor :player_id, :last_time, :output_buffer
 
-    def initialize(db, game, descriptor_details, connected_players, notifier)
+    def initialize(db, game, descriptor_details, connected_players)
       @db = db
       @game = game
       @descriptor_details = descriptor_details
@@ -20,9 +20,6 @@ module MangledMud
       @output_prefix = nil
       @output_suffix = nil
       @output_buffer = []
-
-      @player = Player.new(db, notifier)
-      @look = Look.new(db, notifier)
 
       welcome_user()
     end
@@ -93,26 +90,26 @@ module MangledMud
     end
 
     def connect_player(user, password)
-      connected_player = @player.connect_player(user, password)
+      connected_player = @game.connect_player(user, password)
       if connected_player == NOTHING
         queue(Phrasebook.lookup('connect-fail'))
         puts "FAILED CONNECT #{user} on descriptor #{@descriptor_details}"
       else
         puts "CONNECTED #{@db[connected_player].name}(#{connected_player}) on descriptor #{@descriptor_details}"
         @player_id = connected_player
-        @look.do_look_around(connected_player)
+        @game.process_command(connected_player, "look")
       end
     end
 
     def create_player(user, password)
-      new_player = @player.create_player(user, password)
+      new_player = @game.create_player(user, password)
       if new_player == NOTHING
         queue(Phrasebook.lookup('create-fail'))
         puts "FAILED CREATE #{user} on descriptor #{@descriptor_details}"
       else
         puts "CREATED #{@db[new_player].name}(#{new_player}) on descriptor #{@descriptor_details}"
         @player_id = new_player
-        @look.do_look_around(new_player)
+        @game.process_command(new_player, "look")
       end
     end
 

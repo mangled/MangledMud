@@ -23,8 +23,7 @@ if __FILE__ == $0
 
   puts "Server started at #{options[:host]} on port #{options[:port]}"
   server = Server.new(options[:host], options[:port])
-
-  game = MangledMud::Game.new(db, options[:dumpfile], "help.txt", "news.txt", server, lambda { server.close_sockets() })
+  game = MangledMud::Game.new(db, options[:dumpfile], "help.txt", "news.txt", lambda { server.close_sockets() })
   server.run(db, game)
 
   game.dump_database()

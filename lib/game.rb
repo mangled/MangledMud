@@ -1,3 +1,4 @@
+require 'observer'
 require_relative 'helpers'
 require_relative 'dump'
 require_relative 'create'
@@ -16,6 +17,7 @@ require_relative 'wiz'
 module MangledMud
   class Game
     include Helpers
+    include Observable
 
     attr_reader :shutdown
 
@@ -24,27 +26,26 @@ module MangledMud
       return rand(0x7FFFFFFF)
     end
 
-    def initialize(db, dumpfile, help_file, news_file, notifier, emergency_shutdown = nil)
+    def initialize(db, dumpfile, help_file, news_file, emergency_shutdown = nil)
       @db = db
-      @notifier = notifier
       @shutdown = false
       @alarm_triggered = false
       @help_file = help_file
       @news_file = news_file
 
       @dump = Dump.new(db, dumpfile, emergency_shutdown)
-      @create = Create.new(db, notifier)
-      @help = Help.new(notifier)
-      @look = Look.new(db, notifier)
-      @match = Match.new(db, notifier)
-      @move = Move.new(@db, notifier)
-      @player = Player.new(db, notifier)
-      @predicates = Predicates.new(db, notifier)
-      @rob = Rob.new(db, notifier)
-      @set = Set.new(db, notifier)
-      @speech = Speech.new(db, notifier)
+      @create = Create.new(db, self)
+      @help = Help.new(self)
+      @look = Look.new(db, self)
+      @match = Match.new(db, self)
+      @move = Move.new(@db, self)
+      @player = Player.new(db, self)
+      @predicates = Predicates.new(db, self)
+      @rob = Rob.new(db, self)
+      @set = Set.new(db, self)
+      @speech = Speech.new(db, self)
       @utils = Utils.new(db)
-      @wiz = Wiz.new(db, notifier)
+      @wiz = Wiz.new(db, self)
 
       # Set up command handlers, the true/false is grotty, it indicates if a full
       # match should be taken or not...
@@ -95,22 +96,39 @@ module MangledMud
       }
     end
 
+    def connect_player(user, password)
+      @player.connect_player(user, password)
+    end
+
+    def create_player(user, password)
+      @player.create_player(user, password)
+    end
+
+    # All output gets routed through this method then on to any observers. Ideally you would
+    # pass in an object to each method and chain it down. The current behaviour is a result
+    # of the original TinyMUD code structure and a desire not to refactor it too much for the
+    # first release.
+    def do_notify(player_id, message)
+      changed
+      notify_observers(player_id, message)
+    end
+
     def do_shutdown(player)
       if (is_wizard(player))
         @dump.do_shutdown()
         $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
         @shutdown = true
       else
-        @notifier.do_notify(player, Phrasebook.lookup('delusional'))
+        do_notify(player, Phrasebook.lookup('delusional'))
       end
     end
 
     def do_dump(player)
       if (is_wizard(player))
         @alarm_triggered = true
-        @notifier.do_notify(player, Phrasebook.lookup('dumping'))
+        do_notify(player, Phrasebook.lookup('dumping'))
       else
-        @notifier.do_notify(player, Phrasebook.lookup('sorry-no-dump'))
+        do_notify(player, Phrasebook.lookup('sorry-no-dump'))
       end
     end
 
@@ -159,7 +177,7 @@ module MangledMud
         # command is an exact match for an exit
         @move.do_move(player, command)
       else
-        command, arg1, arg2 = parse(command, @notifier)
+        command, arg1, arg2 = parse(command)
 
         matched_commands = @commands.find_all {|name, cmd| name.start_with?(command.downcase()) }
 
@@ -169,10 +187,10 @@ module MangledMud
           if !perform_full_match or (name == command.downcase())
               cmd[0].call(player, arg1, arg2)
           else
-            @notifier.do_notify(player, Phrasebook.lookup('huh'))
+            do_notify(player, Phrasebook.lookup('huh'))
           end
         else
-          @notifier.do_notify(player, Phrasebook.lookup('huh'))
+          do_notify(player, Phrasebook.lookup('huh'))
         end
       end
 
@@ -184,13 +202,13 @@ module MangledMud
       end
     end
 
-    def parse(command, notifier)
+    def parse(command)
       # Grab the first non-whitespace text chunk
       command =~ /^(\S+)(.*)/
       command = $1
 
       if command.nil?
-        @notifier.do_notify(player, Phrasebook.lookup('huh'))
+        do_notify(player, Phrasebook.lookup('huh'))
         return
       end
 

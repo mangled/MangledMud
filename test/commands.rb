@@ -13,7 +13,7 @@ module MangledMud
       @buffer = buffer
     end
 
-    def do_notify(player, message)
+    def update(player, message)
       @buffer << "\t\e[31;1m#{player} #{message}\e[0m\n"
     end
   end
@@ -35,7 +35,8 @@ module MangledMud
 
       result = []
       notifier = Notifier.new(result)
-      game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
+      game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt")
+      game.add_observer(notifier)
 
       # Keep a track of dumped database files and delete them
       dumped_databases = []
@@ -56,7 +57,8 @@ module MangledMud
               Dump.new(db, nil).dump_database_internal(dumped_databases[-1])
             elsif cmds[0] == "load"
               result << "Reading database from: " << cmds[1] << "\n"
-              game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt", notifier)
+              game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt")
+              game.add_observer(notifier)
               db.load(cmds[1])
             end
           elsif line =~ /^(\w+)>(.*)/
