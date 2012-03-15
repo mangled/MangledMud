@@ -4,6 +4,7 @@ require_relative 'options'
 require_relative 'db'
 require_relative 'game'
 require_relative 'server'
+require_relative 'dump'
 
 # Main cmd line entry for the MUD
 if __FILE__ == $0
@@ -22,8 +23,9 @@ if __FILE__ == $0
   puts "LOADING: #{database} (done)"
 
   puts "Server started at #{options[:host]} on port #{options[:port]}"
-  server = Server.new(options[:host], options[:port])
-  game = MangledMud::Game.new(db, options[:dumpfile], "help.txt", "news.txt", lambda { server.close_sockets() })
+  dump = MangledMud::Dump.new(db, options[:dumpfile])
+  server = Server.new(options[:host], options[:port], dump)
+  game = MangledMud::Game.new(db, dump, "help.txt", "news.txt")
   server.run(db, game)
 
   game.dump_database()

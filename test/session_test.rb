@@ -25,7 +25,7 @@ module MangledMud
       @db = Db.Minimal()
       game = mock()
       connected_players = mock()
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
       assert(session.player_id.nil?, "player id should be nil")
       assert(session.last_time.nil?, "last command time should be nil")
       assert_equal(1, session.output_buffer.length)
@@ -36,7 +36,7 @@ module MangledMud
       @db = Db.Minimal()
       game = mock()
       connected_players = mock()
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
 
       assert(session.do_command(Phrasebook.lookup('quit-command')), "should return true if quit signalled")
       assert_equal(1, session.output_buffer.length)
@@ -50,7 +50,7 @@ module MangledMud
 
       game = mock()
       connected_players = mock()
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
 
       session1 = mock()
       session2 = mock()
@@ -73,7 +73,7 @@ module MangledMud
       game = mock()
       connected_players = mock()
 
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
 
       assert(!session.do_command(Phrasebook.lookup('prefix-command') + " prefix"), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
@@ -92,8 +92,8 @@ module MangledMud
 
       # So should a connected player
       notify = sequence('notify')
-      @notifier.expects(:do_notify).with(wizard, "Limbo (#0)").in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard, regexp_matches(/You are in a dense mist/)).in_sequence(notify)
+      game.expects(:connect_player).with('wizard', 'potrzebie').returns(wizard)
+      game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('connect wizard potrzebie'), "should return false if quit isn't signalled")
 
       game.expects(:process_command).with(wizard, 'inventory').in_sequence(notify)
@@ -108,83 +108,82 @@ module MangledMud
       wizard = 1
       game = mock()
       connected_players = mock()
-
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
-
+    
+      session = Session.new(@db, game, "foo", connected_players)
+    
       # connect should look
       notify = sequence('notify')
-      @notifier.expects(:do_notify).with(wizard, "Limbo (#0)").in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard, regexp_matches(/You are in a dense mist/)).in_sequence(notify)
+      game.expects(:connect_player).with('wizard', 'potrzebie').returns(wizard)
+      game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('connect wizard potrzebie'), "should return false if quit isn't signalled")
       assert_equal(0, session.output_buffer.length)
-
+    
       # When we are connected, unknown commands should route through to the game
       game.expects(:process_command).with(wizard, 'hello')
       assert(!session.do_command('hello'), "should return false if quit isn't signalled")
-
+    
       # connect again, same user - Surely this should be a failure i.e. the player is already connected on another
       # descriptor? I guess its weird but safe?
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
-      @notifier.expects(:do_notify).with(wizard, "Limbo (#0)").in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard, regexp_matches(/You are in a dense mist/)).in_sequence(notify)
+      session = Session.new(@db, game, "foo", connected_players)
+      game.expects(:connect_player).with('wizard', 'potrzebie').returns(wizard)
+      game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('connect wizard potrzebie'), "should return false if quit isn't signalled")
       assert_equal(0, session.output_buffer.length)
 
       # connect failure
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
+      game.expects(:connect_player).with('foo', 'bar').returns(NOTHING)
       assert(!session.do_command('connect foo bar'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/#{Phrasebook.lookup('connect-fail').chomp}/, session.output_buffer[0])
-
+      
       # Missing user and password
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
       assert(!session.do_command('connect'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
-
+      
       # Missing password
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
       assert(!session.do_command('connect bar'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
     end
-
+    
     def test_session_create
       @db = Db.Minimal()
       wizard = 1
       game = mock()
       connected_players = mock()
-
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
-
+    
+      session = Session.new(@db, game, "foo", connected_players)
+    
       # Create should look
       notify = sequence('notify')
-      @notifier.expects(:do_notify).with(wizard + 1, "Limbo").in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard + 1, regexp_matches(/You are in a dense mist/)).in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard, regexp_matches(/potato is briefly visible through the mist/)).in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard + 1, Phrasebook.lookup('contents')).in_sequence(notify)
-      @notifier.expects(:do_notify).with(wizard + 1, "Wizard").in_sequence(notify)
+      game.expects(:create_player).with('potato', 'head').returns(1) # ** map to wizard as we don't really create, stop explosions
+      game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('create potato head'), "should return false if quit isn't signalled")
       assert_equal(0, session.output_buffer.length)
 
       # When we are connected, unknown commands should route through to the game
-      game.expects(:process_command).with(wizard + 1, 'hello')
+      game.expects(:process_command).with(wizard, 'hello')
       assert(!session.do_command('hello'), "should return false if quit isn't signalled")
-
+    
       # Check create failure
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+      session = Session.new(@db, game, "foo", connected_players)
+      game.expects(:create_player).with('potato', 'head').returns(NOTHING)
       assert(!session.do_command('create potato head'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/#{Phrasebook.lookup('create-fail').chomp}/, session.output_buffer[0])
-
-      # Missing user and password
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+    
+      # Missing user and password - Never hits creation
+      session = Session.new(@db, game, "foo", connected_players)
       assert(!session.do_command('create'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
-
-      # Missing password
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
+    
+      # Missing password - Never hits creation
+      session = Session.new(@db, game, "foo", connected_players)
       assert(!session.do_command('create bar'), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
@@ -195,13 +194,13 @@ module MangledMud
       wizard = 1
       game = mock()
       connected_players = mock()
-
-      session = Session.new(@db, game, "foo", connected_players, @notifier)
-
+    
+      session = Session.new(@db, game, "foo", connected_players)
+    
       assert_raise RuntimeError do
         assert(!session.do_command(nil), "should return false if quit isn't signalled")
       end
-
+    
       notify = sequence('notify')
       assert(!session.do_command("cheese string"), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)

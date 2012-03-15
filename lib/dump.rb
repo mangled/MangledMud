@@ -7,14 +7,11 @@ module MangledMud
 
     attr_accessor :alarm_block
 
-    def initialize(db, dumpfile, emergency_shutdown = nil)
+    def initialize(db, dumpfile)
       @db = db
       @dumpfile = dumpfile
       @epoch = 0
       @alarm_block = false
-
-      trap("SIGINT") { bailout(emergency_shutdown) }
-
       start_dump_thread()
     end
 
@@ -26,22 +23,10 @@ module MangledMud
       end
     end
 
-    def bailout(emergency_shutdown)
-      panic(emergency_shutdown, "BAILOUT: caught signal")
-      exit(7)
-    end
-
-    def panic(emergency_shutdown, message)
-      # Kill the dumper thread
+    def panic(message)
       Thread.kill(@dumper_thread)
 
       $stderr.puts "PANIC: #{message}"
-
-      # Turn off signals
-      Signal.list.each {|name, id| trap(name, "SIG_IGN") }
-
-      # shut down interface
-      emergency_shutdown.call() if emergency_shutdown
 
       # dump panic file
       panic_file = "#{@dumpfile}.PANIC"
@@ -49,11 +34,11 @@ module MangledMud
         $stderr.puts "DUMPING: #{panic_file}"
         @db.write(panic_file)
         $stderr.puts "DUMPING: #{panic_file} (done)"
-        exit(136)
+        return 136
       rescue
         perror("CANNOT OPEN PANIC FILE #{panic_file}, YOU LOSE:")
-        exit(135)
       end
+      return 135
     end
 
     def do_shutdown()
@@ -61,8 +46,6 @@ module MangledMud
     end
 
     def fork_and_dump()
-      @epoch += 1
-
       $stderr.puts "CHECKPOINTING: #{@dumpfile}.##{@epoch}#"
       if Process.respond_to?(:fork)
         pid = fork do
@@ -83,13 +66,12 @@ module MangledMud
     end
 
     def dump_database()
-      @epoch += 1
-      $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}#"
       dump_database_internal(@dumpfile)
-      $stderr.puts "DUMPING: #{@dumpfile}.##{@epoch}# (done)"
     end
 
     def dump_database_internal(filename)
+      @epoch += 1
+
       $stderr.puts("DUMPING: #{filename}.##{@epoch}#")
 
       # nuke our predecessor
