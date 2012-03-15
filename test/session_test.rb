@@ -14,7 +14,6 @@ module MangledMud
 
     def setup
       @db = MangledMud::Db.new()
-      @notifier = mock()
     end
 
     def teardown
@@ -46,7 +45,7 @@ module MangledMud
     def test_do_command_who
       @db = Db.Minimal()
       wizard = 1
-      bob = Player.new(@db, @notifier).create_player("bob", "pwd")
+      bob = Player.new(@db, nil).create_player("bob", "pwd")
 
       game = mock()
       connected_players = mock()
@@ -91,12 +90,11 @@ module MangledMud
       assert_match(/suffix/, session.output_buffer[2])
 
       # So should a connected player
-      notify = sequence('notify')
       game.expects(:connect_player).with('wizard', 'potrzebie').returns(wizard)
       game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('connect wizard potrzebie'), "should return false if quit isn't signalled")
 
-      game.expects(:process_command).with(wizard, 'inventory').in_sequence(notify)
+      game.expects(:process_command).with(wizard, 'inventory')
       assert(!session.do_command('inventory'), "should return false if quit isn't signalled")
       assert_equal(2, session.output_buffer.length)
       assert_match(/prefix/, session.output_buffer[0])
@@ -112,7 +110,6 @@ module MangledMud
       session = Session.new(@db, game, "foo", connected_players)
     
       # connect should look
-      notify = sequence('notify')
       game.expects(:connect_player).with('wizard', 'potrzebie').returns(wizard)
       game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('connect wizard potrzebie'), "should return false if quit isn't signalled")
@@ -159,7 +156,6 @@ module MangledMud
       session = Session.new(@db, game, "foo", connected_players)
     
       # Create should look
-      notify = sequence('notify')
       game.expects(:create_player).with('potato', 'head').returns(1) # ** map to wizard as we don't really create, stop explosions
       game.expects(:process_command).with(wizard, 'look').returns(true)
       assert(!session.do_command('create potato head'), "should return false if quit isn't signalled")
@@ -201,7 +197,6 @@ module MangledMud
         assert(!session.do_command(nil), "should return false if quit isn't signalled")
       end
     
-      notify = sequence('notify')
       assert(!session.do_command("cheese string"), "should return false if quit isn't signalled")
       assert_equal(1, session.output_buffer.length)
       assert_match(/Welcome to MangledMUD/, session.output_buffer[0])
