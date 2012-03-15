@@ -23,9 +23,9 @@ if __FILE__ == $0
   puts "LOADING: #{database} (done)"
 
   puts "Server started at #{options[:host]} on port #{options[:port]}"
-  dump = MangledMud::Dump.new(db, options[:dumpfile])
-  server = Server.new(options[:host], options[:port], dump)
-  game = MangledMud::Game.new(db, dump, "help.txt", "news.txt")
+
+  server = Server.new(options[:host], options[:port])
+  game = MangledMud::Game.new(db, options[:dumpfile], "help.txt", "news.txt")
   server.run(db, game)
 
   game.dump_database()

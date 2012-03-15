@@ -20,7 +20,7 @@ module MangledMud
       bob = Player.new(@db, @notifier).create_player("bob", "sprout")
       sam = Player.new(@db, @notifier).create_player("sam", "sprout")
 
-      game = MangledMud::Game.new(@db, Dump.new(@db, "dumpfile"), nil, nil) # help and news file's not checked = nil
+      game = MangledMud::Game.new(@db, "dumpfile", nil, nil) # help and news file's not checked = nil
       @notifier.expects(:update).never
       game.add_observer(@notifier)
 

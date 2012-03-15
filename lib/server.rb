@@ -8,18 +8,17 @@ class Server
   #
   # @param [String] host machine
   # @param [Integer] port port
-  def initialize(host, port, dump)
-    @dump = dump
-
+  def initialize(host, port)
     @descriptors = {}
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
-
-    trap("SIGINT") { emergency_shutdown() }
   end
 
   def run(db, game)
     game.add_observer(self)
+
+    # Trap signals - Should probably add some more...
+    trap("SIGINT") { emergency_shutdown(game) }
 
     while !game.shutdown
       res = select([@serverSocket] + @descriptors.keys, nil, nil, nil)
@@ -125,10 +124,10 @@ class Server
     @descriptors.values.each {|session| session.shutdown() }
   end
 
-  def emergency_shutdown()
+  def emergency_shutdown(game)
     Signal.list.each {|name, id| trap(name, "SIG_IGN") }
     close_sockets()
-    exit(@dump.panic("BAILOUT: caught signal"))
+    exit(game.panic("BAILOUT: caught signal"))
   end
 
 end

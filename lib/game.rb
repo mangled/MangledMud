@@ -26,14 +26,14 @@ module MangledMud
       return rand(0x7FFFFFFF)
     end
 
-    def initialize(db, dump, help_file, news_file)
+    def initialize(db, dumpfile, help_file, news_file)
       @db = db
       @shutdown = false
       @alarm_triggered = false
       @help_file = help_file
       @news_file = news_file
 
-      @dump = dump
+      @dump = Dump.new(db, dumpfile)
       @create = Create.new(db, self)
       @help = Help.new(self)
       @look = Look.new(db, self)
@@ -102,6 +102,10 @@ module MangledMud
 
     def create_player(user, password)
       @player.create_player(user, password)
+    end
+    
+    def panic(message)
+      @dump.panic(message)
     end
 
     # All output gets routed through this method then on to any observers. Ideally you would

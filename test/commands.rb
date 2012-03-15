@@ -35,7 +35,7 @@ module MangledMud
 
       result = []
       notifier = Notifier.new(result)
-      game = MangledMud::Game.new(db, Dump.new(db, dumpfile), "help.txt", "news.txt")
+      game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt")
       game.add_observer(notifier)
 
       # Keep a track of dumped database files and delete them
@@ -57,7 +57,7 @@ module MangledMud
               Dump.new(db, nil).dump_database_internal(dumped_databases[-1])
             elsif cmds[0] == "load"
               result << "Reading database from: " << cmds[1] << "\n"
-              game = MangledMud::Game.new(db, Dump.new(db, dumpfile), "help.txt", "news.txt")
+              game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt")
               game.add_observer(notifier)
               db.load(cmds[1])
             end
