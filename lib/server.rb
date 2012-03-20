@@ -1,4 +1,6 @@
 require 'socket'
+require 'thread'
+require_relative 'constants.rb'
 require_relative 'session'
 
 # Provides a TCP based telnet compatible server for running MangledMUD 
@@ -12,70 +14,65 @@ class Server
     @descriptors = {}
     @serverSocket = TCPServer.new(host, port)
     @serverSocket.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
+    @db_semaphore = Mutex.new
   end
 
   def run(db, game)
-    game.add_observer(self)
+    start_dump_thread(game)
 
     # Trap signals - Should probably add some more...
     trap("SIGINT") { emergency_shutdown(game) }
 
-    while !game.shutdown
-      res = select([@serverSocket] + @descriptors.keys, nil, nil, nil)
-      if res
-        res[0].each do |descriptor|
-          begin
-            player_quit = false
-            if descriptor == @serverSocket
-              accept_new_connection(db, game)
-            else
-              unless descriptor_closed(db, descriptor)
-                session = @descriptors[descriptor]
-                player_quit = session.do_command(descriptor.gets())
-              end
-            end
-            write_buffers()
-            remove(descriptor) if player_quit
-          rescue SystemCallError, IOError => e
-            puts "ERROR READING SOCKET: #{e}"
-            remove(descriptor)
-          end
-        end
-      end
-    end
+    # Main loop
+    process_connections(db, game)
+
     # Shutdown
+    Thread.kill(@dumper_thread)
     shutdown_sessions()
     write_buffers()
     close_sockets()
-    game.delete_observer(self)
-  end
-
-  # trap("SIGINT") { bailout(emergency_shutdown) } in Dump - Move signals to here - cleaner?
-  # I think the dumper should be controlled by this class in some way. Its all a bit of a mess
-  # in and around shutdown.
-  def close_sockets()
-    @descriptors.keys.each do |descriptor|
-      begin
-        unless descriptor.closed?
-          descriptor.flush
-          descriptor.close
-        end
-      rescue SystemCallError, IOError => e
-        puts "ERROR CLOSING SOCKET: #{e}"
-      end
-    end
-    @descriptors.clear()
-  end
-
-  # Observer callback from game. Has to be public :-(
-  def update(player_id, message)
-    descriptor = @descriptors.find {|descriptors, session| session.player_id == player_id }
-    # Because the db has no concept of a logged off player, messages can be sent
-    # to players who are in a room etc. but not connected!
-    descriptor[1].queue(message) if descriptor
   end
 
   private
+
+  def process_connections(db, game)
+    while !game.shutdown
+      res = select([@serverSocket] + @descriptors.keys, nil, nil, nil)
+      res[0].each {|descriptor| process(db, game, descriptor) } if res
+    end
+  end
+
+  def process(db, game, descriptor)
+    begin
+      player_quit = false
+      if descriptor == @serverSocket
+        accept_new_connection(db, game)
+      else
+        unless descriptor_closed(db, descriptor)
+          session = @descriptors[descriptor]
+          # Ensure that the dumper thread plays nice with the database
+          @db_semaphore.synchronize {
+            player_quit = session.do_command(descriptor.gets())
+          }
+        end
+      end
+      write_buffers()
+      remove(descriptor) if player_quit
+    rescue SystemCallError, IOError => e
+      puts "ERROR READING SOCKET: #{e}"
+      remove(descriptor)
+    end
+  end
+
+  def start_dump_thread(game)
+    @dumper_thread = Thread.new do
+      sleep(MangledMud::DUMP_INTERVAL)
+      @db_semaphore.synchronize {
+        game.dump_database()
+      }
+      start_dump_thread(game)
+    end
+  end
 
   def accept_new_connection(db, game)
     descriptor = @serverSocket.accept
@@ -120,11 +117,26 @@ class Server
     false
   end
 
+  def close_sockets()
+    @descriptors.keys.each do |descriptor|
+      begin
+        unless descriptor.closed?
+          descriptor.flush
+          descriptor.close
+        end
+      rescue SystemCallError, IOError => e
+        puts "ERROR CLOSING SOCKET: #{e}"
+      end
+    end
+    @descriptors.clear()
+  end
+
   def shutdown_sessions()
     @descriptors.values.each {|session| session.shutdown() }
   end
 
   def emergency_shutdown(game)
+    Thread.kill(@dumper_thread)
     Signal.list.each {|name, id| trap(name, "SIG_IGN") }
     close_sockets()
     exit(game.panic("BAILOUT: caught signal"))

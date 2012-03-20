@@ -4,26 +4,6 @@ require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
 
-def print(record) # to_s?
-  puts "Name: #{record.name}"
-  puts "Desc: #{record.description}"
-  puts "Loc.: #{record.location}"
-  puts "Con.: #{record.contents}"
-  puts "Exts: #{record.exits}"
-  puts "Next: #{record.next}"
-  puts "Key : #{record.key}"
-  puts "Fail: #{record.fail}"
-  puts "Succ: #{record.succ}"
-  puts "OFai: #{record.ofail}"
-  puts "OSuc: #{record.osucc}"
-  puts "Ownr: #{record.owner}"
-  puts "Pens: #{record.pennies}"
-  puts "Type: #{record.type}"
-  puts "Desc: #{record.desc}"
-  puts "Flgs: #{record.flags}"
-  puts "Pwd : #{record.password}"
-end
-
 module MangledMud
   class TestDb < Test::Unit::TestCase
     def setup
