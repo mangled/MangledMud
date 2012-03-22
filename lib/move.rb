@@ -1,6 +1,8 @@
 require_relative 'helpers'
 
 module MangledMud
+
+  # Provides a collection of methods to move objects and players around the world.
   class Move
     include Helpers
 
@@ -13,6 +15,9 @@ module MangledMud
       @match = Match.new(@db, notifier)
     end
 
+    # Moves a record to a new location.
+    # @param [Number] the db index of the old object.
+    # @param [Number] the db index of the new location for the object.
     def moveto(what, where)
       loc = @db[what].location
 
@@ -36,6 +41,9 @@ module MangledMud
       @db[what].location = where
     end
 
+    # Moves a player to a new location, sending proper travel messages and managing sticky/dark room features.
+    # @param [Number] the db index of the player that is traveling.
+    # @param [Number] the db index of the room the player is traveling into.
     def enter_room(player, loc)
       # check for room == HOME
       loc = @db[player].exits if (loc == HOME) # home
@@ -82,6 +90,8 @@ module MangledMud
       end
     end
 
+    # Sends a record to it's stored home location (if applicable).
+    # @param [Number] the db index of the record to send home.
     def send_home(thing)
       case typeof(thing)
       when TYPE_PLAYER
@@ -95,7 +105,11 @@ module MangledMud
         # no effect
       end
     end
-
+  
+    # Determines if a player is making a legal move.  Legal move is one of the exits in the room or "home" keyword.
+    # @param [Number] the db index of the player trying to move.
+    # @param [String] the direction the player is trying to move.
+    # @return [true, false] true if the player can move to specified location, false otherwise.
     def can_move(player, direction)
       return true if (direction.casecmp("home") == 0)
 
@@ -106,6 +120,9 @@ module MangledMud
       return @match.last_match_result() != NOTHING
     end
 
+    # Moves a player through a given exit, or keyword "home".  Notifies player and room of consequence.
+    # @param [Number] the db index of the player trying to move.
+    # @param [String] the direction the player is trying to move.
     def do_move(player, direction)
       if (direction and direction.casecmp("home") == 0)
         # send him home
@@ -141,6 +158,9 @@ module MangledMud
       end
     end
 
+    # Attempt to relocate an object to a player's inventory.  Notifies player and room of consequence.
+    # @param [Number] the db index of the player trying to take the object.
+    # @param [String] the name of the object that is being taken.
     def do_get(player, what)
       @match.init_match_check_keys(player, what, TYPE_THING)
       @match.match_neighbor()
@@ -184,6 +204,9 @@ module MangledMud
       end
     end
 
+    # Attempt to relocate an object to the room from the player's inventory.  Notifies player (and room, under certain conditions) of consequence.
+    # @param [Number] the db index of the player trying to drop the object.
+    # @param [String] the name of the object that is being dropped.
     def do_drop(player, name)
       loc = getloc(player)
       return if (loc == NOTHING)
@@ -253,6 +276,9 @@ module MangledMud
 
     private
 
+    # Helper function that ensures sets of objects (held, etc.) move together.  Manages STICKY attribute with moving objects as well.
+    # @param [Number] the location that contains the first of the linked objects (with next field, managed by enum function).
+    # @param [Number[ the db index of the destination room to move the linked objects.
     def send_contents(loc, dest)
       first = @db[loc].contents
       @db[loc].contents = NOTHING
