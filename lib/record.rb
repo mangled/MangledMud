@@ -1,6 +1,8 @@
 require_relative 'constants'
 
 module MangledMud
+
+  # The record class holds all the fields used to define particular features of a player, object, room, or exit.
   class Record
     attr_accessor :name         # The name of the object
     attr_accessor :description  # A description of the object
@@ -18,6 +20,7 @@ module MangledMud
     attr_accessor :flags        # Flags indicating type and other meta details
     attr_accessor :password     # Password for players
 
+    # Initializes a blank record.  Default values vary by field.
     def initialize()
       @name        =  nil
       @description =  nil
