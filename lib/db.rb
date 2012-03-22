@@ -3,22 +3,25 @@ require_relative 'record'
 
 module MangledMud
 
+  #Db class is responsible for database management holding player, room, exit, and object records.
   class Db
-
+  
     # Static class function. Sets up a Minimal database by parsing
-    # text from minimal.db to create rooms, etc. .
+    # text from minimal.db to create rooms, etc.
+    # @return [MangledMud::Db] Copy of the Minimal database loaded from file.
     def self.Minimal()
       db = Db.new()
       db.load("minimal.db")
       db
     end
 
-    #Creates a new, empty database. Starts empty.
+    #Creates an empty database, replacing anything that existed in the database before.
     def initialize()
       @record_array = Array.new()
     end
 
-    # Loads a database from the given filename (replaces current contents)
+    # Loads a database from the given filename (replaces current contents).  
+    # @param [String] the name of the file to load.
     def load(filename)
       @record_array = Array.new()
       raise "File not found at #{filename}" unless File.exist?(filename)
@@ -54,26 +57,38 @@ module MangledMud
       end
     end
 
-    #Adds a new blank record to the end of the database.
+    # Adds a new blank record to the end of the database.
+    # @return [Number] the index of the newly created record.
     def add_new_record()
       @record_array << Record.new()
       index = @record_array.length() -1
       return index
     end
 
+    # Sets the database record as specified index to the record provided.
+    # @param [Number] the index to replace.
+    # @param [MangledMUD::Record] the record to add to the database.
     def []=(index, record)
       put(index, record)
     end
 
+    # Accesses the database at a specified index and returns the record stored
+    # at that location.  Raises exception if index is invalid.
+    # @param [Number] the index to access.
+    # @return [MangledMud::Record] Record at index given.
     def [](index)
       return get(index)
     end
 
-    #length returns the number of elements in the database.
+    # length provides size of database.
+    # @return [Number] the total number of elements in the database.
     def length()
       return @record_array.length()
     end
 
+    # Converts a string into a number for use accessing the db.
+    # @param [String] the string to parse.
+    # @return [Number] the integer representation of the provided string, else NOTHING if invalid.
     def parse_dbref(s)
       if s
         x = s.to_i
@@ -113,7 +128,7 @@ module MangledMud
       end
     end
 
-    #free clears the database
+    #Free clears the database.
     def free()
       @record_array.clear() if @record_array
     end
@@ -124,12 +139,19 @@ module MangledMud
       return s == "" ? nil : s
     end
 
+    # Accesses the database at a specified index and returns the record stored
+    # at that location.  Raises exception if index is invalid.
+    # @param [Number] the index to access.
+    # @return [MangledMud::Record] Record at index given.
     def get(index)
       r = @record_array[index]
       raise "invalid index #{index}" if r.nil?
       return r
     end
 
+    # Sets the database record as specified index to the record provided.
+    # @param [Number] the index to replace.
+    # @param [MangledMUD::Record] the record to add to the database.
     def put(index, record)
       raise "invalid index #{index}" unless (0...@record_array.length()).include?(index)
       @record_array[index] = record
