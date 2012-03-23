@@ -3,10 +3,15 @@ require 'thread'
 require_relative 'constants.rb'
 require_relative 'session'
 
-# Provides a TCP based telnet compatible server for running MangledMUD 
+# Provides a TCP based, telnet compatible server for running MangledMUD
+#
+# The command line entry point, defined in mud.rb configures this and
+# the {MangledMud::Db} and {MangledMud::Game} instances.
+#
+# @version 1.0
 class Server
 
-  # Initialize the server to run on a given host and port.
+  # Initialize the server to {#run} on a given host and port.
   #
   # @param [String] host machine
   # @param [Integer] port port
@@ -17,6 +22,17 @@ class Server
     @db_semaphore = Mutex.new
   end
 
+  # Run the main "game" loop.
+  #
+  # This method will start the server on the host and port specified in the initializer.
+  # It handles new incomming connections, binding them to {MangledMud::Session}s, cleans up
+  # disconnecting connections and runs a background thread to dump the database periodically.
+  #
+  # The method runs until an exiting signal occurs or a wizard shuts the game down.
+  #
+  # @see MangledMud::Dump
+  # @param [MangledMud::Db] db the database instance to use
+  # @param [MangledMud::Game] game the game instance to use
   def run(db, game)
     start_dump_thread(game)
 
@@ -35,6 +51,7 @@ class Server
 
   private
 
+  # Wait for something to read, then process the returned IO objects
   def process_connections(db, game)
     while !game.shutdown
       res = select([@serverSocket] + @descriptors.keys, nil, nil, nil)
@@ -42,6 +59,9 @@ class Server
     end
   end
 
+  # Handle a given IO descriptor. If its the main server socket, then open a new
+  # connection, otherwise the descriptor is an existing connection, if so check
+  # to see if its disconnected, else read something from it.
   def process(db, game, descriptor)
     begin
       player_quit = false
@@ -64,6 +84,7 @@ class Server
     end
   end
 
+  # The background thread periodically dumps the database.
   def start_dump_thread(game)
     @dumper_thread = Thread.new do
       sleep(MangledMud::DUMP_INTERVAL)
@@ -74,6 +95,7 @@ class Server
     end
   end
 
+  # Bind a new connection to a MangledMud::Session
   def accept_new_connection(db, game)
     descriptor = @serverSocket.accept
     connected_players = ->() { @descriptors.values.find_all {|session| session.player_id } }
@@ -82,6 +104,7 @@ class Server
     write_buffers()
   end
 
+  # Get rid of a descriptor
   def remove(descriptor)
     unless descriptor.closed?
       descriptor.flush
@@ -90,6 +113,7 @@ class Server
     @descriptors.delete(descriptor)
   end
 
+  # For each descriptor's session, get its current output buffer and write it out
   def write_buffers()
     @descriptors.each do |descriptor, session|
       begin
@@ -103,6 +127,7 @@ class Server
     end
   end
 
+  # Check to see if a descriptor is closed
   def descriptor_closed(db, descriptor)
     if descriptor.eof?
       player_id = @descriptors[descriptor].player_id
@@ -117,6 +142,7 @@ class Server
     false
   end
 
+  # Close all connections...we are going down!
   def close_sockets()
     @descriptors.keys.each do |descriptor|
       begin
@@ -131,10 +157,13 @@ class Server
     @descriptors.clear()
   end
 
+  # Notify all users that we are going to shutdown - Note, you still need to
+  # write out buffers...
   def shutdown_sessions()
     @descriptors.values.each {|session| session.shutdown() }
   end
 
+  # Something nasty has happened! Basically dump and abort.
   def emergency_shutdown(game)
     Thread.kill(@dumper_thread)
     Signal.list.each {|name, id| trap(name, "SIG_IGN") }
