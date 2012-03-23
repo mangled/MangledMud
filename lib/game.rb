@@ -19,6 +19,7 @@ module MangledMud
     include Helpers
     include Observable
 
+    # Indicates that the game has been shutdown. Flag set through process_command()
     attr_reader :shutdown
 
     # To control penny checks and general random choices (via stubbing)
@@ -29,7 +30,6 @@ module MangledMud
     def initialize(db, dumpfile, help_file, news_file)
       @db = db
       @shutdown = false
-      @alarm_triggered = false
       @help_file = help_file
       @news_file = news_file
 
@@ -103,9 +103,14 @@ module MangledMud
     def create_player(user, password)
       @player.create_player(user, password)
     end
-    
+
     def panic(message)
       @dump.panic(message)
+    end
+
+    # note: Do not call (externally) during process_command() as the db could be being accessed.
+    def dump_database()
+      @dump.dump_database()
     end
 
     # All output gets routed through this method then on to any observers. Ideally you would
@@ -117,31 +122,7 @@ module MangledMud
       notify_observers(player_id, message)
     end
 
-    def do_shutdown(player)
-      if (is_wizard(player))
-        @dump.do_shutdown()
-        $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
-        @shutdown = true
-      else
-        do_notify(player, Phrasebook.lookup('delusional'))
-      end
-    end
-
-    def do_dump(player)
-      if (is_wizard(player))
-        @alarm_triggered = true
-        do_notify(player, Phrasebook.lookup('dumping'))
-      else
-        do_notify(player, Phrasebook.lookup('sorry-no-dump'))
-      end
-    end
-
-    def dump_database()
-      @dump.dump_database()
-    end
-
     def process_command(player, command)
-      # This is a code smell, we could return a state instead.
       raise "Shutdown signalled but still processing commands" if @shutdown
 
       # robustify player
@@ -169,9 +150,6 @@ module MangledMud
         return
       end
 
-      # We could modify the db from here on...
-      @dump.alarm_block = true
-
       # check for single-character commands
       if (command[0] == SAY_TOKEN)
         @speech.do_say(player, command[1..-1], nil)
@@ -197,12 +175,25 @@ module MangledMud
           do_notify(player, Phrasebook.lookup('huh'))
         end
       end
+    end
 
-      # Db access done, dump if required
-      @dump.alarm_block = false
-      if @alarm_triggered
-        @dump.fork_and_dump()
-        @alarm_triggered = false
+    private
+
+    def do_shutdown(player)
+      if (is_wizard(player))
+        $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
+        @shutdown = true
+      else
+        do_notify(player, Phrasebook.lookup('delusional'))
+      end
+    end
+
+    def do_dump(player)
+      if (is_wizard(player))
+        do_notify(player, Phrasebook.lookup('dumping'))
+        dump_database()
+      else
+        do_notify(player, Phrasebook.lookup('sorry-no-dump'))
       end
     end
 

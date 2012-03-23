@@ -21,7 +21,17 @@ module MangledMud
       @output_suffix = nil
       @output_buffer = []
 
+      @game.add_observer(self)
+
       welcome_user()
+    end
+
+    # Observer callback from game. Has to be public :-(
+    def update(player_id, message)
+      # Only queue messages for this player (game broadcasts to all observing sessions).
+      # Note: Because the db has no concept of a logged off player, messages can be sent
+      # to players who are in a room etc. but not connected!
+      queue(message) if (@player_id == player_id)
     end
 
     def do_command(command)
@@ -55,15 +65,18 @@ module MangledMud
       has_player_quit
     end
 
-    def queue(message)
-      @output_buffer << normalize_line_endings_for_transmission(message)
-    end
-
     def shutdown()
-      queue(Phrasebook.lookup('shutdown-message'))
+      # Note, this will dump a players current output queue, but, given the game is going down, who cares?
+      @output_buffer = []
+      wrap_command(->() { queue(Phrasebook.lookup('shutdown-message')) })
+      @game.delete_observer(self)
     end
 
     private
+
+    def queue(message)
+      @output_buffer << normalize_line_endings_for_transmission(message) unless message.empty?
+    end
 
     def check_connect(message)
       command, user, password = parse_connect(message)
@@ -86,7 +99,7 @@ module MangledMud
     end
 
     def goodbye_user()
-      queue(Phrasebook.lookup('leave-message'))
+      wrap_command(->() { queue(Phrasebook.lookup('leave-message')) })
     end
 
     def connect_player(user, password)
@@ -146,9 +159,17 @@ module MangledMud
     end
 
     def wrap_command(command)
+      # Some commands, @shutdown for example, do not generate any output. To stop
+      # sending empty data back we detect this and drop the buffer content if the
+      # command produced nothing (didn't extend the output queue) - Yuk...
       queue(@output_prefix) if @output_prefix
+      old_output_buffer_length = @output_buffer.length
       command.call()
-      queue(@output_suffix) if @output_suffix
+      if @output_buffer.length == old_output_buffer_length
+        @output_buffer.pop() if @output_prefix
+      else
+        queue(@output_suffix) if @output_suffix
+      end
     end
   end
 end

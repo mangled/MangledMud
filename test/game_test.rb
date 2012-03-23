@@ -59,12 +59,12 @@ module MangledMud
 
       # Do a shutdown as a non-wizard
       @notifier.expects(:update).with(bob, Phrasebook.lookup('delusional'))
-      game.do_shutdown(bob)
+      game.process_command(bob, "@shutdown")
 
       # Shutdown as a wizard
-      game.do_shutdown(wizard)
+      game.process_command(wizard, "@shutdown")
 
-      # This kills further processing
+      # Game should be signalled as shutdown and should raise an error if process command is called.
       assert_raise RuntimeError do
         game.process_command(wizard, "!treacle")
       end

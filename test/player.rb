@@ -73,6 +73,7 @@ module MangledMudTest
     end
 
     private
+
     def do_puts(s, logout = true)
       log(s, :out) if logout
       @session.puts(s)

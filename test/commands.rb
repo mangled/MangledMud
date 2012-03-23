@@ -54,7 +54,7 @@ module MangledMud
             elsif cmds[0] == "@dump"
               result << "Dumping database\n"
               dumped_databases << 'cheese.dump'
-              Dump.new(db, nil).dump_database_internal(dumped_databases[-1])
+              Dump.new(db, dumped_databases[-1]).dump_database()
             elsif cmds[0] == "load"
               result << "Reading database from: " << cmds[1] << "\n"
               game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt")
