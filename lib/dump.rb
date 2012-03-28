@@ -43,8 +43,8 @@ module MangledMud
       $stderr.puts("DUMPING: #{@dumpfile}.##{@epoch}# (done)")
     end
 
-    # Dump the database (directly) to the dumpfile
-    #
+    # Dump the database (directly) to a dumpfile postfixed .PANIC
+    # @param [String] message to write to stderr
     # @return [Boolean] dump status (true indicates success)
     def panic(message)
       $stderr.puts "PANIC: #{message}"

@@ -168,7 +168,8 @@ class Server
     Thread.kill(@dumper_thread)
     Signal.list.each {|name, id| trap(name, "SIG_IGN") }
     close_sockets()
-    exit(game.panic("BAILOUT: caught signal"))
+    game.panic("BAILOUT: caught signal")
+    exit(-1)
   end
 
 end

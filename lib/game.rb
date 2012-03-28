@@ -15,18 +15,31 @@ require_relative 'utils'
 require_relative 'wiz'
 
 module MangledMud
+
+  # The main game entity, handling routing of textual commands to sub-classes and subsequent processing.
+  # Notifications are passed back to all observers via Observable::notify_observers(player_id, message).
+  #
+  # The class also hides implementation details of higher-level functions such as creating a player.
+  # The design is such that you can run the MUD headless by instantiating this class and observing it (but
+  # you will need to create valid players, for this reason you may want to consider using the {Session} class)
+  #
+  # @version 1.0
   class Game
     include Helpers
     include Observable
 
-    # Indicates that the game has been shutdown. Flag set through process_command()
+    # Indicates that the game has been shutdown, the "flag" is set through {#process_command} when a wizard shutdowns the game.
     attr_reader :shutdown
 
-    # To control penny checks and general random choices (via stubbing)
+    # All random number calls are routed to this (penny checks and general random choices) to allow test stubbing/mocking
     def Game.do_rand()
       return rand(0x7FFFFFFF)
     end
 
+    # @param [Db] db the database instance to use
+    # @param [String] dumpfile file path and name
+    # @param [String] help_file file path and name
+    # @param [String] news_file file path and name
     def initialize(db, dumpfile, help_file, news_file)
       @db = db
       @shutdown = false
@@ -96,32 +109,62 @@ module MangledMud
       }
     end
 
+    # Attempt to connect (login) a player
+    # @param [String] user the name of the player
+    # @param [String] password the player's password
+    # @return [Number] the database index of the player or {NOTHING} if the name or password is invalid
+    # @see #do_notify
     def connect_player(user, password)
       @player.connect_player(user, password)
     end
 
+    # Attempt to create a new player
+    # @param [String] user the name of the player
+    # @param [String] password the player's password
+    # @return [Number] the database index of the new player or {NOTHING} if the name or password is invalid
+    # @see #do_notify
     def create_player(user, password)
       @player.create_player(user, password)
     end
 
+    # Cause the database to be dumped to a panic file!
+    # @note Do not call (externally) during #process_command as the database could be being accessed.
+    # @param [String] message to write to stderr
+    # @return [Boolean] dump status (true indicates success)
+    # @see Dump#panic
     def panic(message)
       @dump.panic(message)
     end
 
-    # note: Do not call (externally) during process_command() as the db could be being accessed.
+    # Cause the database to be dumped to the main dumpfile
+    # @note Do not call (externally) during #process_command as the database could be being accessed.
+    # @see Dump#dump_database
     def dump_database()
       @dump.dump_database()
     end
 
-    # All output gets routed through this method then on to any observers. Ideally you would
-    # pass in an object to each method and chain it down. The current behaviour is a result
-    # of the original TinyMUD code structure and a desire not to refactor it too much for the
-    # first release.
+    # Handler for all {#process_command} responses
+    #
+    # All output gets routed through this method then on to any observers via a call to
+    # Observable::notify_observers(player_id, message).
+    #
+    # Ideally you would pass in an object to each method and chain it down. The current behaviour is a result
+    # of the original TinyMUD code structure and a desire not to refactor it too much for the first release.
+    # @param [Number] player_id in the current database
+    # @param [String] message to present to the player
     def do_notify(player_id, message)
       changed
       notify_observers(player_id, message)
     end
 
+    # Main command handler - All commands from players are routed through this and output events
+    # sent back to observers.
+    #
+    # @note This checks for a valid player identifier, Session handles the higher level interactions
+    # @param [Number] player_id in the current database
+    # @param [String] command to invoke
+    # @see #do_notify
+    # @see Session
     def process_command(player, command)
       raise "Shutdown signalled but still processing commands" if @shutdown
 
@@ -179,6 +222,7 @@ module MangledMud
 
     private
 
+    # Handles @shutdown command issued from player
     def do_shutdown(player)
       if (is_wizard(player))
         $stderr.puts "SHUTDOWN: by #{@db[player].name}(#{player})"
@@ -188,6 +232,7 @@ module MangledMud
       end
     end
 
+    # Handles @dump command issued from player
     def do_dump(player)
       if (is_wizard(player))
         do_notify(player, Phrasebook.lookup('dumping'))
@@ -197,6 +242,7 @@ module MangledMud
       end
     end
 
+    # Helper to parse out command strings
     def parse(command)
       # Grab the first non-whitespace text chunk
       command =~ /^(\S+)(.*)/
