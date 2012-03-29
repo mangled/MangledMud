@@ -1,9 +1,15 @@
 require_relative 'helpers'
 
 module MangledMud
+  
+  # Handles a player look(ing) and examin(ing) "things"
+  #
+  # @version 1.0
   class Look
     include Helpers
 
+    # @param [Db] db the current database instance
+    # @param [Object] notifier An object with method do_notify(player_id, string), the method will be called to send notifications back to the player invoking the command/action
     def initialize(db, notifier)
       @db = db
       @notifier = notifier
@@ -12,6 +18,10 @@ module MangledMud
       @match = Match.new(@db, notifier)
     end
 
+    # Look at a room, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record number for the player
+    # @param [Number] loc the database record number for the room
     def look_room(player, loc)
       # tell him the name, and the number if he can link to it
       if (@predicates.can_link_to(player, loc))
@@ -30,12 +40,19 @@ module MangledMud
       look_contents(player, loc, "Contents:")
     end
 
+    # Shorthand for {#look_room}. Get the players location and look
+    #
+    # @param [Number] player the database record number for the player
     def do_look_around(player)
       loc = getloc(player)
       return if (loc == NOTHING)
       look_room(player, loc)
     end
 
+    # Look at a specific "thing", calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record number for the player
+    # @param [Number] name the database record number for the thing to look at, if nil then look at the players location
     def do_look_at(player, name)
       if (name.nil? || name.empty?)
         thing = getloc(player)
@@ -70,6 +87,10 @@ module MangledMud
       end
     end
 
+    # Examine a specific "thing" in detail, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record number for the player
+    # @param [Number] name the database record number for the thing to examine
     def do_examine(player, name)
       thing = getloc(player)
       if (!name.nil? && !name.empty?)
@@ -176,6 +197,9 @@ module MangledMud
       end
     end
 
+    # Get the current score for player, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record number for the player
     def do_score(player)
       if @db[player].pennies == 1
         @notifier.do_notify(player, Phrasebook.lookup('you-have-a-penny'))
@@ -184,6 +208,9 @@ module MangledMud
       end
     end
 
+    # Get the current inventory for a player, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record number for the player
     def do_inventory(player)
       thing = @db[player].contents
       if (thing == NOTHING)
@@ -197,13 +224,18 @@ module MangledMud
       do_score(player)
     end
 
+    # Find a specific "thing", calling back on the notifier passed into the initializer.
+    # The player must have enough money to perform a lookup and they must control the "thing", see {LOOKUP_COST}
+    #
+    # @param [Number] player the database record number for the player
+    # @param [Number] name the database record number for the thing to find
     def do_find(player, name)
       if (!@predicates.payfor(player, LOOKUP_COST))
         @notifier.do_notify(player, Phrasebook.lookup('too-poor'))
       else
         if name
           0.upto(@db.length - 1) do |i|
-            # Note: this isn't the same code as the original stringutil, fix
+            # Note: this isn't the same code as the original stringutil, fix?
             if (!exit?(i) && @predicates.controls(player, i) && (@db[i].name.include?(name)))
               @notifier.do_notify(player, "#{@db[i].name}(##{i})")
             end
@@ -215,6 +247,7 @@ module MangledMud
 
     private
 
+    # Look at the contents of a specific database record
     def look_contents(player, loc, contents_name)
       # check to see if he can see the location
       can_see_loc = (!is_dark(loc) || @predicates.controls(player, loc))
@@ -232,6 +265,7 @@ module MangledMud
       end
     end
 
+    # Notify the player of a specific things name, provide more detail if the player controls
     def notify_name(player, thing)
       if (@predicates.controls(player, thing))
         # tell him the number
@@ -242,6 +276,7 @@ module MangledMud
       end
     end
 
+    # Notify player of the things description (if it has one)
     def look_simple(player, thing)
       if (@db[thing].description)
         @notifier.do_notify(player, @db[thing].description)
@@ -250,6 +285,7 @@ module MangledMud
       end
     end
 
+    # Build a string from the things current flag's
     def flag_description(thing)
       description = Phrasebook.lookup('type') + " "
       case typeof(thing)

@@ -4,8 +4,15 @@ require 'optparse'
 require_relative 'constants'
 
 module MangledMud
+  
+  # Handles command line option parsing
+  #
+  # @version 1.0
+  # @see mud.rb
   class MudOptions
 
+    # Create and return the default option set
+    # @return [Hash] Default options and their values
     def MudOptions.default
       options = {}
       options[:database] = nil
@@ -15,6 +22,11 @@ module MangledMud
       options
     end
 
+    # Parse an array of command line arguments, if successfull return the options, else show help
+    # and exit()!
+    #
+    # @param [Array] args The command line arguments to parse
+    # @return [Hash] The options parsed and/or defaulted
     def MudOptions.get_options(args)
       options = MudOptions.default
 

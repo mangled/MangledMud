@@ -1,9 +1,15 @@
 require_relative 'helpers'
 
 module MangledMud
+  
+  # Handles exchanging money and killing
+  #
+  # @version 1.0
   class Rob
     include Helpers
 
+    # @param [Db] db the current database instance
+    # @param [Object] notifier An object with method do_notify(player_id, string), the method will be called to send notifications back to the player invoking the command/action
     def initialize(db, notifier)
       @db = db
       @notifier = notifier
@@ -13,6 +19,10 @@ module MangledMud
       @speech = Speech.new(@db, notifier)
     end
 
+    # Attempt to rob someone, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record identifier for the player attempting to rob
+    # @param [Number] what the database record identifier for the thing being robbed (only players can be robbed, this is checked)
     def do_rob(player, what)
       loc = getloc(player)
       return if (loc == NOTHING)
@@ -47,6 +57,11 @@ module MangledMud
       end
     end
 
+    # Attempt to kill another player, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record identifier for the player attempting to kill
+    # @param [Number] what the database record identifier for the thing being killed (only players can be killed, this is checked)
+    # @param [Number] cost the amount being payed to perform the kill, the player must have at least {KILL_MIN_COST} pennies
     def do_kill(player, what, cost)
       @match.init_match(player, what, TYPE_PLAYER)
       @match.match_neighbor()
@@ -99,6 +114,11 @@ module MangledMud
       end
     end
 
+    # Give some money to a player - Only wizards can perform this, call back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record identifier for the player attempting to give
+    # @param [Number] recipient the database record identifier for the recipient
+    # @param [Number] amount the amount being given
     def do_give(player, recipient, amount)
       # do amount consistency check
       if (amount < 0 && !is_wizard(player))
