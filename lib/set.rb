@@ -1,9 +1,15 @@
 require_relative 'helpers'
 
 module MangledMud
+
+  # Handles applying values to {Db} {Record}'s
+  #
+  # @version 1.0
   class Set
     include Helpers
 
+    # @param [Db] db the current database instance
+    # @param [Object] notifier An object with method do_notify(player_id, string), the method will be called to send notifications back to the player invoking the command/action
     def initialize(db, notifier)
       @db = db
       @notifier = notifier
@@ -12,6 +18,11 @@ module MangledMud
       @player = Player.new(@db, notifier)
     end
 
+    # Changes the name of something, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object to rename
+    # @param [String] newname the new name to be given to the object (for players a password must also be provided)
     def do_name(player, name, newname)
 
       thing = match_controlled(player, name)
@@ -53,6 +64,12 @@ module MangledMud
       end
     end
 
+    # Change the description of a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose description is being changed
+    # @param [String] description the new description
+    # @see Record#description
     def do_describe(player, name, description)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
@@ -61,6 +78,12 @@ module MangledMud
       end
     end
 
+    # Change the fail message for a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose fail message is being changed
+    # @param [String] message the new message
+    # @see Record#fail
     def do_fail(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
@@ -69,6 +92,12 @@ module MangledMud
       end
     end
 
+    # Change the success message for a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose success message is being changed
+    # @param [String] message the new message
+    # @see Record#succ
     def do_success(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
@@ -77,6 +106,12 @@ module MangledMud
       end
     end
 
+    # Change the external success message for a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose external success message is being changed
+    # @param [String] message the new message
+    # @see Record#osucc
     def do_osuccess(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
@@ -85,6 +120,12 @@ module MangledMud
       end
     end
 
+    # Change the external fail message for a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose external fail message is being changed
+    # @param [String] message the new message
+    # @see Record#ofail
     def do_ofail(player, name, message)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
@@ -93,6 +134,13 @@ module MangledMud
       end
     end
 
+    # Lock a thing to a given key, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object to lock
+    # @param [String] keyname the key to lock against, example key "!*murf"
+    # @see Record#key
+    # @see Record#flags
     def do_lock(player, name, keyname)
       @match.init_match(player, name, NOTYPE)
       @match.match_everything()
@@ -155,6 +203,12 @@ module MangledMud
       end
     end
 
+    # Unlock a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object to unlock
+    # @see Record#key
+    # @see Record#flags
     def do_unlock(player, name)
       thing = match_controlled(player, name)
       if (thing != NOTHING)
@@ -164,6 +218,12 @@ module MangledMud
       end
     end
 
+    # Unlink a thing, calling back on the notifier passed into the initializer.
+    # This only effects exits and rooms
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object to unlink
+    # @see Record#location
     def do_unlink(player, name)
       @match.init_match(player, name, TYPE_EXIT)
       @match.match_exit()
@@ -194,6 +254,12 @@ module MangledMud
       end
     end
 
+    # Change ownership of a thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose ownership is being changed
+    # @param [String] newobj the new owner's name (a player)
+    # @see Record#owner
     def do_chown(player, name, newobj)
       if (!is_wizard(player))
         @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
@@ -215,7 +281,12 @@ module MangledMud
       end
     end
 
-    # Note, we are not using RESTRICTED_BUILDING so did not port
+    # Change a flag on thing, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the change
+    # @param [String] name the name of the object whose flags are being changed
+    # @param [String] flag the name of the flag to change, see {DARK}, {LINK_OK}, {STICKY}, {WIZARD}, {TEMPLE}
+    # @see Record#flags
     def do_set(player, name, flag)
       # find thing
       thing = match_controlled(player, name)
@@ -273,6 +344,7 @@ module MangledMud
 
     private
 
+    # Check to see if player controls (owns) thing
     def match_controlled(player, name)
       @match.init_match(player, name, NOTYPE)
       @match.match_everything()

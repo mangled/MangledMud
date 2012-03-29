@@ -1,9 +1,11 @@
 require_relative 'constants'
 require_relative 'record'
 
+# The main module for MangledMUD related code
+# @version 1.0
 module MangledMud
 
-  #Db class is responsible for database management holding player, room, exit, and object records.
+  # Db class is responsible for database management holding player, room, exit, and object records.
   class Db
   
     # Static class function. Sets up a Minimal database by parsing
@@ -15,7 +17,7 @@ module MangledMud
       db
     end
 
-    #Creates an empty database, replacing anything that existed in the database before.
+    # Creates an empty database, replacing anything that existed in the database before.
     def initialize()
       @record_array = Array.new()
     end
@@ -103,7 +105,7 @@ module MangledMud
       return NOTHING
     end
 
-    #Writes current database to location
+    # Writes current database to location
     def write(location)
       File.open(location, "w") do |file|
         @record_array.each_with_index do |r, i|

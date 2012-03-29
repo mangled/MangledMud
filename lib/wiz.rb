@@ -1,9 +1,15 @@
 require_relative 'helpers'
 
 module MangledMud
+
+  # Handles wizard related actions (the player performing these actions must be a wizard (this is checked throughout))
+  #
+  # @version 1.0
   class Wiz
     include Helpers
 
+    # @param [Db] db the current database instance
+    # @param [Object] notifier An object with method do_notify(player_id, string), the method will be called to send notifications back to the player invoking the command/action
     def initialize(db, notifier)
       @db = db
       @notifier = notifier
@@ -13,6 +19,11 @@ module MangledMud
       @player = Player.new(@db, notifier)
     end
 
+    # Teleport self or another player to a location, calling back on the notifier passed into the initializer.
+    #
+    # @param [Number] player the database record number for the player executing the teleport
+    # @param [String] arg1 either the name of the player to teleport, or if arg2 is empty the location to transport player
+    # @param [String] arg2 the destination, if empty then arg1 represents the destination for player
     def do_teleport(player, arg1, arg2)
       if (!is_wizard(player))
         @notifier.do_notify(player, Phrasebook.lookup('bad-teleport'))
@@ -69,6 +80,12 @@ module MangledMud
       end
     end
 
+    # Force another player to perform a command, calling back on the notifier passed into the initializer.
+    #
+    # @param [Game] the current game instance
+    # @param [Number] player the database record number for the player executing the action
+    # @param [Number] what the database record number of the player being forced
+    # @param [String] command the command that the forced player is to perform
     def do_force(game, player, what, command)
       if (!is_wizard(player))
         @notifier.do_notify(player, Phrasebook.lookup('only-wizard'))
@@ -86,10 +103,16 @@ module MangledMud
       if game
         game.process_command(victim, command)
       else
+        # This is here for testing purposes only
         @notifier.do_process_command(victim, command)
       end
     end
 
+    # Dump some statistics regarding the players world, calling back on the notifier passed into the initializer
+    # (non wizards see very little).
+    #
+    # @param [Number] player the database record number for the player executing the action
+    # @param [Number] name the database record number of the player being examined, if {NOTHING} then examine the whole game universe
     def do_stats(player, name)
       if (!is_wizard(player))
         @notifier.do_notify(player, Phrasebook.lookup('universe-contains', @db.length))
@@ -117,6 +140,10 @@ module MangledMud
       end
     end
 
+    # Change a player into a toad, calling back on the notifier passed into the initializer
+    #
+    # @param [Number] player the database record number for the player executing the action
+    # @param [Number] name the database record number of the player being turned into a slimy thing :-)
     def do_toad(player, name)
       if (!is_wizard(player))
         @notifier.do_notify(player, Phrasebook.lookup('bad-toad'))

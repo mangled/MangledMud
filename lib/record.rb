@@ -4,21 +4,36 @@ module MangledMud
 
   # The record class holds all the fields used to define particular features of a player, object, room, or exit.
   class Record
-    attr_accessor :name         # The name of the object
-    attr_accessor :description  # A description of the object
-    attr_accessor :location     # The objects container
-    attr_accessor :contents     # For exits, pointer to destination, else a room or players contents
-    attr_accessor :exits        # Pointer to first exit for rooms, pointer to home for things and players
-    attr_accessor :next         # Next in the contents/exits chain
-    attr_accessor :key          # If this isn't empty then you must have this to do the operation
-    attr_accessor :fail         # What you see if the operation fails
-    attr_accessor :succ         # What you see if the operation succeeds
-    attr_accessor :ofail        # What others see if the operation fails
-    attr_accessor :osucc        # What others see if the operation succeeds
-    attr_accessor :owner        # Who controls this object
-    attr_accessor :pennies      # Number of pennies this object contains
-    attr_accessor :flags        # Flags indicating type and other meta details
-    attr_accessor :password     # Password for players
+    # @return [String] The name of the object
+    attr_accessor :name
+    # @return [String] A description of the object
+    attr_accessor :description
+    # @return [Number] The objects container
+    attr_accessor :location
+    # @return [Number] For exits, pointer to destination, else a room or players contents
+    attr_accessor :contents
+    # @return [Number] Pointer to first exit for rooms, pointer to home for things and players
+    attr_accessor :exits
+    # @return [Number] Next in the contents/exits chain
+    attr_accessor :next
+    # @return [String] If this isn't empty then you must have this to do the operation
+    attr_accessor :key
+    # @return [Number] What you see if the operation fails
+    attr_accessor :fail
+    # @return [String] What you see if the operation succeeds
+    attr_accessor :succ
+    # @return [String] What others see if the operation fails
+    attr_accessor :ofail
+    # @return [String] What others see if the operation succeeds
+    attr_accessor :osucc
+    # @return [Number] Who controls this object
+    attr_accessor :owner
+    # @return [Number] Number of pennies this object contains
+    attr_accessor :pennies
+    # @return [Number] Flags indicating type and other meta details
+    attr_accessor :flags
+    # @return [String] Password for players
+    attr_accessor :password
 
     # Initializes a blank record.  Default values vary by field.
     def initialize()
