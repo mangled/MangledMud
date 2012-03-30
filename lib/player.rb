@@ -3,6 +3,8 @@ require_relative 'constants'
 module MangledMud
 
   #Player class takes care of player's creation, access, and connection.
+  #
+  # @version 1.0
   class Player
 
     

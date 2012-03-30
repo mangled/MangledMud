@@ -3,6 +3,7 @@ require_relative 'helpers'
 module MangledMud
 
   # Provides a collection of methods to move objects and players around the world.
+  # @version 1.0
   class Move
     include Helpers
 

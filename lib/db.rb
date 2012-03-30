@@ -6,6 +6,7 @@ require_relative 'record'
 module MangledMud
 
   # Db class is responsible for database management holding player, room, exit, and object records.
+  # @version 1.0
   class Db
   
     # Static class function. Sets up a Minimal database by parsing

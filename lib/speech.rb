@@ -2,7 +2,8 @@ require_relative 'helpers'
 
 module MangledMud
   
-  #Holds various methods that handle game mechanics related to speech and communications.
+  # Holds various methods that handle game mechanics related to speech and communications.
+  # @version 1.0
   class Speech
     include Helpers
 

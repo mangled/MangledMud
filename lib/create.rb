@@ -1,6 +1,9 @@
 require_relative 'helpers'
 
 module MangledMud
+  
+  # Holds functions related to the expansion of rooms, and creation of exits and objects.
+  # @version 1.0
   class Create
     include Helpers
 
