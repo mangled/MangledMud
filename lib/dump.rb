@@ -35,7 +35,7 @@ module MangledMud
 
       # Dump current
       tmpfile = "#{@dumpfile}.##{@epoch}#"
-      @db.write(tmpfile)
+      @db.save(tmpfile)
 
       # Finalize name
       File.rename(tmpfile, @dumpfile)
@@ -53,7 +53,7 @@ module MangledMud
       panic_file = "#{@dumpfile}.PANIC"
       begin
         $stderr.puts "DUMPING: #{panic_file}"
-        @db.write(panic_file)
+        @db.save(panic_file)
         $stderr.puts "DUMPING: #{panic_file} (done)"
         true
       rescue

@@ -6,10 +6,13 @@ require 'diff/lcs/array'
 require 'mocha'
 require_relative 'include'
 require_relative 'commands'
+require_relative 'helpers'
 
 module MangledMud
 
   class TestRegression < Test::Unit::TestCase
+
+    include TestHelpers
 
     def cmd_files
       Dir.glob("./test/commands/*.cmd")
@@ -23,7 +26,7 @@ module MangledMud
 
     def test_process_command_regressions
       cmd_files().each do |cmd_file|
-        db = Db.Minimal()
+        db = minimal()
         current_result = open(cmd_file) {|content| CommandHelpers.collect_responses(db, "dump", content) }
         tmp_file = cmd_file.gsub(".cmd", ".tmp")
         open(tmp_file, "wb") {|file| file.write(current_result.join)}

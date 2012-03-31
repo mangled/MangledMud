@@ -38,7 +38,7 @@ module MangledMud
     end
 
     def test_do_create
-      @db = Db.Minimal()
+      @db = minimal()
       game = mock()
       game.expects(:add_observer).once()
 
@@ -51,7 +51,7 @@ module MangledMud
     end
 
     def test_do_command_quit
-      @db = Db.Minimal()
+      @db = minimal()
       game = mock()
       game.expects(:add_observer).once()
 
@@ -64,7 +64,7 @@ module MangledMud
     end
 
     def test_do_command_who
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       bob = Player.new(@db, nil).create_player("bob", "pwd")
 
@@ -90,7 +90,7 @@ module MangledMud
     end
 
     def test_do_command_prefix_and_suffix
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       game = mock()
       game.expects(:add_observer).once()
@@ -126,7 +126,7 @@ module MangledMud
     def test_connected_prefix_suffix
       # Due to game emitting events, we need to check that they end up in the queue, we can't
       # use mocha, or continue the above test, so more repeats (with fake)
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       game = FakeGame.new()
       connected_players = mock()
@@ -149,7 +149,7 @@ module MangledMud
     end
 
     def test_session_connect
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       game = mock()
       game.expects(:add_observer).times(5)
@@ -200,7 +200,7 @@ module MangledMud
     end
     
     def test_session_create
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       game = mock()
       game.expects(:add_observer).times(4)
@@ -239,7 +239,7 @@ module MangledMud
     end
 
     def test_unconnected_unrecognized_command
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       game = mock()
       game.expects(:add_observer).once()
@@ -257,7 +257,7 @@ module MangledMud
     end
 
     def test_shutdown
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       game = mock()
       game.expects(:add_observer).once()

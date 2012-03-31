@@ -53,13 +53,13 @@ module MangledMud
               players[cmds[1]] = MangledMud::Player.new(db, notifier).create_player(cmds[1], cmds[2])
             elsif cmds[0] == "@dump"
               result << "Dumping database\n"
-              dumped_databases << 'cheese.dump'
+              dumped_databases << File.join(File.dirname(__FILE__), "../db/" + 'cheese.dump')
               Dump.new(db, dumped_databases[-1]).dump_database()
             elsif cmds[0] == "load"
               result << "Reading database from: " << cmds[1] << "\n"
               game = MangledMud::Game.new(db, dumpfile, "help.txt", "news.txt")
               game.add_observer(notifier)
-              db.load(cmds[1])
+              db.load(File.join(File.dirname(__FILE__), "../db/" + cmds[1]))
             end
           elsif line =~ /^(\w+)>(.*)/
             player = $1

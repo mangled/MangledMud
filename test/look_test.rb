@@ -21,7 +21,7 @@ module MangledMud
     end
 
     def test_look_room
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       place = @db.add_new_record
@@ -115,7 +115,7 @@ module MangledMud
     end
 
     def test_do_look_at
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       place = @db.add_new_record
@@ -193,7 +193,7 @@ module MangledMud
     end
 
     def test_do_examine
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       place = @db.add_new_record
@@ -346,7 +346,7 @@ module MangledMud
     end
 
     def test_do_find
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       place = @db.add_new_record

@@ -3,12 +3,16 @@ require 'test/unit'
 require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
+require_relative 'helpers'
 
 module MangledMud
 
   class TestGame < Test::Unit::TestCase
+
+    include TestHelpers
+
     def setup
-      @db = Db.Minimal()
+      @db = minimal()
       @notifier = mock()
       @notify = sequence('notify')
     end

@@ -3,9 +3,13 @@ require 'test/unit'
 require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
+require_relative 'helpers'
 
 module MangledMud
   class TestPlayer < Test::Unit::TestCase
+
+    include TestHelpers
+
     def setup
       @db = MangledMud::Db.new()
       @notifier = mock()
@@ -60,7 +64,7 @@ module MangledMud
       assert_equal(NOTHING, player.create_player("home", "pwd"))
       assert_equal(NOTHING, player.create_player("here", "pwd"))
 
-      @db = Db.Minimal()
+      @db = minimal()
       player = Player.new(@db, @notifier)
 
       record = @db[0]

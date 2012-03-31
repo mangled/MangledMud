@@ -3,9 +3,13 @@ require 'test/unit'
 require 'bundler/setup'
 require 'mocha'
 require_relative 'include'
+require_relative 'helpers'
 
 module MangledMud
   class TestDb < Test::Unit::TestCase
+
+    include TestHelpers
+
     def setup
       @db = MangledMud::Db.new()
     end
@@ -85,7 +89,7 @@ module MangledMud
     end
 
     def test_minimal
-      @db = Db.Minimal()
+      @db = minimal()
 
       assert_equal(2, @db.length)
 

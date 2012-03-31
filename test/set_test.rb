@@ -302,7 +302,7 @@ module MangledMud
     end
 
     def test_do_unlink
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       place = @db.add_new_record
       bob = Player.new(@db, @notifier).create_player("bob", "sprout")

@@ -3,6 +3,9 @@ require_relative 'constants'
 module MangledMud
 
   # The record class holds all the fields used to define particular features of a player, object, room, or exit.
+  #
+  # @version 1.0
+  # @see Db
   class Record
     # @return [String] The name of the object
     attr_accessor :name
@@ -54,6 +57,79 @@ module MangledMud
       @pennies     =  0
       @type        =  0
       @flags       =  0
+    end
+
+    # Restores a new record object from the given source.
+    #
+    # @param [Object] source source to read from, must support readline() function
+    # @return [Record] returns a new record
+    def Record.restore(source)
+      Record.new().read(source)
+    end
+
+    # Read contents from a stream
+    #
+    # @param [Object] source source to read from, must support readline() function
+    # @param [Record] returns self
+    def read(source)
+      self.name        = read_string(source)
+      self.description = read_string(source)
+      self.location    = read_int(source)
+      self.contents    = read_int(source)
+      self.exits       = read_int(source)
+      self.next        = read_int(source)
+      self.key         = read_int(source)
+      self.fail        = read_string(source)
+      self.succ        = read_string(source)
+      self.ofail       = read_string(source)
+      self.osucc       = read_string(source)
+      self.owner       = read_int(source)
+      self.pennies     = read_int(source)
+      self.flags       = read_int(source)
+      self.password    = read_string(source)
+      self
+    end
+
+    # Write content to a stream
+    #
+    # @param [Integer] index the record's identifier
+    # @param [Object] destination the ouput stream, must support puts() function
+    def write(index, destination)
+      destination.puts("##{index}")
+      destination.puts(name)
+      destination.puts(description)
+      destination.puts(location)
+      destination.puts(contents)
+      destination.puts(exits)
+      destination.puts(self.next)
+      destination.puts(key)
+      destination.puts(fail)
+      destination.puts(succ)
+      destination.puts(ofail)
+      destination.puts(osucc)
+      destination.puts(owner)
+      destination.puts(pennies)
+      destination.puts(flags)
+      destination.puts(password)
+    end
+
+    private
+
+    # Helper, read a line from source and optionally set it to nil if its empty
+    def read_string(source, empty_implies_nil = true)
+      line = source.readline().strip()
+      line = nullify(line) if empty_implies_nil
+      line
+    end
+
+    # Helper, read a line from source and convert it to an integer
+    def read_int(source)
+      source.readline().strip().to_i
+    end
+
+    # If s is empty then return nil
+    def nullify(s)
+      return s == "" ? nil : s
     end
   end
 end

@@ -2,6 +2,12 @@
 require_relative 'include'
 
 module TestHelpers
+
+  # Load the minimal database
+  def minimal()
+    MangledMud::Db.new().load(File.join(File.dirname(__FILE__), "../db/minimal.db"))
+  end
+
   # Used all over the place: Simplify setting a records content - Note, assumes
   # @db instance variable
   def record(i)

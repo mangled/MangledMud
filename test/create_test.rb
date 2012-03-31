@@ -11,7 +11,7 @@ module MangledMud
     include TestHelpers
 
     def setup
-      @db = Db.Minimal()
+      @db = minimal()
       @notifier = mock()
     end
 
@@ -127,7 +127,6 @@ module MangledMud
 
     def test_do_link # link player via an exit to a room that they own
       # Note: RESTRICTED_BUILDING is not defined and will not be tested
-      Db.Minimal()
       limbo = 0
       wizard = 1
       bob = Player.new(@db, @notifier).create_player("bob", "pwd")

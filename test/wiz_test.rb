@@ -11,7 +11,7 @@ module MangledMud
     include TestHelpers
 
     def setup
-      @db = Db.Minimal()
+      @db = minimal()
       @notifier = mock()
 
       # Ensure we never give pennies

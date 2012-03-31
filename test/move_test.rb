@@ -23,7 +23,7 @@ module MangledMud
     end
 
     def test_moveto
-      @db = Db.Minimal()
+      @db = minimal()
       wizard = 1
       somewhere = @db.add_new_record
       record(somewhere) {|r| r[:contents] = NOTHING }
@@ -74,7 +74,7 @@ module MangledMud
     end
 
     def test_enter_room
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       bob = Player.new(@db, @notifier).create_player("bob", "pwd")
@@ -176,7 +176,7 @@ module MangledMud
     end
 
     def test_send_home
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       bob = Player.new(@db, @notifier).create_player("bob", "pwd")
@@ -260,7 +260,7 @@ module MangledMud
     end
 
     def test_do_move
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       bob = Player.new(@db, @notifier).create_player("bob", "pwd")
@@ -333,7 +333,7 @@ module MangledMud
     end
 
     def test_do_get
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       place = @db.add_new_record
@@ -444,7 +444,7 @@ module MangledMud
     end
 
     def test_do_drop
-      @db = Db.Minimal()
+      @db = minimal()
       limbo = 0
       wizard = 1
       place = @db.add_new_record
