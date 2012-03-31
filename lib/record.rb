@@ -33,7 +33,7 @@ module MangledMud
     attr_accessor :owner
     # @return [Number] Number of pennies this object contains
     attr_accessor :pennies
-    # @return [Number] Flags indicating type and other meta details
+    # @return [Number] Flags indicating type and other meta details, see: {TYPE_ROOM}, {TYPE_THING}, {TYPE_EXIT}, {TYPE_PLAYER}, {NOTYPE}, {TYPE_MASK}, {ANTILOCK}, {WIZARD}, {LINK_OK}, {DARK}, {TEMPLE}, {STICKY}
     attr_accessor :flags
     # @return [String] Password for players
     attr_accessor :password
