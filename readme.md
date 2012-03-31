@@ -20,8 +20,7 @@ Please enjoy, this is a great MUD and its history deserves to be retained and th
 Trying it out
 -------------
 
-We are running a server at `f8f8ff.com` on port `2525`. You can try the MUD out by, say telnet'ing in to it: `telnet ip-address 2525` (you will need
-to lookup the ip address). For documentation see the associated "Three's Unabridged Dictionary of Commands" - See [Documentation](#Documentation).
+We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` on port `4201`, for either try `telnet address port` or use something like [TinTin++](http://tintin.sourceforge.net/index.php), there is also a flash based interface to try in your web browser go to http://www.mangled.me/mangledmud/. For documentation see the associated "Three's Unabridged Dictionary of Commands" - See [Documentation](#Documentation).
 
 Install
 -------
@@ -45,9 +44,9 @@ The default rake task is to run the unit and regression tests:
 Ignore the various stdout/stderr messages, these are "original" informal output. There are also some networking tests, to run them you need to
 start the mud server and then execute the tests, e.g.:
 
-    $ ruby ./lib/mud.rb -d minimal.db -o dump
+    $ ruby ./lib/mud.rb -d ./db/minimal.db -o dump
 
-In another terminal (for example):
+In another terminal:
 
     $ ruby ./test/networking_test.rb
 
@@ -58,9 +57,9 @@ Running
 
 To run the server, type:
 
-    $ ruby ./lib/mud.rb -d minimal.db -o dump
+    $ ruby ./lib/mud.rb -d ./db/minimal.db -o dump
 
-You can also specify the port on which to run (the default is `4201`) and some other options, try `--help`. Two (original, in format and content) database's are provided:
+You can also specify the port on which to run (the default is `4201`) and some other options, try `--help`. Two (original, in format and content) database's are provided (in the db folder):
 
 * `minimal.db` : A tiny database, containing, well the minimal amount!
 * `small.db` : A slightly larger database
@@ -88,6 +87,8 @@ The password of [potrzebie](https://en.wikipedia.org/wiki/Potrzebie) has some as
 
 We have converted the original "Three's Unabridged Dictionary of Commands", if you `rake doc:yard` you will get local documentation (under `doc`) and this [link](./file.guide.html) will work, or via GitHub click on [guide.md](../guide.md) to browse the markdown source in the git repository.
 
+The source code is also reasonably well documented, again `rake doc:yard` and look under `doc`
+
 Version
 -------
 
@@ -108,7 +109,7 @@ There are a number of possible enhancements:
 * Because of the database structure the networking code is non-threaded, it handles each request in turn. It would be nice to see the networking improved,
 neither of us are experts in this area and we are pretty sure its not as robust as it could be :-)
 * It would be good to see the code extended to support the full command set (see above).
-* Keep refactoring the code to make it more ruby like.
+* Keep refactoring the code to make it more ruby like (we made some of it a little more object orientated, but held off a major re-write as this would defeat the point of the first release).
 
 If you wish to extend this then please maintain the high level of unit test coverage. We only request that the master branch progresses along the lines
 of the original, even if it's innards are replaced entirely it should still run like the original and support importing original database files.
