@@ -20,7 +20,7 @@ Please enjoy, this is a great MUD and its history deserves to be retained and th
 Trying it out
 -------------
 
-We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` on port `4201`, for either try `telnet address port` or use something like [TinTin++](http://tintin.sourceforge.net/index.php), there is also a flash based interface to try in your web browser go to http://www.mangled.me/mangledmud/. For documentation see the associated "Three's Unabridged Dictionary of Commands" - See [Documentation](#Documentation).
+We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` on port `4201`, for either try `telnet address port` or use something like [TinTin++](http://tintin.sourceforge.net/index.php), there is also a flash based interface to try in your web browser, go to http://www.mangled.me/mangledmud/. For documentation see the associated "Three's Unabridged Dictionary of Commands" - See [Documentation](#Documentation).
 
 Install
 -------
@@ -61,10 +61,10 @@ To run the server, type:
 
 You can also specify the port on which to run (the default is `4201`) and some other options, try `--help`. Two (original, in format and content) database's are provided (in the db folder):
 
-* `minimal.db` : A tiny database, containing, well the minimal amount!
+* `minimal.db` : A tiny database containing the minimal amount!
 * `small.db` : A slightly larger database
 
-To connect, launch `telnet (localhost 4201)`, for example, or use a more advanced client such as [TinTin++](http://tintin.sourceforge.net/index.php). You should
+To connect, launch `telnet localhost 4201`, for example, or use a more advanced client such as [TinTin++](http://tintin.sourceforge.net/index.php). You should
 be greeted with some text, e.g.:
 
     Welcome to MangledMUD
@@ -76,7 +76,7 @@ be greeted with some text, e.g.:
 
     Use the WHO command to find out who is currently active.
 
-The Wizard player is always defined, you connect as them by typing (assumming an original database):
+The Wizard player is always defined, you connect as them by typing (assuming an original database):
 
     > connect wizard potrzebie
 
@@ -89,7 +89,7 @@ We have converted the original "Three's Unabridged Dictionary of Commands", if y
 
 The source code is also reasonably well documented, again `rake doc:yard` and look under `doc`
 
-Version
+<a id="Version"/>Version
 -------
 
 We chose to port [TinyMUD](https://en.wikipedia.org/wiki/TinyMUD) version `1.4.1`. This is a fairly early edition, it lacks some of the later incarnations
@@ -105,10 +105,10 @@ Enhancements
 There are a number of possible enhancements:
 
 * Refactoring the database from in-memory to some kind of true database. Note that the unit tests are slightly fragile wrt the database, this would also need attention.
-* During the port we shifted the majority of strings into a "phrasebook", localization would also now be trivially possible.
+* During the port we shifted the majority of strings into a "phrasebook", localization to other languages would now also be trivially possible.
 * Because of the database structure the networking code is non-threaded, it handles each request in turn. It would be nice to see the networking improved,
 neither of us are experts in this area and we are pretty sure its not as robust as it could be :-)
-* It would be good to see the code extended to support the full command set (see above).
+* It would be good to see the code extended to support the full command set (see [Version](#Version) above).
 * Keep refactoring the code to make it more ruby like (we made some of it a little more object orientated, but held off a major re-write as this would defeat the point of the first release).
 
 If you wish to extend this then please maintain the high level of unit test coverage. We only request that the master branch progresses along the lines

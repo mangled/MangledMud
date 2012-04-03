@@ -1,5 +1,8 @@
 # YAML Phrasebook for MangledMUD
 ################################
+#
+# See phrasebook.rb
+#
 # Note: We have ported 99.9% of the strings, there might be the odd few lurking away!
 # Some formatted output strings, e.g. name(#number) are not here - As they do not contain
 # static text, but they do influence presentation. It would be possible to add these

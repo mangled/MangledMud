@@ -19,12 +19,6 @@ module MangledMud
       @db.free()
     end
 
-    def test_reconstruct_message
-      speech = Speech.new(@db, @notifier)
-      assert_equal("hello", speech.reconstruct_message("hello", nil))
-      assert_equal("hello = world", speech.reconstruct_message("hello", "world"))
-    end
-
     def test_do_say
       wizard = 1
       bob = Player.new(@db, @notifier).create_player("bob", "pwd")

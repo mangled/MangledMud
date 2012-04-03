@@ -7,6 +7,8 @@ module MangledMud
   class Create
     include Helpers
 
+    # @param [Db] db the current database instance
+    # @param [Object] notifier An object with method do_notify(player_id, string), the method will be called to send notifications back to the player invoking the command/action
     def initialize(db, notifier)
       @db = db
       @notifier = notifier
@@ -16,8 +18,8 @@ module MangledMud
 
     # Given a room name or special keyowrds "here" or "home", parse_linkable_room attempts to find the room
     # player is asking to link to, and return the index for the room it is associated with (or tell the player they can't).
-    # @param [Number] the index of the player who is using the command.
-    # @param [String] room number, or keywords "here" or "home"
+    # @param [Number] player the index of the player who is using the command.
+    # @param [String] room_name room number, or keywords "here" or "home"
     # @return [Number] the index of the parsed room name in the db, or NOTHING if the room name provided was bad.
     def parse_linkable_room(player, room_name)
       if (room_name and room_name.downcase == "here")
@@ -28,7 +30,7 @@ module MangledMud
         room = @db.parse_dbref(room_name)
       end
 
-      #Check room
+      # Check room
       if ((room < 0) || (room >= @db.length) || (!room?(room)))
         @notifier.do_notify(player, Phrasebook.lookup('not-a-room'))
         return NOTHING
@@ -42,10 +44,10 @@ module MangledMud
 
     # do_open opens an exit belonging to the player in the specified direction.
     # Player must be a builder or higher, must supply a valid exit, and must have enough pennies.
-    # @param [Number] the player index using do_open
-    # @param [String] the direction to open the link.
-    # @param [String] the room to link to, or keywords "here" or "home".
-    def do_open(player,direction,linkto)
+    # @param [Number] player the player index using do_open
+    # @param [String] direction the direction to open the link.
+    # @param [String] linkto the room to link to, or keywords "here" or "home".
+    def do_open(player, direction, linkto)
       loc = getloc(player)
 
       if(getloc(player) == NOTHING)
@@ -98,9 +100,9 @@ module MangledMud
     # costs 1 penny
     # plus a penny transferred to the exit owner if they aren't you.
     # you must own the linked-to room AND specify it by room number.
-    # @param [Number] the player index in the db who is attempting to link.
-    # @param [String] the name of the exit to use.
-    # @param [String] the room to link to, or key words "here" or "home".
+    # @param [Number] player the player index in the db who is attempting to link.
+    # @param [String] name the name of the exit to use.
+    # @param [String] room_name the room to link to, or key words "here" or "home".
     def do_link(player, name, room_name)
       loc = getloc(player)
       return if (loc == NOTHING)
@@ -194,10 +196,10 @@ module MangledMud
 
     # do_create creates an object with a particular name under the ownership of a player.
     # Creating an object costs penies.
-    # @param [Number] db index of the player who is creating.
-    # @param [String] name of the object to create.
-    # @param [Number] the value/cost of an object (for sacrifices).
-    def do_create(player,name,cost)
+    # @param [Number] player db index of the player who is creating.
+    # @param [String] name name of the object to create.
+    # @param [Number] cost the value/cost of an object (for sacrifices).
+    def do_create(player, name, cost)
       if(name == nil)
         @notifier.do_notify(player, Phrasebook.lookup('create-what'))
         return
@@ -249,7 +251,7 @@ module MangledMud
 
 
     # Endow is a helper function to calculate the automatic endowment for an object.
-    # @param [Number] the cost/value of the object.
+    # @param [Number] cost the cost/value of the object.
     # @return [Number] the proposed endowment for the object.
     def endow(cost)
       return (cost - ENDOWMENT_CALCULATOR)/ENDOWMENT_CALCULATOR
@@ -257,10 +259,10 @@ module MangledMud
 
 
     # do_dig digs into an area, creating a new room. Notifies the player of outcome.
-    # @param [Number] the db index of the player who is using do_dig.
-    # @param [String] the name of the new room (must be accepted by MangledMud::Predicate.ok_name)
-    # 
-    def do_dig(player,name)
+    # @param [Number] player the db index of the player who is using do_dig.
+    # @param [String] name the name of the new room (must be accepted by MangledMud::Predicate.ok_name)
+    #
+    def do_dig(player, name)
       if(name == nil)
         @notifier.do_notify(player, Phrasebook.lookup('dig-what'))
       elsif(!@pred.ok_name(name))
@@ -268,15 +270,12 @@ module MangledMud
       elsif(!@pred.payfor(player, ROOM_COST))
         @notifier.do_notify(player, Phrasebook.lookup('sorry-poor-dig'))
       else
-        #Everything is okay, create and initialize room
+        # Everything is okay, create and initialize room
         room = @db.add_new_record()
         room_record = @db[room]
-
-
         room_record.name = name
         room_record.owner = player
         room_record.flags = TYPE_ROOM
-
         @notifier.do_notify(player, Phrasebook.lookup('created-room', name, room))
       end
     end

@@ -21,7 +21,7 @@ module MangledMud
   #
   # The class also hides implementation details of higher-level functions such as creating a player.
   # The design is such that you can run the MUD headless by instantiating this class and observing it (but
-  # you will need to create valid players, for this reason you may want to consider using the {Session} class)
+  # you will need to create valid players, for this reason you may want to consider using the {Session} class instead)
   #
   # @version 1.0
   class Game
@@ -109,7 +109,7 @@ module MangledMud
       }
     end
 
-    # Attempt to connect (login) a player
+    # Attempt to connect (login) a player. See {Session} code for usage.
     # @param [String] user the name of the player
     # @param [String] password the player's password
     # @return [Number] the database index of the player or {NOTHING} if the name or password is invalid
@@ -118,7 +118,7 @@ module MangledMud
       @player.connect_player(user, password)
     end
 
-    # Attempt to create a new player
+    # Attempt to create a new player. See {Session} code for usage.
     # @param [String] user the name of the player
     # @param [String] password the player's password
     # @return [Number] the database index of the new player or {NOTHING} if the name or password is invalid
@@ -128,7 +128,7 @@ module MangledMud
     end
 
     # Cause the database to be dumped to a panic file!
-    # @note Do not call (externally) during #process_command as the database could be being accessed.
+    # @note Do not call (externally) during #process_command as the database could be being accessed. See {Server} code for examples of usage.
     # @param [String] message to write to stderr
     # @return [Boolean] dump status (true indicates success)
     # @see Dump#panic
@@ -137,7 +137,7 @@ module MangledMud
     end
 
     # Cause the database to be dumped to the main dumpfile
-    # @note Do not call (externally) during #process_command as the database could be being accessed.
+    # @note Do not call (externally) during #process_command as the database could be being accessed. See {Server} code for examples of usage.
     # @see Dump#dump_database
     def dump_database()
       @dump.dump_database()
@@ -150,15 +150,15 @@ module MangledMud
     #
     # Ideally you would pass in an object to each method and chain it down. The current behaviour is a result
     # of the original TinyMUD code structure and a desire not to refactor it too much for the first release.
-    # @param [Number] player_id in the current database
-    # @param [String] message to present to the player
+    # @param [Number] player_id the record number in the current database
+    # @param [String] message the message to present to the player
     def do_notify(player_id, message)
       changed
       notify_observers(player_id, message)
     end
 
     # Main command handler - All commands from players are routed through this and output events
-    # sent back to observers.
+    # sent back to observers. See {#do_notify}
     #
     # @note This checks for a valid player identifier, Session handles the higher level interactions
     # @param [Number] player_id in the current database

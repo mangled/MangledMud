@@ -1,6 +1,6 @@
 require_relative 'constants'
 
-# A mix-in module to provide various common helper methods
+# A mix-in module providing various common helper methods
 # @note These would ideally be presented through a database adapter and so represent a legacy of the initial port
 # @version 1.0
 module Helpers
@@ -60,7 +60,7 @@ module Helpers
     ((@db[item].flags & MangledMud::ANTILOCK) != 0)
   end
 
-  # Extract the type flags from a database record
+  # Extract the type flags from a database record, see:  {MangledMud::TYPE_ROOM}, {MangledMud::TYPE_THING}, {MangledMud::TYPE_EXIT}, {MangledMud::TYPE_PLAYER}
   # @param [Number] item the database record number
   # @return [Number] the database records current type flags
   def typeof(item)

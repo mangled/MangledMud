@@ -13,11 +13,11 @@ module MangledMud
     attr_accessor :description
     # @return [Number] The objects container
     attr_accessor :location
-    # @return [Number] For exits, pointer to destination, else a room or players contents
+    # @return [Number] For exits, destination record reference number, else the starting record reference number for a room or players contents, see {#next}
     attr_accessor :contents
-    # @return [Number] Pointer to first exit for rooms, pointer to home for things and players
+    # @return [Number] Record reference number to first exit for rooms see {#next} else record reference number to home for things and players
     attr_accessor :exits
-    # @return [Number] Next in the contents/exits chain
+    # @return [Number] Next in the contents/exits chain, terminates with {NOTHING}
     attr_accessor :next
     # @return [String] If this isn't empty then you must have this to do the operation
     attr_accessor :key

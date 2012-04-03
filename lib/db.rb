@@ -9,12 +9,12 @@ module MangledMud
   # @version 1.0
   class Db
 
-    # Creates an empty database, replacing anything that existed in the database before.
+    # Creates an empty database
     def initialize()
       @record_array = Array.new()
     end
 
-    # Loads a database from the given filename (replaces current contents).
+    # Loads a database from the given input stream or file (replaces current contents).
     #
     # @param [Object] source the input stream to read from (if supports readline()) or filename (supports to_str() - read from a file on disk)
     # @return [Db] self
@@ -30,7 +30,7 @@ module MangledMud
       self
     end
 
-    # Saves the current database to a given stream
+    # Saves the current database to a given output stream or file
     #
     # @param [Object] destination the output stream to write to (if supports puts()) or filename (supports to_str() - write to a file on disk)
     def save(destination)
@@ -52,9 +52,9 @@ module MangledMud
       return index
     end
 
-    # Sets the database record as specified index to the record provided.
+    # Sets the database record as specified by index to the record provided.
     #
-    # @param [Number] index the index to replace.
+    # @param [Number] index the index of the {Record} to replace.
     # @param [Record] record the record to add to the database.
     def []=(index, record)
       put(index, record)
@@ -76,10 +76,11 @@ module MangledMud
       return @record_array.length()
     end
 
-    # Converts a string into a number for use accessing the db.
+    # Converts a string into a number for use when accessing the db.
+    # @note this only converts the string, no bounds check or clamping is performed wrt the current database length
     #
     # @param [String] s the string to parse.
-    # @return [Number] the integer representation of the provided string, else NOTHING if invalid.
+    # @return [Number] the integer representation of the provided string, else {NOTHING} if invalid.
     def parse_dbref(s)
       if s
         x = s.to_i

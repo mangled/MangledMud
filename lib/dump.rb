@@ -10,7 +10,7 @@ module MangledMud
   # @version 1.0
   class Dump
 
-    # @param [Db] db to dump
+    # @param [Db] db the database to dump
     # @param [String] dumpfile the name of the file to dump to
     def initialize(db, dumpfile)
       @db = db
@@ -18,12 +18,11 @@ module MangledMud
       @epoch = 0
     end
 
-    # Dump the database to the dumpfile
+    # Dump the database to the dumpfile provided in the intializer
     #
-    # Produces a temporary dumpfile, replacing the dumpfile if all goes well.
+    # Writes to a temporary file, then replaces the dumpfile if all goes well.
     #
-    # @note this could be combined with {#panic}
-    # @todo trap exceptions
+    # @note this could be combined with {#panic}, it also lacks exception handling.
     def dump_database()
       @epoch += 1
 
@@ -43,7 +42,7 @@ module MangledMud
       $stderr.puts("DUMPING: #{@dumpfile}.##{@epoch}# (done)")
     end
 
-    # Dump the database (directly) to a dumpfile postfixed .PANIC
+    # Dump the database to dumpfile provided in the intializer but postfixed .PANIC
     # @param [String] message to write to stderr
     # @return [Boolean] dump status (true indicates success)
     def panic(message)
