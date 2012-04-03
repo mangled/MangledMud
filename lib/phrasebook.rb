@@ -17,7 +17,7 @@ module MangledMud
     # @param [Array Arguments] args an optional array of arguments, required for strings which have variable substitutions, see phrases.yml
     # @return [String] A localized string
     def self.lookup(key, *args)
-      @phrases = YAML.load_file('./lib/phrases.yml') if @phrases.nil?
+      @phrases = YAML.load_file(File.join(File.dirname(__FILE__), 'phrases.yml')) if @phrases.nil?
       raise "Missing phrase #{key}" unless @phrases.has_key? key
       @phrases[key] % args
     end

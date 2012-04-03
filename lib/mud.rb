@@ -30,7 +30,10 @@ if __FILE__ == $0
   puts "Server started at #{options[:host]} on port #{options[:port]}"
 
   # Bind the game object to the server
-  game = MangledMud::Game.new(db, options[:dumpfile], "help.txt", "news.txt")
+  puts "Dumping to: #{options[:dumpfile]}"
+  puts "Using help file: #{options[:helpfile]}"
+  puts "Using news file: #{options[:newsfile]}"
+  game = MangledMud::Game.new(db, options[:dumpfile], options[:helpfile], options[:newsfile])
 
   # Run until wizard shuts down or a "stop" signal occurs...
   server.run(db, game)
