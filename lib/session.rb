@@ -20,7 +20,7 @@ module MangledMud
     # @return [Time] The last time the player interacted with the game, nil if never
     attr_reader :last_time
 
-    # @return [Array of String] The current buffer of lines to write back to the player see {#do_command}
+    # @return [Array of String] The current buffer of lines to write back to the player see {#process_input}
     attr_accessor :output_buffer
 
     # @note although descriptor_details implies a socket, this is not the case, it is just something representing the outer container's connection to this
@@ -36,6 +36,7 @@ module MangledMud
 
       @player_id = nil
       @last_time = nil
+      @input_buffer = ""
       @output_prefix = nil
       @output_suffix = nil
       @output_buffer = []
@@ -47,6 +48,9 @@ module MangledMud
 
     # This is an internal callback, but has to be public to allow Observable callbacks -
     # It gets all messages from {Game} and filters out those destined for this player.
+    #
+    # @param [Number] player_id the id of the player being updated
+    # @param [String] message the message being sent to the player
     def update(player_id, message)
       # Only queue messages for this player (game broadcasts to all observing sessions).
       # Note: Because the db has no concept of a logged off player, messages can be sent
@@ -54,17 +58,50 @@ module MangledMud
       queue(message) if (@player_id == player_id)
     end
 
-    # Process a command from this player. This causes the {#output_buffer} to be filled with a
-    # response (or responses).
+    # Push a string into the session's command input queue. If the string and previously pushed text forms at
+    # least one command i.e. text delimited by a line ending then a call to {#process_input} will result
+    # in the command being applied by this player. You may queue any number of
+    # commands, or partial commands through this method and call {#process_input} to
+    # attempt to execute them. E.g. queue_input("text1EOLtext2EOLtext3") would result
+    # in two {#process_input} calls executing  text1 and text2, until an EOL is queued
+    # further {#process_input} calls will not initiate the text3 command.
     #
-    # @note It is up to the caller to read and then clear the {#output_buffer} after a call to this function.
-    # @param [String] command the command issued by the player
+    # @param [String] s part of, one or many commands to be processed by {#process_input}
+    def queue_input(s)
+      @input_buffer << s unless s.nil?
+    end
+
+    # If the session has at least one full command queued (see {#queue_input}), then
+    # execute it. Calling this clears the {#output_buffer} regardless of whether a command
+    # was executed or not. Before calling it is up to the callee to write out the {#output_buffer}.
+    #
+    # @return [[Number, Boolean]] the number of remaining full commands in the input queue and an indication if the player has quit the session as a result of executing a buffered "quit" command.
+    # @see #queue_input
+    def process_input()
+      @output_buffer = []
+      command, eol, remainder = @input_buffer.partition(/\r{,1}\n/)
+      player_quit = false
+      unless eol.empty?
+        @input_buffer = remainder
+        player_quit = do_command(command)
+      end
+      [@input_buffer.scan(/.*?\r{,1}\n/).length, player_quit]
+    end
+
+    # Inform this session it is shutting down. This writes a shutdown message to
+    # the {#output_buffer} and causes the session to stop observing {Game}.
+    def shutdown()
+      wrap_command(->() { queue(Phrasebook.lookup('shutdown-message')) })
+      @game.delete_observer(self)
+    end
+
+    private
+
+    # Process a command from this player. This causes the {#output_buffer} to be filled with a response (or responses).
     def do_command(command)
       @last_time = Time.now()
       @output_buffer = []
       has_player_quit = false
-
-      raise "Error: command cannot be nil" if command.nil?
 
       command.chomp!()
       case
@@ -89,18 +126,6 @@ module MangledMud
 
       has_player_quit
     end
-
-    # Inform this session it is shutting down. This writes a message to the {#output_buffer} and
-    # causes the session to stop observing {Game}. After this call {#do_command} will not fill the
-    # {#output_buffer}
-    def shutdown()
-      # Note, this will dump a players current output queue, but, given the game is going down, who cares?
-      @output_buffer = []
-      wrap_command(->() { queue(Phrasebook.lookup('shutdown-message')) })
-      @game.delete_observer(self)
-    end
-
-    private
 
     # Queue (push onto the output buffer) the given message
     def queue(message)

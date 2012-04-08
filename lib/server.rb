@@ -72,7 +72,8 @@ class Server
           session = @descriptors[descriptor]
           # Ensure that the dumper thread plays nice with the database
           @db_semaphore.synchronize {
-            player_quit = session.do_command(descriptor.gets())
+            session.queue_input(descriptor.gets())
+            remaining_commands, player_quit = session.process_input()
           }
         end
       end
