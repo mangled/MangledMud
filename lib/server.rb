@@ -4,12 +4,12 @@ require_relative 'session'
 
 module MangledMud
 
-  ## Provides a TCP based, telnet compatible server for running MangledMUD
-  ##
-  ## The command line entry point, defined in mud.rb configures this and
-  ## the {MangledMud::Db} and {MangledMud::Game} instances.
-  ##
-  ## @version 1.0
+  # Provides a TCP based, telnet compatible server for running MangledMUD
+  #
+  # The command line entry point, defined in mud.rb configures this and
+  # the {MangledMud::Db} and {MangledMud::Game} instances.
+  #
+  # @version 1.0
   class Server
     # @return [Array of Connections] Internal to this, not intended for public usage
     attr_accessor :connections
