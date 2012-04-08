@@ -72,6 +72,7 @@ module MangledMud
   # Internal class - Handles a connection to a player
   class Connection < EventMachine::Connection
     attr_accessor :server
+    attr_accessor :session
   
     def initialize(db, game)
       connected_players = ->() { server.sessions.find_all {|sessions| sessions.player_id } }
@@ -105,10 +106,6 @@ module MangledMud
           close_connection_after_writing()
         end
       end
-    end
-  
-    def session
-      return @session
     end
   
     def shutdown
