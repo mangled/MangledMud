@@ -25,8 +25,7 @@ We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` o
 Install
 -------
 
-The code has been tested on Linux, Mac and Windows. For Linux and Mac we used `ruby 1.9.2p290` (through RVM) and `ruby 1.9.3-p125`
-on windows with the associated dev. kit installed.
+The code has been tested on Linux, Mac and Windows (using [dev.](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit) kit) with `ruby 1.9.2p290`.
 
 Pull the code from here, in the main directory:
 
