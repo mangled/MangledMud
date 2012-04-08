@@ -101,7 +101,7 @@ module MangledMud
         server.write_buffers()
   
         if @game.shutdown
-          @server.stop
+          server.stop
         elsif player_quit
           close_connection_after_writing()
         end
