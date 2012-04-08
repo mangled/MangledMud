@@ -6,3 +6,5 @@ gem 'rdoc'
 gem 'redcarpet'
 gem 'yard'
 gem 'diff-lcs'
+gem 'eventmachine'
+

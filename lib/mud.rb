@@ -25,18 +25,22 @@ if __FILE__ == $0
   db.load(database)
   puts "LOADING: #{database} (done)"
 
-  # Start the server
-  server = Server.new(options[:host], options[:port])
-  puts "Server started at #{options[:host]} on port #{options[:port]}"
-
-  # Bind the game object to the server
+  # Create the main game instance
   puts "Dumping to: #{options[:dumpfile]}"
   puts "Using help file: #{options[:helpfile]}"
   puts "Using news file: #{options[:newsfile]}"
   game = MangledMud::Game.new(db, options[:dumpfile], options[:helpfile], options[:newsfile])
 
   # Run until wizard shuts down or a "stop" signal occurs...
-  server.run(db, game)
+  begin
+    EventMachine::run {
+      server = MangledMud::Server.new(options[:host], options[:port], db, game)
+      server.start
+      puts "Server started at #{options[:host]} on port #{options[:port]}"
+    }
+  rescue Interrupt => e
+    puts "Interrupted..."
+  end
 
   # Ensure the current database content is dumped
   game.dump_database()

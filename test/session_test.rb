@@ -291,7 +291,18 @@ module MangledMud
       connected_players = mock()
     
       session = Session.new(@db, game, "foo", connected_players)
-    
+
+      session.queue_input("")
+      remaining, quit = session.process_input()
+      assert_equal(0, session.output_buffer.length)
+      assert_equal(0, remaining, "no full commands remain")
+      assert_equal(false, quit, "quit not signalled")
+
+      remaining, quit = session.process_input()
+      assert_equal(0, session.output_buffer.length)
+      assert_equal(0, remaining, "no full commands remain")
+      assert_equal(false, quit, "quit not signalled")
+
       session.queue_input("in a galaxy a long time ago...")
       remaining, quit = session.process_input()
       assert_equal(0, session.output_buffer.length)

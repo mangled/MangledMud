@@ -22,7 +22,7 @@ module MangledMud
     #
     # Writes to a temporary file, then replaces the dumpfile if all goes well.
     #
-    # @note this could be combined with {#panic}, it also lacks exception handling.
+    # @note this lacks exception handling, so rescue file io issues outside...
     def dump_database()
       @epoch += 1
 
@@ -40,25 +40,6 @@ module MangledMud
       File.rename(tmpfile, @dumpfile)
 
       $stderr.puts("DUMPING: #{@dumpfile}.##{@epoch}# (done)")
-    end
-
-    # Dump the database to dumpfile provided in the intializer but postfixed .PANIC
-    # @param [String] message to write to stderr
-    # @return [Boolean] dump status (true indicates success)
-    def panic(message)
-      $stderr.puts "PANIC: #{message}"
-
-      # dump panic file
-      panic_file = "#{@dumpfile}.PANIC"
-      begin
-        $stderr.puts "DUMPING: #{panic_file}"
-        @db.save(panic_file)
-        $stderr.puts "DUMPING: #{panic_file} (done)"
-        true
-      rescue
-        perror("CANNOT OPEN PANIC FILE #{panic_file}, YOU LOSE:")
-      end
-      false
     end
   end
 end
