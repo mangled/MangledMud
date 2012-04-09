@@ -1,4 +1,5 @@
 require 'eventmachine'
+require 'socket'
 require_relative 'constants.rb'
 require_relative 'session'
 
@@ -75,9 +76,10 @@ module MangledMud
     attr_accessor :session
   
     def initialize(db, game)
-      connected_players = ->() { server.sessions.find_all {|sessions| sessions.player_id } }
       @game = game
-      @session = MangledMud::Session.new(db, game, "foo", connected_players)
+      port, ip = Socket.unpack_sockaddr_in(get_peername)
+      connected_players = ->() { server.sessions.find_all {|sessions| sessions.player_id } }
+      @session = MangledMud::Session.new(db, game, "#{ip}:#{port}", connected_players)
     end
   
     def post_init
