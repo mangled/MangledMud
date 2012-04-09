@@ -127,15 +127,6 @@ module MangledMud
       @player.create_player(user, password)
     end
 
-    # Cause the database to be dumped to a panic file!
-    # @note Do not call (externally) during #process_command as the database could be being accessed. See {Server} code for examples of usage.
-    # @param [String] message to write to stderr
-    # @return [Boolean] dump status (true indicates success)
-    # @see Dump#panic
-    def panic(message)
-      @dump.panic(message)
-    end
-
     # Cause the database to be dumped to the main dumpfile
     # @note Do not call (externally) during #process_command as the database could be being accessed. See {Server} code for examples of usage.
     # @see Dump#dump_database
