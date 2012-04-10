@@ -128,6 +128,7 @@ module MangledMud
             @exact_match = exit
           elsif @match_name
             @db[exit].name.split(EXIT_DELIMITER).each do |name|
+              name.strip!
               # Allow a partial match - for ambiguous matching
               if (name.downcase.strip.start_with?(@match_name.downcase))
                 # ! Matthew - Modified original code -> Bug fix?

@@ -71,7 +71,7 @@ module MangledMud
           room?(victim) ||
           (player?(victim) && !room?(destination)))
           @notifier.do_notify(player, Phrasebook.lookup('bad-destination'))
-        elsif(player?(victim))
+        elsif (player?(victim))
           @notifier.do_notify(victim, Phrasebook.lookup('feel-weird'))
           @move.enter_room(victim, destination)
         else

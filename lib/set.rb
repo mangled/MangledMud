@@ -228,7 +228,7 @@ module MangledMud
       @match.init_match(player, name, TYPE_EXIT)
       @match.match_exit()
       @match.match_here()
-      @match.match_absolute() if(is_wizard(player))
+      @match.match_absolute() if (is_wizard(player))
 
       exit = @match.match_result()
       case exit

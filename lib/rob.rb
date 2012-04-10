@@ -47,7 +47,7 @@ module MangledMud
         elsif (@db[thing].pennies < 1)
           @notifier.do_notify(player, Phrasebook.lookup('penniless', @db[thing].name))
           @notifier.do_notify(thing, Phrasebook.lookup('tried-to-rob-you', @db[player].name))
-        elsif(@predicates.can_doit(player, thing, Phrasebook.lookup('you-have-a-conscience')))
+        elsif (@predicates.can_doit(player, thing, Phrasebook.lookup('you-have-a-conscience')))
           # steal a penny
           @db[player].pennies = @db[player].pennies + 1
           @db[thing].pennies = @db[thing].pennies - 1

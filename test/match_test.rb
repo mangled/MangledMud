@@ -128,7 +128,7 @@ module MangledMud
       exits = @db.add_new_record
       exite = @db.add_new_record
       record(exitn) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "n;north", :owner => bob, :next => exitw }) }
-      record(exitw) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "w;west", :owner => bob, :next => exits }) }
+      record(exitw) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "w; west", :owner => bob, :next => exits }) }
       record(exits) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "s ;south", :owner => bob }) }
       record(exite) {|r| r.merge!({ :flags => TYPE_EXIT, :name => "e;east", :owner => wizard }) }
       record(0) {|r| r[:exits] = exitn }
@@ -154,6 +154,9 @@ module MangledMud
       match.init_match(wizard, "south", -1)
       match.match_exit()
       check_match_states(match, exits)
+      match.init_match(wizard, "west", -1)
+      match.match_exit()
+      check_match_states(match, exitw)
       match.init_match(bob, "e", -1)
       match.match_exit()
       check_match_states(match, NOTHING, bob)

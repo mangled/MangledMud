@@ -97,6 +97,15 @@ module MangledMud
       create.do_open(bob, "west", "#{place}")
       assert_equal(place, @db[west].location)
 
+      # Another exit, with multiple names e.g. e;east;foo
+      record(bob) {|r| r.merge!( :pennies => EXIT_COST + LINK_COST ) }
+      @notifier.expects(:do_notify).with(bob, Phrasebook.lookup('opened')).in_sequence(notify)
+      @notifier.expects(:do_notify).with(bob, Phrasebook.lookup('trying-to-link')).in_sequence(notify)
+      @notifier.expects(:do_notify).with(bob, Phrasebook.lookup('linked')).in_sequence(notify)
+      another = @db.length
+      create.do_open(bob, "up;boing;ping", "#{place}")
+      assert_equal(place, @db[another].location)
+
       # Now try "here" (we contol limbo at present)
       record(bob) {|r| r.merge!( :pennies => EXIT_COST + LINK_COST ) }
       @notifier.expects(:do_notify).with(bob, Phrasebook.lookup('opened')).in_sequence(notify)

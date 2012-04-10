@@ -50,21 +50,21 @@ module MangledMud
     def do_open(player, direction, linkto)
       loc = getloc(player)
 
-      if(getloc(player) == NOTHING)
+      if (getloc(player) == NOTHING)
         return
       end
 
-      if(direction == nil)
+      if (direction == nil)
         @notifier.do_notify(player, Phrasebook.lookup('open-where'))
         return
-      elsif(!@pred.ok_name(direction))
+      elsif (!@pred.ok_name(direction))
         @notifier.do_notify(player, Phrasebook.lookup('strange-exit-name'))
         return
       end
 
-      if(!@pred.controls(player,loc))
+      if (!@pred.controls(player,loc))
         @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
-      elsif(!@pred.payfor(player, EXIT_COST))
+      elsif (!@pred.payfor(player, EXIT_COST))
         @notifier.do_notify(player, Phrasebook.lookup('sorry-poor-open'))
       else
         exit = @db.add_new_record()
@@ -78,11 +78,11 @@ module MangledMud
 
         @notifier.do_notify(player, Phrasebook.lookup('opened'))
 
-        if(linkto != nil)
+        if (linkto != nil)
           @notifier.do_notify(player, Phrasebook.lookup('trying-to-link'))
           loc = parse_linkable_room(player, linkto)
-          if(loc != NOTHING)
-            if(!@pred.payfor(player, LINK_COST))
+          if (loc != NOTHING)
+            if (!@pred.payfor(player, LINK_COST))
               @notifier.do_notify(player, Phrasebook.lookup('too-poor-to-link'))
             else
               #  Link the room.
@@ -127,9 +127,9 @@ module MangledMud
         case typeof(thing)
         when TYPE_EXIT
           #we're ok, check the usual stuff
-          if(@db[thing].location != NOTHING)
-            if(@pred.controls(player, thing))
-              if(player?(@db[thing].location))
+          if (@db[thing].location != NOTHING)
+            if (@pred.controls(player, thing))
+              if (player?(@db[thing].location))
                 @notifier.do_notify(player, Phrasebook.lookup('exit-being-carried'))
               else
                 @notifier.do_notify(player, Phrasebook.lookup('exit-already-linked'))
@@ -138,13 +138,13 @@ module MangledMud
               @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
             end
           else
-            if(@db[thing].owner == player)
-              if(!@pred.payfor(player, LINK_COST))
+            if (@db[thing].owner == player)
+              if (!@pred.payfor(player, LINK_COST))
                 @notifier.do_notify(player, Phrasebook.lookup('cost-penny-exit'))
                 return
               end
             else
-              if(!@pred.payfor(player, LINK_COST + EXIT_COST))
+              if (!@pred.payfor(player, LINK_COST + EXIT_COST))
                 @notifier.do_notify(player, Phrasebook.lookup('cost-two-exit'))
                 return
               else
@@ -161,9 +161,9 @@ module MangledMud
             @notifier.do_notify(player, Phrasebook.lookup('linked'))
           end
         when TYPE_THING
-          if(!@pred.controls(player,thing))
+          if (!@pred.controls(player,thing))
             @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
-          elsif(room == HOME)
+          elsif (room == HOME)
             @notifier.do_notify(player, Phrasebook.lookup('no-set-home'))
           else
             #Activate link
@@ -171,9 +171,9 @@ module MangledMud
             @notifier.do_notify(player, Phrasebook.lookup('home-set'))
           end
         when TYPE_PLAYER # todo: no drop-through in ruby, this is a copy of the above
-          if(!@pred.controls(player,thing))
+          if (!@pred.controls(player,thing))
             @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
-          elsif(room == HOME)
+          elsif (room == HOME)
             @notifier.do_notify(player, Phrasebook.lookup('no-set-home'))
           else
             #Activate link
@@ -181,7 +181,7 @@ module MangledMud
             @notifier.do_notify(player, Phrasebook.lookup('home-set'))
           end
         when TYPE_ROOM
-          if(!@pred.controls(player,thing))
+          if (!@pred.controls(player,thing))
             @notifier.do_notify(player, Phrasebook.lookup('no-permission'))
           else
             @db[thing].location = room
@@ -200,20 +200,18 @@ module MangledMud
     # @param [String] name name of the object to create.
     # @param [Number] cost the value/cost of an object (for sacrifices).
     def do_create(player, name, cost)
-      if(name == nil)
+      if (name == nil)
         @notifier.do_notify(player, Phrasebook.lookup('create-what'))
         return
-      elsif(!@pred.ok_name(name))
+      elsif (!@pred.ok_name(name))
         @notifier.do_notify(player, Phrasebook.lookup('silly-thing-name'))
         return
-      elsif(cost < 0)
+      elsif (cost < 0)
         @notifier.do_notify(player, Phrasebook.lookup('objects-must-have-a-value'))
         return
-      elsif(cost < OBJECT_COST)
+      elsif (cost < OBJECT_COST)
         cost = OBJECT_COST
       end
-
-
 
       if (!@pred.payfor(player, cost))
         @notifier.do_notify(player, Phrasebook.lookup('sorry-poor'))
@@ -229,10 +227,9 @@ module MangledMud
         thing_record.flags = TYPE_THING
 
         #Make sure endowment isn't higher than max.
-        if(thing_record.pennies > MAX_OBJECT_ENDOWMENT)
+        if (thing_record.pennies > MAX_OBJECT_ENDOWMENT)
           thing_record.pennies = MAX_OBJECT_ENDOWMENT
         end
-
 
         player_record = @db[player]
         if (player_record.location != NOTHING && @pred.can_link_to(player, player_record.location))
@@ -249,7 +246,6 @@ module MangledMud
 
     end
 
-
     # Endow is a helper function to calculate the automatic endowment for an object.
     # @param [Number] cost the cost/value of the object.
     # @return [Number] the proposed endowment for the object.
@@ -257,17 +253,15 @@ module MangledMud
       return (cost - ENDOWMENT_CALCULATOR)/ENDOWMENT_CALCULATOR
     end
 
-
     # do_dig digs into an area, creating a new room. Notifies the player of outcome.
     # @param [Number] player the db index of the player who is using do_dig.
     # @param [String] name the name of the new room (must be accepted by MangledMud::Predicate.ok_name)
-    #
     def do_dig(player, name)
-      if(name == nil)
+      if (name == nil)
         @notifier.do_notify(player, Phrasebook.lookup('dig-what'))
-      elsif(!@pred.ok_name(name))
+      elsif (!@pred.ok_name(name))
         @notifier.do_notify(player, Phrasebook.lookup('silly-room-name'))
-      elsif(!@pred.payfor(player, ROOM_COST))
+      elsif (!@pred.payfor(player, ROOM_COST))
         @notifier.do_notify(player, Phrasebook.lookup('sorry-poor-dig'))
       else
         # Everything is okay, create and initialize room

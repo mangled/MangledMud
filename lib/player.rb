@@ -79,9 +79,9 @@ module MangledMud
     # @param [String] new_password the new password for the player at specified index.
     def change_password(player_index, old_password, new_password)
       player = @db[player_index]
-      if(old_password != player.password)
+      if (old_password != player.password)
         @notifier.do_notify(player_index, Phrasebook.lookup('sorry'))
-      elsif(old_password == player.password)
+      elsif (old_password == player.password)
         player.password = new_password
         @notifier.do_notify(player_index, Phrasebook.lookup('password-changed'))
       end
