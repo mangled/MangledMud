@@ -69,28 +69,29 @@ module MangledMud
       end
     end
   end
-  
+
   # Internal class - Handles a connection to a player
   class Connection < EventMachine::Connection
     attr_accessor :server
     attr_accessor :session
-  
+
     def initialize(db, game)
       @game = game
       port, ip = Socket.unpack_sockaddr_in(get_peername)
+      @connection_info = "#{ip}:#{port}"
       connected_players = ->() { server.sessions.find_all {|sessions| sessions.player_id } }
-      @session = MangledMud::Session.new(db, game, "#{ip}:#{port}", connected_players)
+      @session = MangledMud::Session.new(db, game, @connection_info, connected_players)
     end
-  
+
     def post_init
-      puts "Accepting a new connection"
+      puts "Accepting a new connection: #{@connection_info}"
       write_buffer()
     end
-  
+
     def receive_data data
       unless @game.shutdown
         @session.queue_input(data)
-  
+
         # Note: We handle all the commands issued by the player. If they send
         # tons of them then it will cause other players to be jammed. It's
         # not worth the code pain to fix this edge case, esp. for release 1.0
@@ -99,9 +100,9 @@ module MangledMud
         while (!player_quit and remaining_commands != 0)
           remaining_commands, player_quit = @session.process_input()
         end
-  
+
         server.write_buffers()
-  
+
         if @game.shutdown
           server.stop
         elsif player_quit
@@ -109,17 +110,18 @@ module MangledMud
         end
       end
     end
-  
+
     def shutdown
       @session.shutdown()
       write_buffer()
       close_connection_after_writing()
     end
-  
+
     def unbind
+      puts "Closing connection: #{@connection_info}"
       server.connections.delete(self)
     end
-  
+
     def write_buffer()
       buffer = @session.output_buffer
       send_data(buffer.join('')) if buffer.length > 0
