@@ -1,7 +1,7 @@
 <img src="./mud.png" alt="MangledMud"/>
 
-MangledMud
-==========
+MangledMud 1.0
+==============
 
 MangledMud is a ruby port of [TinyMUD](https://en.wikipedia.org/wiki/TinyMUD).
 
@@ -17,10 +17,12 @@ Please enjoy, this is a great MUD and its history deserves to be retained and th
 - [MangledMe](http://www.google.com/recaptcha/mailhide/d?k=01vdgNNADQlgrqj5lMuKLpag==&c=dLzYSFd6PdPBc5paL9eJKJ62wOQODVZwCaNzqvMcxyI=)
 - [Alexander Morrow](http://www.google.com/recaptcha/mailhide/d?k=01n0PN-HG6h4hK6mVdmLzv9w==&c=kkuhcc5Ozzpy45FXpOqvJQ)
 
-Trying it out
+<a id="TryingItOut"/>Trying it out
 -------------
 
-We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` on port `4201`, for either try `telnet address port` or use something like [TinTin++](http://tintin.sourceforge.net/index.php), there is also a flash based interface to try in your web browser, go to http://www.mangled.me/mangledmud/. For documentation see the associated "Three's Unabridged Dictionary of Commands" - See [Documentation](#Documentation).
+We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` on port `4201`, for either try `telnet address port` or use something like [TinTin++](http://tintin.sourceforge.net/index.php) note that if you use TinTin++ please ensure that you set `{VERBATIM}  {ON}` otherwise semicolon separators will be treated as separate commands.
+
+There is also a flash based interface to try in your web browser, go to http://www.mangled.me/mangledmud/. See [documentation](#Documentation) below for information on how to play the game.
 
 Install
 -------
@@ -63,8 +65,7 @@ You can also specify the port on which to run (the default is `4201`) and some o
 * `minimal.db` : A tiny database containing the minimal amount!
 * `small.db` : A slightly larger database
 
-To connect, launch `telnet localhost 4201`, for example, or use a more advanced client such as [TinTin++](http://tintin.sourceforge.net/index.php). You should
-be greeted with some text, e.g.:
+To connect, see [Trying it out](#TryingItOut) above. You should be greeted with some text, e.g.:
 
     Welcome to MangledMUD
     To connect to your existing character, enter "connect name password"
