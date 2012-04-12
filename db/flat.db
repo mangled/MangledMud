@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-6
-77
-0
+33
 -1
+0
+82
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -98,7 +98,7 @@ is scratching the wall.
 stairwell - bottom
 The bottom of a typical Edinburgh tennament stairwell. Rusty bike chains hang from the railing and the floor has some strange puddles of liquid on it. You can go up from here or travel further west or go back east.
 -1
-82
+-1
 84
 -1
 1
@@ -530,8 +530,8 @@ e;east
 kitchen entrance
 An "L" shaped squeeze of a room. Devoid of windows the pea-green paint dominates, lovely. Flanking the western wall is an impressive attempt at assembling a kitchen unit. Beginning with a contemporary open space filled with a wine rack and various carrier bags it leads the eye forward toward the oven and end wall. On the eastern wall a make shift recycling "point" tries to pass itself off as a game of Jenga. You can go north or south from here.
 -1
--1
-37
+101
+90
 -1
 -1
 
@@ -565,21 +565,21 @@ n;north
 -1
 -1
 -1
--1
+99
+You feel too drunk, may-be you have had enough to drink for now?
 
-
-
+staggers up to the kitchen door then falls back inside.
 
 1
 0
-2
+10
 
 #36
 kitchen end
 Worth a visit (once), the work-surface tries to impress under the weight of varying bread purchases and random clutter. The fridge dominates here, or would do if it wasn't adorned with half baked magnetic poetry. Clearly a mop would be a wise investment. You can go north from here.
 -1
--1
-38
+99
+100
 -1
 -1
 
@@ -627,7 +627,7 @@ hall end
 The end of the hall. Occupying the western alcove is a fascinating set of dusty shelves. You can go north, south, east or west.
 -1
 -1
-49
+98
 -1
 -1
 
@@ -720,10 +720,10 @@ n;north
 
 #45
 bathroom
-A cramped, space. The essential facilities of life jostle for attention. Almost worthy of a tate modern installation finished toilet rolls and dead(ish) plants lie beneath a ceiling of mould experiments. The southern wall is occupied by a lovely mirror and hand basin combination. A bath also settles back against the southern wall, the toilet "offers" a welcome to the west. You can go east from here.
+A cramped, space. The essential facilities of life jostle for attention. Almost worthy of a tate modern installation finished toilet rolls and dead(ish) plants lie beneath a ceiling of mould experiments. The southern wall is occupied by a lovely mirror and hand basin combination. A bath also settles back against the southern wall, the toilet "offers" a welcome to the west. There is a cord dangling to your right and you can go east from here.
 -1
--1
-47
+94
+97
 -1
 -1
 
@@ -1119,7 +1119,7 @@ struggles to look out of the window.
 2
 
 #70
-open cupboard;cupboard
+s;south;open cupboard;cupboard
 
 71
 -1
@@ -1231,16 +1231,16 @@ for some unknown reason, squeezes into the fireplace.
 2
 
 #77
-exit
-
-1
+use mirror;mirror
+The mirror is covered in spatters of toothpaste and some foreign stains that are best not guessed at!
 -1
 -1
 -1
+91
 -1
+You look lovingly at your face.
 
-
-
+is staring at their face in the mirror, how vain.
 
 1
 0
@@ -1313,17 +1313,17 @@ is attacked by a small girl.
 #82
 freyja
 
-6
+33
 -1
 0
-1
+-1
 -1
 
 
 
 
 82
-3
+8
 3
 fish1234
 #83
@@ -1357,5 +1357,277 @@ e;east
 1
 0
 2
+
+#85
+toothpaste
+A green piece of fungus, its probably poisonous!
+45
+-1
+45
+-1
+-1
+The mould looks revolting, its growing all over the ceiling. Some of it looks loose!
+Its nice to see an interest in personal hygene
+
+is attempting to remedy their halitosis.
+1
+1
+1
+
+#86
+somewhere
+A dark place, there isn't an exit?
+-1
+-1
+88
+-1
+-1
+
+
+
+is attempting to remedy that bad halitosis.
+1
+0
+64
+
+#87
+cord;yank cord;pull cord
+A long dangling cord, it probably controls the light switch?
+86
+-1
+-1
+47
+-1
+
+You pull the cord, oops.
+
+disappears!
+1
+0
+2
+
+#88
+exit
+
+55
+-1
+-1
+-1
+-1
+
+Curses you escaped.
+
+escapes the dark place!
+1
+0
+2
+
+#89
+toilet
+You stand in front of a continental style toilet (whatever that means). Its remarkably clean given the poor levels of cleanliness shown by the guests you have seen so far. You feel an urge to drop something (and no, not in a rude way). You may go east to the main part of the toilet.
+-1
+-1
+93
+-1
+-1
+
+
+
+
+1
+0
+128
+
+#90
+wine;rack;wine rack
+A modern affair, delicately crafted by an apprentice blacksmith half-cut from the night before.
+-1
+-1
+-1
+37
+-1
+The rack is empty, may-be you should have brought some drink with you?
+
+is attempting to steal alcohol.
+
+1
+0
+2
+
+#91
+go toilet;toilet
+
+89
+-1
+-1
+87
+-1
+
+You feel a sudden urge...
+
+walks off in a strange waddling fashion
+1
+0
+2
+
+#92
+use toilet;flush toilet
+
+-1
+-1
+-1
+-1
+-1
+You flush the toilet, what fun.
+
+is using the toilet, I would look away if I were you.
+
+1
+0
+2
+
+#93
+e;east
+
+45
+-1
+-1
+92
+-1
+
+
+
+
+1
+0
+2
+
+#94
+green mould
+A green piece of fungus, its probably poisonous! I swear its moving and trying to go back home.
+45
+-1
+45
+85
+-1
+
+You scrape the mould up and put it into your pocket.
+
+is picking up some disgusting green looking stuff.
+1
+2
+321
+
+#95
+mould
+The "green mould" covers the ceiling, it might be a bit loose.
+-1
+-1
+-1
+77
+-1
+The "green mould" looks revolting, its growing all over the ceiling. Some of it looks loose!
+
+is gazing skywards.
+
+1
+0
+2
+
+#96
+hand basin;basin
+A grubby hand basin.
+-1
+-1
+-1
+95
+-1
+You wash your hands noting that the soap is missing and a towel would come in handy.
+
+dries hands on self.
+
+1
+0
+2
+
+#97
+use bath;bath;get in bath
+A big bath, you could probably fit two people in it.
+-1
+-1
+-1
+96
+-1
+You consider having a bath but remember you are at someone else's party in a bathroom without a lock and so decide not to.
+
+starts getting undressed then decides decency is probably a good idea.
+
+1
+0
+2
+
+#98
+shelves
+These shelves would be perfect for displaying little knick knacks detailing wonderful journeys around the world. Instead they contain odd tat dressed in dust (which seems to be a common theme around here).
+-1
+-1
+-1
+49
+-1
+You try to grab an item from the shelves, but are driven back by the ensuing dust storm.
+
+is madly coughing and spluttering.
+
+1
+0
+2
+
+#99
+beer
+Guff beer, brewed from earwig shells, 88% proof.
+36
+-1
+36
+-1
+-1
+Get your own!
+You grab the beer and swig a mouthful down, gross taste but after a few of these you won't notice.
+is desparate for a drink.
+gets more drunk.
+1
+1
+1
+
+#100
+open fridge;fridge
+Humming quietly this state of the art fridge would look out of place in this flat, if not for the random guff stuck to its doors.
+-1
+-1
+-1
+38
+-1
+No matter how hard you pull, the fridge door won't open, probably something todo with all that ice creeping out from around its edges!
+
+is frantically tugging at the fridge door.
+
+1
+0
+2
+
+#101
+junk mail
+Assorted letters, bills and other mail that should really be opened but has been left until unattended until some kind of warning arrives.
+33
+-1
+33
+1
+-1
+
+Stealing other peoples mail is most likely an offence?
+
+is shoving bits of paper into their pockets.
+1
+1
+1
 
 ***END OF DUMP***

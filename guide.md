@@ -272,9 +272,7 @@ Getting killed is no big deal. If you are killed, you return to your home, and a
 
 #### BOGUS COMMANDS
 
-Bogus commands can be made using exits. For example, to make a `sit` command, one could `@open sit`, then `@link sit=here` (because unlinked exits can be stolen), `@lock sit=me&!me` (impossible to be both at once, therefore always fails), and `@fail sit=You sit on the chair.`; `@ofail=sits on the chair.`. Since nobody can go through it, it always fails. The [@FAIL](#@FAIL) message is displayed to the player, and the [@OFAIL](#@OFAIL) message (preceded by the player's name) to everyone else.
-
-__TODO UPDATE GIVEN THE STATE OF THE LOCK COMMAND__
+Bogus commands can be made using exits. For example, to make a `sit` command, one could `@open sit`, then `@link sit=here` (because unlinked exits can be stolen), `@lock sit=me&!me` (impossible to be both at once, therefore always fails), and `@fail sit=You sit on the chair.`; `@ofail=sits on the chair.`. Since nobody can go through it, it always fails. The [@FAIL](#@FAIL) message is displayed to the player, and the [@OFAIL](#@OFAIL) message (preceded by the player's name) to everyone else. Note this version does not support the '!' operator, so you have to lock to yourself or a fake player to achieve similar results. See [@LOCK](#@LOCK).
 
 #### <a id="CONTROL"/>CONTROL
 
@@ -347,7 +345,7 @@ If a room is `LINK_OK`, anyone can link exits to it (but still not from it). It 
 
 ##### <a id="DARK"/>DARK
 
-If a room is dark, then when people besides the owner `look` there, they only see things they own. If a thing or player is dark, then `look` does not list that object in the room's `Contents:`. Only wizards can set players or things dark.
+If a room is dark, then when people besides the owner `look` there, they only see things they own. If a thing or player is dark, then `look` does not list that object in the room's contents. Only wizards can set players or things dark.
 
 ##### <a id="TEMPLE"/>TEMPLE
 
