@@ -2,7 +2,7 @@
 Limbo
 You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. You can go west through the door, or just give up now!
 -1
-2
+82
 4
 -1
 -1
@@ -17,8 +17,8 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-27
-9
+42
+77
 0
 -1
 -1
@@ -143,9 +143,9 @@ You head toward a small wooden door, possibly leading to the garden. Hideous noi
 2
 
 #9
-stairwell - 1st floor
-
-1
+A skyline cleaning services invoice.
+An invoice from the stair cleaning company.
+17
 -1
 6
 -1
@@ -163,7 +163,7 @@ stairwell - 1st floor
 Two baracaded doors lie north and south. An earthy, herby smell courts the live drums and guitar sounds eminating from the north facing door. You can go up or down from here.
 -1
 -1
-16
+63
 -1
 -1
 
@@ -243,7 +243,7 @@ stairwell - 2nd floor
 To the south is a welcoming blue door the sounds of conversation and music eminate from behind it, screwed to its surface is a shiny brass nameplate, further down is a brass letter box. There is a doorbell to your left and further to the north is a twisty maze of passages.
 -1
 -1
-23
+62
 -1
 -1
 
@@ -272,10 +272,10 @@ u;up
 
 #17
 flat entrance
-A lovely (mouldy) pea green! Further ahead the hall splits, from here you can go east or south. To your right is a dusty bookcase attempting to hide a clump of various shoes.
+A lovely (mouldy) pea green! Further ahead the hall splits, from here you can go east, south or north. To your right is a dusty bookcase attempting to hide a clump of various shoes.
 -1
--1
-25
+9
+65
 -1
 -1
 
@@ -295,19 +295,19 @@ s;south
 -1
 -1
 
+You push the door open and enter the party.
 
-
-
+enters the flat.
 1
 0
 2
 
 #19
 the den
-A rectangular room, full of "stuff". A table occupies one wall of the room, it is adorned with computer monitors and assorted mess. A cast off leather settee sits close to the southern wall whilst the eastern wall is struggling to hold an ikea bookcase in place. A small Edinburgh press occupies the north east wall and a grimy window props up the eastern wall. The owners clearly spend quite a bit of time here.
+A rectangular room, full of "stuff". A table occupies one wall of the room, it is adorned with computer monitors and assorted mess. A cast off leather settee sits close to the southern wall whilst the eastern wall is struggling to hold an ikea bookcase in place. A greek styled fireplace and small Edinburgh press occupy the northern wall and a grimy window props up the eastern wall. The owners clearly spend quite a bit of time here.
 -1
--1
-21
+68
+76
 -1
 -1
 
@@ -387,7 +387,7 @@ hall Junction
 You are at the eastern end of the hall. The carpet is splattered with paint from a minor accident (a few years ago). A cupboard lies in front of you (to the south), its opening graced by assorted paraphenalia dropped in transist. You can go east, west or north.
 -1
 -1
-31
+70
 -1
 -1
 
@@ -434,7 +434,7 @@ n;north
 front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautifull fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
-1
+-1
 56
 -1
 -1
@@ -483,7 +483,7 @@ hall
 Half way along the magnificent hall, you stand next to the kitchen (to the south) and by a small collection of art produced by the artist in residence. You may saunter south, east or west from here.
 -1
 -1
-40
+80
 -1
 -1
 
@@ -674,7 +674,7 @@ e;east
 freyja's room
 Toys and artifacts from a nine year old girl fill the available space. A paleontologist in the making, dinosaurs are the theme here (intermixed with Pokemon) and the floor is somewhat messy. A lovely brass bed greets you at the entrance. The northern wall is hugged by a large and dangerous shelving unit. The western wall hosts another press and the rooms main window. You can go north from here.
 -1
--1
+81
 44
 -1
 -1
@@ -880,10 +880,10 @@ w;west
 
 #55
 fireplace
-You stand in a large fireplace, fortunately for you it isn't lit! You may go north.
+You stand in a large fireplace, fortunately for you it isn't lit! Every so often lumps of coal dust fall playfully upon your head from above. You may go north.
 -1
 -1
-57
+79
 -1
 -1
 
@@ -926,4 +926,404 @@ n;north
 0
 2
 
+#58
+nameplate
+A brass nameplate, screwed tightly to the door, I doubt it would budge. Engraved on the nameplate are the words: M CREWE and D RUDKIN.
+-1
+-1
+-1
+23
+1
+you can't take it, its stuck tight.
+
+tries to steal the brass nameplate.
+
+1
+0
+2
+
+#59
+doorbell;push doorbell;press doorbell
+Hanging by a single screw, this doorbell has seen better days. Wires can be seen dangling out of it and if I were you I would knock rather than use it.
+-1
+-1
+-1
+58
+-1
+As hard as you press no sound can be heard.
+As hard as you press no sound can be heard.
+madly presses the doorbell.
+
+1
+0
+2
+
+#60
+letter box
+A wide and inviting (if you were a piece of mail) letter box. Whoever fitted this used an industrial jig to cut out the hole, clearly a more practical person than a perfectionist!
+-1
+-1
+-1
+59
+-1
+Peeking through the letter box you see a small hallway.
+
+peeks through the letter box.
+
+1
+0
+2
+
+#61
+n;north
+
+-1
+-1
+-1
+60
+-1
+You wander about the stairwell for a while.
+
+wanders around looking aimless.
+
+1
+0
+2
+
+#62
+knock
+
+-1
+-1
+-1
+61
+-1
+You knock on the door like a man possessed, nobody seems to be coming though.
+
+knocks hard on the door.
+
+1
+0
+2
+
+#63
+smell
+
+-1
+-1
+-1
+16
+-1
+Good stuff.
+
+inhales the heady aroma.
+
+1
+0
+2
+
+#64
+bookcase
+The bookcase is covered in a jumble of stuff, most of which is attempting to hide under a layer of dust. Behind some ill fitting glass doors there lies a random collection of reading material.
+-1
+-1
+-1
+25
+-1
+Getting inside the bookcase wouldn't be a good idea!
+
+tries to get inside the bookcase.
+
+1
+0
+2
+
+#65
+shoes
+Clearly the owners have a love of eccentric fashion as these shoes demonstrate. Many of the shoes look like they should be thrown out, the remaining shoes look like they are in some kind of shoe mating ritual.
+-1
+-1
+-1
+64
+-1
+
+
+
+
+1
+0
+2
+
+#66
+space hopper
+A slightly deflated barbie space-hopper.
+19
+-1
+19
+-1
+-1
+
+After a few failed bounces you pick up the space-hopper
+
+hops about on a space-hopper for a while shouting "yeeeha"
+1
+1
+1
+
+#67
+bit of wood
+A long bit of wood. Why the owners keep such items the mind boggles.
+19
+-1
+19
+66
+-1
+
+You pick up the wood, gaining minor injury as a result of the many splinters poking out from its surfaces.
+
+grimaces in pain as they pick up a piece of wood covered in splinters.
+1
+1
+1
+
+#68
+dead plant
+A long spindly plant that has seen better days. Its clearly dead or in a terminal coma.
+19
+-1
+19
+67
+-1
+
+Leaves fall off the plant as you pick it up.
+
+picks up a rather dead plant.
+1
+1
+1
+
+#69
+window
+A fine piece of modern double glazing, the window looks out onto the main road outside.
+-1
+-1
+-1
+21
+-1
+You try to peer onto the street below, unfortunately layers of mud and dirt block your view. Clearly window cleaners are an unknown entity in these parts.
+
+struggles to look out of the window.
+
+1
+0
+2
+
+#70
+open cupboard;cupboard
+
+71
+-1
+-1
+31
+-1
+
+
+
+
+1
+0
+2
+
+#71
+hall cupboard
+You are standing in front of a large cupboard. Like much of the flat every available inch is crammed full of assorted junk. You can go north back to the hall.
+-1
+74
+72
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#72
+n;north;exit
+
+24
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#73
+buffy the vampire game
+A board game based on the brilliant tv series of the same name. Unfortunately the game isn't so brilliant and appears to have been played about once.
+71
+-1
+71
+-1
+-1
+
+Sarah Michelle Gellar's lovely smile bewitches as you pick up the board game.
+
+fertively picks up an object.
+1
+1
+1
+
+#74
+household oil
+Some 1920's multi-purpose household oil.
+71
+-1
+71
+73
+-1
+
+As you pick the oil up your hands get some grease on them.
+
+fumbles with a tin of somthing slippy.
+1
+1
+1
+
+#75
+small fireplace
+I won't ask why you wanted to stand inside the fireplace, or how you managed it. Moving on, this is a small dusty fireplace which really should have never been designed or built, the sixties, gotta love that crazy time. You can exit.
+-1
+-1
+78
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#76
+fireplace
+
+75
+-1
+-1
+69
+-1
+
+You squeeze yourself into the fireplace.
+
+for some unknown reason, squeezes into the fireplace.
+1
+0
+2
+
+#77
+exit
+
+1
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#78
+exit
+
+19
+-1
+-1
+-1
+-1
+
+Coughing and spluttering you exit the fireplace.
+
+leaves in a cloud of dust.
+1
+0
+2
+
+#79
+up
+
+75
+-1
+-1
+57
+-1
+
+You clamber up the chimney (what have you been drinking).
+
+disappears upwards.
+1
+0
+2
+
+#80
+art
+Mainly (nude) figure drawings - Have the owners any decency displaying this filth upon their walls?
+-1
+-1
+-1
+40
+-1
+attempts to peel some artwork from the wall.
+
+
+
+1
+0
+2
+
+#81
+child's drawings
+Some endearing sketches of fluffy velociraptors eating a triceratops.
+42
+-1
+42
+1
+82
+A child scampers out from under the bed and pokes you so hard you drop the drawings.
+
+is attacked by a small girl.
+
+1
+1
+1
+
+#82
+freyja
+
+0
+-1
+0
+2
+-1
+
+
+
+
+82
+0
+3
+fish1234
 ***END OF DUMP***
