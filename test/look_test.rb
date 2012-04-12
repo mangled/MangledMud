@@ -64,6 +64,11 @@ module MangledMud
       @notifier.expects(:do_notify).with(bob, "#{@db[place].fail}").in_sequence(notify)
       @notifier.expects(:do_notify).with(wizard, "bob #{@db[place].ofail}").in_sequence(notify)
       look.look_room(bob, place)
+      # Check that no message occurs if fail isn't set
+      record(place) {|r| r.merge!({:fail => nil, :ofail => nil}) }
+      @notifier.expects(:do_notify).with(bob, "#{@db[place].name}").in_sequence(notify)
+      @notifier.expects(:do_notify).with(bob, @db[place].description).in_sequence(notify)
+      look.look_room(bob, place)
       # Now bob is the key
       record(place) {|r| r.merge!({ :key => bob }) }
       @notifier.expects(:do_notify).with(bob, "#{@db[place].name}").in_sequence(notify)

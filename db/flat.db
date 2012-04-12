@@ -2,7 +2,7 @@
 Limbo
 You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. You can go west through the door, or just give up now!
 -1
-82
+2
 4
 -1
 -1
@@ -17,7 +17,7 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-42
+6
 77
 0
 -1
@@ -48,10 +48,10 @@ is pressing the buzzer.
 
 #3
 stairwell - entrance
-The entrance way into a slightly dingy stairwell. There are some cryptic writings etched/scratched into the wall. You can go west from here.
+The entrance way into a slightly dingy stairwell. There are some cryptic writings etched/scratched into the wall. You can go west or east from here.
 -1
 -1
-7
+83
 -1
 -1
 
@@ -96,10 +96,10 @@ is scratching the wall.
 
 #6
 stairwell - bottom
-The bottom of a typical Edinburgh tennament stairwell. Rusty bike chains hang from the railing and the floor has some strange puddles of liquid on it. You can go up from here or travel further west.
+The bottom of a typical Edinburgh tennament stairwell. Rusty bike chains hang from the railing and the floor has some strange puddles of liquid on it. You can go up from here or travel further west or go back east.
 -1
--1
-11
+82
+84
 -1
 1
 
@@ -1300,7 +1300,7 @@ Some endearing sketches of fluffy velociraptors eating a triceratops.
 42
 -1
 42
-1
+-1
 82
 A child scampers out from under the bed and pokes you so hard you drop the drawings.
 
@@ -1313,17 +1313,49 @@ is attacked by a small girl.
 #82
 freyja
 
-0
+6
 -1
 0
-2
+1
 -1
 
 
 
 
 82
-0
+3
 3
 fish1234
+#83
+e;east
+
+0
+-1
+-1
+7
+-1
+
+
+
+
+1
+0
+2
+
+#84
+e;east
+
+3
+-1
+-1
+11
+-1
+
+
+
+
+1
+0
+2
+
 ***END OF DUMP***

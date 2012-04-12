@@ -34,7 +34,7 @@ module MangledMud
       @notifier.do_notify(player, @db[loc].description) if (@db[loc].description)
 
       # tell him the appropriate messages if he has the key
-      @predicates.can_doit(player, loc, 0)
+      @predicates.can_doit(player, loc, nil)
 
       # tell him the contents
       look_contents(player, loc, "Contents:")
