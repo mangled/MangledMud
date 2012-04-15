@@ -10,82 +10,189 @@
 # THIS IS WIP
 require 'yaml'
 require 'net/telnet'
+require 'ostruct'
 require_relative '../test/player.rb'
 
-# TODO: put in a class?
-# - tidy up and document
-# - add more phrases
-# - make robust (is there anything anyone else can do to muck it up?)
-# - always start in limbo (rename this anyway) teleport to #0
+# Needs some robustness checks
 
-def connect(session, name, password)
-  session.waitfor(/currently active\./)
-  session.write("connect #{NAME} #{PASSWORD}\r\n")
-  session.cmd('String' => "OUTPUTPREFIX prefix", 'Match' => /Done/)
-  session.cmd('String' => "OUTPUTSUFFIX >done<", 'Match' => /Done/)
-  # start at #0
-  session.write("@TELEPORT me=#0\r\n")
-end
+################################################################################
+class DrunkGuy
 
-def setup(session, bottle_phrases)
-  session.cmd('@describe me=A lover of all things alcholic, hic.')
-  unless session.cmd('@FIND bottle').lines.find {|line| line =~ /bottle/}
-    session.cmd('@CREATE bottle')
+  def initialize(session, name, password, phrases, toiletid, start_location = nil)
+    @name = name
+    @session = session
+    @phrases = phrases
+    @toiletid = toiletid
+    connect(session, name, password, start_location)
+    @in_toilet = start_location == toiletid
+    @bottleid = setup(session, phrases[:bottle_osucc])
+    @map = Map.new(session, [toiletid])
+    reset_bladder()
   end
-  session.cmd('@FIND bottle')=~ /\s+bottle\s*\(#(\d+)\)/
-  bottle_id = $1
-  session.write("@TELEPORT ##{bottle_id}=me\r\n")
-  session.cmd("@LOCK ##{bottle_id}=me")
-  session.cmd("@DESCRIBE ##{bottle_id}=A bottle")
-  session.cmd("@OSUCCESS ##{bottle_id}=#{bottle_phrases.sample}")
-  session.cmd("@LINK ##{bottle_id}=me")
-  bottle_id
-end
 
-def extract_item(session, s, type)
-  m = s.scan(/\s*(.+)\(#(\d+)\)\s*/)
-  m.each do |item|
-    info = session.cmd("examine ##{item[1]}")
-    yield item if info =~ type
+  def act()
+    if needs_the_toilet?
+      puts "Going to the toilet!"
+      go_toilet()
+      @map.update_location()
+    elsif rand(0) > 0.8
+      @session.cmd("say #{@phrases[:leaving].sample}")
+      @map.pick_next_exit()
+      @in_toilet = false
+    else
+      @bottles_drunk = @bottles_drunk + 1
+      puts "Bladder full" if needs_the_toilet?
+      available_players = @map.location.players.reject {|player| player.name == @name }
+      swear_someone(available_players) if rand(0) > 0.5
+      drop_and_pickup_bottle() if (rand(0) > 0.95 and available_players.length != 0)
+      @session.cmd(":#{@phrases[:before_sleep].sample}") if rand(0) > 0.7
+    end
+  end
+
+  private
+
+  def connect(session, name, password, start_location = nil)
+    session.waitfor(/currently active\./)
+    session.write("connect #{NAME} #{PASSWORD}\r\n")
+    session.cmd('String' => "OUTPUTPREFIX prefix", 'Match' => /Done/)
+    session.cmd('String' => "OUTPUTSUFFIX >done<", 'Match' => /Done/)
+    session.write("@TELEPORT me=##{start_location}\r\n") if start_location
+    session.cmd('look')
+  end
+
+  def setup(session, bottle_phrases)
+    session.cmd('@describe me=A lover of all things alcholic, hic.')
+    unless session.cmd('@FIND bottle').lines.find {|line| line =~ /bottle/}
+      session.cmd('@CREATE bottle')
+    end
+    session.cmd('@FIND bottle')=~ /\s+bottle\s*\(#(\d+)\)/
+    bottle_id = $1
+    session.write("@TELEPORT ##{bottle_id}=me\r\n")
+    session.cmd("@LOCK ##{bottle_id}=me")
+    session.cmd("@DESCRIBE ##{bottle_id}=A bottle")
+    session.cmd("@OSUCCESS ##{bottle_id}=#{bottle_phrases.sample}")
+    session.cmd("@LINK ##{bottle_id}=me")
+    bottle_id
+  end
+
+  def swear_someone(players)
+    unless players.empty?
+      player_name = players.sample.name
+      puts "Swearing at #{player_name}"
+      insult = @phrases[:mutterings].sample
+      @session.cmd("say #{insult % player_name}")
+      sleep(1 + rand(3))
+    end
+  end
+  
+  def drop_and_pickup_bottle()
+    puts "Dropping and picking up bottle"
+    @session.cmd("say #{@phrases[:bottle_pre].sample}")
+    sleep(2)
+    @session.cmd("drop ##{@bottleid}")
+    sleep(1 + rand(2))
+    @session.cmd("take ##{@bottleid}")
+    sleep(2)
+    @session.cmd("say #{@phrases[:bottle_post].sample}")
+    # Change the success on bottle pick up
+    @session.cmd("@OSUCCESS ##{@bottleid}=#{@phrases[:bottle_osucc].sample}")
+  end
+
+  def go_toilet()
+    @session.cmd("@teleport me=##{@toiletid}")
+    reset_bladder()
+    @session.cmd("say #{@phrases[:toilet].sample}")
+    sleep(1 + rand(2))
+  end
+
+  def needs_the_toilet?
+    (@bottles_drunk >= @bladder_size) and not @in_toilet
+  end
+
+  def reset_bladder
+    @bottles_drunk = 0
+    @bladder_size = 5 + rand(10)
+    @in_toilet = true
   end
 end
 
-def contents(session)
-  players = {}
-  exits = {}
-  here = session.cmd('examine here')
-  m = /Contents:(.*)Exits:(.*)/m.match(here)
-  if m
-    extract_item(session, m[1], /Type: Player/) {|name, id| players[name] = id }
-    extract_item(session, m[2], /Destination: .*?\(\#(\d+)\)/) {|name, id| exits[name.partition(';')[0]] = id }
+################################################################################
+class Map
+
+  attr_accessor :location
+
+  def initialize(session, nogos)
+    @session = session
+    @nogos = nogos
+    @visit_count = Hash.new(0)
+    @last_location_id = nil
+    @location = look()
   end
-  [players, exits]
+
+  def update_location()
+    @location = look()
+  end
+
+  def pick_next_exit()
+      # Look at current location
+      @location = look()
+      raise "Failed to find an exit at #{@location.name}!" if @location.exits.length == 0
+
+      # Reject any exits in the no-go list and last exit (where we came from) if we have the option to
+      exits = location.exits.reject{|exit| @nogos.include?(exit.destid) }
+      exits = exits.reject{|exit| exit.destid == @last_location_id } if exits.length > 1
+
+      # Collect potential destinations and order by visit count (low to high) pick one of the lowest to go to
+      order_of_visit = exits.collect {|exit| [exit, @visit_count[exit.destid]] }.sort {|a, b| a[1] <=> b[1] }
+      chose = order_of_visit.take_while {|i| i[1] == order_of_visit[0][1] }.sample()
+
+      # Update visit count, record chosen exit and move
+      @visit_count[chose[0].destid] = chose[1] + 1
+      @last_location_id = @location.id
+      puts "Moving to: #{chose[0].destname} (##{chose[0].destid})"
+      @session.cmd("move #{chose[0].name}")
+
+      # finally make sure our location is up to date
+      @location = look()
+  end
+
+  private
+
+  def look()
+    location = OpenStruct.new
+    location.exits = []
+    location.players = []
+    m = /(.*)Contents:(.*)Exits:(.*)/m.match(@session.cmd('examine here'))
+    if m
+      if m[1] =~ /^(.*?)\(#(\d+)\)/
+        location.name = $1
+        location.id = $2
+      end
+      extract_item(m[2], /Type:\s+Player/) {|player_name, player_id| location.players << OpenStruct.new(:name => player_name, :id => player_id) }
+      extract_item(m[3], /Destination:\s+(.*?)\(\#(\d+)\)/) do |names, id, dest, destid|
+        location.exits << OpenStruct.new(
+          :names => names,
+          :name => names.partition(';')[0],
+          :id => id,
+          :destname => dest,
+          :destid => destid
+        )
+      end
+    end
+    location
+  end
+
+  def extract_item(s, type)
+    m = s.scan(/\s*(.+)\(#(\d+)\)\s*/)
+    m.each do |item|
+      info = @session.cmd("examine ##{item[1]}")
+      m = type.match(info)
+      yield item + m[1..-1] if m
+    end
+  end
 end
 
-def swear(session, insults, players)
-  insult = insults.sample
-  session.cmd("say #{insult % players.keys.sample}")
-  sleep(1)
-  insult
-end
-
-def drop_and_pickup_bottle(session, bottle_id, pre, post)
-  session.cmd("say #{pre.sample}")
-  sleep(1)
-  session.cmd("drop ##{bottle_id}")
-  sleep(1 + rand(2))
-  session.cmd("take ##{bottle_id}")
-  sleep(1)
-  session.cmd("say #{post.sample}")
-end
-
-def go_toilet(session, messages)
-  session.cmd('@teleport me=#89')
-  sleep(1 + rand(2))
-  session.cmd("say #{messages.sample}")
-end
-
-# This needs to be robust!!!
+################################################################################
 if __FILE__ == $0
   host = ARGV[0]
   port = ARGV[1]
@@ -94,65 +201,27 @@ if __FILE__ == $0
     exit(-1)
   end
 
-  puts "loading phrases..."
+  puts "Loading drunken phrases..."
   phrases = YAML.load_file(File.join(File.dirname(__FILE__), 'drunkguy.yml'))
 
-  NAME = "drunk_guy"
+  NAME     = "drunk_guy"
   PASSWORD = "steaming_person"
-  
-  puts "Drunk guy starting on #{host}:#{port}"
+  TOILET   = 89
+  START_LOCATION = 0
+
+  puts "Drunk guy client starting on #{host}:#{port}"
   session = Net::Telnet.new('Host' => host, 'Port' => port, 'Prompt' => Regexp.new(">done<"))
 
-  connect(session, NAME, PASSWORD)
-  bottle_id = setup(session, phrases[:bottle_osucc])
-
-  in_toilet = false
+  drunkguy = DrunkGuy.new(session, NAME, PASSWORD, phrases, TOILET, START_LOCATION)
   while true
-    players, exits = contents(session)
-
-    if exits.length == 0
-      puts "Failed to find an exit! - stopping"
-      session.close()
-      exit(-1)
-    end
-
-    # todo - store previous room's and don't consider a move back to them
-    # unless they are the only option. Movement is a bit pants!!!
-    do_move = rand(0) > 0.6
-    if do_move
-      # Don't go to the toilet via a move.
-      next_exit = exits.keys.reject {|e| e.include?('toilet') }.sample
-      if next_exit
-
-        puts "Moving to: #{next_exit}"
-
-        session.cmd("say #{phrases[:leaving].sample}")
-        loc = session.cmd("move #{next_exit}")
-        if loc =~ /(.* \(#\d+\))/
-          puts "Now at: #{$1}"
-        end
-
-        # It doesn't matter if they have moved into the toilet
-        # just won't emit silly phrases once in a while.
-        in_toilet = false
-      end
-    elsif rand(0) > 0.98 and not in_toilet
-      puts "Moving directly to the toilet"
-      go_toilet(session, phrases[:toilet])
-      in_toilet = true
-      last_exit = nil
-    end
-
-    session.cmd("@OSUCCESS ##{bottle_id}=#{phrases[:bottle_osucc].sample}") if rand(0) > 0.95 # put in drop bottle
-    swear(session, phrases[:mutterings], players.reject {|player| player.include?(NAME) }) if rand(0) > 0.6
-    drop_and_pickup_bottle(session, bottle_id, phrases[:bottle_pre], phrases[:bottle_post]) if rand(0) > 0.9
-    session.cmd(":#{phrases[:before_sleep].sample}") if rand(0) > 0.7
-
-    sleep(3 + rand(1))
+    drunkguy.act()
+    sleep(1 + rand(3))
   end
 
+  # will never be hit!
   puts "Exiting now..."
   session.cmd('QUIT')
 
   session.close()
 end
+################################################################################
