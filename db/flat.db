@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-33
+27
 -1
 0
-82
+-1
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -306,8 +306,8 @@ enters the flat.
 the den
 A rectangular room, full of "stuff". A table occupies one wall of the room, it is adorned with computer monitors and assorted mess. A cast off leather settee sits close to the southern wall whilst the eastern wall is struggling to hold an ikea bookcase in place. A greek styled fireplace and small Edinburgh press occupy the northern wall and a grimy window props up the eastern wall. The owners clearly spend quite a bit of time here.
 -1
-68
-76
+110
+109
 -1
 -1
 
@@ -341,14 +341,14 @@ w;west
 -1
 -1
 -1
--1
+106
+You try to leave but the cable on the VCR pulls tight.
 
-
-
+falls over whilst attempting to leave.
 
 1
 0
-2
+10
 
 #22
 n;north
@@ -434,8 +434,8 @@ n;north
 front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautifull fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
--1
-56
+111
+115
 -1
 -1
 
@@ -896,7 +896,7 @@ You stand in a large fireplace, fortunately for you it isn't lit! Every so often
 
 #56
 fireplace
-
+A grand marble fireplace, its really amazing, honest. If Polwarth wasn't so off the beaten track you could offer this up as a tourist attraction.
 55
 -1
 -1
@@ -1216,19 +1216,19 @@ I won't ask why you wanted to stand inside the fireplace, or how you managed it.
 
 #76
 fireplace
-
+A small fireplace, which fails to create the splendor of the period it is aiming to come from. It's top is covered in yet more books.
 75
 -1
 -1
 69
--1
-
+106
+You try to leave but the cable on the VCR pulls tight.
 You squeeze yourself into the fireplace.
-
+falls over whilst attempting to leave.
 for some unknown reason, squeezes into the fireplace.
 1
 0
-2
+10
 
 #77
 use mirror;mirror
@@ -1313,10 +1313,10 @@ is attacked by a small girl.
 #82
 freyja
 
-33
+27
 -1
 0
--1
+1
 -1
 
 
@@ -1620,7 +1620,7 @@ Assorted letters, bills and other mail that should really be opened but has been
 33
 -1
 33
-1
+-1
 -1
 
 Stealing other peoples mail is most likely an offence?
@@ -1629,5 +1629,229 @@ is shoving bits of paper into their pockets.
 1
 1
 1
+
+#102
+pieces of paper
+A novel in the making. It appears to be about Elizabeth Woodville.
+19
+-1
+19
+68
+-1
+
+Fancying a read you pick up the pieces of paper.
+
+furtively squirrels away some pieces of paper.
+1
+1
+1
+
+#103
+bookcase
+A fine piece of IKEA craftmanship, this book shelf system occupies the southern corner of the room. It is stuffed with books, covering a set of diverse topics, such as computer programming, tarot reading, break dancing and mechanical engineering. There is a VCR tape nestling in amongst the books.
+-1
+-1
+-1
+76
+-1
+You consider climbing the bookcase, but decide it looks a little too precarious. You spot an old VCR perched on top, just within arms reach.
+
+tries to climb the bookcase.
+
+1
+0
+2
+
+#104
+tape
+An old VCR tape. I wonder what is on it?
+19
+-1
+19
+106
+106
+Without anything to play it on, what's the point of owning it?
+You pick up the tape.
+pulls something out of the bookcase then returns it.
+picks up something from the bookcase.
+1
+1
+65
+
+#105
+table
+Another cluttered surface. This table is covered in post-it notes, ruby programming manuals and dub reggae bass books. In its center is a small keyboard and an aging computer monitor. Toward the back of the table is a pile of candle stubs and flyers for burlesque shows.
+-1
+-1
+-1
+103
+-1
+
+
+
+
+1
+0
+2
+
+#106
+vcr
+An old VCR player/recorder. A non-descript make purchased for pennies around the time when VCR's died.
+19
+-1
+19
+102
+-1
+
+Its bulky and dangerously balanced on top of the bookcase, but you manage to retrieve it successfully. You note that its attached to a long cable and might even be plugged in.
+
+pulls a large object off from the top of the bookcase.
+1
+1
+65
+
+#107
+play;play vcr;play tape
+
+-1
+-1
+-1
+105
+104
+You slip the tape into the vcr. Bizzarely, it begins to play and projects an image of a poorly made stop animation film consisting of plasticine models and tomato ketchup.
+
+is surrounded by a flickering orb of light.
+
+1
+0
+2
+
+#108
+settee
+A comfortable leather settee, covered in bits of rizla papers and tissues.
+-1
+-1
+-1
+107
+-1
+Its a little too big to lift.
+
+is trying to lift the settee
+
+1
+0
+2
+
+#109
+press
+A small cupboard, whose opening is blocked by a couple of deck chairs and other random clutter.
+-1
+-1
+-1
+108
+-1
+You tug on the handle, the clutter surrounding the door gives way a little as a pile of shoes starts to fall out from behind the door. You decide not to go any further and tidy up the mess as best you can.
+
+is almost squashed by a pile of shoes and collapsing deck chairs.
+
+1
+0
+2
+
+#110
+bass guitar
+Borrowed some time ago, this is a regular bass guitar.
+19
+-1
+19
+104
+-1
+
+In the mood to boogie?
+
+picks up the bass guitar.
+1
+1
+1
+
+#111
+skylanders
+A collection of small figures, which when placed on the portal of power transform into their video game counterparts.
+27
+-1
+27
+112
+-1
+
+You pick up the figures and pocket them, even though they are clearly a childs toy.
+
+steals something.
+1
+1
+1
+
+#112
+drawings
+A collection of drawings depicting dragons.
+27
+-1
+27
+82
+-1
+
+
+
+
+1
+1
+1
+
+#113
+brown;brown settees;settees;sit;sit down
+Two lovely, comfortable settees. They do look comfy, maybe you should sit down?
+-1
+-1
+-1
+56
+-1
+As you sit down a large farting noise eminates from under one of the cushions. You quickly stand up again.
+
+lets out a large fart.
+
+1
+0
+2
+
+#114
+glass;table;glass table
+Chic and stylish, this table allows you to stair at the floor while you eat. Revealing a random collection of left overs from previous meals. Its also a pain to clean, any excuse. Some old table mats lounge amongst more paper and random items that have settled there.
+-1
+-1
+-1
+113
+-1
+Picking the table up is not a good idea.
+
+is trying to pick the table up.
+
+1
+0
+2
+
+#115
+bay;window;bay window
+The bay window looks out onto Polwarth Crescent. Below strange blurred blobs move about in the street, either you need to see an optician, or the owners should try cleaning the windows once in a while.
+-1
+-1
+-1
+114
+-1
+You wander into the bay and try to open a window, unfortunately they won't budge.
+
+tries to jump out of the window.
+
+1
+0
+2
 
 ***END OF DUMP***
