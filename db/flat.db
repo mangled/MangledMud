@@ -17,8 +17,8 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-27
--1
+48
+118
 0
 -1
 -1
@@ -387,7 +387,7 @@ hall Junction
 You are at the eastern end of the hall. The carpet is splattered with paint from a minor accident (a few years ago). A cupboard lies in front of you (to the south), its opening graced by assorted paraphenalia dropped in transist. You can go east, west or north.
 -1
 -1
-70
+117
 -1
 -1
 
@@ -435,7 +435,7 @@ front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautifull fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
 111
-115
+116
 -1
 -1
 
@@ -674,8 +674,8 @@ e;east
 freyja's room
 Toys and artifacts from a nine year old girl fill the available space. A paleontologist in the making, dinosaurs are the theme here (intermixed with Pokemon) and the floor is somewhat messy. A lovely brass bed greets you at the entrance. The northern wall is hugged by a large and dangerous shelving unit. The western wall hosts another press and the rooms main window. You can go north from here.
 -1
-81
-44
+82
+125
 -1
 -1
 
@@ -770,7 +770,7 @@ e;east
 master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by another press. You may go south from here.
 -1
--1
+1
 52
 -1
 -1
@@ -831,7 +831,7 @@ Serving as a dustbin for any object capable of falling over when its door is ope
 0
 
 #52
-cupboard
+right;cupboard
 
 51
 -1
@@ -1313,17 +1313,17 @@ is attacked by a small girl.
 #82
 freyja
 
-27
+42
 -1
 0
-1
+81
 -1
 
 
 
 
 82
-8
+11
 3
 fish1234
 #83
@@ -1796,7 +1796,7 @@ A collection of drawings depicting dragons.
 27
 -1
 27
-82
+-1
 -1
 
 
@@ -1849,6 +1849,166 @@ The bay window looks out onto Polwarth Crescent. Below strange blurred blobs mov
 You wander into the bay and try to open a window, unfortunately they won't budge.
 
 tries to jump out of the window.
+
+1
+0
+2
+
+#116
+table mats;table mat; mat
+Slightly frayed and spattered with assorted bits of food, these table mats have seen better days.
+-1
+-1
+-1
+115
+-1
+You try to pick up a mat but it seems to be stuck to the table by some crusted baked bean juice.
+
+is struggling with a table mat.
+
+1
+0
+2
+
+#117
+paint
+Some dried white paint, not that interesting really!
+-1
+-1
+-1
+70
+-1
+You try to srape the paint up but its now an integral part of the carpet and refuses to budge.
+
+bends down and scratches the carpet.
+
+1
+0
+2
+
+#118
+plastic dinosaur
+A toy replica of a stegasaurus.
+1
+-1
+42
+-1
+-1
+
+
+
+
+1
+1
+1
+
+#119
+bed
+A small persons bed. Unmade and littered with furry and slightly eye threatening plastic toys.
+-1
+-1
+-1
+44
+-1
+Tired, you lie down for a little nap. Zzzzz.
+
+is having a nap.
+
+1
+0
+2
+
+#120
+press
+From here its another press (cupboard), the door is closed.
+-1
+-1
+-1
+119
+-1
+You attempt to reach the press to open its door, but are forced to stop this adventure as a result of the amount of clutter covering the floor.
+
+attempts to navigate the mess on the floor, and fails.
+
+1
+0
+2
+
+#121
+shelving unit;shelving;unit
+Another IKEA wonder of the world. This spacious shelving unit has been put together well, but is suffering from having every piece of available space filled with stuff. The sheer weight of junk and the fact the unit is on an uneven floor makes it a tad lethal, still who would be daft enough to climb it?
+122
+-1
+-1
+120
+-1
+
+Fuelled by drink you think it would be a brilliant idea to climb the shelving unit.
+
+shins up the shelving unit.
+1
+0
+2
+
+#122
+top of shelving unit
+Various boxes (empty) from toys rest here, they should be thrown out but have been kept in case they ever become useful. Odd cast off's from school projects lie here too all snoozing under more layers of dust. You can go down.
+-1
+124
+123
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#123
+d;down
+
+42
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#124
+remote controlled dragonfly
+A cool radio controlled dragonfly.
+122
+-1
+122
+-1
+-1
+
+
+
+
+1
+1
+1
+
+#125
+window
+Another unwashed window, this one though has been decorated (a few years ago) by a friendly pidgeon.
+-1
+-1
+-1
+121
+-1
+You cannot reach the window due to a large sofa bed sitting right in front of it. The sofa bed is rarely used for its intended purpose, instead it functions as a comfy shelf system for more random objects, ranging from empty boxes to odd socks.
+
+is blocked by a sofa bed.
 
 1
 0
