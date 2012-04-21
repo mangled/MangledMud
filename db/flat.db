@@ -17,8 +17,8 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-48
-118
+24
+-1
 0
 -1
 -1
@@ -99,7 +99,7 @@ stairwell - bottom
 The bottom of a typical Edinburgh tennament stairwell. Rusty bike chains hang from the railing and the floor has some strange puddles of liquid on it. You can go up from here or travel further west or go back east.
 -1
 -1
-84
+135
 -1
 1
 
@@ -129,12 +129,12 @@ w;west
 #8
 w;west
 
+136
 -1
 -1
 -1
 -1
--1
-You head toward a small wooden door, possibly leading to the garden. Hideous noises from the evil pixies of Polwarth make you change your mind and so you head back.
+
 
 
 
@@ -240,10 +240,10 @@ Man, that's good...
 
 #15
 stairwell - 2nd floor
-To the south is a welcoming blue door the sounds of conversation and music eminate from behind it, screwed to its surface is a shiny brass nameplate, further down is a brass letter box. There is a doorbell to your left and further to the north is a twisty maze of passages.
+To the south is a welcoming blue door the sounds of conversation and music eminate from behind it, screwed to its surface is a shiny brass nameplate, further down is a brass letter box. There is a doorbell to your left and further to the north is a twisty maze of passages, you can also go back down the stairs.
 -1
 -1
-62
+134
 -1
 -1
 
@@ -386,7 +386,7 @@ d;down
 hall Junction
 You are at the eastern end of the hall. The carpet is splattered with paint from a minor accident (a few years ago). A cupboard lies in front of you (to the south), its opening graced by assorted paraphenalia dropped in transist. You can go east, west or north.
 -1
--1
+1
 117
 -1
 -1
@@ -674,7 +674,7 @@ e;east
 freyja's room
 Toys and artifacts from a nine year old girl fill the available space. A paleontologist in the making, dinosaurs are the theme here (intermixed with Pokemon) and the floor is somewhat messy. A lovely brass bed greets you at the entrance. The northern wall is hugged by a large and dangerous shelving unit. The western wall hosts another press and the rooms main window. You can go north from here.
 -1
-82
+118
 125
 -1
 -1
@@ -723,7 +723,7 @@ bathroom
 A cramped, space. The essential facilities of life jostle for attention. Almost worthy of a tate modern installation finished toilet rolls and dead(ish) plants lie beneath a ceiling of mould experiments. The southern wall is occupied by a lovely mirror and hand basin combination. A bath also settles back against the southern wall, the toilet "offers" a welcome to the west. There is a cord dangling to your right and you can go east from here.
 -1
 94
-97
+133
 -1
 -1
 
@@ -768,10 +768,10 @@ e;east
 
 #48
 master bedroom
-A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by another press. You may go south from here.
+A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
-1
-52
+-1
+126
 -1
 -1
 
@@ -1313,17 +1313,17 @@ is attacked by a small girl.
 #82
 freyja
 
-42
+89
 -1
 0
-81
+-1
 -1
 
 
 
 
 82
-11
+13
 3
 fish1234
 #83
@@ -1424,10 +1424,10 @@ escapes the dark place!
 
 #89
 toilet
-You stand in front of a continental style toilet (whatever that means). Its remarkably clean given the poor levels of cleanliness shown by the guests you have seen so far. You feel an urge to drop something (and no, not in a rude way). You may go east to the main part of the toilet.
+You stand in front of a continental style toilet (whatever that means). Its remarkably clean given the poor levels of cleanliness shown by the guests you have seen so far. A frosted window nestles happily in the wall behind the toilet. You feel an urge to drop something! You may go east to the main part of the toilet (this makes it sound like the bathroom is huge...it isn't).
 -1
--1
-93
+82
+129
 -1
 -1
 
@@ -1889,10 +1889,10 @@ bends down and scratches the carpet.
 #118
 plastic dinosaur
 A toy replica of a stegasaurus.
-1
--1
 42
 -1
+42
+81
 -1
 
 
@@ -2013,5 +2013,549 @@ is blocked by a sofa bed.
 1
 0
 2
+
+#126
+window
+A large window, flanked by some orange curtains, the window is partially open.
+127
+-1
+-1
+52
+-1
+
+You open the window a little more and climb out.
+
+climbs out of the window - it can't be that bad can it?
+1
+0
+2
+
+#127
+window ledge
+You balance percariously on the window ledge. Its a long way down... You can see a jungle come garden far below. You think you glimpse a person on the wall to your left. Must be your imagination? For your own safety you should do back in now.
+-1
+-1
+128
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#128
+in;back
+
+48
+-1
+-1
+-1
+-1
+
+You climb back in.
+
+climbs carefully back into the flat.
+1
+0
+2
+
+#129
+window
+A rectangular, frosted window, ideal for bathroom privacy. It also looks clean, probably as a result of steam, rather than the owners paying any attention to it.
+130
+-1
+-1
+93
+-1
+
+For some unknown reason you feel the urge to climb out of the window.
+
+hops up on the toilet, then climbs out of the window!
+1
+0
+2
+
+#130
+window ledge
+A very, and I mean it, narrow window ledge. Pidgeons clearly perch here often. To your left is a black drain-pipe, it doesn't look very safe, if I was you I would go back in and drink your self to a stupor.
+-1
+-1
+149
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#131
+e;east
+
+6
+-1
+-1
+138
+-1
+
+
+
+
+1
+0
+2
+
+#132
+in;back
+
+89
+-1
+-1
+-1
+-1
+
+You wisely decide to return to the party.
+
+wriggles back through the window.
+1
+0
+2
+
+#133
+w;west
+
+89
+-1
+-1
+97
+-1
+
+
+
+
+1
+0
+2
+
+#134
+door
+Its a blue door!
+-1
+-1
+-1
+62
+-1
+
+
+
+
+1
+0
+2
+
+#135
+puddle;puddles;liquid
+Not sure what the liquid is, probably toxic.
+-1
+-1
+-1
+84
+-1
+
+
+
+
+1
+0
+2
+
+#136
+back passage way
+A brown passage way. Flaky paint is accompanied by a substantial amount of dead snails, stuck all over the ceiling. Further to the west the passage ends with a rustic wooden door and east will take you back to the stairwell.
+-1
+-1
+141
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#137
+snail;snails
+They look dead.
+-1
+-1
+-1
+-1
+-1
+The snails are stuck to the ceiling, you don't have acme extendo legs, so you can't reach them.
+
+jumps up and down grabbing at the ceiling.
+
+1
+0
+2
+
+#138
+w;west
+
+139
+-1
+-1
+137
+-1
+
+You walk to the end of the passage and exit through the door.
+
+disappears through the door.
+1
+0
+2
+
+#139
+garden
+You stand in a small triangular garden overlooked by dozens of windows. The garden is fenced off by a brick wall to the north and iron railings to the south. The lawn is unkempt and weeds dominate its surface. There is a compost bin in the apex and assorted bushes and plants scattered about the borders. A long and dangerous looking drain pipe clings to the wall, you can also go back through the door to the east.
+-1
+150
+152
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#140
+e;east;door
+
+136
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#141
+door
+This door has seen better times. It has an enchanting aura though and fits the word rustic to a tee. The lower corner has a large hole in it, this is probably where the snails get in.
+139
+-1
+-1
+131
+-1
+
+You walk up to and open the door.
+
+exits through the door.
+1
+0
+2
+
+#142
+drain;pipe;drain pipe;climb
+An old iron drain pipe, it doesn't look too secure, unless rust is super strong? Only a lunatic would consider climbing it!
+143
+-1
+-1
+140
+-1
+
+Hey, you only live once! You hop on the drain pipe and shin up it for a while.
+
+climbs up the drain pipe.
+1
+0
+2
+
+#143
+drain pipe
+You are clinging onto the drain pipe for dear life. The tennament block wall fills your vision. You can go up or down. I would suggest down.
+-1
+-1
+145
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#144
+d;down
+
+139
+-1
+-1
+-1
+-1
+
+wisely you climb back down the drain pipe.
+
+scuttles downwards.
+1
+0
+2
+
+#145
+u;up
+
+146
+-1
+-1
+144
+-1
+
+You shin further up the drain pipe.
+
+shins further up the drain pipe.
+1
+0
+2
+
+#146
+drain pipe top
+You are clinging onto the drain pipe for dear life. Sounds of water gurgle through it every so often and odd smells waft through a window ajar to your left. Are you sure you don't want to go down?
+-1
+-1
+148
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#147
+d;down
+
+143
+-1
+-1
+-1
+-1
+
+Weee down you go.
+
+wizzes downwards.
+1
+0
+2
+
+#148
+left;window;ledge
+You see a frosted window, in front of which is a small window ledge.
+130
+-1
+-1
+147
+-1
+
+You spring off the drain pipe and land (just) on the ledge.
+
+jumps off the drain pipe.
+1
+0
+2
+
+#149
+drain;drain pipe;climb;d;down
+A rusty drain pipe. If you were insane you could climb onto it.
+146
+-1
+-1
+132
+-1
+
+ok, you are insane!
+
+climbs onto the drain pipe
+1
+0
+2
+
+#150
+grass
+Some grass.
+139
+-1
+139
+-1
+-1
+
+
+
+
+1
+1
+1
+
+#151
+compost bin
+A left over gift from a long since vanished tennent, this vessel of rotting organic material smells earthy and inviting, if you like romping in manure. You could enter the bin, its wide enough, but why on earth you would want to is beyond me. You can wander back east to the main part of the garden.
+-1
+-1
+154
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#152
+bin;compost;compost bin;apex;w;west
+
+151
+-1
+-1
+142
+-1
+
+
+
+
+1
+0
+2
+
+#153
+e;east
+
+139
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#154
+enter
+
+155
+-1
+-1
+153
+-1
+
+You climb into the compost bin and sink into its warm center. Strange, it seems quite a bit bigger inside than out.
+
+is playing hide and seek in the compost bin.
+1
+0
+2
+
+#155
+buried in vegetables
+You are surrounded by rotting vegetables. Its not clear how or if you can escape, so don't ask me for help.
+-1
+159
+158
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#156
+help
+
+-1
+-1
+-1
+-1
+-1
+What did i just say?
+
+
+
+1
+0
+2
+
+#157
+escape
+
+151
+-1
+-1
+156
+-1
+
+With quite a bit of effort you dig yourself out and escape to freedom.
+
+scratches around.
+1
+0
+2
+
+#158
+eat
+
+-1
+-1
+-1
+157
+-1
+Euurgch, are you that hungry, they are rotten you know?
+
+nibbles some rotten vegetables.
+
+1
+0
+2
+
+#159
+stinky twig
+Its a twig and it stinks of something unpleasant!
+155
+-1
+155
+-1
+-1
+
+It stinks, and your hands have adopted the smell now.
+
+
+1
+1
+1
 
 ***END OF DUMP***
