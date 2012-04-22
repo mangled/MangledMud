@@ -17,7 +17,7 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-24
+39
 -1
 0
 -1
@@ -386,7 +386,7 @@ d;down
 hall Junction
 You are at the eastern end of the hall. The carpet is splattered with paint from a minor accident (a few years ago). A cupboard lies in front of you (to the south), its opening graced by assorted paraphenalia dropped in transist. You can go east, west or north.
 -1
-1
+-1
 117
 -1
 -1
@@ -626,7 +626,7 @@ n;north
 hall end
 The end of the hall. Occupying the western alcove is a fascinating set of dusty shelves. You can go north, south, east or west.
 -1
--1
+1
 98
 -1
 -1
@@ -771,7 +771,7 @@ master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
 -1
-126
+163
 -1
 -1
 
@@ -819,7 +819,7 @@ master cupboard
 Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. You may leave west.
 -1
 -1
-54
+178
 -1
 -1
 
@@ -2557,5 +2557,309 @@ It stinks, and your hands have adopted the smell now.
 1
 1
 1
+
+#160
+wardrobe
+A magnificent edwardian wardrobe. Consisting of two doors flanking a large mirror.
+48
+-1
+-1
+126
+-1
+Prying in people's wardrobe's, don't think so.
+
+looks furtive
+
+1
+0
+2
+
+#161
+chest
+A chest of drawers, its top is piled high with odd socks, empty deodorant containers and generally anything you could imagine.
+-1
+-1
+-1
+160
+-1
+Sorting through the general mess would take you hours.
+
+half heartedly pokes some socks.
+
+1
+0
+2
+
+#162
+bed
+A vast ocean of a bed, unmade of course.
+164
+-1
+-1
+161
+-1
+
+
+
+
+1
+0
+2
+
+#163
+box
+An old blue toy box repurposed as a bedside table, it surfaces, again are covered in all sorts of life's jetsum.
+164
+-1
+-1
+162
+-1
+
+
+
+
+1
+0
+2
+
+#164
+bedroom corner
+The northern corner of the master bedroom. You stand next to the bed and a blue box, on top of which is an alarm clock, bedside light and more bits and bobs. To your right is a full length mirror and the floor is littered with shoes. You can do back south if you so wish.
+-1
+-1
+173
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#165
+back;s;south
+
+48
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#166
+mirror
+A fairly modern mirror, it tilts at the middle.
+-1
+-1
+-1
+165
+-1
+You stand and admire your wonderful body and fine features.
+
+is acting vain.
+
+1
+0
+2
+
+#167
+shoes
+Various assorted shoes. Why they fill the bedroom floor when they should be in the hall is anyone's guess.
+-1
+-1
+-1
+166
+-1
+There not your size or style.
+
+tries on some shoes.
+
+1
+0
+2
+
+#168
+clock;alarm
+A very old digital alarm clock. Its a wonder it still works.
+-1
+-1
+-1
+167
+-1
+Why would you want it?
+
+checks the time.
+
+1
+0
+2
+
+#169
+light
+An elegant lamp, art deco in style. The lampshade has a nice curve to it and tassells dangle down from its rim.
+-1
+-1
+-1
+168
+-1
+Its a bit too big and plugged into the wall.
+
+contemplates stealing the bedside lamp.
+
+1
+0
+2
+
+#170
+box
+A wooden toy box.
+-1
+-1
+-1
+169
+-1
+You can't open it with all this junk on top.
+
+tries to open the box.
+
+1
+0
+2
+
+#171
+bed
+The right hand side of the bed. You can just make out some objects underneath the bed, fancy a peek?
+-1
+-1
+-1
+170
+-1
+The strong smell of man sweat puts you off.
+
+holds nose.
+
+1
+0
+2
+
+#172
+underneath bed
+The underneath of the bed is jammed full of boxes (is this a surprise). You can stand up.
+-1
+176
+174
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#173
+peek;d;down;underneath
+
+172
+-1
+-1
+171
+-1
+
+You crouch down to get a better view
+
+gets on hands and knees
+1
+0
+2
+
+#174
+stand;up;stand up
+
+164
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+2
+
+#175
+whip
+A small black whip.
+172
+-1
+172
+-1
+-1
+
+
+
+waves a small black whip about.
+1
+1
+257
+
+#176
+mad book
+An old mad comic book.
+172
+-1
+172
+175
+-1
+
+
+
+
+1
+1
+257
+
+#177
+boiler
+It's a hot water boiler. What else can I say?
+-1
+-1
+-1
+54
+-1
+It's too big and dangerous to pick up.
+
+hugs the boiler
+
+1
+0
+2
+
+#178
+shelves
+Yet another IKEA wonder of shelving. This is clearly a cheap unit, held together by the clutter it looks a little unstable.
+-1
+-1
+-1
+177
+-1
+Sorting through the clutter would take ages.
+
+is rummaging through the shelves.
+
+1
+0
+2
 
 ***END OF DUMP***
