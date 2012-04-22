@@ -1,19 +1,15 @@
-# An experiment at making a simple bot for the flat.db and the
-# launch party.
+# A simple bot for the flat.db database and the launch party.
 #
 # ** This bot assumes the existance of a player: drunk_guy steaming_person
 # ** and that this player is a wizard.
 #
 # i.e. login, create drunk_guy steaming_person
-# as wizard @set drunk_guy=WIZARD
+# as a wizard @set drunk_guy=WIZARD
 #
-# THIS IS WIP
 require 'yaml'
 require 'net/telnet'
 require 'ostruct'
 require_relative '../test/player.rb'
-
-# Needs some robustness checks
 
 ################################################################################
 class DrunkGuy
@@ -30,20 +26,21 @@ class DrunkGuy
     reset_bladder()
   end
 
-  def act()
-    if needs_the_toilet?
+  def act(movement_allowed = true)
+    if needs_the_toilet? and movement_allowed
       puts "Going to the toilet!"
       go_toilet()
       @map.update_location()
-    elsif rand(0) > 0.8
+    elsif rand(0) > 0.8 and movement_allowed
       @session.cmd("say #{@phrases[:leaving].sample}")
       @map.pick_next_exit()
       @in_toilet = false
     else
+      @map.update_location()
       @bottles_drunk = @bottles_drunk + 1
-      puts "Bladder full" if needs_the_toilet?
+      puts "Bladder full" if (needs_the_toilet? and movement_allowed)
       available_players = @map.location.players.reject {|player| player.name == @name }
-      swear_someone(available_players) if rand(0) > 0.5
+      swear_someone(available_players) if rand(0) > 0.7
       drop_and_pickup_bottle() if (rand(0) > 0.95 and available_players.length != 0)
       @session.cmd(":#{@phrases[:before_sleep].sample}") if rand(0) > 0.7
     end
@@ -111,7 +108,7 @@ class DrunkGuy
 
   def reset_bladder
     @bottles_drunk = 0
-    @bladder_size = 5 + rand(10)
+    @bladder_size = 7 + rand(10)
     @in_toilet = true
   end
 end
@@ -138,9 +135,9 @@ class Map
       @location = look()
       raise "Failed to find an exit at #{@location.name}!" if @location.exits.length == 0
 
-      # Reject any exits in the no-go list and last exit (where we came from) if we have the option to
-      exits = location.exits.reject{|exit| @nogos.include?(exit.destid) }
-      exits = exits.reject{|exit| exit.destid == @last_location_id } if exits.length > 1
+      # Reject any exits in the no-go list, circular (bogus exits) and last exit (where we came from) if we have the option to
+      exits = @location.exits.reject{|exit| @nogos.include?(exit.destid) }
+      exits = exits.reject{|exit| (exit.destid == @last_location_id) or (exit.destid == @location.id) } if exits.length > 1
 
       # Collect potential destinations and order by visit count (low to high) pick one of the lowest to go to
       order_of_visit = exits.collect {|exit| [exit, @visit_count[exit.destid]] }.sort {|a, b| a[1] <=> b[1] }
@@ -215,7 +212,7 @@ if __FILE__ == $0
   drunkguy = DrunkGuy.new(session, NAME, PASSWORD, phrases, TOILET, START_LOCATION)
   while true
     drunkguy.act()
-    sleep(1 + rand(3))
+    sleep(1 + rand(4))
   end
 
   # will never be hit!

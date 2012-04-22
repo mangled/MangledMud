@@ -2,7 +2,7 @@
 Limbo
 You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. You can go west through the door, or just give up now!
 -1
-179
+2
 4
 -1
 -1
@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-30
+45
 -1
 0
--1
+94
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -482,7 +482,7 @@ w;west
 hall
 Half way along the magnificent hall, you stand next to the kitchen (to the south) and by a small collection of art produced by the artist in residence. You may saunter south, east or west from here.
 -1
-1
+-1
 80
 -1
 -1
@@ -626,7 +626,7 @@ n;north
 hall end
 The end of the hall. Occupying the western alcove is a fascinating set of dusty shelves. You can go north, south, east or west.
 -1
--1
+82
 98
 -1
 -1
@@ -661,14 +661,14 @@ e;east
 -1
 -1
 -1
--1
+182
+Maybe you should dispose of that diamond first?
 
-
-
+looks lovingly at something shiny.
 
 1
 0
-2
+10
 
 #42
 freyja's room
@@ -693,14 +693,14 @@ s;south
 -1
 -1
 41
--1
+182
+Maybe you should dispose of that diamond first?
 
-
-
+looks lovingly at something shiny.
 
 1
 0
-2
+10
 
 #44
 n;north
@@ -722,7 +722,7 @@ n;north
 bathroom
 A cramped, space. The essential facilities of life jostle for attention. Almost worthy of a tate modern installation finished toilet rolls and dead(ish) plants lie beneath a ceiling of mould experiments. The southern wall is occupied by a lovely mirror and hand basin combination. A bath also settles back against the southern wall, the toilet "offers" a welcome to the west. There is a cord dangling to your right and you can go east from here.
 -1
-94
+1
 133
 -1
 -1
@@ -757,21 +757,21 @@ e;east
 -1
 -1
 -1
--1
+182
+Maybe you should dispose of that diamond first?
 
-
-
+looks lovingly at something shiny.
 
 1
 0
-2
+10
 
 #48
 master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
--1
-163
+182
+181
 -1
 -1
 
@@ -789,14 +789,14 @@ n;north
 -1
 -1
 46
--1
+182
+Maybe you should dispose of that diamond first?
 
-
-
+looks lovingly at something shiny.
 
 1
 0
-2
+10
 
 #50
 s;south
@@ -805,14 +805,14 @@ s;south
 -1
 -1
 -1
--1
+183
+As you try to leave the key swells up in size and pushes you back into the room!
 
-
-
+is stopped from leaving by a giant key!
 
 1
 0
-2
+10
 
 #51
 master cupboard
@@ -882,7 +882,7 @@ w;west
 fireplace
 You stand in a large fireplace, fortunately for you it isn't lit! Every so often lumps of coal dust fall playfully upon your head from above. You may go north.
 -1
--1
+184
 79
 -1
 -1
@@ -1313,7 +1313,7 @@ is attacked by a small girl.
 #82
 freyja
 
-89
+39
 -1
 0
 -1
@@ -1323,7 +1323,7 @@ freyja
 
 
 82
-13
+14
 3
 fish1234
 #83
@@ -1426,7 +1426,7 @@ escapes the dark place!
 toilet
 You stand in front of a continental style toilet (whatever that means). Its remarkably clean given the poor levels of cleanliness shown by the guests you have seen so far. A frosted window nestles happily in the wall behind the toilet. You feel an urge to drop something! You may go east to the main part of the toilet (this makes it sound like the bathroom is huge...it isn't).
 -1
-82
+-1
 129
 -1
 -1
@@ -2021,21 +2021,21 @@ A large window, flanked by some orange curtains, the window is partially open.
 -1
 -1
 52
--1
-
+183
+The key swells up in size and pushes you back.
 You open the window a little more and climb out.
-
+is attacked by a giant key!
 climbs out of the window - it can't be that bad can it?
 1
 0
-2
+10
 
 #127
 window ledge
-You balance percariously on the window ledge. Its a long way down... You can see a jungle come garden far below. You think you glimpse a person on the wall to your left. Must be your imagination? For your own safety you should do back in now.
+You balance percariously on the window ledge. Its a long way down... You can vaguely see a jungle come garden far below. A dark starry sky wraps itself around the tennament roofs, if only you had a telescope you could look through it and into the heavens themselves. Out of the corner of your eye you think you glimpse a person on the wall to your left. Must be your imagination? For your own safety you should do back in now.
 -1
--1
-128
+183
+185
 -1
 -1
 
@@ -2053,14 +2053,14 @@ in;back
 -1
 -1
 -1
--1
-
+184
+With the telescope in its expanded position you can't fit through the window.
 You climb back in.
-
+is struggling to get back in through the window.
 climbs carefully back into the flat.
 1
 0
-2
+10
 
 #129
 window
@@ -2069,14 +2069,14 @@ A rectangular, frosted window, ideal for bathroom privacy. It also looks clean, 
 -1
 -1
 93
--1
-
+182
+Maybe you should dispose of that diamond first?
 For some unknown reason you feel the urge to climb out of the window.
-
+looks lovingly at something shiny.
 hops up on the toilet, then climbs out of the window!
 1
 0
-2
+10
 
 #130
 window ledge
@@ -2576,7 +2576,7 @@ looks furtive
 
 #161
 chest
-A chest of drawers, its top is piled high with odd socks, empty deodorant containers and generally anything you could imagine.
+A chest of drawers, its top is piled high with odd socks, empty deodorant containers and generally anything you could imagine. A small container sits amongst the mess.
 48
 -1
 -1
@@ -2865,10 +2865,10 @@ is rummaging through the shelves.
 #179
 lock
 
-0
+180
 -1
 0
-2
+-1
 -1
 
 
@@ -2878,4 +2878,100 @@ lock
 0
 3
 lock1234
+#180
+hidy hole
+The wizards secret hidy hole for players who act as locks.
+-1
+179
+-1
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#181
+container
+It looks like a small jewellary box.
+48
+-1
+-1
+163
+183
+Its locked.
+You open the box, inside is a large diamond!
+tries to open a small box.
+finds a large diamond!
+1
+0
+2
+
+#182
+diamond
+A huge and very expensive diamond. I would sacrifice that now, it looks like its worth quite a bit!
+48
+-1
+48
+-1
+183
+
+
+
+
+1
+19
+321
+
+#183
+key
+A small golden key, you just need to find something to open now.
+127
+-1
+127
+-1
+184
+
+You pull the key from the sky itself. How weird.
+
+grabs something from the sky!
+1
+1
+321
+
+#184
+telescope
+A small plasticy telescope.
+55
+-1
+55
+-1
+-1
+
+
+
+
+1
+1
+257
+
+#185
+look through;look telescope;telescope
+
+127
+-1
+-1
+128
+184
+hmm would be handy right now.
+You look through the telescope at the night sky. You can see a key dangling in front of your eyes!
+
+lifts a telescope to their eye.
+1
+0
+2
+
 ***END OF DUMP***
