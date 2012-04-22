@@ -17,7 +17,7 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-39
+48
 -1
 0
 -1
@@ -626,7 +626,7 @@ n;north
 hall end
 The end of the hall. Occupying the western alcove is a fascinating set of dusty shelves. You can go north, south, east or west.
 -1
-1
+-1
 98
 -1
 -1
@@ -770,7 +770,7 @@ e;east
 master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
--1
+1
 163
 -1
 -1
@@ -2561,7 +2561,7 @@ It stinks, and your hands have adopted the smell now.
 #160
 wardrobe
 A magnificent edwardian wardrobe. Consisting of two doors flanking a large mirror.
-48
+-1
 -1
 -1
 126

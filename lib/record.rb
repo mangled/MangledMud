@@ -11,9 +11,9 @@ module MangledMud
     attr_accessor :name
     # @return [String] A description of the object
     attr_accessor :description
-    # @return [Number] The objects container
+    # @return [Number] For exits, destination record reference number else the objects container
     attr_accessor :location
-    # @return [Number] For exits, destination record reference number, else the starting record reference number for a room or players contents, see {#next}
+    # @return [Number] The starting record reference number for a room or players contents, see {#next}
     attr_accessor :contents
     # @return [Number] Record reference number to first exit for rooms see {#next} else record reference number to home for things and players
     attr_accessor :exits
