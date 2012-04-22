@@ -33,11 +33,11 @@ potrzebie
 #2
 buzzer
 An old and broken down buzzer (entry door system). There are seven plastic buttons, each with faded flat numbers on them.
+0
 -1
 -1
 -1
--1
-1
+179
 You try pressing a number of the buttons on the buzzer, ignoring the odd blue spark nothing of interest seems to happen
 
 is pressing the buzzer.
@@ -81,11 +81,11 @@ w;west
 #5
 writings
 It appears someone used the wall as a betting diary.
+3
 -1
 -1
 -1
--1
-1
+179
 you try in vain to scratch the writing off the wall
 
 is scratching the wall.
@@ -209,11 +209,11 @@ d;down
 #13
 s;south
 
--1
+10
 -1
 -1
 12
--1
+179
 Barbed wire and electric fences block your way...
 
 
@@ -225,11 +225,11 @@ Barbed wire and electric fences block your way...
 #14
 n;north
 
--1
+10
 -1
 -1
 13
--1
+179
 Man, that's good...
 
 
@@ -929,11 +929,11 @@ n;north
 #58
 nameplate
 A brass nameplate, screwed tightly to the door, I doubt it would budge. Engraved on the nameplate are the words: M CREWE and D RUDKIN.
--1
+15
 -1
 -1
 23
-1
+179
 you can't take it, its stuck tight.
 
 tries to steal the brass nameplate.
@@ -945,11 +945,11 @@ tries to steal the brass nameplate.
 #59
 doorbell;push doorbell;press doorbell
 Hanging by a single screw, this doorbell has seen better days. Wires can be seen dangling out of it and if I were you I would knock rather than use it.
--1
+15
 -1
 -1
 58
--1
+179
 As hard as you press no sound can be heard.
 As hard as you press no sound can be heard.
 madly presses the doorbell.
@@ -961,11 +961,11 @@ madly presses the doorbell.
 #60
 letter box
 A wide and inviting (if you were a piece of mail) letter box. Whoever fitted this used an industrial jig to cut out the hole, clearly a more practical person than a perfectionist!
--1
+15
 -1
 -1
 59
--1
+179
 Peeking through the letter box you see a small hallway.
 
 peeks through the letter box.
@@ -977,11 +977,11 @@ peeks through the letter box.
 #61
 n;north
 
--1
+15
 -1
 -1
 60
--1
+179
 You wander about the stairwell for a while.
 
 wanders around looking aimless.
@@ -993,11 +993,11 @@ wanders around looking aimless.
 #62
 knock
 
--1
+15
 -1
 -1
 61
--1
+179
 You knock on the door like a man possessed, nobody seems to be coming though.
 
 knocks hard on the door.
@@ -1009,11 +1009,11 @@ knocks hard on the door.
 #63
 smell
 
--1
+10
 -1
 -1
 16
--1
+179
 Good stuff.
 
 inhales the heady aroma.
@@ -1025,11 +1025,11 @@ inhales the heady aroma.
 #64
 bookcase
 The bookcase is covered in a jumble of stuff, most of which is attempting to hide under a layer of dust. Behind some ill fitting glass doors there lies a random collection of reading material.
--1
+17
 -1
 -1
 25
--1
+179
 Getting inside the bookcase wouldn't be a good idea!
 
 tries to get inside the bookcase.
@@ -1041,11 +1041,11 @@ tries to get inside the bookcase.
 #65
 shoes
 Clearly the owners have a love of eccentric fashion as these shoes demonstrate. Many of the shoes look like they should be thrown out, the remaining shoes look like they are in some kind of shoe mating ritual.
--1
+17
 -1
 -1
 64
--1
+179
 
 
 
@@ -1105,11 +1105,11 @@ picks up a rather dead plant.
 #69
 window
 A fine piece of modern double glazing, the window looks out onto the main road outside.
--1
+19
 -1
 -1
 21
--1
+179
 You try to peer onto the street below, unfortunately layers of mud and dirt block your view. Clearly window cleaners are an unknown entity in these parts.
 
 struggles to look out of the window.
@@ -1233,11 +1233,11 @@ for some unknown reason, squeezes into the fireplace.
 #77
 use mirror;mirror
 The mirror is covered in spatters of toothpaste and some foreign stains that are best not guessed at!
--1
+45
 -1
 -1
 91
--1
+179
 You look lovingly at your face.
 
 is staring at their face in the mirror, how vain.
@@ -1281,11 +1281,11 @@ disappears upwards.
 #80
 art
 Mainly (nude) figure drawings - Have the owners any decency displaying this filth upon their walls?
--1
+30
 -1
 -1
 40
--1
+179
 stealing the owners artwork wouldn't be nice.
 
 attempts to peel some artwork from the wall.
@@ -1441,11 +1441,11 @@ You stand in front of a continental style toilet (whatever that means). Its rema
 #90
 wine;rack;wine rack
 A modern affair, delicately crafted by an apprentice blacksmith half-cut from the night before.
--1
+33
 -1
 -1
 37
--1
+179
 The rack is empty, may-be you should have brought some drink with you?
 
 is attempting to steal alcohol.
@@ -1473,11 +1473,11 @@ walks off in a strange waddling fashion
 #92
 use toilet;flush toilet
 
+89
 -1
 -1
 -1
--1
--1
+179
 You flush the toilet, what fun.
 
 is using the toilet, I would look away if I were you.
@@ -1521,11 +1521,11 @@ is picking up some disgusting green looking stuff.
 #95
 mould
 The "green mould" covers the ceiling, it might be a bit loose.
--1
+45
 -1
 -1
 77
--1
+179
 The "green mould" looks revolting, its growing all over the ceiling. Some of it looks loose!
 
 is gazing skywards.
@@ -1537,11 +1537,11 @@ is gazing skywards.
 #96
 hand basin;basin
 A grubby hand basin.
--1
+45
 -1
 -1
 95
--1
+179
 You wash your hands noting that the soap is missing and a towel would come in handy.
 
 dries hands on self.
@@ -1553,11 +1553,11 @@ dries hands on self.
 #97
 use bath;bath;get in bath
 A big bath, you could probably fit two people in it.
--1
+45
 -1
 -1
 96
--1
+179
 You consider having a bath but remember you are at someone else's party in a bathroom without a lock and so decide not to.
 
 starts getting undressed then decides decency is probably a good idea.
@@ -1569,11 +1569,11 @@ starts getting undressed then decides decency is probably a good idea.
 #98
 shelves
 These shelves would be perfect for displaying little knick knacks detailing wonderful journeys around the world. Instead they contain odd tat dressed in dust (which seems to be a common theme around here).
--1
+39
 -1
 -1
 49
--1
+179
 You try to grab an item from the shelves, but are driven back by the ensuing dust storm.
 
 is madly coughing and spluttering.
@@ -1601,11 +1601,11 @@ gets more drunk.
 #100
 open fridge;fridge
 Humming quietly this state of the art fridge would look out of place in this flat, if not for the random guff stuck to its doors.
--1
+36
 -1
 -1
 38
--1
+179
 No matter how hard you pull, the fridge door won't open, probably something todo with all that ice creeping out from around its edges!
 
 is frantically tugging at the fridge door.
@@ -1649,11 +1649,11 @@ furtively squirrels away some pieces of paper.
 #103
 bookcase
 A fine piece of IKEA craftmanship, this book shelf system occupies the southern corner of the room. It is stuffed with books, covering a set of diverse topics, such as computer programming, tarot reading, break dancing and mechanical engineering. There is a VCR tape nestling in amongst the books.
--1
+19
 -1
 -1
 76
--1
+179
 You consider climbing the bookcase, but decide it looks a little too precarious. You spot an old VCR perched on top, just within arms reach.
 
 tries to climb the bookcase.
@@ -1681,11 +1681,11 @@ picks up something from the bookcase.
 #105
 table
 Another cluttered surface. This table is covered in post-it notes, ruby programming manuals and dub reggae bass books. In its center is a small keyboard and an aging computer monitor. Toward the back of the table is a pile of candle stubs and flyers for burlesque shows.
--1
+19
 -1
 -1
 103
--1
+179
 
 
 
@@ -1713,11 +1713,11 @@ pulls a large object off from the top of the bookcase.
 #107
 play;play vcr;play tape
 
--1
+19
 -1
 -1
 105
-104
+179
 You slip the tape into the vcr. Bizzarely, it begins to play and projects an image of a poorly made stop animation film consisting of plasticine models and tomato ketchup.
 
 is surrounded by a flickering orb of light.
@@ -1729,11 +1729,11 @@ is surrounded by a flickering orb of light.
 #108
 settee
 A comfortable leather settee, covered in bits of rizla papers and tissues.
--1
+19
 -1
 -1
 107
--1
+179
 Its a little too big to lift.
 
 is trying to lift the settee
@@ -1745,11 +1745,11 @@ is trying to lift the settee
 #109
 press
 A small cupboard, whose opening is blocked by a couple of deck chairs and other random clutter.
--1
+19
 -1
 -1
 108
--1
+179
 You tug on the handle, the clutter surrounding the door gives way a little as a pile of shoes starts to fall out from behind the door. You decide not to go any further and tidy up the mess as best you can.
 
 is almost squashed by a pile of shoes and collapsing deck chairs.
@@ -1809,11 +1809,11 @@ A collection of drawings depicting dragons.
 #113
 brown;brown settees;settees;sit;sit down
 Two lovely, comfortable settees. They do look comfy, maybe you should sit down?
--1
+27
 -1
 -1
 56
--1
+179
 As you sit down a large farting noise eminates from under one of the cushions. You quickly stand up again.
 
 lets out a large fart.
@@ -1825,11 +1825,11 @@ lets out a large fart.
 #114
 glass;table;glass table
 Chic and stylish, this table allows you to stair at the floor while you eat. Revealing a random collection of left overs from previous meals. Its also a pain to clean, any excuse. Some old table mats lounge amongst more paper and random items that have settled there.
--1
+27
 -1
 -1
 113
--1
+179
 Picking the table up is not a good idea.
 
 is trying to pick the table up.
@@ -1841,11 +1841,11 @@ is trying to pick the table up.
 #115
 bay;window;bay window
 The bay window looks out onto Polwarth Crescent. Below strange blurred blobs move about in the street, either you need to see an optician, or the owners should try cleaning the windows once in a while.
--1
+27
 -1
 -1
 114
--1
+179
 You wander into the bay and try to open a window, unfortunately they won't budge.
 
 tries to jump out of the window.
@@ -1857,11 +1857,11 @@ tries to jump out of the window.
 #116
 table mats;table mat; mat
 Slightly frayed and spattered with assorted bits of food, these table mats have seen better days.
--1
+27
 -1
 -1
 115
--1
+179
 You try to pick up a mat but it seems to be stuck to the table by some crusted baked bean juice.
 
 is struggling with a table mat.
@@ -1873,11 +1873,11 @@ is struggling with a table mat.
 #117
 paint
 Some dried white paint, not that interesting really!
--1
+24
 -1
 -1
 70
--1
+179
 You try to srape the paint up but its now an integral part of the carpet and refuses to budge.
 
 bends down and scratches the carpet.
@@ -1905,11 +1905,11 @@ A toy replica of a stegasaurus.
 #119
 bed
 A small persons bed. Unmade and littered with furry and slightly eye threatening plastic toys.
--1
+42
 -1
 -1
 44
--1
+179
 Tired, you lie down for a little nap. Zzzzz.
 
 is having a nap.
@@ -1921,11 +1921,11 @@ is having a nap.
 #120
 press
 From here its another press (cupboard), the door is closed.
--1
+42
 -1
 -1
 119
--1
+179
 You attempt to reach the press to open its door, but are forced to stop this adventure as a result of the amount of clutter covering the floor.
 
 attempts to navigate the mess on the floor, and fails.
@@ -2001,11 +2001,11 @@ A cool radio controlled dragonfly.
 #125
 window
 Another unwashed window, this one though has been decorated (a few years ago) by a friendly pidgeon.
--1
+42
 -1
 -1
 121
--1
+179
 You cannot reach the window due to a large sofa bed sitting right in front of it. The sofa bed is rarely used for its intended purpose, instead it functions as a comfy shelf system for more random objects, ranging from empty boxes to odd socks.
 
 is blocked by a sofa bed.
@@ -2145,11 +2145,11 @@ w;west
 #134
 door
 Its a blue door!
--1
+15
 -1
 -1
 62
--1
+179
 
 
 
@@ -2161,11 +2161,11 @@ Its a blue door!
 #135
 puddle;puddles;liquid
 Not sure what the liquid is, probably toxic.
--1
+6
 -1
 -1
 84
--1
+179
 
 
 
@@ -2193,11 +2193,11 @@ A brown passage way. Flaky paint is accompanied by a substantial amount of dead 
 #137
 snail;snails
 They look dead.
+136
 -1
 -1
 -1
--1
--1
+179
 The snails are stuck to the ceiling, you don't have acme extendo legs, so you can't reach them.
 
 jumps up and down grabbing at the ceiling.
@@ -2497,11 +2497,11 @@ You are surrounded by rotting vegetables. Its not clear how or if you can escape
 #156
 help
 
+155
 -1
 -1
 -1
--1
--1
+179
 What did i just say?
 
 
@@ -2529,11 +2529,11 @@ scratches around.
 #158
 eat
 
--1
+155
 -1
 -1
 157
--1
+179
 Euurgch, are you that hungry, they are rotten you know?
 
 nibbles some rotten vegetables.
@@ -2561,11 +2561,11 @@ It stinks, and your hands have adopted the smell now.
 #160
 wardrobe
 A magnificent edwardian wardrobe. Consisting of two doors flanking a large mirror.
--1
+48
 -1
 -1
 126
--1
+179
 Prying in people's wardrobe's, don't think so.
 
 looks furtive
@@ -2577,11 +2577,11 @@ looks furtive
 #161
 chest
 A chest of drawers, its top is piled high with odd socks, empty deodorant containers and generally anything you could imagine.
--1
+48
 -1
 -1
 160
--1
+179
 Sorting through the general mess would take you hours.
 
 half heartedly pokes some socks.
@@ -2657,11 +2657,11 @@ back;s;south
 #166
 mirror
 A fairly modern mirror, it tilts at the middle.
--1
+164
 -1
 -1
 165
--1
+179
 You stand and admire your wonderful body and fine features.
 
 is acting vain.
@@ -2673,11 +2673,11 @@ is acting vain.
 #167
 shoes
 Various assorted shoes. Why they fill the bedroom floor when they should be in the hall is anyone's guess.
--1
+164
 -1
 -1
 166
--1
+179
 There not your size or style.
 
 tries on some shoes.
@@ -2689,11 +2689,11 @@ tries on some shoes.
 #168
 clock;alarm
 A very old digital alarm clock. Its a wonder it still works.
--1
+164
 -1
 -1
 167
--1
+179
 Why would you want it?
 
 checks the time.
@@ -2705,11 +2705,11 @@ checks the time.
 #169
 light
 An elegant lamp, art deco in style. The lampshade has a nice curve to it and tassells dangle down from its rim.
--1
+164
 -1
 -1
 168
--1
+179
 Its a bit too big and plugged into the wall.
 
 contemplates stealing the bedside lamp.
@@ -2721,11 +2721,11 @@ contemplates stealing the bedside lamp.
 #170
 box
 A wooden toy box.
--1
+164
 -1
 -1
 169
--1
+179
 You can't open it with all this junk on top.
 
 tries to open the box.
@@ -2737,11 +2737,11 @@ tries to open the box.
 #171
 bed
 The right hand side of the bed. You can just make out some objects underneath the bed, fancy a peek?
--1
+164
 -1
 -1
 170
--1
+179
 The strong smell of man sweat puts you off.
 
 holds nose.
@@ -2833,11 +2833,11 @@ An old mad comic book.
 #177
 boiler
 It's a hot water boiler. What else can I say?
--1
+51
 -1
 -1
 54
--1
+179
 It's too big and dangerous to pick up.
 
 hugs the boiler
@@ -2849,11 +2849,11 @@ hugs the boiler
 #178
 shelves
 Yet another IKEA wonder of shelving. This is clearly a cheap unit, held together by the clutter it looks a little unstable.
--1
+51
 -1
 -1
 177
--1
+179
 Sorting through the clutter would take ages.
 
 is rummaging through the shelves.
