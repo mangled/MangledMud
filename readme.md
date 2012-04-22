@@ -24,6 +24,8 @@ We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` o
 
 There is also a flash based interface to try in your web browser, go to http://www.mangled.me/mangledmud/. See [documentation](#Documentation) below for information on how to play the game.
 
+As is usual with the internet, if you are reading this sometime in the future we cannot gaurantee to still be hosting these services.
+
 Install
 -------
 
@@ -65,6 +67,10 @@ You can also specify the port on which to run (the default is `4201`) and some o
 * `minimal.db` : A tiny database containing the minimal amount!
 * `small.db` : A slightly larger database
 
+There is also another database designed for a small re-launch party:
+
+* `flat.db`
+
 To connect, see [Trying it out](#TryingItOut) above. You should be greeted with some text, e.g.:
 
     Welcome to MangledMUD
@@ -97,7 +103,15 @@ features. This specific version was chosen as it had the least code pollution, l
 that it would be a simple step to port specific commands now that the code is in place - Through diff'ing the changes to the original and applying
 the desired functionality. Source code for later versions may be found [here](http://www.mudbytes.net/) (under code repository `/Tiny`, version `1.5.4(f)`).
 
+Note that this version of the code will probably not handle slightly later database formats as a result of extensions to some of the commands, `@lock` for example.
+If you are fortunate enough to have a later database and you wish to load it then please speak to us and we will look into addressing this.
+
 The git repository contains the original source, updated to compile with a modern gcc, it was removed before release in commit `d3601f7d2a7c598ce1dcd87fde1cd9931556d2e2`. Resurrecting it should be easy.
+
+Bots
+----
+
+We would have loved to incorporate one of the original chatter bots, but couldn't find any source. For the re-launch party we created some simple bots to spice things up. Look under `bots`, note these are very simple and fixed to the `flat.db` database.
 
 Enhancements
 ------------
