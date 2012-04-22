@@ -2,7 +2,7 @@
 Limbo
 You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. You can go west through the door, or just give up now!
 -1
-2
+179
 4
 -1
 -1
@@ -17,7 +17,7 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-48
+30
 -1
 0
 -1
@@ -482,7 +482,7 @@ w;west
 hall
 Half way along the magnificent hall, you stand next to the kitchen (to the south) and by a small collection of art produced by the artist in residence. You may saunter south, east or west from here.
 -1
--1
+1
 80
 -1
 -1
@@ -770,7 +770,7 @@ e;east
 master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
-1
+-1
 163
 -1
 -1
@@ -1286,9 +1286,9 @@ Mainly (nude) figure drawings - Have the owners any decency displaying this filt
 -1
 40
 -1
+stealing the owners artwork wouldn't be nice.
+
 attempts to peel some artwork from the wall.
-
-
 
 1
 0
@@ -2862,4 +2862,20 @@ is rummaging through the shelves.
 0
 2
 
+#179
+lock
+
+0
+-1
+0
+2
+-1
+
+
+
+
+179
+0
+3
+lock1234
 ***END OF DUMP***
