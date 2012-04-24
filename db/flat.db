@@ -1,6 +1,6 @@
 #0
-Limbo
-You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. You can go west through the door, or just give up now!
+main door
+You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. If you drop an object here, or set its home to be here, you probably won't be able to find it again (thats Polwarth for you). You can go west through the door, or just give up now!
 -1
 2
 4
@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-45
+10
 -1
 0
-94
+-1
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -99,7 +99,7 @@ stairwell - bottom
 The bottom of a typical Edinburgh tennament stairwell. Rusty bike chains hang from the railing and the floor has some strange puddles of liquid on it. You can go up from here or travel further west or go back east.
 -1
 -1
-135
+186
 -1
 1
 
@@ -162,7 +162,7 @@ An invoice from the stair cleaning company.
 stairwell - 1st floor
 Two baracaded doors lie north and south. An earthy, herby smell courts the live drums and guitar sounds eminating from the north facing door. You can go up or down from here.
 -1
--1
+1
 63
 -1
 -1
@@ -216,7 +216,7 @@ s;south
 179
 Barbed wire and electric fences block your way...
 
-
+stares at a door
 
 1
 0
@@ -232,7 +232,7 @@ n;north
 179
 Man, that's good...
 
-
+is attempting to break into someone's flat
 
 1
 0
@@ -435,7 +435,7 @@ front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautifull fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
 111
-116
+199
 -1
 -1
 
@@ -531,7 +531,7 @@ kitchen entrance
 An "L" shaped squeeze of a room. Devoid of windows the pea-green paint dominates, lovely. Flanking the western wall is an impressive attempt at assembling a kitchen unit. Beginning with a contemporary open space filled with a wine rack and various carrier bags it leads the eye forward toward the oven and end wall. On the eastern wall a make shift recycling "point" tries to pass itself off as a game of Jenga. You can go north or south from here.
 -1
 101
-90
+196
 -1
 -1
 
@@ -578,8 +578,8 @@ staggers up to the kitchen door then falls back inside.
 kitchen end
 Worth a visit (once), the work-surface tries to impress under the weight of varying bread purchases and random clutter. The fridge dominates here, or would do if it wasn't adorned with half baked magnetic poetry. Clearly a mop would be a wise investment. You can go north from here.
 -1
-99
-100
+198
+197
 -1
 -1
 
@@ -626,7 +626,7 @@ n;north
 hall end
 The end of the hall. Occupying the western alcove is a fascinating set of dusty shelves. You can go north, south, east or west.
 -1
-82
+-1
 98
 -1
 -1
@@ -722,8 +722,8 @@ n;north
 bathroom
 A cramped, space. The essential facilities of life jostle for attention. Almost worthy of a tate modern installation finished toilet rolls and dead(ish) plants lie beneath a ceiling of mould experiments. The southern wall is occupied by a lovely mirror and hand basin combination. A bath also settles back against the southern wall, the toilet "offers" a welcome to the west. There is a cord dangling to your right and you can go east from here.
 -1
-1
-133
+94
+195
 -1
 -1
 
@@ -882,7 +882,7 @@ w;west
 fireplace
 You stand in a large fireplace, fortunately for you it isn't lit! Every so often lumps of coal dust fall playfully upon your head from above. You may go north.
 -1
-184
+200
 79
 -1
 -1
@@ -911,7 +911,7 @@ A grand marble fireplace, its really amazing, honest. If Polwarth wasn't so off 
 2
 
 #57
-n;north
+n;north;exit;back;out
 
 27
 -1
@@ -1046,9 +1046,9 @@ Clearly the owners have a love of eccentric fashion as these shoes demonstrate. 
 -1
 64
 179
+Why? You already have a pair on!
 
-
-
+tries some shoes on.
 
 1
 0
@@ -1313,10 +1313,10 @@ is attacked by a small girl.
 #82
 freyja
 
-39
+180
 -1
 0
--1
+179
 -1
 
 
@@ -1385,7 +1385,7 @@ A dark place, there isn't an exit?
 
 
 
-is attempting to remedy that bad halitosis.
+
 1
 0
 64
@@ -1807,7 +1807,7 @@ A collection of drawings depicting dragons.
 1
 
 #113
-brown;brown settees;settees;sit;sit down
+settee;brown;brown settees;settees;sit;sit down
 Two lovely, comfortable settees. They do look comfy, maybe you should sit down?
 27
 -1
@@ -2166,9 +2166,9 @@ Not sure what the liquid is, probably toxic.
 -1
 84
 179
+I wouldn't recommend drinking it.
 
-
-
+looks thirsty
 
 1
 0
@@ -2179,7 +2179,7 @@ back passage way
 A brown passage way. Flaky paint is accompanied by a substantial amount of dead snails, stuck all over the ceiling. Further to the west the passage ends with a rustic wooden door and east will take you back to the stairwell.
 -1
 -1
-141
+188
 -1
 -1
 
@@ -2227,7 +2227,7 @@ garden
 You stand in a small triangular garden overlooked by dozens of windows. The garden is fenced off by a brick wall to the north and iron railings to the south. The lawn is unkempt and weeds dominate its surface. There is a compost bin in the apex and assorted bushes and plants scattered about the borders. A long and dangerous looking drain pipe clings to the wall, you can also go back through the door to the east.
 -1
 150
-152
+192
 -1
 -1
 
@@ -2291,7 +2291,7 @@ drain pipe
 You are clinging onto the drain pipe for dear life. The tennament block wall fills your vision. You can go up or down. I would suggest down.
 -1
 -1
-145
+193
 -1
 -1
 
@@ -2339,7 +2339,7 @@ drain pipe top
 You are clinging onto the drain pipe for dear life. Sounds of water gurgle through it every so often and odd smells waft through a window ajar to your left. Are you sure you don't want to go down?
 -1
 -1
-148
+194
 -1
 -1
 
@@ -2383,7 +2383,7 @@ jumps off the drain pipe.
 2
 
 #149
-drain;drain pipe;climb;d;down
+drain;pipe;drain pipe;climb;d;down
 A rusty drain pipe. If you were insane you could climb onto it.
 146
 -1
@@ -2882,7 +2882,7 @@ lock1234
 hidy hole
 The wizards secret hidy hole for players who act as locks.
 -1
-179
+82
 -1
 -1
 -1
@@ -2973,5 +2973,245 @@ lifts a telescope to their eye.
 1
 0
 2
+
+#186
+chains;bike chains;rusty
+Some old rusty (motor) bike chains.
+6
+-1
+-1
+135
+179
+They are locked.
+
+attempts some lock picking.
+
+1
+0
+2
+
+#187
+flaky paint;flaky;paint
+Its paint and its flaky! If it helps the paint is white.
+136
+-1
+-1
+141
+179
+Its out of reach.
+
+looks at the ceiling
+
+1
+0
+2
+
+#188
+hole
+A hole in the door.
+136
+-1
+-1
+187
+179
+You are too large to get through the hole.
+
+tries to squeeze themselves through a hole.
+
+1
+0
+2
+
+#189
+wall
+A tall brick wall. The morter is slightly crumbly.
+139
+-1
+-1
+152
+179
+Its too tall to climb
+
+tries to climb the wall
+
+1
+0
+2
+
+#190
+iron;railings;iron railings
+Gleaming black, these iron railings are perfectly designed to skewer anyone silly enough to fall out of a tree.
+139
+-1
+-1
+189
+179
+Climbing the railings would be fun, but you decide not to in case you might rip your funky party clothes.
+
+attempts to climb over the railings.
+
+1
+0
+2
+
+#191
+bushes;plants
+Clearly nobody around here likes gardening as these poor excuses for fauna testify.
+139
+-1
+-1
+190
+179
+Removing more plants would just make this garden even less garden like.
+
+tries to dig up some plants.
+
+1
+0
+2
+
+#192
+windows
+Hundreds of windows overlook you, lucky its dusk and you don't fancy a spot of nude sun bathing.
+139
+-1
+-1
+191
+179
+You cant reach them
+
+looks skyward
+
+1
+0
+2
+
+#193
+wall
+Its a big wall.
+143
+-1
+-1
+145
+179
+As if hanging on a drain pipe wasn't enough, you want to scale the wall bare handed, don't think so!
+
+eyes the wall
+
+1
+0
+2
+
+#194
+up
+It gives you vertigo.
+146
+-1
+-1
+148
+179
+You try to go up further but the creaking sound coming from the drain pipe puts you off.
+
+looks scared.
+
+1
+0
+2
+
+#195
+plants
+They are (were) plants, I think.
+45
+-1
+-1
+133
+179
+They start to crumble as you pick them up, so you decide to leave them alone.
+
+rustles some plants.
+
+1
+0
+2
+
+#196
+carrier;bags;carrier bags
+The carrier bags seem to contain tons more mail and random flyers from indian restaurants. It seems that "stuff" is moved into these from the work surface to create more room. Not sure what happens when the floor space is exceeded.
+33
+-1
+-1
+90
+179
+You rummage through them but find nothing of interest.
+
+rummages through some bags
+
+1
+0
+2
+
+#197
+poetry
+In amongst the innocent smoothy alphabet and fab ice cream bar, the "girl kiss touch love explore his big bottom" poem stands out.
+36
+-1
+-1
+100
+179
+It wouldn't be right.
+
+shuffles some magnets about for a bit.
+
+1
+0
+2
+
+#198
+bleach
+A bottle of bleach, from 2002, stil has some content!
+36
+-1
+36
+99
+-1
+
+
+
+
+1
+3
+1
+
+#199
+press
+Once you have seen one press (cupboard) you have seen them all. This one appears to be half open, straining to hold back yet more junk.
+27
+-1
+-1
+116
+179
+Its not worth visiting.
+
+strolls about peeking at things.
+
+1
+0
+2
+
+#200
+nude sculpture
+A tasteful metal sculpture of a naked woman bending backwards. Not to everyone's tastes.
+55
+-1
+55
+184
+-1
+
+Its quite heavy, but you manage to pick it up. It's a tad obvious your holding it!
+
+is holding a naked woman.
+1
+9
+1
 
 ***END OF DUMP***
