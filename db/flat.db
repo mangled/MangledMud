@@ -17,7 +17,7 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-10
+51
 -1
 0
 -1
@@ -162,7 +162,7 @@ An invoice from the stair cleaning company.
 stairwell - 1st floor
 Two baracaded doors lie north and south. An earthy, herby smell courts the live drums and guitar sounds eminating from the north facing door. You can go up or down from here.
 -1
-1
+-1
 63
 -1
 -1
@@ -771,7 +771,7 @@ master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
 182
-181
+208
 -1
 -1
 
@@ -818,7 +818,7 @@ is stopped from leaving by a giant key!
 master cupboard
 Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. You may leave west.
 -1
--1
+212
 178
 -1
 -1
@@ -853,14 +853,14 @@ out;leave
 -1
 -1
 -1
--1
+212
+You try to leave but the ladders bash off the door frame - I told you they were big!
 
-
-
+can't get out of the door.
 
 1
 0
-2
+10
 
 #54
 w;west
@@ -1541,11 +1541,11 @@ A grubby hand basin.
 -1
 -1
 95
-179
-You wash your hands noting that the soap is missing and a towel would come in handy.
-
+198
+May-be you should clean it first?
+After giving the basin a clean you wash your hands noting that the soap is missing and a towel would come in handy. As you finish the dirt creeps back again.
+considers washing their hands, but isn't sure they would end up any cleaner!
 dries hands on self.
-
 1
 0
 2
@@ -1648,15 +1648,15 @@ furtively squirrels away some pieces of paper.
 
 #103
 bookcase
-A fine piece of IKEA craftmanship, this book shelf system occupies the southern corner of the room. It is stuffed with books, covering a set of diverse topics, such as computer programming, tarot reading, break dancing and mechanical engineering. There is a VCR tape nestling in amongst the books.
-19
+
+201
 -1
 -1
 76
-179
-You consider climbing the bookcase, but decide it looks a little too precarious. You spot an old VCR perched on top, just within arms reach.
+-1
 
-tries to climb the bookcase.
+
+
 
 1
 0
@@ -1665,10 +1665,10 @@ tries to climb the bookcase.
 #104
 tape
 An old VCR tape. I wonder what is on it?
-19
+201
 -1
-19
-106
+201
+-1
 106
 Without anything to play it on, what's the point of owning it?
 You pick up the tape.
@@ -1676,7 +1676,7 @@ pulls something out of the bookcase then returns it.
 picks up something from the bookcase.
 1
 1
-65
+321
 
 #105
 table
@@ -1686,9 +1686,9 @@ Another cluttered surface. This table is covered in post-it notes, ruby programm
 -1
 103
 179
+There is nothing of interest there.
 
-
-
+rummages through the contents of the table.
 
 1
 0
@@ -1697,10 +1697,10 @@ Another cluttered surface. This table is covered in post-it notes, ruby programm
 #106
 vcr
 An old VCR player/recorder. A non-descript make purchased for pennies around the time when VCR's died.
-19
+201
 -1
-19
-102
+201
+104
 -1
 
 Its bulky and dangerously balanced on top of the bookcase, but you manage to retrieve it successfully. You note that its attached to a long cable and might even be plugged in.
@@ -1708,20 +1708,20 @@ Its bulky and dangerously balanced on top of the bookcase, but you manage to ret
 pulls a large object off from the top of the bookcase.
 1
 1
-65
+321
 
 #107
 play;play vcr;play tape
 
-19
+201
 -1
 -1
-105
-179
+204
+104
+You need to put a tape into it?
 You slip the tape into the vcr. Bizzarely, it begins to play and projects an image of a poorly made stop animation film consisting of plasticine models and tomato ketchup.
-
+prods at some buttons on an electrical device.
 is surrounded by a flickering orb of light.
-
 1
 0
 2
@@ -1732,11 +1732,11 @@ A comfortable leather settee, covered in bits of rizla papers and tissues.
 19
 -1
 -1
-107
+105
 179
-Its a little too big to lift.
+You sit down and chill out for a while.
 
-is trying to lift the settee
+sits down
 
 1
 0
@@ -1764,7 +1764,7 @@ Borrowed some time ago, this is a regular bass guitar.
 19
 -1
 19
-104
+102
 -1
 
 In the mood to boogie?
@@ -2560,15 +2560,15 @@ It stinks, and your hands have adopted the smell now.
 
 #160
 wardrobe
-A magnificent edwardian wardrobe. Consisting of two doors flanking a large mirror.
+A magnificent edwardian wardrobe. Consisting of two doors flanking a large mirror. The central door is ajar, you might be able to squeeze inside?
 48
 -1
 -1
 126
 179
-Prying in people's wardrobe's, don't think so.
 
-looks furtive
+
+
 
 1
 0
@@ -3168,7 +3168,7 @@ shuffles some magnets about for a bit.
 
 #198
 bleach
-A bottle of bleach, from 2002, stil has some content!
+A bottle of bleach, from 2002, it feels pretty full! Now you need to find some dirt to banish.
 36
 -1
 36
@@ -3212,6 +3212,198 @@ Its quite heavy, but you manage to pick it up. It's a tad obvious your holding i
 is holding a naked woman.
 1
 9
+1
+
+#201
+bookcase
+A fine piece of IKEA craftmanship, this book shelf system occupies the southern corner of the room. It is stuffed with books, covering a set of diverse topics, such as computer programming, tarot reading, break dancing and mechanical engineering. There is a tape nestling in amongst the books and piles of stuff on top of the bookcase too. You can go back north to the main living space.
+-1
+106
+203
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#202
+climb;bookcase
+
+201
+-1
+-1
+-1
+179
+You consider climbing the bookcase, but decide it looks a little too precarious. You spot an old VCR perched on top, just within arms reach.
+
+tries to climb the bookcase.
+
+1
+0
+2
+
+#203
+book;books
+Lots of books
+201
+-1
+-1
+107
+179
+Pulling one out might result in the whole shelf system falling down!
+
+peers at some books.
+
+1
+0
+2
+
+#204
+back;n;north
+
+19
+-1
+-1
+202
+104
+You should probably return (drop) the tape?
+
+is feeling a little guilty
+
+1
+0
+10
+
+#205
+clothing
+Assorted clothing lies about the room. Some male, some female, the female appears to have some dress and fashion sense, the male looks like he last went to a shop fifteen years ago.
+48
+-1
+-1
+181
+179
+After a good rummage you decide that none of the clothing would suit you.
+
+plays dressing up.
+
+1
+0
+2
+
+#206
+flannels;socks
+Small garments, flung randomnly about the place.
+48
+-1
+-1
+205
+179
+Why bother?
+
+is pretending to have a friend by placing a sock on their hand and talking to it.
+
+1
+0
+2
+
+#207
+inside wardrobe
+You are inside a spacious wardrobe, or it would be if it wasn't stuffed full of clothing. A good precentage of which seems to be used to occupy coat hanger space rather than the open air. Unsurprising really given the generally naff style sense it conveys. You can exit.
+-1
+210
+209
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#208
+squeeze;inside
+
+207
+-1
+-1
+206
+-1
+
+You squeeze into the wardrobe.
+
+disappears.
+1
+0
+2
+
+#209
+exit
+
+48
+-1
+-1
+-1
+-1
+
+You squeeze your way out.
+
+escapes the clothing.
+1
+0
+2
+
+#210
+black corset
+A sexy black corset.
+207
+-1
+207
+-1
+-1
+
+You just need someone to lace you up.
+
+is feeling kinky.
+1
+1
+1
+
+#211
+wrapping paper
+Assorted second hand wrapping paper. Ideal for kids birthday presents.
+51
+-1
+51
+1
+-1
+
+
+
+
+1
+3
+1
+
+#212
+ladders
+A very large ladder. Covered in paint, plaster and terminating in an improvised paint gaurd (plastic bag).
+51
+-1
+51
+211
+-1
+
+They are very big...
+
+stumbles around with a pair of ladders.
+1
+1
 1
 
 ***END OF DUMP***
