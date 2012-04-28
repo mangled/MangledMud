@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-48
+51
 -1
 0
-182
+212
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -528,10 +528,10 @@ e;east
 
 #33
 kitchen entrance
-An "L" shaped squeeze of a room. Devoid of windows the pea-green paint dominates, lovely. Flanking the western wall is an impressive attempt at assembling a kitchen unit. Beginning with a contemporary open space filled with a wine rack and various carrier bags it leads the eye forward toward the oven and end wall. On the eastern wall a make shift recycling "point" tries to pass itself off as a game of Jenga. You can go north or south from here.
+An "L" shaped squeeze of a room. Devoid of windows the pea-green paint dominates, lovely. Flanking the western wall is an impressive attempt at assembling a kitchen unit. Beginning with a contemporary open space filled with a wine rack and various carrier bags it leads the eye forward toward the oven and end wall. On the eastern wall a make shift recycling "point" tries to pass itself off as a game of Jenga. The beginning of the kitchen unit is coated in abandoned paper of varying types. You can go north or south from here.
 -1
-101
-196
+214
+215
 -1
 -1
 
@@ -770,7 +770,7 @@ looks lovingly at something shiny.
 master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
-1
+182
 208
 -1
 -1
@@ -816,10 +816,10 @@ is stopped from leaving by a giant key!
 
 #51
 master cupboard
-Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. You may leave west.
+Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. There is a magical feeling to this place. You may leave west.
 -1
-212
-178
+1
+217
 -1
 -1
 
@@ -3418,6 +3418,70 @@ You try to climb up the chimney but fail
 
 is covered in soot
 
+1
+0
+2
+
+#214
+business card
+A small white piece of card. On the front is says "the magical emporium inc." and the back has one word "shazam".
+33
+-1
+33
+101
+-1
+
+You feel a tingling magical sensation
+
+glows briefly.
+1
+1
+257
+
+#215
+paper
+The start of the kitchen worksurface is covered in bits of paper, magazines and debris. Layers of time are recorded in the various of strata's.
+33
+-1
+-1
+196
+179
+There is nothing of intrinsic value here
+
+rummages through a pile of paper.
+
+1
+0
+2
+
+#216
+master cupboard
+Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. There is a magical feeling to this place. You may leave west.
+-1
+-1
+-1
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#217
+shazam
+
+216
+-1
+-1
+178
+214
+Nothing happens...
+You feel a little weird
+is shouting silly words
+fades away...
 1
 0
 2
