@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-51
+33
 -1
 0
-212
+214
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -530,7 +530,7 @@ e;east
 kitchen entrance
 An "L" shaped squeeze of a room. Devoid of windows the pea-green paint dominates, lovely. Flanking the western wall is an impressive attempt at assembling a kitchen unit. Beginning with a contemporary open space filled with a wine rack and various carrier bags it leads the eye forward toward the oven and end wall. On the eastern wall a make shift recycling "point" tries to pass itself off as a game of Jenga. The beginning of the kitchen unit is coated in abandoned paper of varying types. You can go north or south from here.
 -1
-214
+1
 215
 -1
 -1
@@ -818,7 +818,7 @@ is stopped from leaving by a giant key!
 master cupboard
 Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. There is a magical feeling to this place. You may leave west.
 -1
-1
+212
 217
 -1
 -1
@@ -3343,7 +3343,7 @@ disappears.
 2
 
 #209
-exit
+out;back;leave;exit
 
 48
 -1
@@ -3459,7 +3459,7 @@ master cupboard
 Serving as a dustbin for any object capable of falling over when its door is opened. This small room holds all manner of things. To your left is a boiler, ahead a number of stuffed shelves, the same to your right. There is a magical feeling to this place. You may leave west.
 -1
 -1
--1
+221
 -1
 -1
 
@@ -3485,5 +3485,181 @@ fades away...
 1
 0
 2
+
+#218
+w;west
+
+222
+-1
+-1
+-1
+214
+A loud voice booms out "you may not leave here with any items belonging to the magical emporium inc. - thank you"
+Feeling a little more than strange, you struggle westward.
+is stuck
+Leaves in a swirl of rainbow colours
+1
+0
+10
+
+#219
+shazam
+
+216
+-1
+-1
+218
+179
+Nothing happens...
+
+and you are paradoxical
+
+1
+0
+2
+
+#220
+shelves
+Your vision blurs
+216
+-1
+-1
+219
+179
+You struggle to move your hands
+
+moves slowly
+
+1
+0
+2
+
+#221
+boiler
+You find concentrating difficult
+216
+-1
+-1
+220
+179
+You bounce off the boiler
+
+is acting weird
+
+1
+0
+2
+
+#222
+long corridor
+A very long and dimly lit corridor, a flourescent red arrow points the way, it looks like you have no alternative but to go somewhere in the direction it is pointing.
+-1
+-1
+224
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#223
+n;north;e;east;s;south;w;west;up;down
+
+222
+-1
+-1
+-1
+179
+You try to move but can't, maybe you should go somewhere else?
+
+wanders about for a bit.
+
+1
+0
+2
+
+#224
+go;somewhere;else;go somewhere;go somewhere else
+
+225
+-1
+-1
+223
+-1
+
+
+
+
+1
+0
+2
+
+#225
+somewhere
+You arrive somewhere. Its a lonely dark and empty place, in the distance you hear the sound of dripping water. There is someone here with you. You feel tension bubbling around in your head, the pressure is enough to make you scream.
+-1
+228
+227
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#226
+n;north;e;east;s;south;w;west;up;down
+
+225
+-1
+-1
+-1
+179
+There doesn't appear to be an exit in that direction
+
+tries to escape
+
+1
+0
+2
+
+#227
+scream
+
+207
+-1
+-1
+226
+-1
+
+You let out all your demons, that feels better.
+
+fades away
+1
+0
+2
+
+#228
+evil
+Some evil.
+225
+-1
+225
+-1
+-1
+
+Voices scream inside your head
+
+pulls hair and screams wildly
+1
+9
+257
 
 ***END OF DUMP***
