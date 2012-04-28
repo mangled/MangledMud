@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-51
+48
 -1
 0
--1
+182
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -147,7 +147,7 @@ A skyline cleaning services invoice.
 An invoice from the stair cleaning company.
 17
 -1
-6
+17
 -1
 -1
 
@@ -770,7 +770,7 @@ looks lovingly at something shiny.
 master bedroom
 A cozy room where the furniture appears to exist as support group for clothing, flannels, socks and other random objects of life as they wander about the surfaces. The southern wall is dominated by a large wooden wardrobe. To your right is a cupboard, onwards lies a chest of drawers. The northen wall hosts a bedside "box" and a rather large and unmade bed, flanked by a window and yet another press. You may go south from here.
 -1
-182
+1
 208
 -1
 -1
@@ -1203,7 +1203,7 @@ small fireplace
 I won't ask why you wanted to stand inside the fireplace, or how you managed it. Moving on, this is a small dusty fireplace which really should have never been designed or built, the sixties, gotta love that crazy time. You can exit.
 -1
 -1
-78
+213
 -1
 -1
 
@@ -3212,7 +3212,7 @@ Its quite heavy, but you manage to pick it up. It's a tad obvious your holding i
 is holding a naked woman.
 1
 9
-1
+257
 
 #201
 bookcase
@@ -3324,10 +3324,10 @@ You are inside a spacious wardrobe, or it would be if it wasn't stuffed full of 
 
 1
 0
-0
+32
 
 #208
-squeeze;inside
+squeeze;inside;squeeze inside
 
 207
 -1
@@ -3380,7 +3380,7 @@ Assorted second hand wrapping paper. Ideal for kids birthday presents.
 51
 -1
 51
-1
+-1
 -1
 
 
@@ -3405,5 +3405,21 @@ stumbles around with a pair of ladders.
 1
 1
 1
+
+#213
+up;climb
+
+75
+-1
+-1
+78
+179
+You try to climb up the chimney but fail
+
+is covered in soot
+
+1
+0
+2
 
 ***END OF DUMP***
