@@ -1,0 +1,5 @@
+databases:
+- flat.db: Designed for the re-launch party. It uses bots to spice things up. See "bots/". All the bots are present in the database. You can just run them.
+- minimal.db: Original minimal database, good for starting out with when building a new world
+- small.db: An original database, slightly populated, good for seeing how puzzles can be made (flat.db is also useful in this regard)
+
