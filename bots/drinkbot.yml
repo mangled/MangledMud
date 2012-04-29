@@ -1,0 +1,86 @@
+# Drink bot's phrases
+---
+# Pill
+:pill_say:  
+- pretty colours
+- spacey
+- taste the sounds man
+- nice pattern
+- big fish, little fish, cardboard box
+- potato, he, he
+- %s ones are really trippy
+- scarecrow
+:pill_do:
+- grins
+- smiles
+- dances
+- stares at hands
+- takes off some clothes
+- chews a %s pill
+- strokes the floor
+:pill_descriptions:
+- red and pink
+- small white
+- big purple
+- yellow
+- octagonal
+# Beer
+:beer_say:  
+- what
+- have you tried a %s
+- you look nice
+- you've pulled
+- fancy a fight
+:beer_do:
+- burps
+- licks lips
+- chuckles
+- farts
+- dribbles
+- is being sick in the corner
+:beer_descriptions:
+- cool and frothy
+- old winkle picker
+- scrot juggler
+- wizard brew
+# Wine
+:wine_say:  
+- merlot is lovely
+- I love your fingernails
+- darling you crack me up
+- %s is the best
+- wine is so cultured
+- I do apologise
+- Bach is brilliant
+:wine_do:
+- hic
+- blinks
+- spills some %s wine
+- licks lips
+- drops %s wine on self
+:wine_descriptions:
+- red
+- white
+- greenish
+- lemon and seeweed
+# Food
+:food_say:  
+- i'm stuffed
+- yummy
+- hmmmm
+- you tried the %s yet?
+:food_do:
+- munches on a %s
+- chews a %s slowly
+- drops some %s crumbs
+- throws some %s
+- coughs
+- sticks a %s in their ear
+:food_descriptions:
+- cheese pasty
+- spring roll
+- garlic baguette
+- sponge cake
+- cheese string
+- baked turnip
+

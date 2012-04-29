@@ -4,17 +4,18 @@
 # ** and that this player is a wizard.
 #
 # i.e. login, create drunk_guy steaming_person
-# as a wizard @set drunk_guy=WIZARD
+# as a wizard @find drunk_guy, @set #nnn=WIZARD
 #
 require 'yaml'
 require 'net/telnet'
 require 'ostruct'
+require_relative 'util'
 require_relative '../test/player.rb'
 
 ################################################################################
 class DrunkGuy
 
-  def initialize(session, name, password, phrases, toiletid, start_location = nil)
+  def initialize(session, name, password, phrases, toiletid, other_nogos, start_location = nil)
     @name = name
     @session = session
     @phrases = phrases
@@ -22,7 +23,7 @@ class DrunkGuy
     connect(session, name, password, start_location)
     @in_toilet = start_location == toiletid
     @bottleid = setup(session, phrases[:bottle_osucc])
-    @map = Map.new(session, [toiletid])
+    @map = Map.new(session, other_nogos << toiletid)
     reset_bladder()
   end
 
@@ -37,7 +38,7 @@ class DrunkGuy
       @in_toilet = false
     else
       @map.update_location()
-      @bottles_drunk = @bottles_drunk + 1
+      @bottles_drunk = @bottles_drunk + 1 if rand(0) > 0.5
       puts "Bladder full" if (needs_the_toilet? and movement_allowed)
       available_players = @map.location.players.reject {|player| player.name == @name }
       swear_someone(available_players) if rand(0) > 0.7
@@ -49,7 +50,7 @@ class DrunkGuy
   private
 
   def connect(session, name, password, start_location = nil)
-    session.waitfor(/currently active\./)
+    session.waitfor('Match' => /currently active\./)
     session.write("connect #{NAME} #{PASSWORD}\r\n")
     session.cmd('String' => "OUTPUTPREFIX prefix", 'Match' => /Done/)
     session.cmd('String' => "OUTPUTSUFFIX >done<", 'Match' => /Done/)
@@ -108,7 +109,7 @@ class DrunkGuy
 
   def reset_bladder
     @bottles_drunk = 0
-    @bladder_size = 7 + rand(10)
+    @bladder_size = 5 + rand(10)
     @in_toilet = true
   end
 end
@@ -123,20 +124,20 @@ class Map
     @nogos = nogos
     @visit_count = Hash.new(0)
     @last_location_id = nil
-    @location = look()
+    @location = Utilities.look(@session)
   end
 
   def update_location()
-    @location = look()
+    @location = Utilities.look(@session)
   end
 
   def pick_next_exit()
       # Look at current location
-      @location = look()
+      @location = Utilities.look(@session)
       raise "Failed to find an exit at #{@location.name}!" if @location.exits.length == 0
 
       # Reject any exits in the no-go list, circular (bogus exits) and last exit (where we came from) if we have the option to
-      exits = @location.exits.reject{|exit| @nogos.include?(exit.destid) }
+      exits = @location.exits.reject{|exit| @nogos.include?(exit.destid.to_i) }
       exits = exits.reject{|exit| (exit.destid == @last_location_id) or (exit.destid == @location.id) } if exits.length > 1
 
       # Collect potential destinations and order by visit count (low to high) pick one of the lowest to go to
@@ -150,42 +151,7 @@ class Map
       @session.cmd("move #{chose[0].name}")
 
       # finally make sure our location is up to date
-      @location = look()
-  end
-
-  private
-
-  def look()
-    location = OpenStruct.new
-    location.exits = []
-    location.players = []
-    m = /(.*)Contents:(.*)Exits:(.*)/m.match(@session.cmd('examine here'))
-    if m
-      if m[1] =~ /^(.*?)\(#(\d+)\)/
-        location.name = $1
-        location.id = $2
-      end
-      extract_item(m[2], /Type:\s+Player/) {|player_name, player_id| location.players << OpenStruct.new(:name => player_name, :id => player_id) }
-      extract_item(m[3], /Destination:\s+(.*?)\(\#(\d+)\)/) do |names, id, dest, destid|
-        location.exits << OpenStruct.new(
-          :names => names,
-          :name => names.partition(';')[0],
-          :id => id,
-          :destname => dest,
-          :destid => destid
-        )
-      end
-    end
-    location
-  end
-
-  def extract_item(s, type)
-    m = s.scan(/\s*(.+)\(#(\d+)\)\s*/)
-    m.each do |item|
-      info = @session.cmd("examine ##{item[1]}")
-      m = type.match(info)
-      yield item + m[1..-1] if m
-    end
+      @location = Utilities.look(@session)
   end
 end
 
@@ -204,12 +170,13 @@ if __FILE__ == $0
   NAME     = "drunk_guy"
   PASSWORD = "steaming_person"
   TOILET   = 89
+  TO_WINDOW = 130 # window ledge from bathroom
   START_LOCATION = 0
 
   puts "Drunk guy client starting on #{host}:#{port}"
   session = Net::Telnet.new('Host' => host, 'Port' => port, 'Prompt' => Regexp.new(">done<"))
 
-  drunkguy = DrunkGuy.new(session, NAME, PASSWORD, phrases, TOILET, START_LOCATION)
+  drunkguy = DrunkGuy.new(session, NAME, PASSWORD, phrases, TOILET, [TO_WINDOW], START_LOCATION)
   while true
     drunkguy.act()
     sleep(1 + rand(4))
