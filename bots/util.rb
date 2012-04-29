@@ -2,11 +2,11 @@
 
 module Utilities
 
-  def Utilities.look(session)
+  def Utilities.look(session, look_cmd = 'examine here')
     location = OpenStruct.new
     location.exits = []
     location.players = []
-    m = /(.*)Contents:(.*)Exits:(.*)/m.match(session.cmd('examine here'))
+    m = /(.*)Contents:(.*)Exits:(.*)/m.match(session.cmd(look_cmd))
     if m
       if m[1] =~ /^(.*?)\(#(\d+)\)/
         location.name = $1

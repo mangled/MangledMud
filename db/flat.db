@@ -2,7 +2,7 @@
 main door
 You stand in front of a blue door with a brass number "7" stuck to it. There is an antique buzzer (as in its old) to your left and the sounds of a party drift on the wind. If you drop an object here, or set its home to be here, you probably won't be able to find it again (thats Polwarth for you). You can go west through the door, or just give up now!
 -1
-2
+232
 4
 -1
 -1
@@ -434,7 +434,7 @@ n;north
 front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautifull fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
-111
+231
 199
 -1
 -1
@@ -2882,7 +2882,7 @@ lock1234
 hidy hole
 The wizards secret hidy hole for players who act as locks.
 -1
-82
+230
 -1
 -1
 -1
@@ -3678,4 +3678,52 @@ is weird
 0
 2
 
+#230
+somewhere_bot
+
+180
+-1
+0
+82
+-1
+
+
+
+
+230
+0
+19
+veryweird1
+#231
+drinkbot2000
+
+27
+-1
+27
+111
+-1
+
+
+
+
+231
+1
+19
+slaveforyou
+#232
+drunk_guy
+
+0
+-1
+0
+2
+-1
+
+
+
+
+232
+0
+19
+steaming_person
 ***END OF DUMP***
