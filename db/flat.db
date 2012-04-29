@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-33
+225
 -1
 0
-214
+228
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -530,7 +530,7 @@ e;east
 kitchen entrance
 An "L" shaped squeeze of a room. Devoid of windows the pea-green paint dominates, lovely. Flanking the western wall is an impressive attempt at assembling a kitchen unit. Beginning with a contemporary open space filled with a wine rack and various carrier bags it leads the eye forward toward the oven and end wall. On the eastern wall a make shift recycling "point" tries to pass itself off as a game of Jenga. The beginning of the kitchen unit is coated in abandoned paper of varying types. You can go north or south from here.
 -1
-1
+214
 215
 -1
 -1
@@ -3505,15 +3505,15 @@ Leaves in a swirl of rainbow colours
 #219
 shazam
 
-216
+51
 -1
 -1
 218
-179
-Nothing happens...
-
-and you are paradoxical
-
+214
+Nothing happens!
+You feel a little weird
+is shouting odd words again.
+fades away...
 1
 0
 2
@@ -3600,10 +3600,10 @@ go;somewhere;else;go somewhere;go somewhere else
 
 #225
 somewhere
-You arrive somewhere. Its a lonely dark and empty place, in the distance you hear the sound of dripping water. There is someone here with you. You feel tension bubbling around in your head, the pressure is enough to make you scream.
+A lonely dark and empty place, in the distance you hear the sound of dripping water. You feel tension bubbling around in your head, the pressure is enough to make you scream.
 -1
-228
-227
+1
+229
 -1
 -1
 
@@ -3661,5 +3661,21 @@ pulls hair and screams wildly
 1
 9
 257
+
+#229
+weird
+
+225
+-1
+-1
+227
+179
+Weird huh?
+
+is weird
+
+1
+0
+2
 
 ***END OF DUMP***
