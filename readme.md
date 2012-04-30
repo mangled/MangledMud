@@ -24,7 +24,7 @@ We are running a server at `f8f8ff.com` on port `2525` and at `www.mangled.me` o
 
 There is also a flash based interface to try in your web browser, go to http://www.mangled.me/mangledmud/. See [documentation](#Documentation) below for information on how to play the game.
 
-As is usual with the internet, if you are reading this sometime in the future we cannot gaurantee to still be hosting these services.
+As is usual with the internet, if you are reading this sometime in the future we cannot guarantee to still be hosting these services.
 
 Install
 -------

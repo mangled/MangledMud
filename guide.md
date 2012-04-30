@@ -300,7 +300,7 @@ Wizards do not need [MONEY](#MONEY) to do anything.
 
 #### <a id="DESTROYING"/>DESTROYING
 
-Nothing can be destroyed. However, everything can be reused. You can [GIVE](#GIVE) an object a new name with [@NAME](#@NAME), redescribe it with [@DESCRIBE](#@DESCRIBE), and set new [SUCCESS](#SUCCESS) and fail messages for it. Exits can be [@UNLINK](#@UNLINK)'d and picked up and dropped elsewhere, so you can pick up an extra exit and use it in another room.
+Nothing can be destroyed. However, everything can be reused. You can [GIVE](#GIVE) an object a new name with [@NAME](#@NAME), re-describe it with [@DESCRIBE](#@DESCRIBE), and set new [SUCCESS](#SUCCESS) and fail messages for it. Exits can be [@UNLINK](#@UNLINK)'d and picked up and dropped elsewhere, so you can pick up an extra exit and use it in another room.
 
 #### <a id="DROP-TO"/>DROP-TOs
 
