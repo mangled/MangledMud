@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 Wizard
 You see The Wizard.
-225
+27
 -1
 0
-228
+231
 -1
 "Get an honest job!" snarls the Wizard.
 
@@ -434,7 +434,7 @@ n;north
 front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautiful fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
-231
+1
 199
 -1
 -1
@@ -837,14 +837,14 @@ right;cupboard
 -1
 -1
 50
--1
+182
+Maybe you should dispose of that diamond first?
 
-
-
+looks lovingly at something shiny.
 
 1
 0
-2
+10
 
 #53
 out;leave
@@ -882,7 +882,7 @@ w;west
 fireplace
 You stand in a large fireplace, fortunately for you it isn't lit! Every so often lumps of coal dust fall playfully upon your head from above. You may go north.
 -1
-200
+184
 79
 -1
 -1
@@ -1397,14 +1397,14 @@ A long dangling cord, it probably controls the light switch?
 -1
 -1
 47
--1
-
+182
+The diamond is so large you might drop it.
 You pull the cord, oops.
-
+struggles to hold a shiny object.
 disappears!
 1
 0
-2
+10
 
 #88
 exit
@@ -2895,7 +2895,7 @@ The wizards secret hidy hole for players who act as locks.
 0
 
 #181
-container
+container;open container;open jewellery;open jewellery box
 It looks like a small jewellery box.
 48
 -1
@@ -2948,7 +2948,7 @@ A small plastic telescope.
 55
 -1
 55
--1
+200
 -1
 
 
@@ -3204,7 +3204,7 @@ A tasteful metal sculpture of a naked woman bending backwards. Not to everyone's
 55
 -1
 55
-184
+-1
 -1
 
 Its quite heavy, but you manage to pick it up. It's a tad obvious your holding it!
@@ -3589,20 +3589,20 @@ go;somewhere;else;go somewhere;go somewhere else
 -1
 -1
 223
--1
+183
+As you try to go somewhere the key in your pocket shouts "no-way"
 
-
-
+is being shouted at by a key!
 
 1
 0
-2
+10
 
 #225
-somewhere
+lost
 A lonely dark and empty place, in the distance you hear the sound of dripping water. You feel tension bubbling around in your head, the pressure is enough to make you scream.
 -1
-1
+228
 229
 -1
 -1
