@@ -17,10 +17,10 @@ is briefly visible through the mist.
 #1
 matthew
 You see a scruffy bearded man.
-27
+222
 -1
 27
-231
+-1
 1
 cheeky!
 
@@ -434,7 +434,7 @@ n;north
 front room
 A large white room, probably the "best aspect of the flat". Nothing on the walls due to the residents phobia for nails. A beautiful fireplace graces the southern wall with another press farther along. A room for relaxing in, echoed by the large brown settees gracing both the north and western aspects of the room. A large glass table occupies the eastern wall, splitting the bay window in two. You can go west from here.
 -1
-1
+231
 199
 -1
 -1
@@ -1599,17 +1599,17 @@ gets more drunk.
 1
 
 #100
-open fridge;fridge
+open fridge;fridge;open door
 Humming quietly this state of the art fridge would look out of place in this flat, if not for the random guff stuck to its doors.
-36
+233
 -1
 -1
 38
-179
-No matter how hard you pull, the fridge door won't open, probably something to-do with all that ice creeping out from around its edges!
+-1
 
-is frantically tugging at the fridge door.
+You pull hard on the fridge door...
 
+looks hungry.
 1
 0
 2
@@ -3554,7 +3554,7 @@ is acting weird
 long corridor
 A very long and dimly lit corridor, a fluorescent red arrow points the way, it looks like you have no alternative but to go somewhere in the direction it is pointing.
 -1
--1
+238
 224
 -1
 -1
@@ -3726,4 +3726,100 @@ drunk_guy
 0
 19
 steaming_person
+#233
+kitchen end
+Worth a visit (once), the work-surface tries to impress under the weight of varying bread purchases and random clutter. The fridge dominates here, or would do if it wasn't adorned with half baked magnetic poetry. Clearly a mop would be a wise investment. The fridge door is open, filling the room with a cool breeze. You can go north from here.
+-1
+237
+235
+-1
+-1
+
+
+
+
+1
+0
+0
+
+#234
+door;fridge
+The fridge door is wide open. There is little of interest inside the fridge.
+233
+-1
+-1
+-1
+179
+You are a little too large to fit in a fridge!
+
+attempts to climb in the fridge.
+
+1
+0
+2
+
+#235
+n;north
+
+33
+-1
+-1
+234
+-1
+
+You close the fridge door
+
+
+1
+0
+2
+
+#236
+hummus
+A half finished tub of hummus.
+233
+-1
+233
+-1
+-1
+
+
+
+
+1
+1
+1
+
+#237
+cheese string
+Looks like cheese, thats about as far as it goes.
+233
+-1
+233
+236
+-1
+
+You must be really hungry!
+
+
+1
+1
+1
+
+#238
+pikachu
+A home made pikachu plushie.
+222
+-1
+222
+1
+-1
+
+As you pick up pikachu a voice booms out "property of the wizard matthew, please return for a reward"
+
+
+1
+100
+1
+
 ***END OF DUMP***
