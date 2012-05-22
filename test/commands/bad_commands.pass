@@ -127,8 +127,6 @@
 	[31;1m1 Full names of exits can be used in place of a go or move command.  The[0m
 	[31;1m1 names "me" and "here" are special; me means the current player, and[0m
 	[31;1m1 here means the current player's location.[0m
-	[31;1m1 More information is available in the reference section of the Library,[0m
-	[31;1m1 north of the Temple.[0m
 	[31;1m1 Remember, no matter how bad it gets, you can always go home.[0m
 [32;1mwizard(1): help a[0m
 	[31;1m1 This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.[0m
@@ -151,8 +149,6 @@
 	[31;1m1 Full names of exits can be used in place of a go or move command.  The[0m
 	[31;1m1 names "me" and "here" are special; me means the current player, and[0m
 	[31;1m1 here means the current player's location.[0m
-	[31;1m1 More information is available in the reference section of the Library,[0m
-	[31;1m1 north of the Temple.[0m
 	[31;1m1 Remember, no matter how bad it gets, you can always go home.[0m
 [32;1mwizard(1): help a b[0m
 	[31;1m1 This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.[0m
@@ -175,8 +171,6 @@
 	[31;1m1 Full names of exits can be used in place of a go or move command.  The[0m
 	[31;1m1 names "me" and "here" are special; me means the current player, and[0m
 	[31;1m1 here means the current player's location.[0m
-	[31;1m1 More information is available in the reference section of the Library,[0m
-	[31;1m1 north of the Temple.[0m
 	[31;1m1 Remember, no matter how bad it gets, you can always go home.[0m
 [32;1mwizard(1): inventory[0m
 	[31;1m1 You are carrying:[0m

@@ -29,8 +29,6 @@ Creating player: "bob" with password "bar"
 	[31;1m2 Full names of exits can be used in place of a go or move command.  The[0m
 	[31;1m2 names "me" and "here" are special; me means the current player, and[0m
 	[31;1m2 here means the current player's location.[0m
-	[31;1m2 More information is available in the reference section of the Library,[0m
-	[31;1m2 north of the Temple.[0m
 	[31;1m2 Remember, no matter how bad it gets, you can always go home.[0m
 [32;1mbob(3): gripe I'm clueless[0m
 	[31;1m3 Your complaint has been duly noted.[0m

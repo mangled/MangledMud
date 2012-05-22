@@ -17,13 +17,13 @@ module MangledMud
     def test_do_help
       help = MangledMud::Help.new(@notifier)
       notify = sequence('notify')
-
+      
       @notifier.expects(:do_notify).with(0, Phrasebook.lookup('sorry-bad-file', "missing-help.txt")).in_sequence(notify)
       help.do_help(0, "missing-help.txt")
-
+      
       @notifier.expects(:do_notify).with(0, "This is MangledMUD version 1.0, a user-extendible, multi-user adventure game.").in_sequence(notify)
       @notifier.expects(:do_notify).with(0, "Basic commands: ").in_sequence(notify)
-      @notifier.expects(:do_notify).with(0, anything()).times(21).in_sequence(notify)
+      @notifier.expects(:do_notify).with(0, anything()).times(19).in_sequence(notify)
       help.do_help(0, "help.txt")
     end
 
