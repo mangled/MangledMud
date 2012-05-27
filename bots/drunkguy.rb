@@ -136,19 +136,45 @@ class Map
       @location = Utilities.look(@session)
       raise "Failed to find an exit at #{@location.name}!" if @location.exits.length == 0
 
-      # Reject any exits in the no-go list, circular (bogus exits) and last exit (where we came from) if we have the option to
+      # Reject any exits in the no-go list
       exits = @location.exits.reject{|exit| @nogos.include?(exit.destid.to_i) }
-      exits = exits.reject{|exit| (exit.destid == @last_location_id) or (exit.destid == @location.id) } if exits.length > 1
 
-      # Collect potential destinations and order by visit count (low to high) pick one of the lowest to go to
+      # Reject any circular (bogus exits)
+      exits = exits.reject{|exit| exit.destid == @location.id }
+
+      # Lastly we want only exits that lead away from this room, but it might be a dead end
+      go_back_exits = exits.find_all{|exit| exit.destid == @last_location_id }
+      go_elsewhere_exits = exits.find_all{|exit| exit.destid != @last_location_id }
+
+      # Now opt to go somewhere else, if possible
+      if go_elsewhere_exits.length > 0
+        exits = go_elsewhere_exits
+      else
+        exits = go_back_exits
+      end
+
+      # Collect potential destinations and order by visit count (low to high)
       order_of_visit = exits.collect {|exit| [exit, @visit_count[exit.destid]] }.sort {|a, b| a[1] <=> b[1] }
+
+      # Take all the lowest (equal) visit counted exits and pick one
       chose = order_of_visit.take_while {|i| i[1] == order_of_visit[0][1] }.sample()
 
-      # Update visit count, record chosen exit and move
-      @visit_count[chose[0].destid] = chose[1] + 1
+      # If we fail to find any exit then the room is one way so start at zero
       @last_location_id = @location.id
-      puts "Moving to: #{chose[0].destname} (##{chose[0].destid})"
-      @session.cmd("move #{chose[0].name}")
+      unless chose
+        puts "Failed to find an exit in exits #{exits}, so going back to #0"
+        puts "Was at #{@last_location_id}"
+        puts "Location #{@location.name} ##{@location.id} exits"
+        @location.exits.each do |exit|
+          puts "\tExit #{exit.name} ##{exit.id} dest #{exit.destid}"
+        end
+        @session.write("@TELEPORT me=##{0}\r\n")
+      else
+        # Update visit count, record chosen exit and move
+        @visit_count[chose[0].destid] = chose[1] + 1
+        puts "Moving to: #{chose[0].destname} (##{chose[0].destid})"
+        @session.cmd("move #{chose[0].name}")
+      end
 
       # finally make sure our location is up to date
       @location = Utilities.look(@session)
@@ -171,7 +197,7 @@ if __FILE__ == $0
   PASSWORD = "steaming_person"
   TOILET   = 89
   TO_WINDOW = 130 # window ledge from bathroom
-  START_LOCATION = 0
+  START_LOCATION = 201#146
 
   puts "Drunk guy client starting on #{host}:#{port}"
   session = Net::Telnet.new('Host' => host, 'Port' => port, 'Prompt' => Regexp.new(">done<"))
