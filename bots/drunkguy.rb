@@ -197,7 +197,7 @@ if __FILE__ == $0
   PASSWORD = "steaming_person"
   TOILET   = 89
   TO_WINDOW = 130 # window ledge from bathroom
-  START_LOCATION = 201#146
+  START_LOCATION = 0
 
   puts "Drunk guy client starting on #{host}:#{port}"
   session = Net::Telnet.new('Host' => host, 'Port' => port, 'Prompt' => Regexp.new(">done<"))
