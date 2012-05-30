@@ -120,6 +120,7 @@ module MangledMud
     def unbind
       puts "Closing connection: #{@connection_info}"
       server.connections.delete(self)
+      @session.shutdown()
     end
 
     def write_buffer()

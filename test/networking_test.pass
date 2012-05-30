@@ -200,112 +200,137 @@ To connect to your existing character, enter "connect name password"
 (rx) wizard: You give 100 pennies to 5.
 (tx) 1: inventory
 (rx) 1: You are carrying:
-(rx) 1: 110()
-(rx) 1: 19()
-(rx) 1: 18()
-(rx) 1: 17()
-(rx) 1: 16()
-(rx) 1: 15()
-(rx) 1: 14()
-(rx) 1: 13()
-(rx) 1: 12()
-(rx) 1: 11()
+(rx) 1: 010()
+(rx) 1: 09()
+(rx) 1: 08()
+(rx) 1: 07()
+(rx) 1: 06()
+(rx) 1: 05()
+(rx) 1: 04()
+(rx) 1: 03()
+(rx) 1: 02()
+(rx) 1: 01()
 (rx) 1: You have 0 pennies.
-(tx) 1: say 1
-(rx) 1: You say "1"
+(tx) 1: say 0
+(rx) 1: You say "0"
 (tx) 1: QUIT
 (rx) 1: 
 (rx) 1: ***Disconnected***
 (tx) 2: inventory
-(rx) 2: 1 says "1"
+(rx) 2: 1 says "0"
 (rx) 2: You are carrying:
-(rx) 2: 210()
-(rx) 2: 29()
-(rx) 2: 28()
-(rx) 2: 27()
-(rx) 2: 26()
-(rx) 2: 25()
-(rx) 2: 24()
-(rx) 2: 23()
-(rx) 2: 22()
-(rx) 2: 21()
+(rx) 2: 110()
+(rx) 2: 19()
+(rx) 2: 18()
+(rx) 2: 17()
+(rx) 2: 16()
+(rx) 2: 15()
+(rx) 2: 14()
+(rx) 2: 13()
+(rx) 2: 12()
+(rx) 2: 11()
 (rx) 2: You have 0 pennies.
-(tx) 2: say 2
-(rx) 2: You say "2"
+(tx) 2: say 1
+(rx) 2: You say "1"
 (tx) 2: QUIT
 (rx) 2: 
 (rx) 2: ***Disconnected***
 (tx) 3: inventory
-(rx) 3: 1 says "1"
-(rx) 3: 2 says "2"
+(rx) 3: 1 says "0"
+(rx) 3: 2 says "1"
 (rx) 3: You are carrying:
-(rx) 3: 310()
-(rx) 3: 39()
-(rx) 3: 38()
-(rx) 3: 37()
-(rx) 3: 36()
-(rx) 3: 35()
-(rx) 3: 34()
-(rx) 3: 33()
-(rx) 3: 32()
-(rx) 3: 31()
+(rx) 3: 210()
+(rx) 3: 29()
+(rx) 3: 28()
+(rx) 3: 27()
+(rx) 3: 26()
+(rx) 3: 25()
+(rx) 3: 24()
+(rx) 3: 23()
+(rx) 3: 22()
+(rx) 3: 21()
 (rx) 3: You have 0 pennies.
-(tx) 3: say 3
-(rx) 3: You say "3"
+(tx) 3: say 2
+(rx) 3: You say "2"
 (tx) 3: QUIT
 (rx) 3: 
 (rx) 3: ***Disconnected***
 (tx) 4: inventory
-(rx) 4: 1 says "1"
-(rx) 4: 2 says "2"
-(rx) 4: 3 says "3"
+(rx) 4: 1 says "0"
+(rx) 4: 2 says "1"
+(rx) 4: 3 says "2"
 (rx) 4: You are carrying:
-(rx) 4: 410()
-(rx) 4: 49()
-(rx) 4: 48()
-(rx) 4: 47()
-(rx) 4: 46()
-(rx) 4: 45()
-(rx) 4: 44()
-(rx) 4: 43()
-(rx) 4: 42()
-(rx) 4: 41()
+(rx) 4: 310()
+(rx) 4: 39()
+(rx) 4: 38()
+(rx) 4: 37()
+(rx) 4: 36()
+(rx) 4: 35()
+(rx) 4: 34()
+(rx) 4: 33()
+(rx) 4: 32()
+(rx) 4: 31()
 (rx) 4: You have 0 pennies.
-(tx) 4: say 4
-(rx) 4: You say "4"
+(tx) 4: say 3
+(rx) 4: You say "3"
 (tx) 4: QUIT
 (rx) 4: 
 (rx) 4: ***Disconnected***
 (tx) 5: inventory
-(rx) 5: 1 says "1"
-(rx) 5: 2 says "2"
-(rx) 5: 3 says "3"
-(rx) 5: 4 says "4"
+(rx) 5: 1 says "0"
+(rx) 5: 2 says "1"
+(rx) 5: 3 says "2"
+(rx) 5: 4 says "3"
 (rx) 5: You are carrying:
-(rx) 5: 510()
-(rx) 5: 59()
-(rx) 5: 58()
-(rx) 5: 57()
-(rx) 5: 56()
-(rx) 5: 55()
-(rx) 5: 54()
-(rx) 5: 53()
-(rx) 5: 52()
-(rx) 5: 51()
+(rx) 5: 410()
+(rx) 5: 49()
+(rx) 5: 48()
+(rx) 5: 47()
+(rx) 5: 46()
+(rx) 5: 45()
+(rx) 5: 44()
+(rx) 5: 43()
+(rx) 5: 42()
+(rx) 5: 41()
 (rx) 5: You have 0 pennies.
-(tx) 5: say 5
-(rx) 5: You say "5"
+(tx) 5: say 4
+(rx) 5: You say "4"
 (tx) 5: QUIT
 (rx) 5: 
 (rx) 5: ***Disconnected***
 (tx) wizard: QUIT
-(rx) wizard: 1 says "1"
-(rx) wizard: 2 says "2"
-(rx) wizard: 3 says "3"
-(rx) wizard: 4 says "4"
-(rx) wizard: 5 says "5"
+(rx) wizard: 1 says "0"
+(rx) wizard: 2 says "1"
+(rx) wizard: 3 says "2"
+(rx) wizard: 4 says "3"
+(rx) wizard: 5 says "4"
 (rx) wizard: 
 (rx) wizard: ***Disconnected***
+(tx) 1: QUIT
+(rx) 1: 2 is briefly visible through the mist.
+(rx) 1: 3 is briefly visible through the mist.
+(rx) 1: 4 is briefly visible through the mist.
+(rx) 1: 5 is briefly visible through the mist.
+(rx) 1: 
+(rx) 1: ***Disconnected***
+(tx) 2: QUIT
+(rx) 2: 3 is briefly visible through the mist.
+(rx) 2: 4 is briefly visible through the mist.
+(rx) 2: 5 is briefly visible through the mist.
+(rx) 2: 
+(rx) 2: ***Disconnected***
+(tx) 3: QUIT
+(rx) 3: 4 is briefly visible through the mist.
+(rx) 3: 5 is briefly visible through the mist.
+(rx) 3: 
+(rx) 3: ***Disconnected***
+(tx) 4: QUIT
+(rx) 4: 5 is briefly visible through the mist.
+(rx) 4: 
+(rx) 4: ***Disconnected***
+(tx) 5: QUIT
+(rx) 5: 
+(rx) 5: ***Disconnected***
 (rx) wizard: Welcome to MangledMUD
 (rx) wizard: To connect to your existing character, enter "connect name password"
 (rx) wizard: To create a new character, enter "create name password"

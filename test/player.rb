@@ -4,7 +4,7 @@ module MangledMudTest
   TINYMUD_PORT = 4201
 
   class Player
-    def initialize(stdout, name, password, create = false, expect_fail = false)
+    def initialize(stdout, name, password, create = false, expect_fail = false, logout = true)
       # some of this needs explaining!
       # In order to ensure we parse commands back from the server we hook into
       # un-documented MangledMUD commands, OUTPUTPREFIX and OUTPUTSUFFIX.
@@ -22,23 +22,24 @@ module MangledMudTest
       @session = new_session(TINYMUD_HOST, TINYMUD_PORT)
 
       # Wait fot the intro. message
-      log(@session.waitfor(/currently active\./), :in)
+      intro_message = @session.waitfor(/currently active\./)
+      log(intro_message, :in) if logout
 
       if create
         if expect_fail
-          pre_suffix_set_cmd("create #{name} #{password}", /that name is illegal/)
+          pre_suffix_set_cmd("create #{name} #{password}", /that name is illegal/, logout)
         else
-          pre_suffix_set_cmd("create #{name} #{password}", /to find it again/)
+          pre_suffix_set_cmd("create #{name} #{password}", /to find it again/, logout)
         end
       else
         if expect_fail
-          pre_suffix_set_cmd("connect #{name} #{password}", /or has a different password/)
+          pre_suffix_set_cmd("connect #{name} #{password}", /or has a different password/, logout)
         else
-          pre_suffix_set_cmd("connect #{name} #{password}", /to find it again/)
+          pre_suffix_set_cmd("connect #{name} #{password}", /to find it again/, logout)
         end
       end
       if expect_fail
-        pre_suffix_set_cmd("QUIT", /\*\*\*Disconnected\*\*\*/)
+        pre_suffix_set_cmd("QUIT", /\*\*\*Disconnected\*\*\*/, logout)
       else
         pre_suffix_set_cmd("OUTPUTPREFIX #{@prefix}", /Done/, false)
         pre_suffix_set_cmd("OUTPUTSUFFIX #{@suffix}", /Done/, false)
@@ -64,8 +65,12 @@ module MangledMudTest
       end
     end
 
-    def quit()
-      cmd("QUIT")
+    def quit(logout = true)
+      cmd("QUIT", logout)
+    end
+
+    def close_connection()
+      @session.close()
     end
 
     def shutdown()

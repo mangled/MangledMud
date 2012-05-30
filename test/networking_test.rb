@@ -4,6 +4,12 @@
 # It could be extended to perform a wider set of tests, but the regression
 # commands already do this and they don't require networking, which makes
 # them cleaner.
+#
+# NOTE: One of the tests stresses the MUD looking for memory problems
+# its worth using system monitor whilst this tests runs to see if the
+# ruby process associated with the MUD starts using tons of memory
+# It should stay fairly consistant.
+#
 require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
@@ -50,10 +56,8 @@ module MangledMudTest
       end
     end
 
-    # This test assumes that a tinymud server has started with a fresh minimal database
-    # I tried starting the process and killing it per test but it bails out
-    # and doesn't clean up the ports properly, so things go wrong on the second
-    # run.
+    # This test assumes that a tinymud server has started with a fresh *minimal* database
+    # E.g. > ~/Source/tinymud $ ruby lib/mud.rb -d db/minimal.db -o dump
     def test_networking
       # As it says!
       check_network_failure_handling()
@@ -94,26 +98,64 @@ module MangledMudTest
       # the regression tests to always fail as a result. The main
       # "assertion" is that their inventories have the correct content
       wizard = MangledMudTest::Player.new(@regression, "wizard", "potrzebie")
-      player_connections = {}
+      player_connections = []
       1.upto(5) do |i|
-        player_connections[i] = MangledMudTest::Player.new(@regression, "#{i}", "password", true)
+        player_connections << MangledMudTest::Player.new(@regression, "#{i}", "password", true)
         wizard.cmd("give #{i}=100")
       end
       players = ThreadsWait.new
-      1.upto(5) do |i|
-        thread = Thread.new { 1.upto(10) {|j| player_connections[i].cmd("@create #{i}#{j}", false) } }
+      player_connections.each_with_index do |connection, i|
+        thread = Thread.new { 1.upto(10) {|j| connection.cmd("@create #{i}#{j}", false) } }
         players.join_nowait(thread)
       end
       players.all_waits
-      1.upto(5) do |i|
+      player_connections.each_with_index do |connection, i|
         # The number can change based on thread order, hence we ignore the object id's in the inventory
-        player_connections[i].cmd("inventory", true, true)
-        player_connections[i].cmd("say #{i}")
-        player_connections[i].quit()
+        connection.cmd("inventory", true, true)
+        connection.cmd("say #{i}")
+        connection.quit()
       end
       wizard.quit
 
-      # Do this last...
+      # Before release we held a small party, the network code would through out all connections
+      # every so often. This seemed to be caused by the drunk guy bot crashing (this behaviour has
+      # been fixed) - This test tries to re-create the scenario. It re-uses some of the players above
+      # and the wizard. The wizard performs some actions then closes the connection (not using QUIT)
+      # this detected one error - sessions were remaining connected to players resulting in multiple
+      # sessions handling a players input! One of which was associated with the network connection.
+      # This caused memory usage to grow over time as the zombie sessions would acrue output!
+      #
+      # See note at top of file - consider monitoring with system monitor also
+      #
+      # First connect the players
+      player_connections = []
+      1.upto(5) do |i|
+        player_connections << MangledMudTest::Player.new(@regression, "#{i}", "password", false, false, false)
+      end
+
+      # Loop around, performing actions then quitting without calling the mud "QUIT" command
+      # This thrashes the MUD and should detect if anything is being held onto when connections
+      # end in unexpected ways i.e. not through the "QUIT" command.
+      1.upto(100) do |i|
+        # Now the wizard
+        wizard = MangledMudTest::Player.new(@regression, "wizard", "potrzebie", false, false, false)
+        # Perform the same action a number of times - Not logging out these interactions
+        # this test is about network failure, we want to get to the end of it without
+        # a player connection freezing or the server refusing to accept more connections
+        1.upto(50) {|j| wizard.cmd("look", false) }
+
+        # Alternate between clean and un-clean exits
+        (i % 2 == 0) ? wizard.quit(false) : wizard.close_connection()
+      
+        # Get the players to eat their buffers
+        player_connections.each {|connection| connection.cmd("look", false) }
+      end
+
+      # Cleanup
+      player_connections.each {|connection| connection.quit()}
+
+      # Do this last...Test shutdown...
+      #
       # Connect the wizard again
       wizard = MangledMudTest::Player.new(@regression, "wizard", "potrzebie")
       wizard.shutdown()
