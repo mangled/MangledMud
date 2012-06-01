@@ -1,4 +1,4 @@
-<img src="./mud.png" alt="MangledMud"/>
+![Image MangledMud](./mud.png)
 
 MangledMud 1.0
 ==============
@@ -91,7 +91,7 @@ The password of [potrzebie](https://en.wikipedia.org/wiki/Potrzebie) has some as
 <a id="Documentation"/>Documentation
 -----------------------
 
-We have converted the original "Three's Unabridged Dictionary of Commands", if you `rake doc:yard` you will get local documentation (under `doc`) and this [link](./file.guide.html) will work, or via GitHub click on [guide.md](../guide.md) to browse the markdown source in the git repository.
+We have converted the original "Three's Unabridged Dictionary of Commands", if you `rake doc:yard` you will get local documentation (under `doc`) and this [link](./file.guide.html) will work, or via GitHub click on `guide.md` to browse the markdown source in the git repository.
 
 The source code is also reasonably well documented, again `rake doc:yard` and look under `doc`
 
