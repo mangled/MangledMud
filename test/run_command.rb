@@ -4,7 +4,7 @@
 # During development its easier to see the output, hence this tiny script
 require 'rubygems'
 require 'bundler/setup'
-require 'mocha'
+require 'mocha/test_unit'
 require_relative 'include'
 require_relative 'commands'
 

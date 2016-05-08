@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
-require 'mocha'
+require 'mocha/test_unit'
 require_relative 'include'
 require_relative 'helpers'
 
@@ -390,14 +390,14 @@ module MangledMud
     end
 
     def expect_examine(thing_ref, flag_desc)
-      def name(ref)
+      name = lambda do |ref|
         return Phrasebook.lookup('loc-nothing') if ref == NOTHING
         @db[ref].name
       end
       thing = @db[thing_ref]
-      "#{thing.name}(##{thing_ref}) [#{name(thing.owner)}] " +
+      "#{thing.name}(##{thing_ref}) [#{name.call(thing.owner)}] " +
       "#{Phrasebook.lookup('key')} #{(thing.flags & ANTILOCK) != 0 ? NOT_TOKEN : ' '}" +
-      "#{name(thing.key)}(##{thing.key}) #{Phrasebook.lookup('pennies')} " +
+      "#{name.call(thing.key)}(##{thing.key}) #{Phrasebook.lookup('pennies')} " +
       "#{thing.pennies} #{Phrasebook.lookup('type')} #{flag_desc}"
     end
   end

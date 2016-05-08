@@ -8,26 +8,24 @@
 # NOTE: One of the tests stresses the MUD looking for memory problems
 # its worth using system monitor whilst this tests runs to see if the
 # ruby process associated with the MUD starts using tons of memory
-# It should stay fairly consistant.
+# It should stay fairly consistent.
 #
 require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
 require 'diff/lcs'
 require 'diff/lcs/array'
-require 'mocha'
+require 'mocha/test_unit'
 require 'net/telnet'
 require 'thwait'
 require_relative 'player'
 
 module MangledMudTest
-
-  class Test::Unit::TestCase
+  class NetworkingTests < Test::Unit::TestCase
 
     def setup
-      @test_name = self.instance_variable_get(:@__name__)
       # Swap file name about
-      @test_name = @test_name.gsub('test_', "") + "_test"
+      @test_name = /^(\w+)/.match(self.name)
       @regression_tmp_filename = File.join(File.dirname(__FILE__), "#{@test_name}.tmp")
       @regression_pass_filename = File.join(File.dirname(__FILE__), "#{@test_name}.pass")
       File.delete @regression_tmp_filename if File.exists? @regression_tmp_filename
@@ -57,7 +55,7 @@ module MangledMudTest
     end
 
     # This test assumes that a tinymud server has started with a fresh *minimal* database
-    # E.g. > ~/Source/tinymud $ ruby lib/mud.rb -d db/minimal.db -o dump
+    # E.g. ruby lib/mud.rb -d db/minimal.db -o dump
     def test_networking
       # As it says!
       check_network_failure_handling()
@@ -117,7 +115,7 @@ module MangledMudTest
       end
       wizard.quit
 
-      # Before release we held a small party, the network code would through out all connections
+      # Before release we held a small party, the network code would throw out all connections
       # every so often. This seemed to be caused by the drunk guy bot crashing (this behaviour has
       # been fixed) - This test tries to re-create the scenario. It re-uses some of the players above
       # and the wizard. The wizard performs some actions then closes the connection (not using QUIT)
@@ -146,7 +144,7 @@ module MangledMudTest
 
         # Alternate between clean and un-clean exits
         (i % 2 == 0) ? wizard.quit(false) : wizard.close_connection()
-      
+
         # Get the players to eat their buffers
         player_connections.each {|connection| connection.cmd("look", false) }
       end

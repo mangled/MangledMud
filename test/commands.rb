@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'test/unit'
 require 'bundler/setup'
-require 'mocha'
+require 'mocha/test_unit'
 require_relative 'include'
 
 module MangledMud
