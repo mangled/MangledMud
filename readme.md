@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mangled/MangledMud.svg?branch=master)](https://travis-ci.org/mangled/MangledMud)
+Latest [![Build Status](https://travis-ci.org/mangled/MangledMud.svg?branch=master)](https://travis-ci.org/mangled/MangledMud)
 
 ![Image MangledMud](./mud.png)
 
@@ -28,8 +28,13 @@ There is also a flash based interface to try in your web browser, go to http://w
 
 As is usual with the internet, if you are reading this sometime in the future we cannot guarantee to still be hosting these services.
 
-Install
--------
+Install with Docker
+-------------------
+
+I have created a [Docker image](https://hub.docker.com/r/mangled/mangled-mud/), basic instructions for running it are provided through this link but you will still need to refer below, for example, for the initial wizard password.
+
+Install by hand
+---------------
 
 The code has been tested on Linux, Mac and Windows (using [dev.](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit) kit) with `ruby 2.3.1p112`.
 
@@ -38,8 +43,7 @@ Pull the code from here, in the main directory:
     $ gem install bundler
     $ bundle install
 
-Testing
--------
+### Testing
 
 The code is *very well* tested (we achieved nearly 100% line/branch coverage of the original code via these tests).
 The default rake task is to run the unit and regression tests:
@@ -57,8 +61,7 @@ In another terminal:
 
 If any of these tests break, panic (and if you wish e-mail/contact us).
 
-Running
--------
+### Running
 
 To run the server, type:
 
