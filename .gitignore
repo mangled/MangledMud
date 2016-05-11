@@ -1,5 +1,4 @@
 # Ignore generated documention
 .yardoc
 doc
-
-
+.idea

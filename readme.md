@@ -29,7 +29,7 @@ As is usual with the internet, if you are reading this sometime in the future we
 Install
 -------
 
-The code has been tested on Linux, Mac and Windows (using [dev.](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit) kit) with `ruby 1.9.2p290`.
+The code has been tested on Linux, Mac and Windows (using [dev.](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit) kit) with `ruby 2.3.1p112`.
 
 Pull the code from here, in the main directory:
 
