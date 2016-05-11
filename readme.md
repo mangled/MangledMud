@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mangled/MangledMud.svg?branch=master)](https://travis-ci.org/mangled/MangledMud)
+
 ![Image MangledMud](./mud.png)
 
 MangledMud 1.0
